@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\Company.WebApi.Core.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\Company.WebApi.Core.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Swagger\swaggerAuth.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Swagger\swaggerAuth.js">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+    <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="4.5.1" />
+    <PackageReference Include="SimpleInjector.Packaging" Version="4.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Company.Diagnostic.Core\Company.Diagnostic.Core.csproj" />
+    <ProjectReference Include="..\Company.Security.Jwt\Company.Security.Jwt.csproj" />
+    <ProjectReference Include="..\Company.WebApi.Core\Company.WebApi.Core.csproj" />
+    <ProjectReference Include="..\Company\Company.HttpClient\Company.HttpClient.csproj" />
+    <ProjectReference Include="..\Company\Company.Logging\Company.Logging.csproj" />
+    <ProjectReference Include="..\Company\Company.Security\Company.Security.csproj" />
+    <ProjectReference Include="..\Company\Company.Utils\Company.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

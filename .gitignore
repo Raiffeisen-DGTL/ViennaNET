@@ -1,0 +1,16 @@
+/.vs/
+bin/*
+obj/
+
+!bin/*/clidriver/bin/*
+
+*.csproj.user
+/Company.Core.sln.DotSettings.user
+/packages/
+
+*/bin/Debug/*
+
+*/bin/*
+
+/Visual Studio 2019/*
+/paket.lock
