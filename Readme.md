@@ -24,7 +24,7 @@ ___
 
 #### WebApi
 *  [**Company.WebApi.Core**](Company.WebApi.Core/Readme.md) - main service library. Contains WebApi-service builder with common AspNetCore & Swagger features enabled
-*  [**Company.WebApi.Core.DefaultConfiguration**](Company.WebApi.Core.DefaultConfiguration/Readme.md) - all-in-one app configuration tools (Kestrel, SimpleInjector, log4net, JWT, Middleware, Handlers, ... ) and a pre-configured builder
+*  [**Company.WebApi.Core.DefaultConfiguration**](Company.WebApi.Core.DefaultConfiguration/Readme.md) - all-in-one app configuration tools (Kestrel, SimpleInjector, log4net, JWT, Middleware, Handlers, etc ) and a pre-configured builder
 *  [**Company.WebApi.Core.DefaultHttpSysRunner**](Company.WebApi.Core.DefaultHttpSysRunner/Readme.md) - Windows web-api configuration tools with integrated NTLM auth and run-as-windows-service hosting
 *  **Company.HttpClient** - Http-client builder, integrated in standard AspNetCore DI-container
 
