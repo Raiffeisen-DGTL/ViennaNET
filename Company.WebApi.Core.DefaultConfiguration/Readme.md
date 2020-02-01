@@ -177,7 +177,7 @@ There is also a **useStrictHttps** option - when setting its value to **true**, 
 
 *  RequestAuthorizationHeaderHandler - a handler for authorization header forwarding to outgoing Http requests
 
-##### Конфигураторы
+##### Configurators
 *  JwtHttpClientsConfigurator - configurator for registering HTTP clients with JwtRequestHeadersHandler
 *  NtlmHttpClientsConfigurator - configurator for registering HTTP clients, tuned for NTLM support
 

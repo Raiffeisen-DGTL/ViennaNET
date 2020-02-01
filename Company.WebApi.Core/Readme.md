@@ -81,7 +81,7 @@ ___
 
 Base class - HostBuilder. It is split into 3 files:
 *  HostBuilder.cs - contains setup properties and the main Build method
-*  HostBuilderActions.cs - contains methods for buield configuration
+*  HostBuilderActions.cs - contains methods for build configuration
 *  HostBuilderValidation.cs - contains app-builder state validation methods
 
 Non-configurable features:
@@ -111,7 +111,7 @@ _________________
 ### Service configuration methods
 
 *  AddMvcBuilderConfiguration - this method enables additional MVC Builder configuration
-*  ConfigureApp - internal builder configurator, where Middleware are added, Cors is implemented etc.
+*  ConfigureApp - internal builder configurator, for adding middleware, enabling Cors, etc.
 *  AddMiddleware - standard middleware registration, without any third party container usage
 *  CreateContainer - this method is used to create third-party DI-container object. If you do not call this method, an internal container will be used
 *  VerifyContainer - third-party DI container validation 
