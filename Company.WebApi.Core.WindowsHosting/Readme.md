@@ -1,9 +1,9 @@
-# Сборка с расширением для запуска сервисов как Windows-службы
+# Extension library for running your app as Windows service 
 
-Работает как для сервисов на основе Kestrel так и на основе HttpSys
+Works for Kestrel-hosted and HttpSys-hosted services
 
-#### Пример применения
-В корневом файле Program.cs необходимо вызвать метод-расширение RunAsWindowsService для сконфигурированного IWebHost :
+#### Example
+In main Program.cs you need to call RunAsWindowsService extension method for the configured IWebHost :
 
 		DefaultKestrelRunner.Configure()
                         .BuildWebHost(args)

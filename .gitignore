@@ -14,3 +14,5 @@ obj/
 
 /Visual Studio 2019/*
 /paket.lock
+.vscode/launch.json
+.vscode/tasks.json

@@ -1,7 +1,7 @@
-# Сборка с классами и интерфейсами для обеспечения централизованной диагностики приложения
+# Assembly for centralized app diagnostics
 
 ### Сущности сборки:
-*  HealthCheckingService - Корневой сервис для централизованного вызова диагностики приложения
-*  DiagnosticFailedDelegate - Делегат для события о непрохождении диагностики
+*  HealthCheckingService - Root service for centralized app diagnostics features
+*  DiagnosticFailedDelegate - A delegate for health check failure logic
 
-В случае, если хотя бы одна диагностическая проверка не прошла, то произойдет срабатывание события DiagnosticFailedEvent, объявленного в HealthCheckingService. При необходимости на него можно подписаться, и, например, прекращать слушать очередь.
+In case at least one diagnostics check fails, a DiagnosticFailedEvent is fired (this event is declared in HealthCheckingService). You could subscribe to this event, and, for example, stop a queue listener.
