@@ -1,6 +1,6 @@
 # Repo, containing .NET Standard based infrastructure libs
 
-[![Actions Status](https://github.com/Raiffeisen-DGTL/ViennaNET/workflows/.NET%20Core/badge.svg](https://github.com/Raiffeisen-DGTL/ViennaNET/actions)
+[![Actions Status](https://github.com/Raiffeisen-DGTL/ViennaNET/workflows/.NET%20Core/badge.svg)](https://github.com/Raiffeisen-DGTL/ViennaNET/actions)
 
 ### Table of contents
 
