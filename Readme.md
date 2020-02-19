@@ -1,5 +1,9 @@
 # Repo, containing .NET Standard based infrastructure libs
 
+<p align="left">
+  <a href="https://github.com/actions/ViennaNET"><img alt="GitHub Actions status" src="https://github.com/actions/ViennaNET/workflows/.NET%20Core/badge.svg"></a>
+</p>
+
 ### Table of contents
 
 
