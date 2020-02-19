@@ -5,14 +5,14 @@ obj/
 !bin/*/clidriver/bin/*
 
 *.csproj.user
-/Company.Core.sln.DotSettings.user
+/ViennaNET.sln.DotSettings.user
 /packages/
 
 */bin/Debug/*
 
 */bin/*
 
-/Visual Studio 2019/*
 /paket.lock
-.vscode/launch.json
-.vscode/tasks.json
+
+/TestResult/
+/Visual Studio 2019

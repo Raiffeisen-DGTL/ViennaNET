@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Diagnostic\ViennaNET.WebApi.Configurators.Diagnostic.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.HttpClients.Jwt\ViennaNET.WebApi.Configurators.HttpClients.Jwt.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Kestrel\ViennaNET.WebApi.Configurators.Kestrel.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Security.Jwt\ViennaNET.WebApi.Configurators.Security.Jwt.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.SimpleInjector\ViennaNET.WebApi.Configurators.SimpleInjector.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth\ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Common\ViennaNET.WebApi.Configurators.Common.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi\ViennaNET.WebApi.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.WebApi.Runners.BaseKestrel.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.WebApi.Runners.BaseKestrel.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>
