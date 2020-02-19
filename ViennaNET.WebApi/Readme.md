@@ -60,12 +60,14 @@ To get request and response metrics, you have these endpoints:
 
 To enable monitoring, you need to add this section in app configuration file:
 
+```
 		{
 		  "metrics": {
 			"enabled": true,
                         "reporter": "default"
 		  }
 		}
+```
 
 **enabled** - enable/disable metrics collection (false by default)
 **reporter** - optional, answer format:
