@@ -63,7 +63,7 @@ To enable monitoring, you need to add this section in app configuration file:
 		{
 		  "metrics": {
 			"enabled": true,
-            "reporter": "default"
+                        "reporter": "default"
 		  }
 		}
 
