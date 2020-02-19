@@ -96,7 +96,7 @@ SetCollectionContext (Expression <Func <T, IEnumerable <TEntity> >> expression, 
     }
 ```
 
-Instead of using the ** IValidator ** interface, you can use the static wrapper ** RulesValidator **.
+Instead of using the **IValidator** interface, you can use the static wrapper **RulesValidator**.
 
 ### Conditional execution of rules
 
