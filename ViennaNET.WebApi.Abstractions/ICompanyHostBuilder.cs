@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Net;
 
 namespace ViennaNET.WebApi.Abstractions
 {
@@ -124,5 +125,33 @@ namespace ViennaNET.WebApi.Abstractions
     /// <param name="functionToGetAction"></param>
     /// <returns></returns>
     ICompanyHostBuilder AddOnStopAction(Func<object, Action> functionToGetAction);
+
+    /// <summary>
+    /// Добавляет обработчик ошибок для определенного исключения
+    /// </summary>
+    /// <typeparam name="TException">Тип исключения</typeparam>
+    /// <param name="statusCode">HTTP-код ошибки</param>
+    ICompanyHostBuilder AddExceptionHandler<TException>(int statusCode) where TException : Exception;
+
+    /// <summary>
+    /// Добавляет обработчик ошибок для определенного исключения
+    /// </summary>
+    /// <typeparam name="TException">Тип исключения</typeparam>
+    /// <param name="statusCode">HTTP-код ошибки</param>
+    public ICompanyHostBuilder AddExceptionHandler<TException>(HttpStatusCode statusCode) where TException : Exception;
+
+    /// <summary>
+    /// Добавляет обработчик ошибок для определенного исключения
+    /// </summary>
+    /// <param name="exception">Тип исключения</param>
+    /// <param name="statusCode">HTTP-код ошибки</param>
+    ICompanyHostBuilder AddExceptionHandler(Type exception, int statusCode);
+
+    /// <summary>
+    /// Добавляет обработчик ошибок для определенного исключения
+    /// </summary>
+    /// <param name="exception">Тип исключения</param>
+    /// <param name="statusCode">HTTP-код ошибки</param>
+    ICompanyHostBuilder AddExceptionHandler(Type exception, HttpStatusCode statusCode);
   }
 }

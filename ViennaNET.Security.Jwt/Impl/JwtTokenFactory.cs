@@ -31,6 +31,7 @@ namespace ViennaNET.Security.Jwt.Impl
       var permissionClaims = permissions.Select(p => new Claim(ClaimTypes.Role, p));
 
       claims.Add(new Claim(ClaimTypes.NameIdentifier, userName));
+      claims.Add(new Claim(ClaimTypes.Name, userName));
       claims.AddRange(permissionClaims);
 
       var token = new JwtSecurityToken(issuer: _securityKeysContainer.Issuer(),

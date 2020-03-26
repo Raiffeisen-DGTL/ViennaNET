@@ -95,8 +95,12 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware
 
     private async Task<string> ExtractBody(HttpRequest request)
     {
+      request.EnableBuffering();
+
       var body = await request.BodyReader.ReadAsync();
       var bodyAsText = Encoding.UTF8.GetString(body.Buffer.ToArray());
+
+      request.Body.Position = 0;
 
       return bodyAsText;
     }

@@ -44,6 +44,26 @@ In the new version, the use of composite configurators has become easier, for ex
    In this case, there is no need to use the CopyLocalLockFileAssemblies parameter
 7. The swagger enable flag has been moved from the webApiConfiguration section to the swagger section with the renaming swaggerSubmit -> useSwagger
 
+       "swagger": {
+         "useSwagger": true,
+         ...
+       },
+
+8. If you used HttpClients through the ViennaNET.WebApi.Configurators.HttpClients.Jwt/Ntlm assemblies, you need to add a parameter with an authentication type to the section of each webApiEndpoints:
+
+       "webApiEndpoints": [
+         ...
+         {
+           ...
+           "authType": "jwt"
+         },
+         {
+           ...
+           "authType": "ntlm"
+         },
+         ...
+       ],
+
 #### Case II. The service was built manually (without using DefaultKestrelRunner or DefaultHttpSysRunner)
 1) In all assemblies using <TargetFramework> netcoreapp2.2 </TargetFramework>, change to <TargetFramework> netcoreapp3.1 </TargetFramework>.
 2) Assemblies with configurators were renamed to ViennaNET.WebApi.Configurators. *, As well as some of them were merged or divided, so you need to familiarize yourself with their description and select the ones you need.

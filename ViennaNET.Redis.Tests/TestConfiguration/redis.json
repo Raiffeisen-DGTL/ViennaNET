@@ -1,0 +1,16 @@
+﻿{
+  "redis": {
+    "key": "9050",
+    "connection": "localhost:6379,localhost:6380,allowAdmin=true",
+    "keylifetimes": [
+      {
+        "name": "default",
+        "time": "0.8:0:0"
+      },
+      {
+        "name": "def",
+        "time": "0.8:0:0"
+      }
+    ]
+  }
+}

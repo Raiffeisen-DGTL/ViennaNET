@@ -4,14 +4,12 @@ Contains:
 * KestrelConfigurator - Configurator for registering Kestrel as a server. For hosting both under Windows and under Linux
 * WebApiConfiguration - section in the configuration file
 
-```
     "webApiConfiguration": {
       "portNumber": 80,
       "httpsPort": 8080,
       "useStrictHttps": false,
       "certificatePath": "RootCA.crt"
     },
-```
 
 To enable https, you need to add the port for https **httpsPort** in the **webApiConfiguration** configuration section.
 There is also an option **useStrictHttps** - when setting the value **true**, all requests via http will be forcibly redirected to https.

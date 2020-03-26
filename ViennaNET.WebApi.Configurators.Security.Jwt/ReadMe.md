@@ -19,4 +19,4 @@ All parameters are optional.
 * audience - for whom the token is issued, the default value is "RaiffeisenbankEmployee"
 * tokenKeyEnvVariable - the name of the environment variable that stores the code word for encryption, the default value is "TOKEN_SECRET_KEY"
 
-> ** Attention! ** If any of the parameters were redefined in the service generating the tokens, then they also need to be redefined in other services
+> **Attention!** If any of the parameters were redefined in the service generating the tokens, then they also need to be redefined in other services

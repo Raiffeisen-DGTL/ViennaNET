@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using ViennaNET.WebApi.Abstractions;
 
 namespace ViennaNET.WebApi
 {
@@ -40,14 +41,9 @@ namespace ViennaNET.WebApi
         });
       });
     }
-
-    /// <summary>
-    /// Добавить обработку ошибки
-    /// </summary>
-    /// <typeparam name="TException">Тип исключения</typeparam>
-    /// <param name="statusCode">HTTP-код ошибки</param>
-    /// <returns></returns>
-    public CompanyHostBuilder AddExceptionHandler<TException>(int statusCode) where TException : Exception
+    
+    /// <inheritdoc />
+    public ICompanyHostBuilder AddExceptionHandler<TException>(int statusCode) where TException : Exception
     {
       if (!_exceptionMapper.TryAdd(typeof(TException), statusCode))
       {
@@ -65,7 +61,7 @@ namespace ViennaNET.WebApi
     /// <typeparam name="TException">Тип исключения</typeparam>
     /// <param name="statusCode">HTTP-код ошибки</param>
     /// <returns></returns>
-    public CompanyHostBuilder AddExceptionHandler<TException>(HttpStatusCode statusCode) where TException : Exception
+    public ICompanyHostBuilder AddExceptionHandler<TException>(HttpStatusCode statusCode) where TException : Exception
     {
       return AddExceptionHandler<TException>((int)statusCode);
     }
@@ -76,7 +72,7 @@ namespace ViennaNET.WebApi
     /// <param name="exception">Тип исключения</param>
     /// <param name="statusCode">HTTP-код ошибки</param>
     /// <returns></returns>
-    public CompanyHostBuilder AddExceptionHandler(Type exception, int statusCode)
+    public ICompanyHostBuilder AddExceptionHandler(Type exception, int statusCode)
     {
       var isExceptionType = exception.IsSubclassOf(typeof(Exception)) ||
                             exception.IsAssignableFrom(typeof(Exception));
@@ -101,7 +97,7 @@ namespace ViennaNET.WebApi
     /// <param name="exception">Тип исключения</param>
     /// <param name="statusCode">HTTP-код ошибки</param>
     /// <returns></returns>
-    public CompanyHostBuilder AddExceptionHandler(Type exception, HttpStatusCode statusCode)
+    public ICompanyHostBuilder AddExceptionHandler(Type exception, HttpStatusCode statusCode)
     {
       return AddExceptionHandler(exception, (int)statusCode);
     }

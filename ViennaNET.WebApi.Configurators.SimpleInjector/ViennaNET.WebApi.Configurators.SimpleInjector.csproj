@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.SimpleInjector.Extensions\ViennaNET.SimpleInjector.Extensions.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
   </ItemGroup>
 

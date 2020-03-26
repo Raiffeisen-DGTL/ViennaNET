@@ -12,7 +12,10 @@ obj/
 
 */bin/*
 
+/Visual Studio 2019/*
 /paket.lock
 
 /TestResult/
-/Visual Studio 2019
+
+NuGet.Config
+/Bin
