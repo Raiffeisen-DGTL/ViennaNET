@@ -14,6 +14,7 @@ The main class is **Mediator**. It is an intermediary that allows you to bind di
 
 ### Usage example
 
+```csharp
   public IHttpActionResult Get ()
   {
     IEnumerable<ProductModel>products = _mediator.SendMessage<GetProductsRequest, IEnumerable <ProductModel>>(new GetProductsRequest());
@@ -27,11 +28,13 @@ The main class is **Mediator**. It is an intermediary that allows you to bind di
       return Ok(products);
     }
   }
+```
 
 #### Application instruction for processing domain events:
 
 1. Implement in essence the interface **IEntityEventPublisher**. The standard implementation stores an instance of **IEventCollector** in an internal variable.
 
+```csharp
   public class Payroll: IEntityKey<int>, IEntityEventPublisher
   {
     private IEventCollector _eventCollector;
@@ -41,17 +44,22 @@ The main class is **Mediator**. It is an intermediary that allows you to bind di
       _eventCollector = eventCollector;
     }
   }
+```
 
 2. If necessary, publish the event using **IEventCollector**.
 
+```csharp
   _eventCollector.Enqueue (new PayrollReachesFinalStatusEvent (this));
+```
 
 3. In the application service managing domain entities, implement a unit of work for sending domain events.
 
+```csharp
    using (var collector = _eventCollectorFactory.Create())
    {
      ...
      collector.Publish();
    }
+```
 
 For correct event handling, Handlers must be registered in the **Mediator** class.
