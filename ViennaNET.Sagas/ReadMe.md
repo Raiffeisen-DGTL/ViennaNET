@@ -1,4 +1,4 @@
-﻿# Assembly with the basic implementation of the sag mechanism
+﻿# Assembly with the basic implementation of the sagas mechanism
 
 ### Contains:
 * SagaBase - The base class for creating sagas through the inheritance mechanism
