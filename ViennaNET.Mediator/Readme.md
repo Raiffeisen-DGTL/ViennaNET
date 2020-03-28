@@ -17,7 +17,8 @@ The main class is **Mediator**. It is an intermediary that allows you to bind di
 ```csharp
   public IHttpActionResult Get ()
   {
-    IEnumerable<ProductModel>products = _mediator.SendMessage<GetProductsRequest, IEnumerable <ProductModel>>(new GetProductsRequest());
+    IEnumerable<ProductModel>products = _mediator
+      .SendMessage<GetProductsRequest, IEnumerable <ProductModel>>(new GetProductsRequest());
 
     if (products is null ||! products.Any())
     {
