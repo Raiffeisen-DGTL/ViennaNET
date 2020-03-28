@@ -17,6 +17,7 @@ To eliminate the need to manually catch exceptions in case of Redis failure, in 
 1. Add a dependency on **ISilentRedisDatabaseProvider** to the class.
 2. Add the configuration file **appsettings.json**,
 
+```
 "redis": {
       "key": "9050",
       "connection": "localhost: 6379",
@@ -27,6 +28,7 @@ To eliminate the need to manually catch exceptions in case of Redis failure, in 
         }
       ]
     }
+```
 
 * key - an additional service prefix. Prefixes are needed so that in the general address space of the service, keys with matching names created by different services do not overlap and do not override each other's values.
 * connection - connection string in the format of the StackExchange.Redis library.
@@ -34,10 +36,12 @@ To eliminate the need to manually catch exceptions in case of Redis failure, in 
 
 3. To implement caching, create an **SilentRedisDatabase** object by calling the **ISilentRedisDatabaseProvider** GetDatabase method.
 
+```csharp
     public ReadingService (ISilentRedisDatabaseProvider silentRedisDatabaseProvider)
     {
       _redis = silentRedisDatabaseProvider.ThrowIfNull(nameof(silentRedisDatabaseProvider)).GetDatabase();
     }
+```
 
 4. We use the standard 3-point approach for work:
 
@@ -45,6 +49,7 @@ To eliminate the need to manually catch exceptions in case of Redis failure, in 
 * Get data from the source.
 * Save key data in Redis.
 
+```csharp
       var objects = _redis.ObjectGet<List<T>>(redisKey);
       if (objects! = null)
       {
@@ -57,3 +62,4 @@ To eliminate the need to manually catch exceptions in case of Redis failure, in 
       _redis.ObjectSet(redisKey, objects, lifetimeKey);
 
       return objects;
+```      
