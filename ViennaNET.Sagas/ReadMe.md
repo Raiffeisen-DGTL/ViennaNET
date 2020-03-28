@@ -15,6 +15,7 @@ In the event of ANY unhandled exception, the direct process is interrupted, and 
 
 ### Example:
 
+```csharp
       private class TestFailedSaga: SagaBase <SomeContext>
       {
         public TestFailedSaga (SomeService someService)
@@ -32,3 +33,4 @@ In the event of ANY unhandled exception, the direct process is interrupted, and 
             .WithCompensation(c => someService.Method3());
         }
       }
+```      
