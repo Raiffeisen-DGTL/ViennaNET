@@ -16,6 +16,7 @@ For sending, the CefMessage class is used. The class contains all the informatio
 1. Add a dependency on **IArcSightClient** to the class.
 2. Add the configuration file **appsettings.json**,
 
+```
 {
 "arcSight": {
            "serverHost": "localhost",
@@ -23,12 +24,14 @@ For sending, the CefMessage class is used. The class contains all the informatio
            "syslogVersion": "rfc3164",
            "protocol": "tcp" }
 }
+```
 
 3. Create an instance of the **CefMessage** class. The message is automatically validated upon creation.
 4. Calls the **Send** method of the interface **IArcSightClient**, passing the message created in step 3 there.
 
 ### Usage example
 
+```csharp
   public class ArcSightSendingService: IArcSightSendingService
   {
     private readonly IArcSightClient _arcSightClient;
@@ -52,6 +55,7 @@ For sending, the CefMessage class is used. The class contains all the informatio
       }
     }
   }
+```
 
 ### Syslog Serialization Formats
 * RFC 3164
