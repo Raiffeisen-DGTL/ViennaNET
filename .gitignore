@@ -19,3 +19,4 @@ obj/
 
 NuGet.Config
 /Bin
+/Examples/*/bin/*
