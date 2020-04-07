@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>MediatorService</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViennaNET.Mediator.DefaultConfiguration\ViennaNET.Mediator.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.Mediator\ViennaNET.Mediator.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.SimpleInjector.Extensions\ViennaNET.SimpleInjector.Extensions.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Kestrel\ViennaNET.WebApi.Configurators.Kestrel.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.SimpleInjector\ViennaNET.WebApi.Configurators.SimpleInjector.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Swagger\ViennaNET.WebApi.Configurators.Swagger.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.WebApi\ViennaNET.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="conf\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
