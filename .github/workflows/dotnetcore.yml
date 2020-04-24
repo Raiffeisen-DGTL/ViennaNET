@@ -8,12 +8,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - uses: actions/checkout@v2
     - name: Build
       run: dotnet publish -c Release --self-contained false
     - name: Test
       run: dotnet test --no-build --filter "TestCategory=Unit" --logger "nunit;LogFilePath=TestResult-{assembly}.xml"
+    - name: Publish
+      if: github.event_name == 'repository_dispatch'
+      uses: |
+        dotnet pack --no-build -c Release
+        ls 
