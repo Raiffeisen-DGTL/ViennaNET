@@ -21,4 +21,5 @@ jobs:
       if: github.event_name == 'repository_dispatch'
       run: |
         dotnet pack --no-build -c Release
-        ls 
+        dotnet nuget push ./Bin/*.nupkg -s https://nuget.org -k ${{nugetKey}}
+    
