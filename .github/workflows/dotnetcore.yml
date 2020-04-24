@@ -23,17 +23,15 @@ jobs:
     - name: Use GitVersion
       id: gitversion # step id used as reference for output values
       uses: gittools/actions/gitversion/execute@v0.9.2
-      env:
-        NugetVersion: ${{ steps.gitversion.outputs.majorMinorPatch }}.${{ steps.gitversion.outputs.commitsSinceVersionSource }}
     - name: Build
       run: |
         env
-        dotnet publish -c Release -p:Version=$NugetVersion --self-contained false
+        dotnet publish -c Release -p:Version=${{ steps.gitversion.outputs.majorMinorPatch }}.${{ steps.gitversion.outputs.commitsSinceVersionSource }} --self-contained false
     - name: Test
       run: dotnet test --no-build --filter "TestCategory=Unit" --logger "nunit;LogFilePath=TestResult-{assembly}.xml"
     - name: Publish
       if: github.event_name == 'repository_dispatch'
       run: |
-        dotnet pack --no-build -c Release -p:PackageVersion=$gitVersion
+        dotnet pack --no-build -c Release -p:PackageVersion=${{ steps.gitversion.outputs.majorMinorPatch }}.${{ steps.gitversion.outputs.commitsSinceVersionSource }}
         dotnet nuget push ./Bin/**/*.nupkg -s https://nuget.org -k ${{secrets.nugetKey}} --skip-duplicate --no-symbols true
     
