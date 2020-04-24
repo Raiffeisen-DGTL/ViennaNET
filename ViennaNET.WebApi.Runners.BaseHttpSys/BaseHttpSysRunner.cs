@@ -1,4 +1,5 @@
 ﻿using ViennaNET.WebApi.Abstractions;
+using ViennaNET.WebApi.Configurators.CallContext;
 using ViennaNET.WebApi.Configurators.Common;
 using ViennaNET.WebApi.Configurators.Diagnostic;
 using ViennaNET.WebApi.Configurators.HttpClients.Ntlm;
@@ -18,12 +19,13 @@ namespace ViennaNET.WebApi.Runners.BaseHttpSys
     {
       return CompanyHostBuilder.Create()
                                .UseHttpSys()
+                               .UseNtlmAuth()
+                               .UseCallContext()
                                .UseCommonModules()
                                .UseSimpleInjector()
                                .UseSwagger()
                                .UseDiagnosing()
-                               .UseNtlmHttpClients()
-                               .UseNtlmAuth();
+                               .UseNtlmHttpClients();
     }
   }
 }

@@ -1,36 +1,34 @@
-﻿# Assembly with the basic implementation of the sagas mechanism
+﻿# Сборка с базовой реализацией механизма саг
 
-### Contains:
-* SagaBase - The base class for creating sagas through the inheritance mechanism
-* SagaStep - Class for describing the step of the saga
+### Содержит:
+*  SagaBase - Базовый класс для создания саг через механизм наследования
+*  SagaStep - Класс для описания шага саги
 
-### Principle of operation:
-When you call the Execute method declared in the SagaBase <> class, the process of sequential execution of the basic actions of the steps specified with WithAction will begin.
-In the event of ANY unhandled exception, the direct process is interrupted, and the rollback process begins, which consists of sequentially invoking the actions of the steps in the REVERSE manner indicated with WithCompensation.
+### Принцип работы:
+При вызове метода Execute, объявленного в классе SagaBase<>, начнется процесс последовательного выполнения основных действий шагов, указанных с помощью WithAction.
+В случае появления ЛЮБОГО необработанного исключения, прямой процесс прерывается, и начинается процесс отката, который состоит из последовательного вызова действий шагов в ОБРАТНОМ порядке, указанных с помощью WithCompensation.
 
-### How to use:
-1. Create a class to describe a specific saga, make inheritance from SagaBase <>.
-2. In the constructor of a specific class, sequentially specify the steps of the saga through the use of the Step () method from SagaBase <>.
-3. If at some stage it is necessary to force the rollback of the saga, then simply throw an AbortSagaExecutingException.
+### Как использовать:
+1. Создать класс для описания конкретной саги, сделать наследование от SagaBase<>.
+2. В конструкторе конкретного класса последовательно указать шаги саги через использование метода Step() из SagaBase<>.
+3. Если на каком-то этапе необходимо запустить процедуру отката саги принудительно, то достаточно просто выбросить исключение AbortSagaExecutingException.
 
-### Example:
+### Пример:
 
-```csharp
-      private class TestFailedSaga: SagaBase <SomeContext>
-      {
-        public TestFailedSaga (SomeService someService)
-        {
-          Step("step 1")
-            .WithAction(c => someService.Method1())
-            .WithCompensation(c => someService.Method1());
+      private class TestFailedSaga : SagaBase<SomeContext>
+      {
+        public TestFailedSaga(SomeService someService)
+        {
+          Step("step 1")
+            .WithAction(c => someService.Method1())
+            .WithCompensation(c => someService.Method1());
 
-          Step("step 2")
-            .WithAction(c => someService.Method2())
-            .WithCompensation(c => someService.Method2());
+          Step("step 2")
+            .WithAction(c => someService.Method2())
+            .WithCompensation(c => someService.Method2());
 
-          Step ("step 3")
-            .WithAction(c => throw new AbortSagaExecutingException())
-            .WithCompensation(c => someService.Method3());
-        }
-      }
-```      
+          Step("step 3")
+            .WithAction(c => throw new AbortSagaExecutingException())
+            .WithCompensation(c => someService.Method3());
+        }
+      }

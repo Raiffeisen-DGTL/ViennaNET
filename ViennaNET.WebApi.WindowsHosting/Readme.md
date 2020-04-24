@@ -6,5 +6,5 @@ Kestrel and based on HttpSys
 In the main Program.cs file, you must call the RunAsWindowsService extension method for the configured IWebHost:
 
 	DefaultKestrelRunner.Configure()
-		.BuildWebHost(arg)
-		.RunAsWindowsService(arg);
+		.BuildWebHost(args)
+		.RunAsWindowsService(args);

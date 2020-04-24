@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.WebApi.Configurators.CallContext.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.WebApi.Configurators.CallContext.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector" Version="4.9.0" />
+    <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Net\ViennaNET.WebApi.Net.csproj" />
+  </ItemGroup>
+
+</Project>

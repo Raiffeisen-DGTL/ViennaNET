@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>Bin\Tests\ViennaNET.Messaging</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>Bin\Tests\ViennaNET.Messaging</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Unit\Messages\BytesMessage.xml" />
+    <None Remove="Unit\Messages\TextMessage.xml" />
+    <None Remove="XmlTestData.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Unit\Extensions\XmlTestData.xml" />
+    <EmbeddedResource Include="Unit\Messages\TextMessage.xml" />
+    <EmbeddedResource Include="Unit\Messages\BytesMessage.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.msbuild" Version="2.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NunitXml.TestLogger" Version="2.1.41" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.Messaging.KafkaQueue\ViennaNET.Messaging.KafkaQueue.csproj" />
+    <ProjectReference Include="..\ViennaNET.Messaging.RabbitMQQueue\ViennaNET.Messaging.RabbitMQQueue.csproj" />
+    <ProjectReference Include="..\ViennaNET.Messaging\ViennaNET.Messaging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="app3.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettingsAll.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Integration\" />
+    <Folder Include="Unit\Diagnostic\" />
+    <Folder Include="Unit\MqSeries\" />
+    <Folder Include="Unit\Processing\" />
+  </ItemGroup>
+
+</Project>

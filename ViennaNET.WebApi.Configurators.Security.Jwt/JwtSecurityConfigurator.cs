@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using ViennaNET.Security.Jwt;
 
 namespace ViennaNET.WebApi.Configurators.Security.Jwt
 {
@@ -19,6 +20,9 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
   /// </summary>
   public static class JwtSecurityConfigurator
   {
+    /// <summary>
+    /// Настраивает JWT-авторизацию
+    /// </summary>
     public static ICompanyHostBuilder UseJwtAuth(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.ConfigureApp(UseAuthentication)
@@ -72,6 +76,8 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
               });
 
       services.AddSingleton<ISecurityContextFactory, JwtSecurityContextFactory>();
+      services.AddSingleton<ISecurityKeysContainer>((x) => GetSecurityKeysContainer(configuration));
+      services.AddSingleton<IJwtTokenReader, JwtTokenReader>();
     }
 
     private static SecurityKeysContainer GetSecurityKeysContainer(IConfiguration configuration)

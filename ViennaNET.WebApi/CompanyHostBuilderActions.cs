@@ -116,11 +116,22 @@ namespace ViennaNET.WebApi
     /// <summary>
     /// Функция для вызова валидации стороннего контейнера
     /// </summary>
-    /// <param name="varifyContainerAction"></param>
+    /// <param name="verifyContainerAction"></param>
     /// <returns></returns>
-    public ICompanyHostBuilder VerifyContainer(Action<object> varifyContainerAction)
+    public ICompanyHostBuilder VerifyContainer(Action<object> verifyContainerAction)
     {
-      _verifyContainerAction = varifyContainerAction;
+      _verifyContainerAction = verifyContainerAction;
+      return this;
+    }
+
+    /// <summary>
+    /// Регистрация сервисов в стороннем DI
+    /// </summary>
+    /// <param name="registerServices"></param>
+    /// <returns></returns>
+    public ICompanyHostBuilder RegisterServices(Action<IServiceCollection, object, IConfiguration> registerServices)
+    {
+      _servicesToRegisterInContainer.Add(registerServices);
       return this;
     }
 

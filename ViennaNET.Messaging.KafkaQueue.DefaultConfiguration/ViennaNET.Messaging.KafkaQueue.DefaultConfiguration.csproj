@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>..\Bin\ViennaNET.Messaging.KafkaQueue.DefaultConfiguration.xml</DocumentationFile>
+    <OutputPath>..\Bin</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.Messaging.KafkaQueue.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector.Packaging" Version="4.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.Messaging.KafkaQueue\ViennaNET.Messaging.KafkaQueue.csproj" />
+  </ItemGroup>
+
+</Project>

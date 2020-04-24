@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
     <ProjectReference Include="..\ViennaNET.Diagnostic\ViennaNET.Diagnostic.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
     <ProjectReference Include="..\ViennaNET.HttpClient\ViennaNET.HttpClient.csproj" />

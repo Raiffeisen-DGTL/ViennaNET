@@ -1,0 +1,9 @@
+﻿{
+  "db": [
+    {
+      "nick": "default",
+      "dbServerType": "SQLite",
+      "ConnectionString": "Data Source=LocalDatabaseTests/test.db;Version=3"
+    }
+  ]
+}

@@ -1,4 +1,20 @@
-# v2.0
+# v0004
+
+### Release Summary
+We have added ICallContext. This abstraction receive and hold some context data such as request id, user name, domain and so on to pass in microservices by different channels: Http-requests and queue messaging.
+SecurityContextFactories now uses this context to build authentication data.
+
+### Breaking Changes
+If you used manual installation of SimpleInjector packages, you will find that DiagnosticPackage is deleted: since this release it register automatically. Just delete DiagnosticPackage registration in your code.
+
+
+# v0003
+
+### Release Summary
+Add more libraries
+
+
+# v0002
 
 ### Release Summary
 The new version of ViennaNET.WebApi. * Was made based on AspNetCore 3, and .NET Core 3.1 is recommended for its use.
@@ -82,8 +98,7 @@ In the new version, the use of composite configurators has become easier, for ex
 3) We update versions of Company libraries to (2. *. *) In all assemblies. Version conflicts with third-party libraries (for example, SimpleInjector) may occur, so they need to be synchronized.
 
 
-# v1.4
-# v1.3
-# v1.2
-# v1.1
-# v1.0
+# v0001
+
+### Release Summary
+MVP Company.Framework on NET Core 2.2

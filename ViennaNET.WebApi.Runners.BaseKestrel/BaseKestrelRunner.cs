@@ -1,4 +1,5 @@
 ﻿using ViennaNET.WebApi.Abstractions;
+using ViennaNET.WebApi.Configurators.CallContext;
 using ViennaNET.WebApi.Configurators.Common;
 using ViennaNET.WebApi.Configurators.Diagnostic;
 using ViennaNET.WebApi.Configurators.HttpClients.Jwt;
@@ -18,12 +19,13 @@ namespace ViennaNET.WebApi.Runners.BaseKestrel
     {
       return CompanyHostBuilder.Create()
                                .UseKestrel()
+                               .UseJwtAuth()
+                               .UseCallContext()
                                .UseCommonModules()
                                .UseSimpleInjector()
                                .UseSwaggerWithJwtAuth()
                                .UseDiagnosing()
-                               .UseJwtHttpClients()
-                               .UseJwtAuth();
+                               .UseJwtHttpClients();
     }
   }
 }

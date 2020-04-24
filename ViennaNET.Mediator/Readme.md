@@ -1,66 +1,57 @@
-# An assembly containing an intermediary implementation for performing service operations
+# Сборка, содержащая реализацию посредника для выполнения операций сервисов
 
-### Key Entities
+### Основные сущности
 
-The main class is **Mediator**. It is an intermediary that allows you to bind different types of messages and their handlers.
+Основной класс - **Mediator**. Представляет собой посредник, позволяющий связывать различные виды сообщений и их обработчики.
 
-**EventCollector** allows for delayed sending through an intermediary.
+**EventCollector** позволяет обеспечить отложенную отправку через посредник. 
 
-#### Instructions for use for processing requests and commands:
+#### Инструкция по применению для обработки запросов и комманд:
 
-1. Add dependency on **IMediator** to the class.
-2. We create or register in the DI class **Mediator**, parameterizing it with collections of synchronous and asynchronous message handlers. The list of handlers should correspond to the expected message types in the service.
-3. In the service methods, call the methods of the SendMessage or SendMessageAsync interface. The broker will automatically forward the message to the appropriate handler.
+1.  Добавляем в класс зависимость от **IMediator**.
+2.  Создаем либо регистрируем в DI класс **Mediator**, параметризуя его коллекциями синхронных и асинхронных обработчиков сообщений. Список обработчиков должен соответствовать ожидаемым в сервисе типам сообщений. 
+3.  В методах сервисов вызываем методы интерфейса SendMessage либо SendMessageAsync. Посредник автоматически направит сообщение соответствующему обработчику. 
 
-### Usage example
+### Пример использования
 
-```csharp
-  public IHttpActionResult Get ()
-  {
-    IEnumerable<ProductModel>products = _mediator
-      .SendMessage<GetProductsRequest, IEnumerable <ProductModel>>(new GetProductsRequest());
+  public IHttpActionResult Get()
+  {
+    IEnumerable<ProductModel> products = _mediator.SendMessage<GetProductsRequest, IEnumerable<ProductModel>>(new GetProductsRequest());
 
-    if (products is null ||! products.Any())
-    {
-      return NotFound();
-    }
-    else
-    {
-      return Ok(products);
-    }
-  }
-```
+    if (products is null || !products.Any())
+    {
+      return NotFound();
+    }
+    else
+    {
+      return Ok(products);
+    }
+  }
 
-#### Application instruction for processing domain events:
+#### Инструкция по применению для обработки доменных событий:
 
-1. Implement in essence the interface **IEntityEventPublisher**. The standard implementation stores an instance of **IEventCollector** in an internal variable.
+1. Реализовать в сущности интерфейс **IEntityEventPublisher**. Стандартная реализация сохраняет экземпляр **IEventCollector** во внутреннюю переменную.
 
-```csharp
-  public class Payroll: IEntityKey<int>, IEntityEventPublisher
-  {
-    private IEventCollector _eventCollector;
+  public class Payroll : IEntityKey<int>, IEntityEventPublisher
+  {
+    private IEventCollector _eventCollector;
 
-    public virtual void SetCollector(IEventCollector eventCollector);
-    {
-      _eventCollector = eventCollector;
-    }
-  }
-```
+    public virtual void SetCollector(IEventCollector eventCollector);
+    {
+      _eventCollector = eventCollector;
+    }
+  }
 
-2. If necessary, publish the event using **IEventCollector**.
+2. При необходимости опубликовать событие с использованием **IEventCollector**. 
 
-```csharp
-  _eventCollector.Enqueue (new PayrollReachesFinalStatusEvent (this));
-```
+  _eventCollector.Enqueue(new PayrollReachesFinalStatusEvent(this));
 
-3. In the application service managing domain entities, implement a unit of work for sending domain events.
+3. В аппликационном сервисе, управляющем доменными сущностями, реализовать единицу работы для отправки доменных событий.
 
-```csharp
-   using (var collector = _eventCollectorFactory.Create())
-   {
-     ...
-     collector.Publish();
-   }
-```
+   using (var collector = _eventCollectorFactory.Create())
+   {
+     ...
+	 collector.Publish();
+   }
 
-For correct event handling, Handlers must be registered in the **Mediator** class.
+Для корректной обработки событий Handlers должны быть зарегистрированы в классе **Mediator**. 

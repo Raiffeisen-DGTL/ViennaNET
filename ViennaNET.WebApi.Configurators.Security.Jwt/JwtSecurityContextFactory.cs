@@ -1,13 +1,12 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using ViennaNET.Logging;
 using ViennaNET.Security;
 using ViennaNET.Utils;
+using ViennaNET.CallContext;
+using ViennaNET.Security.Jwt;
 using ViennaNET.WebApi.Net;
-using ViennaNET.WebApi.Abstractions;
 
 namespace ViennaNET.WebApi.Configurators.Security.Jwt
 {
@@ -16,14 +15,16 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
   /// </summary>
   public class JwtSecurityContextFactory : ISecurityContextFactory
   {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICallContextFactory _callContextFactory;
     private readonly ILoopbackIpFilter _loopbackIpFilter;
+    private readonly IJwtTokenReader _jwtTokenReader;
 
-    public JwtSecurityContextFactory(IHttpContextAccessor httpContextAccessor,
-                                     ILoopbackIpFilter loopbackIpFilter)
+    public JwtSecurityContextFactory(
+      ICallContextFactory callContextFactory, ILoopbackIpFilter loopbackIpFilter, IJwtTokenReader jwtTokenReader)
     {
-      _httpContextAccessor = httpContextAccessor.ThrowIfNull(nameof(httpContextAccessor));
+      _callContextFactory = callContextFactory.ThrowIfNull(nameof(callContextFactory));
       _loopbackIpFilter = loopbackIpFilter.ThrowIfNull(nameof(loopbackIpFilter));
+      _jwtTokenReader = jwtTokenReader.ThrowIfNull(nameof(jwtTokenReader));
     }
 
     /// <summary>
@@ -33,53 +34,30 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
     /// <returns>Контекст с данными пользователя</returns>
     public ISecurityContext Create()
     {
-      var context = _httpContextAccessor.HttpContext;
-      var identity = context?.User?.Identity;
-      if (identity is null || !identity.IsAuthenticated)
+      var callContext = _callContextFactory.Create();
+
+      var permissions = GetPermissions(callContext);
+      var ip = _loopbackIpFilter.FilterIp(callContext.RequestCallerIp);
+
+      return new SecurityContext(callContext.UserId, ip, permissions);
+    }
+
+    private string[] GetPermissions(ICallContext callContext)
+    {
+      var callContextPrincipal = _jwtTokenReader.Read(callContext.AuthorizeInfo);
+      if (callContextPrincipal != null)
       {
-        // NOTE: Данная ситуация возможна только при наличии AllowAnonymous-аттрибута
-        Logger.LogWarning("Invalid token");
-        identity = null;
+        return ExtractPermissions(callContextPrincipal.Claims);
       }
 
-      var username = string.Empty;
-      var permissions = new string[0];
+      return new string[0];
+    }
 
-      if (identity != null)
-      {
-        username = context.User?.Claims
-                          ?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)
-                          ?.Value;
-
-        var contextPermissions = context.User?.Claims
-                                              ?.Where(x => x.Type == ClaimTypes.Role)
-                                              .Select(x => x.Value)
-                                              .ToArray();
-        if (contextPermissions != null)
-        {
-          permissions = contextPermissions;
-        }
-      }
-
-      var request = context?.Request;
-
-      if (string.IsNullOrEmpty(username))
-      {
-        username = request != null && request.Headers.Keys.Contains(CompanyHttpHeaders.UserId)
-          ? request.Headers[CompanyHttpHeaders.UserId]
-                   .ToString()
-          : Environment.UserName;
-      }
-
-      var ip = request != null && request.Headers.Keys.Contains(CompanyHttpHeaders.RequestHeaderCallerIp)
-        ? context.Request.Headers[CompanyHttpHeaders.RequestHeaderCallerIp]
-                 .ToString()
-        : context?.Connection?.RemoteIpAddress?.MapToIPv4()
-                 .ToString();
-
-      ip = _loopbackIpFilter.FilterIp(ip);
-
-      return new SecurityContext(username, ip, permissions);
+    private string[] ExtractPermissions(IEnumerable<Claim> claims)
+    {
+      return claims.Where(x => x.Type == ClaimTypes.Role)
+                   .Select(x => x.Value)
+                   .ToArray();
     }
 
     /// <summary>

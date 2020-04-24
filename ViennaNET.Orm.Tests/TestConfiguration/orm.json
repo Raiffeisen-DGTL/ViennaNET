@@ -1,0 +1,25 @@
+﻿{
+  "db": [
+    {
+      "nick": "default",
+      "dbServerType": "DB2",
+      "ConnectionString": "Server=ReServer:50000;Database=ReDatabase;UserID=ReUser;Password=RePassword;CurrentSchema=ReSchema;",
+      "useCallContext": true
+    },
+    {
+      "nick": "mssql",
+      "dbServerType": "MSSQL",
+      "ConnectionString": "Server=ReServer,1433;Database=ReDatabase;User ID=ReUser;Password=RePassword;"
+    },
+    {
+      "nick": "oracle",
+      "dbServerType": "Oracle",
+      "ConnectionString": ""
+    },
+    {
+      "nick": "postgresql",
+      "dbServerType": "PostgreSql",
+      "ConnectionString": ""
+    }
+  ]
+}

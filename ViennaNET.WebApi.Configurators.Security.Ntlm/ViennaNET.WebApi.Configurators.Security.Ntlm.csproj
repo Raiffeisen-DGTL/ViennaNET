@@ -12,10 +12,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Net\ViennaNET.WebApi.Net.csproj" />
     <ProjectReference Include="..\ViennaNET.Security\ViennaNET.Security.csproj" />

@@ -1,0 +1,1 @@
+﻿# An assembly containing the configuration of the interfaces and their implementations for the ViennaNET.Messaging assembly using SimpleInjector.

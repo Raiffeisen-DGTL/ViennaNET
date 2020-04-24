@@ -16,7 +16,8 @@ obj/
 /paket.lock
 
 /TestResult/
+bin
 
 NuGet.Config
-/Bin
-/Examples/*/bin/*
+
+*/TestResult/*

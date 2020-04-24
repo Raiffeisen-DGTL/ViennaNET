@@ -78,6 +78,13 @@ namespace ViennaNET.WebApi.Abstractions
     ICompanyHostBuilder RegisterServices(Action<IServiceCollection, IConfiguration> registerServices);
 
     /// <summary>
+    /// Регистрация сервисов в стандартном и/или стороннем DI
+    /// </summary>
+    /// <param name="registerServices"></param>
+    /// <returns></returns>
+    ICompanyHostBuilder RegisterServices(Action<IServiceCollection, object, IConfiguration> registerServices);
+
+    /// <summary>
     /// Функция для создания объекта DI-контейнера. Если не была вызвана, то используется встроенный контейнер
     /// </summary>
     /// <param name="createContainerAction"></param>
@@ -87,9 +94,9 @@ namespace ViennaNET.WebApi.Abstractions
     /// <summary>
     /// Функция для вызова валидации стороннего контейнера
     /// </summary>
-    /// <param name="varifyContainerAction"></param>
+    /// <param name="verifyContainerAction"></param>
     /// <returns></returns>
-    ICompanyHostBuilder VerifyContainer(Action<object> varifyContainerAction);
+    ICompanyHostBuilder VerifyContainer(Action<object> verifyContainerAction);
 
     /// <summary>
     /// Настройка сервера

@@ -12,24 +12,17 @@ Non-configurable features:
 *  JSON-configuration
 
 #### Minimal service setup and launch:
-1.  Create a simple console app, using .Net Core or Framework template.
+1.  Create a simple console app, using .NET Core or Framework template.
 2.  Add configuration file **appsettings.json** (as you can see, it only contains enabled swagger feature):
 
-```
-{
-  "webApiConfiguration": {
-	"swaggerSubmit": true
-  }
-}
-```
+		{
+		  "webApiConfiguration": {
+			"swaggerSubmit": true
+		  }
+		}
 
 3.  In Program.cs create HostBuilder object, using Create() method.
-4.  As web server is not specified by default, you need to configure it. Ex: for using Kestrel (no additional packages are needed, as Microsoft included it in basic AspNetCore) with base settings you are to call builder method: 
-
-```csharp
-UseServer((b, c) => { b.UseKestrel(); })
-```
-
+4.  As web server is not specified by default, you need to configure it. Ex: for using Kestrel (no additional packages are needed, as Microsoft included it in basic AspNetCore) with base settings you are to call builder method **UseServer((b, c) => { b.UseKestrel(); })**.
 5.  Call BuildWebHost()
 6.  Call Run()
 
@@ -67,14 +60,12 @@ To get request and response metrics, you have these endpoints:
 
 To enable monitoring, you need to add this section in app configuration file:
 
-```
-{
-  "metrics": {
-     "enabled": true,
-     "reporter": "default"
-  }
-}
-```
+		{
+		  "metrics": {
+			"enabled": true,
+            "reporter": "default"
+		  }
+		}
 
 **enabled** - enable/disable metrics collection (false by default)
 **reporter** - optional, answer format:

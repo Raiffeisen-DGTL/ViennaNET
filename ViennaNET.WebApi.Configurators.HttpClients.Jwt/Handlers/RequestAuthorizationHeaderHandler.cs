@@ -3,8 +3,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using ViennaNET.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
+using ViennaNET.CallContext;
 
 namespace ViennaNET.WebApi.Configurators.HttpClients.Jwt.Handlers
 {
@@ -13,43 +13,33 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Jwt.Handlers
   /// </summary>
   public class RequestAuthorizationHeaderHandler : DelegatingHandler
   {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ICallContextFactory _callContextFactory;
 
-    public RequestAuthorizationHeaderHandler(IHttpContextAccessor httpContextAccessor)
+    public RequestAuthorizationHeaderHandler(ICallContextFactory callContextFactory)
     {
-      _httpContextAccessor = httpContextAccessor.ThrowIfNull(nameof(httpContextAccessor));
+      _callContextFactory = callContextFactory.ThrowIfNull(nameof(callContextFactory));
     }
 
     private static void SetHeaderParameter(
-      HttpRequestMessage request, string headerId, HttpRequest incomingRequest, Func<HttpRequest, string> getParameter)
+      HttpRequestMessage request, string headerId, ICallContext callContext, Func<ICallContext, string> getParameter)
     {
       if (request.Headers.Contains(headerId))
       {
         request.Headers.Remove(headerId);
       }
 
-      var parameter = getParameter(incomingRequest);
+      var parameter = getParameter(callContext);
       if (!string.IsNullOrEmpty(parameter))
       {
         request.Headers.Add(headerId, parameter);
       }
     }
 
-    private static string GetAuthHeader(HttpRequest incomingRequest)
-    {
-      // TODO: нужно ли здесь ходить в security за токеном, если да, то как? NTLMа то нет.
-      return incomingRequest != null
-        ? incomingRequest.Headers[HeaderNames.Authorization]
-          .ToString()
-        : string.Empty;
-    }
-
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-      var context = _httpContextAccessor.HttpContext;
-      var incomingRequest = context?.Request;
+      var context = _callContextFactory.Create();
 
-      SetHeaderParameter(request, HeaderNames.Authorization, incomingRequest, GetAuthHeader);
+      SetHeaderParameter(request, HeaderNames.Authorization, context, x => x.AuthorizeInfo);
 
       return await base.SendAsync(request, cancellationToken);
     }

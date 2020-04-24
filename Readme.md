@@ -1,7 +1,5 @@
 # Repo, containing .NET Standard based infrastructure libs
 
-[![Actions Status](https://github.com/Raiffeisen-DGTL/ViennaNET/workflows/.NET%20Core/badge.svg)](https://github.com/Raiffeisen-DGTL/ViennaNET/actions)
-
 ### Table of contents
 
 #### ArcSight
@@ -12,6 +10,23 @@
 *  [**ViennaNET.Mediator**](ViennaNET.Mediator) - implementation of the internal message bus
 *  **ViennaNET.Mediator.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 *  [**ViennaNET.Mediator.Seedwork**](ViennaNET.Mediator.Seedwork) - assembly with interfaces
+
+#### DAL
+*  [**ViennaNET.Orm**](ViennaNET.Orm) - DAL, wrapper over NHibernate
+*  **ViennaNET.Orm.DefaultConfiguration** - build integration into the project through SimpleInjector
+*  [**ViennaNET.Orm.Seedwork**](ViennaNET.Orm.Seedwork) - assembly with interfaces
+
+> MSSql:
+> *  [**ViennaNET.Orm.MSSQL**](ViennaNET.Orm.MSSQL) - connection of the MSSql driver
+> *  **ViennaNET.Orm.MSSQL.DefaultConfiguration** - build integration into the project through SimpleInjector
+
+> Oracle:
+> *  [**ViennaNET.Orm.Oracle**](ViennaNET.Orm.Oracle) - connecting the Oracle driver
+> *  **ViennaNET.Orm.Oracle.DefaultConfiguration** - build integration into the project through SimpleInjector
+
+> SQLite:
+> *  [**ViennaNET.Orm.SQLite**](ViennaNET.Orm.SQLite) - connecting the SQLite driver
+> *  **ViennaNET.Orm.SQLite.DefaultConfiguration** - build integration into the project through SimpleInjector
 
 
 #### Redis
@@ -36,4 +51,3 @@
 * **ViennaNET.Utils** - contains useful extension methods and attributes
 * [**ViennaNET.Validation**](ViennaNET.Validation) - implementation of validation services
 * **ViennaNET.Specifications** - library for creating and using specifications
-* [**ViennaNET.Sagas**](ViennaNET.Sagas) - basic implementation of the sagas mechanism

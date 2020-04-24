@@ -1,9 +1,7 @@
-﻿# Build to connect SimpleInjector as DI/IoC to the application
+﻿# Сборка, обеспечивающая подключение SimpleInjector в качестве DI/IoC в приложение
 
-For the configurator to work correctly in the .csproj assembly with the service, you must add the line
+Для корректной работы конфигуратора в .csproj сборки с сервисом необходимо добавить строку
+     
+     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
-```
-      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-```
-
-It requires during assembly to copy assemblies from downloaded nuget packages to the output folder so that SimpleInjector can see them and register services in the container.
+Она предписывает при сборке копировать сборки из скачанных nuget-пакетов в выходную папку, чтобы SimpleInjector смог их увидеть и зарегистрировать сервисы в контейнере.

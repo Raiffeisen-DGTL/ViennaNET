@@ -1,62 +1,58 @@
-# Build to connect the service to ArcSight. Contains classes that allow you to send a standard message in CEF format to the data channel.
+# Сборка для подключения сервиса к ArcSight. Содержит классы, позволяющие отправить стандартное сообщение в формате CEF в канал передачи данных.
 
-### Key Entities
+### Основные сущности
 
-The main class is **ArcSightClient**. It allows you to serialize the incoming message in the format specified by the settings.
+Основной класс - **ArcSightClient**. Он позволяет сериализовать входящее сообщение в формат, заданный настройками.
 
-Settings specified in the configuration:
-* Domain name of the server to which data is transmitted
-* Server port
-* Data serialization protocol version
-* Type of transport protocol
+Настройки, задаваемые в конфигурации:
+*  Доменное имя сервера, на который передаются данные
+*  Порт сервера
+*  Версия протокола сериализации данных
+*  Тип транспортного протокола
 
-For sending, the CefMessage class is used. The class contains all the information needed to identify an incident with ArcSight. In case of an entity validation error, an exception **CefMessageValidationException** is thrown
+Для отправки используется класс CefMessage. Класс содержит всю информацию, необходимую для идентификации инцидента системой ArcSight. В случае ошибки валидации сущности возникает исключение **CefMessageValidationException**
 
-#### Instructions for use:
-1. Add a dependency on **IArcSightClient** to the class.
-2. Add the configuration file **appsettings.json**,
+#### Инструкция по применению:
+1.  Добавляем в класс зависимость от **IArcSightClient**.
+2.  Добавляем файл конфигурации **appsettings.json**,  
 
-```
-{
-"arcSight": {
-           "serverHost": "localhost",
-           "serverPort": "60",
-           "syslogVersion": "rfc3164",
-           "protocol": "tcp" }
-}
-```
+		{
+		 "arcSight": {
+           "serverHost": "localhost",
+           "serverPort": "60",
+           "syslogVersion": "rfc3164",
+           "protocol": "tcp"
+		}
 
-3. Create an instance of the **CefMessage** class. The message is automatically validated upon creation.
-4. Calls the **Send** method of the interface **IArcSightClient**, passing the message created in step 3 there.
+3.  Создаем экземпляр класса **CefMessage**. Сообщение автоматически валидируется при создании.
+4.  Вызывает метод **Send** интерфейса **IArcSightClient**, передав туда созданное на шаге 3 сообщение.
 
-### Usage example
+### Пример использования
 
-```csharp
-  public class ArcSightSendingService: IArcSightSendingService
-  {
-    private readonly IArcSightClient _arcSightClient;
-    private readonly IMapperFactory _mapperFactory;
+  public class ArcSightSendingService : IArcSightSendingService
+  {
+    private readonly IArcSightClient _arcSightClient;
+    private readonly IMapperFactory _mapperFactory;
 
-    public ArcSightSendingService (IArcSightClient arcSightClient, IMapperFactory mapperFactory)
-    {
-      _arcSightClient = arcSightClient.ThrowIfNull("arcSightClient");
-      _mapperFactory = mapperFactory.ThrowIfNull("mapperFactory");
-    }
+    public ArcSightSendingService(IArcSightClient arcSightClient, IMapperFactory mapperFactory)
+    {
+      _arcSightClient = arcSightClient.ThrowIfNull("arcSightClient");
+      _mapperFactory = mapperFactory.ThrowIfNull("mapperFactory");
+    }
 
-    public void SendViewingEvent(LoggingMessage message)
-    {
-      var mapper = _mapperFactory.Create<LoggingMessage, ICollection <CEFMessage>>();
+    public void SendViewingEvent(LoggingMessage message)
+    {
+      var mapper = _mapperFactory.Create<LoggingMessage, ICollection<CEFMessage>>();
 
-      var cefMessages = mapper.Map(message);
+      var cefMessages = mapper.Map(message);
 
-      foreach (var cefMessage in cefMessages)
-      {
-        _arcSightClient.Send(cefMessage);
-      }
-    }
-  }
-```
+      foreach (var cefMessage in cefMessages)
+      {
+        _arcSightClient.Send(cefMessage);
+      }
+    }
+  }
 
-### Syslog Serialization Formats
-* RFC 3164
-* RFC 5424
+### Форматы сериализации Syslog
+*  RFC 3164
+*  RFC 5424

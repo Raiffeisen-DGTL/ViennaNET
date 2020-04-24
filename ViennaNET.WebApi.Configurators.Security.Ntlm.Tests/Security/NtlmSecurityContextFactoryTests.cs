@@ -6,6 +6,7 @@ using ViennaNET.WebApi.Net;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
+using ViennaNET.CallContext;
 
 namespace ViennaNET.WebApi.Configurators.Security.Ntlm.Tests.Security
 {
@@ -20,11 +21,13 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm.Tests.Security
       var fakeHttpContext = new Mock<IHttpContextAccessor>();
       var fakeHttpClientFactory = new Mock<IHttpClientFactory>();
       var fakeLoopbackIpFilter = new Mock<ILoopbackIpFilter>();
+      var fakeCallContextFactory = new Mock<ICallContextFactory>();
 
       // act
       var factory = new NtlmSecurityContextFactory(fakeHttpContext.Object, 
                                                    fakeHttpClientFactory.Object, 
-                                                   fakeLoopbackIpFilter.Object);
+                                                   fakeLoopbackIpFilter.Object,
+                                                   fakeCallContextFactory.Object);
       var result = factory.Create();
 
       // assert
@@ -41,9 +44,11 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm.Tests.Security
       // arrange
       var fakeHttpClientFactory = new Mock<IHttpClientFactory>();
       var fakeRequest = new Mock<HttpRequest>();
-      var fakeHeaders = new HeaderDictionary();
-      fakeHeaders.Add(CompanyHttpHeaders.UserId, "hamster");
-      fakeHeaders.Add(CompanyHttpHeaders.RequestHeaderCallerIp, "some IP");
+      var fakeHeaders = new HeaderDictionary
+      {
+        { CompanyHttpHeaders.UserId, "hamster" },
+        { CompanyHttpHeaders.RequestHeaderCallerIp, "some IP" }
+      };
       fakeRequest.Setup(x => x.Headers)
                  .Returns(fakeHeaders);
       var fakeContext = new Mock<HttpContext>();
@@ -56,11 +61,13 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm.Tests.Security
       var fakeHttpContextAccessor = new Mock<IHttpContextAccessor>();
       fakeHttpContextAccessor.Setup(x => x.HttpContext)
                              .Returns(fakeContext.Object);
+      var fakeCallContextFactory = new Mock<ICallContextFactory>();
 
       // act
       var factory = new NtlmSecurityContextFactory(fakeHttpContextAccessor.Object, 
                                                    fakeHttpClientFactory.Object, 
-                                                   fakeLoopbackIpFilter.Object);
+                                                   fakeLoopbackIpFilter.Object,
+                                                   fakeCallContextFactory.Object);
       var result = factory.Create();
 
       // assert

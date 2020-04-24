@@ -11,7 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.CallContext\ViennaNET.WebApi.Configurators.CallContext.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Diagnostic\ViennaNET.WebApi.Configurators.Diagnostic.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Configurators.HttpClients.Jwt\ViennaNET.WebApi.Configurators.HttpClients.Jwt.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Kestrel\ViennaNET.WebApi.Configurators.Kestrel.csproj" />

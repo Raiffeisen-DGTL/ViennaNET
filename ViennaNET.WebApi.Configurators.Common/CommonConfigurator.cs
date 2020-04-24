@@ -24,7 +24,7 @@ namespace ViennaNET.WebApi.Configurators.Common
     public static ICompanyHostBuilder UseCommonModules(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.ConfigureApp(ConfigureLogger)
-                               .ConfigureApp(ConfigureCompanyMiddleware)
+                               .ConfigureApp(ConfigureLoggerMiddleware)
                                .RegisterServices(RegisterCommonServices);
     }
 
@@ -59,10 +59,9 @@ namespace ViennaNET.WebApi.Configurators.Common
     /// <param name="configuration"></param>
     /// <param name="env"></param>
     /// <param name="container"></param>
-    internal static void ConfigureCompanyMiddleware(
+    internal static void ConfigureLoggerMiddleware(
       IApplicationBuilder builder, IConfiguration configuration, IHostEnvironment env, object container)
     {
-      builder.UseMiddleware<RequestRegistrationMiddleware>();
       builder.UseMiddleware<SetUpLoggerMiddleware>();
       builder.UseMiddleware<LogRequestAndResponseMiddleware>();
     }

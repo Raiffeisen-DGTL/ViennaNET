@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.CallContext\ViennaNET.WebApi.Configurators.CallContext.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Diagnostic\ViennaNET.WebApi.Configurators.Diagnostic.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Configurators.HttpClients.Ntlm\ViennaNET.WebApi.Configurators.HttpClients.Ntlm.csproj" />
     <ProjectReference Include="..\ViennaNET.WebApi.Configurators.HttpSys\ViennaNET.WebApi.Configurators.HttpSys.csproj" />

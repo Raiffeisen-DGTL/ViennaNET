@@ -1,9 +1,9 @@
-# Build with basic domain model interfaces for creating domain events.
+# Сборка с базовыми интерфейсами доменной модели для создания доменных событий.
 
-### Interface Description
+### Описание интерфейсов
 
-* **IEntityEventPublisher** is an entity interface that allows it to send domain events.
-* **IEvent** is a marker interface, all domain events must implement it.
-* **IEventCollector** - message collector interface. Its implementation is passed to the entity for deferred publication of events.
-* **IEventCollectorFactory** - factory interface for creating a message collector.
-* **IMessage** - the basic message interface. Specific entity interfaces that can be processed by the mediator are inherited from it. For example **IEvent**
+*  **IEntityEventPublisher** - интерфейс сущности, позволяющий ей отправлять доменные события.
+*  **IEvent** - интерфейс-маркер, все доменные события должны его реализовать.
+*  **IEventCollector** - интерфейс сборщика сообщений. Его реализация передается сущности для отложенной публикации событий. 
+*  **IEventCollectorFactory** - интерфейс фабрики для создания сборщика сообщений. 
+*  **IMessage** - базовый интерфейс сообщения. От него наследуются конкретные интерфейсы сущностей, которые могут быть обработаны медиатором. Например, **IEvent**
