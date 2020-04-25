@@ -1,4 +1,4 @@
-name: .NET Core
+name: Publish packages
 
 on: [repository_dispatch]
 
