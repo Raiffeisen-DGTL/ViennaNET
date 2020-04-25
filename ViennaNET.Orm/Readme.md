@@ -20,12 +20,13 @@
 1. Add a dependency on **IEntityFactoryService** to the class.
 2. Add the configuration file **appsettings.json**,
 
-```
+```json
     "db": [
       {
         "nick": "default",
         "dbServerType": "DB2",
-        "ConnectionString": "Database = DBNAME; UserID = user_name; Server = servername: 50000; CurrentSchema = SCHEME;",
+        "ConnectionString": 
+            "Database = DBNAME; UserID = user_name; Server = servername: 50000; CurrentSchema = SCHEME;",
         "useCallContext": true
       },
       {
@@ -45,21 +46,21 @@ For each connection to the database, a separate list item is created containing 
 
 3a. If you just need to read the entity from the database, then just create a repository and call the Get method, passing the Id into it.
 
-```
+```csharp
 return _entityFactoryService.Create<Entity>()
                                 .Get(message.Id);
 ```
 
 3b. If you want to read database entities with filtering, you can use the LINQ query.
 
-```
+```csharp
     return _entityFactoryService.Create<Entity>()
-                                .Query().Where(x => x.Status == EntityStatus.Processed && x.UpdateDate < DateTime.Today);
+           .Query().Where(x => x.Status == EntityStatus.Processed && x.UpdateDate < DateTime.Today);
 ```
 
 4a. In the event of an entity change, a unit of work must be created. Changes in the fields of an entity must occur in it.
 
-```
+```csharp
      using (var unitOfWork = _entityFactoryService.Create())
      {
        var entity = _entityFactoryService.Create<Entity>().Get(message.Id);
@@ -72,7 +73,7 @@ return _entityFactoryService.Create<Entity>()
 
 4b. If an entity is created, use the Add method to add it.
 
-```
+```csharp
      using (var unitOfWork = _entityFactoryService.Create())
      {
        var entityRepository = _entityFactoryService.Create<Entity>();
@@ -89,7 +90,7 @@ return _entityFactoryService.Create<Entity>()
 
 5. You can delete an entity using the Delete method.
 
-```
+```csharp
      using (var unitOfWork = _entityFactoryService.Create())
      {
        var entityRepository = _entityFactoryService.Create<Entity>();
@@ -104,7 +105,7 @@ return _entityFactoryService.Create<Entity>()
 
 6. When processing in manually created tasks, it is additionally necessary to create scope sessions. Without this, exceptions will occur during operation.
 
-```
+```csharp
     return await Task.Run(() =>
     {
       using (_entityFactoryService.GetScopedSession())
@@ -117,7 +118,7 @@ return _entityFactoryService.Create<Entity>()
 
 7. For the correct operation of the entity must be registered in a limited context of the service. To do this, create a class in the assembly
 
-```
+```csharp
     internal sealed class TestLogicsContext: ApplicationContext
     {
       public TestLogicsContext()
@@ -130,7 +131,7 @@ return _entityFactoryService.Create<Entity>()
 
 and register it in the DI with the IBoundedContext interface.
 
-```
+```csharp
     container.Collection.Append<IBoundedContext, TestLogicsContext>(Lifestyle.Singleton);
 ```
 
@@ -138,7 +139,7 @@ and register it in the DI with the IBoundedContext interface.
 
 To create a SQL query to the database, you need to create a query class.
 
-```
+```csharp
     internal class EntityDetailsQuery : BaseQuery<EntityDetailsItem>
     {
       private const string query = @"SELECT FIELD, ANOTHER_FIELD
@@ -162,7 +163,7 @@ To create a SQL query to the database, you need to create a query class.
 
 Next, you need to create a query executor and call it with the created instance of the command.
 
-```
+```csharp
     var query = new EntityDetailsQuery("keyData");
 
     var customQueryExecutor = _entityFactoryService.CreateCommandExecutor<EntityDetails>();
@@ -174,7 +175,7 @@ Next, you need to create a query executor and call it with the created instance 
 
 To create an SQL command to the database, you need to create a command class.
 
-```
+```csharp
     public class EntityCommand: BaseCommand
     {
       private EntityCommand()
@@ -198,7 +199,7 @@ To create an SQL command to the database, you need to create a command class.
 
 Next, you need to create an executor of commands and call it with the created instance of the command.
 
-```
+```csharp
     var command = new EntityCommand(123456);
 
     var commandExecutor = _entityFactoryService.CreateCommandExecutor<EntityCommand>();
