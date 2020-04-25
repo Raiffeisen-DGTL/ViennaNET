@@ -387,7 +387,7 @@ namespace ViennaNET.Orm.Tests.Unit.Factories
         Assert.That(session.Object.DefaultReadOnly);
         session.Verify(x => x.Clear(), Times.Once);
         transaction.Verify(x => x.RollbackAsync(default(CancellationToken)), Times.Never);
-        session.Verify(x => x.Dispose(), Times.Once);
+        session.Verify(x => x.Dispose(), Times.AtLeastOnce);
       });
     }
 
