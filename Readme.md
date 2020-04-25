@@ -36,7 +36,7 @@
 *  **ViennaNET.Redis.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 #### WebApi
-*  [**ViennaNET.WebApi**](ViennaNET.WebApi) - main service library. Contains WebApi-service builder with common AspNetCore & Swagger features enabled
+*  [**ViennaNET.WebApi**](ViennaNET.WebApi) - WebApi-service builder with common AspNetCore & Swagger features enabled
 *  **ViennaNET.HttpClient** - Http-client builder, integrated in standard AspNetCore DI-container
 
 #### Security
