@@ -3,4 +3,4 @@
 ### Key Entities
 
 * **PostgreSqlSessionFactoryProvider**. It configures NHibernate parameters to create **SessionFactory** for the PostgreSql database.
-* **PostgreSqlSessionFactoryProviderGetter**. Factory to create ***PostgreSqlSessionFactoryProvider**.
+* **PostgreSqlSessionFactoryProviderGetter**. Factory to create **PostgreSqlSessionFactoryProvider**.
