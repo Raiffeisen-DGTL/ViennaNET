@@ -3,9 +3,9 @@
 ### Key Entities
 
 * **SessionFactoryProvider** - performs the following functions:
-  1. Configures the basic parameters of NHibernate.
-  1. Registers entity mappings. Supports Fluent syntax.
-  1. Based on 1 and 2 points creates **SessionFactory**.
+1. Configures the basic parameters of NHibernate.
+1. Registers entity mappings. Supports Fluent syntax.
+1. Based on 1 and 2 points creates **SessionFactory**.
 
 * **ScopedSessionManager** - provides the life cycle of NHibernate sessions within a web request. It is an analog of the Nhibernate session context. Created because none of the contexts is fully suitable for solving the problem.
 
@@ -20,7 +20,7 @@
 1. Add a dependency on **IEntityFactoryService** to the class.
 2. Add the configuration file **appsettings.json**,
 
-```
+```javascript
     "db": [
       {
         "nick": "default",
