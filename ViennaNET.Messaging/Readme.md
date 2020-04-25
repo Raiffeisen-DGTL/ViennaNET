@@ -10,18 +10,25 @@ This dependency is a component factory and returns objects that implement the ID
 
 > Example of receiving a message:
 
+```csharp
     using (var receiver = _messagingComponentFactory.CreateMessageReceiver<TestMessage>("testQueue"))
     {
         var message = receiver.Receive();
     }
+```
+
 > Example of sending a message:
 
+```csharp
     using (var sender = _messagingComponentFactory.CreateMessageSender<TestMessage>("testQueue"))
     {
         sender.SendMessage(new TestMessage {Value = message});
     }
+```
+
 > To implement listening on the queue, you must implement the IQueueReactorFactory dependency. In a class with an embedded dependency, you need to create an IQueueReactor instance using this factory and start listening, after registering IMessageProcessor message handlers in it:
 
+```csharp
     private readonly IQueueReactor _queueReactor;
     public TestClass (IQueueReactorFactory queueReactorFactory)
     {
@@ -29,8 +36,11 @@ This dependency is a component factory and returns objects that implement the ID
       _queueReactor = _queueReactorFactory.CreateQueueReactor("testQueue");
       _queueReactor.StartProcessing();
     }
+```
+
 > Example of a message handler class and message class:
 
+```csharp
         public class TestMessageProcessor: IMessageProcessor
         {
             public bool Process(BaseMessage message)
@@ -46,15 +56,18 @@ This dependency is a component factory and returns objects that implement the ID
         {
             public string Value {get; set; }
         }
+```
 
 > In your assembly that uses libraries for working with queues, you need to register the XmlMessageSerializer<T> implementation of the IMessageSerializer and IMessageDeserializer interfaces for messages used in your business logic and implemented in your assemblies in the installer for the IoC container.
 > Registration example:
 
+```csharp
 public void RegisterServices(Container container)
 {
-container.Collection.Append<IMessageSerializer, XmlMessageSerializer<TestMessage>>(Lifestyle.Singleton);
-container.Collection.Append<IMessageDeserializer, XmlMessageSerializer<TestMessage>>(Lifestyle.Singleton);
+  container.Collection.Append<IMessageSerializer, XmlMessageSerializer<TestMessage>>(Lifestyle.Singleton);
+  container.Collection.Append<IMessageDeserializer, XmlMessageSerializer<TestMessage>>(Lifestyle.Singleton);
 }
+```
 ___
 ___
 ___
@@ -73,13 +86,16 @@ ___
 * **MessagingConfiguration** - Configuration section. It contains the necessary information for the library.
 Section in the configuration file:
 
+```javascript
 "messaging": { "ApplicationName": <name of the application performing work with queues> }
+```
 
 * **QueueConfigurationBase** - The base class of the configuration section. It contains the necessary information to work with all types of queues.
 
 * **CustomHeader** - Configuration section. Contains information on additional headers for working with queues in key-value format.
  Section in the configuration file:
 
+```javascript
         "<queue type name>": [{
         ...
             "customHeaders": {
@@ -87,6 +103,8 @@ Section in the configuration file:
                     {"key": "<title name>", "value": "<title value>"}]
             }
         }
+```
+
 _________________
 ##### Enumerations Used in the Configuration
 * **MessageProcessingType** - type of processing for listening to the queue. Values:
