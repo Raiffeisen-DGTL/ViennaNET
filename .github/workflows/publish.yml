@@ -31,4 +31,4 @@ jobs:
       if: github.event_name == 'repository_dispatch'
       run: |
         dotnet pack --no-build -c Release -p:PackageVersion=${{ steps.gitversion.outputs.majorMinorPatch }}.${{ steps.gitversion.outputs.commitsSinceVersionSource }}
-        dotnet nuget push ./Bin/**/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.nugetPushKey}} --skip-duplicate --no-symbols true
+        dotnet nuget push ./Bin/**/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.nugetKey}} --skip-duplicate --no-symbols true
