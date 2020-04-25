@@ -51,3 +51,4 @@
 * **ViennaNET.Utils** - contains useful extension methods and attributes
 * [**ViennaNET.Validation**](ViennaNET.Validation) - implementation of validation services
 * **ViennaNET.Specifications** - library for creating and using specifications
+* [**ViennaNET.Sagas**](ViennaNET.Sagas) - basic implementation of the sagas mechanism
