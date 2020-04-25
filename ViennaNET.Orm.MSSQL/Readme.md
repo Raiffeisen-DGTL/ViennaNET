@@ -3,4 +3,4 @@
 ### Key Entities
 
 * **MsSqlSessionFactoryProvider**. It configures NHibernate parameters to create **SessionFactory** for the MS SQL database.
-* **MsSqlSessionFactoryProviderGetter**. Factory to create ***MsSqlSessionFactoryProvider**.
+* **MsSqlSessionFactoryProviderGetter**. Factory to create **MsSqlSessionFactoryProvider**.
