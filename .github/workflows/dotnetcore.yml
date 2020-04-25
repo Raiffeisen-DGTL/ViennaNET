@@ -1,6 +1,6 @@
 name: .NET Core
 
-on: [repository_dispatch, push, pull_request]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -27,9 +27,3 @@ jobs:
       run: dotnet publish -c Release -p:Version=${{ steps.gitversion.outputs.majorMinorPatch }}.${{ steps.gitversion.outputs.commitsSinceVersionSource }} --self-contained false
     - name: Test
       run: dotnet test --no-build --filter "TestCategory=Unit" --logger "nunit;LogFilePath=TestResult-{assembly}.xml"
-    - name: Publish
-      if: github.event_name == 'repository_dispatch'
-      run: |
-        dotnet pack --no-build -c Release -p:PackageVersion=${{ steps.gitversion.outputs.majorMinorPatch }}.${{ steps.gitversion.outputs.commitsSinceVersionSource }}
-        dotnet nuget push ./Bin/**/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.nugetPushKey}} --skip-duplicate --no-symbols true
-    
