@@ -8,6 +8,7 @@ ___
 
  Section in the configuration file:
 
+```javascript
        "kafka": {
          "queues": [
            {
@@ -35,3 +36,4 @@ ___
            }
          ]
        }
+```       
