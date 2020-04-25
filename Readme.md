@@ -37,8 +37,6 @@
 
 #### WebApi
 *  [**ViennaNET.WebApi**](ViennaNET.WebApi) - main service library. Contains WebApi-service builder with common AspNetCore & Swagger features enabled
-*  [**ViennaNET.WebApi.DefaultConfiguration**](ViennaNET.WebApi.DefaultConfiguration) - all-in-one app configuration tools (Kestrel, SimpleInjector, log4net, JWT, Middleware, Handlers, etc ) and a pre-configured builder
-*  [**ViennaNET.WebApi.DefaultHttpSysRunner**](ViennaNET.WebApi.DefaultHttpSysRunner) - Windows web-api configuration tools with integrated NTLM auth and run-as-windows-service hosting
 *  **ViennaNET.HttpClient** - Http-client builder, integrated in standard AspNetCore DI-container
 
 #### Security
