@@ -7,11 +7,12 @@ ___
 
  Section in the configuration file:
 
+```javascript
         "rabbitmq": {
           "queues": [
             {
               "id": "<queue identifier>", // as a rule, the name of the queue is indicated
-              "processingtype": "<processing type to listen on the queue>", // one of the values ​​of MessageProcessingType
+              "processingtype": "<processing type to listen on the queue>", // one of the values of MessageProcessingType
               "server": "<queue server>",
               "port": "<queue connection port>",
               "queuename": "<queue name>",
@@ -28,6 +29,7 @@ ___
             }
           ]
         }
+```
 
 > RabbitMQ configuration features
 > * exchangeType - can take one of the values ​​direct | topic | fanout | headers, if not specified, then by default fanout
