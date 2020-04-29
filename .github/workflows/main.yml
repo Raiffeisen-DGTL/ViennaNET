@@ -14,11 +14,11 @@ jobs:
         dotnet-version: 3.1.101
     - name: Checkout
       uses: actions/checkout@v2
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#    - name: SonarCloud Scan
+#      uses: sonarsource/sonarcloud-github-action@master
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Build
       run: dotnet publish -c Release --self-contained false
     - name: Test
