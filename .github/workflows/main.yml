@@ -17,7 +17,7 @@ jobs:
     - name: Build
       run: dotnet publish -c Release --self-contained false
     - name: Test
-      run: dotnet test --no-build --filter "TestCategory=Unit" --logger "nunit;LogFilePath=TestResult-{assembly}.xml"
+      run: dotnet test --no-build --filter "TestCategory=Unit" --logger "nunit;LogFilePath=TestResult/TestResult-{assembly}.xml" /p:CollectCoverage=true /p:CoverletOutputFormat=\"opencover\" /p:CoverletOutput=TestResult/
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
       env:
