@@ -2,6 +2,8 @@
 
 [![Build&Test](https://github.com/Raiffeisen-DGTL/ViennaNET/workflows/Build&Test/badge.svg?branch=master)](https://github.com/Raiffeisen-DGTL/ViennaNET/actions?query=workflow%3ABuild%26Test)
 
+|[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Raiffeisen-DGTL_ViennaNET&metric=alert_status)](https://sonarcloud.io/dashboard?id=Raiffeisen-DGTL_ViennaNET)|[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Raiffeisen-DGTL_ViennaNET&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Raiffeisen-DGTL_ViennaNET)|[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Raiffeisen-DGTL_ViennaNET&metric=security_rating)](https://sonarcloud.io/dashboard?id=Raiffeisen-DGTL_ViennaNET)|[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Raiffeisen-DGTL_ViennaNET&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=Raiffeisen-DGTL_ViennaNET)|
+
 ### Table of contents
 
 #### ArcSight
