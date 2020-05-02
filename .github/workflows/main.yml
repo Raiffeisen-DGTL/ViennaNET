@@ -17,7 +17,7 @@ jobs:
     - name: SonarScanner install
       run: dotnet tool install --global dotnet-sonarscanner
     - name: SonarScanner run
-      run: dotnet sonarscanner begin /o:raiffeisen-dgtl /k:Raiffeisen-DGTL_ViennaNET /d:sonar.login=${{ secrets.SONAR_TOKEN }} /d:sonar.host.url=https://sonarcloud.io /d:sonar.verbose=true /d:sonar.cs.nunit.reportsPaths="TestResult/TestResults.xml" /d:sonar.cs.opencover.reportsPaths="TestResult/coverage.opencover.xml"
+      run: dotnet sonarscanner begin /o:raiffeisen-dgtl /k:Raiffeisen-DGTL_ViennaNET /d:sonar.login=${{ secrets.SONAR_TOKEN }} /d:sonar.host.url=https://sonarcloud.io /d:sonar.verbose=true /d:sonar.cs.nunit.reportsPaths="TestResult/TestResults*.xml" /d:sonar.cs.opencover.reportsPaths="TestResult/coverage.opencover.xml"
     - name: Build
       run: dotnet build -c Release
     - name: Test
@@ -26,3 +26,5 @@ jobs:
       run: dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: debug
+      run: ls TestResult
