@@ -156,15 +156,15 @@ _________________
 		* **IMessagingComponentFactory** - Creates instances of senders and recipients of messages by the queue name defined in the configuration file.
 
 * Classes:
-		* **MessageAdapterFactory** - Instance Factory _IMessageAdapter_. Creates them by the queue name defined in the configuration file. Contains a collection of _IMessageAdapterConstructor_ instances that are referenced when the adapter is instantiated.
+	* **MessageAdapterFactory** - Instance Factory _IMessageAdapter_. Creates them by the queue name defined in the configuration file. Contains a collection of _IMessageAdapterConstructor_ instances that are referenced when the adapter is instantiated.
 			> For one type of queue, only one IMessageAdapterConstructor implementation can be defined. Otherwise, a CantFindAdapterConstructorException will be thrown.
 
-		* **MessagingComponentFactory** - Instance factory _IMessageReceiver_ and _IMessageSender_. Creates them by the queue name defined in the configuration file. Contains collections of _IMessageSerializer_ and _IMessageDeserializer_ instances that are referenced when the component is instantiated.
+	* **MessagingComponentFactory** - Instance factory _IMessageReceiver_ and _IMessageSender_. Creates them by the queue name defined in the configuration file. Contains collections of _IMessageSerializer_ and _IMessageDeserializer_ instances that are referenced when the component is instantiated.
 			> Only one implementation of IMessageReceiver<TMessage> / ISerializedMessageSender<TMessage> messages can be defined for a single queue name. Otherwise, a CantFindSerializerOrDeserializerException will be thrown.
 
-		* **MessageReceiver<TMessage>** - the class of the message recipient.
-		* **MessageSender** - class of message sender.
-		* **SerializedMessageSender<TMessage>** - the class of the sender of messages with serialization.
+	* **MessageReceiver<TMessage>** - the class of the message recipient.
+	* **MessageSender** - class of message sender.
+	* **SerializedMessageSender<TMessage>** - the class of the sender of messages with serialization.
 _________________
 _________________
 #### Listening to Queues
