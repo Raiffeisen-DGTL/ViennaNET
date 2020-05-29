@@ -108,37 +108,37 @@ Section in the configuration file:
 _________________
 ##### Enumerations Used in the Configuration
 - **MessageProcessingType** - type of processing for listening to the queue. Values:
-    - _ThreadStrategy_ - based on work in an infinite loop in one thread.
-    - _Subscribe_ - based on a subscription to queue events.
-    - _SubscribeAndReply_ - based on subscribing to queue events and the ability to respond.
+	- _ThreadStrategy_ - based on work in an infinite loop in one thread.
+	- _Subscribe_ - based on a subscription to queue events.
+	- _SubscribeAndReply_ - based on subscribing to queue events and the ability to respond.
 _________________
 ##### Messages
 * **BaseMessage** - The main class of messages to send to the queue. Any messages containing data must be serialized in the Body field and deserialized from it.
  Properties:
  
-    * _MessageId_ - message identifier.
-    * _CorrelationId_ - correlation identifier.
-    * _ApplicationTitle_ - the name of the application that sent the message.
-    * _SendDate_ - date and time of sending the message.
-    * _ReceiveDate_ - date and time of receipt of the message.
-    * _LifeTime_ - message lifetime, by default - indefinitely (TimeSpan.Zero).
-    * _Body_ - message body.
-    * _Properties_ - dictionary of additional message properties, by default - an empty dictionary.
+	* _MessageId_ - message identifier.
+	* _CorrelationId_ - correlation identifier.
+	* _ApplicationTitle_ - the name of the application that sent the message.
+	* _SendDate_ - date and time of sending the message.
+	* _ReceiveDate_ - date and time of receipt of the message.
+	* _LifeTime_ - message lifetime, by default - indefinitely (TimeSpan.Zero).
+	* _Body_ - message body.
+	* _Properties_ - dictionary of additional message properties, by default - an empty dictionary.
 _________________
 _________________
 #### Message serialization / deserialization
 * Interfaces:
-    * **IMessageSerializer / IMessageSerializer<in TMessage>** - Serializes the original message in the Body field of the _BaseMessage_ instance and returns the _BaseMessage_ instance.
-    * **IMessageDeserializer / IMessageDeserializer<out TMessage>** - Deserializes from the Body field of the _BaseMessage_ instance to the message type intended for further use.
+	* **IMessageSerializer / IMessageSerializer<in TMessage>** - Serializes the original message in the Body field of the _BaseMessage_ instance and returns the _BaseMessage_ instance.
+	* **IMessageDeserializer / IMessageDeserializer<out TMessage>** - Deserializes from the Body field of the _BaseMessage_ instance to the message type intended for further use.
 * Classes:
-    * **PlainTextSerializer** - serializer/deserializer for plain text
-    * **XmlMessageSerializer<T>** - xml-serializer/deserializer. It supports validation based on a data scheme - for this you need to set the value of the xsd field using the _SetStream (Stream xsd)_ or _AddStream (Stream xsd)_ methods.
-    * **XmlResourcesMessageSerializer<T>** - xml-serializer/deserealizer. It supports validation based on a data scheme - for this, you need to set the value of the xsd field using an implementation of a descendant of the ResourceStorage class.
+	* **PlainTextSerializer** - serializer/deserializer for plain text
+	* **XmlMessageSerializer<T>** - xml-serializer/deserializer. It supports validation based on a data scheme - for this you need to set the value of the xsd field using the _SetStream (Stream xsd)_ or _AddStream (Stream xsd)_ methods.
+	* **XmlResourcesMessageSerializer<T>** - xml-serializer/deserealizer. It supports validation based on a data scheme - for this, you need to set the value of the xsd field using an implementation of a descendant of the ResourceStorage class.
 _________________   
 _________________
 #### Queue connection classes their classes generating them
 * Interfaces:
-    * **IMessageAdapter** - Proxy to the queue.
+	* **IMessageAdapter** - Proxy to the queue.
         > **IMessageAdapter** is implemented in separate assemblies for each individual queue type, since its specific implementations depend on libraries that provide queue APIs.
 
     * **IMessageAdapterWithSubscribing** - Proxy to the queue, in addition to the _IMessageAdapter_ functionality, which provides the ability to subscribe client classes to queue events.
