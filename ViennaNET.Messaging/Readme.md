@@ -150,10 +150,10 @@ _________________
 			> **IMessageAdapterConstructor** is implemented in separate assemblies for each individual queue type, since its specific implementations depend on the libraries that provide the queue API.
 
 		* **IMessageAdapterFactory** - Creates instances **IMessageAdapter** by the queue name defined in the configuration file.
-		* **IMessageReceiver<TMessage>** - Receive messages from the queue.
-		* **IMessageSender** - Sends messages to the queue.
-		* **ISerializedMessageSender<in TMessage>** - Sends messages to the queue with pre-serialization.
-		* **IMessagingComponentFactory** - Creates instances of senders and recipients of messages by the queue name defined in the configuration file.
+	* **IMessageReceiver<TMessage>** - Receive messages from the queue.
+	* **IMessageSender** - Sends messages to the queue.
+	* **ISerializedMessageSender<in TMessage>** - Sends messages to the queue with pre-serialization.
+	* **IMessagingComponentFactory** - Creates instances of senders and recipients of messages by the queue name defined in the configuration file.
 
 * Classes:
 	* **MessageAdapterFactory** - Instance Factory _IMessageAdapter_. Creates them by the queue name defined in the configuration file. Contains a collection of _IMessageAdapterConstructor_ instances that are referenced when the adapter is instantiated.
