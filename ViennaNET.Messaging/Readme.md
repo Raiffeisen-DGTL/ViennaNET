@@ -77,10 +77,10 @@ ___
 #### Configuration
 ___
 ##### Factory
-* Interfaces:
-    * **IMessagingConfigurationFactory** - Creates a configuration for working with queues.
-* Classes:
-    * **MessagingConfigurationFactory** - Creates a configuration for working with queues.
+- Interfaces:
+	- **IMessagingConfigurationFactory** - Creates a configuration for working with queues.
+- Classes:
+	- **MessagingConfigurationFactory** - Creates a configuration for working with queues.
 ___
 ##### Configuration sections
 * **MessagingConfiguration** - Configuration section. It contains the necessary information for the library.
