@@ -16,11 +16,11 @@ The base class contains a set of helper methods for constructing chains of rules
 Rule sets should be used to group rules and perform validation parts by input conditions.
 The validation algorithm for nested set rules is specified in the constructor. To do this, use the following functions:
 
-SetRule(IRule<T> rule) - puts the rule in the validation chain.
+`SetRule(IRule<T> rule)` - puts the rule in the validation chain.
 
-SetCollectionContext(Expression<Func<T, IEnumerable<TEntity>>> expression, IValidationRuleSet<TEntity> ruleSet) - Defines a set of validation rules for a nested collection of a validated entity
+`SetCollectionContext(Expression<Func<T, IEnumerable<TEntity>>> expression, IValidationRuleSet<TEntity> ruleSet)` - Defines a set of validation rules for a nested collection of a validated entity
 
-SetCollectionContext(Expression<Func<T, IEnumerable<TEntity>>> expression, IEnumerable<IValidationRuleSet<TEntity>> contexts) - Defines several sets of validation rules for a nested collection of a validated entity
+`SetCollectionContext(Expression<Func<T, IEnumerable<TEntity>>> expression, IEnumerable<IValidationRuleSet<TEntity>> contexts)` - Defines several sets of validation rules for a nested collection of a validated entity
 
 * **Validator** - the main class that allows you to validate rules and rule sets.
 
@@ -232,9 +232,9 @@ In this case, you can use the validator that takes the rule as an input.
 
 For validation, the **Validator** class is used that implements the **IValidator** interface. It contains the following methods:
 
-* ValidationResult Validate<T>(IValidationRuleSet<T> ruleSet, T instance, ValidationContext context) - Validation of one set of rules for an instance entity with an arbitrary context.
+* `ValidationResult Validate<T>(IValidationRuleSet<T> ruleSet, T instance, ValidationContext context)` - Validation of one set of rules for an instance entity with an arbitrary context.
 
-* ValidationResult ValidateMany<T>(IEnumerable<IValidationRuleSet<T>> context, T instance, ValidationContext context) - Validation of several rule sets for an instance entity with an arbitrary context.
+* `ValidationResult ValidateMany<T>(IEnumerable<IValidationRuleSet<T>> context, T instance, ValidationContext context)` - Validation of several rule sets for an instance entity with an arbitrary context.
 
 Additionally, there are asynchronous versions of methods.
 
@@ -257,9 +257,9 @@ Sometimes a set of rules is degenerate, it contains just a few consecutive rules
 
 In this case, you can use functions that accept not rulesets, but the rules themselves:
 
-* ValidationResult Validate<T>(IEnumerable<IRule<T>> rules, T instance, ValidationContext context) - Validation of the list of rules for an instance entity with an arbitrary context.
+* `ValidationResult Validate<T>(IEnumerable<IRule<T>> rules, T instance, ValidationContext context)` - Validation of the list of rules for an instance entity with an arbitrary context.
 
-* ValidationResult ValidateMany<T>(IRule<T> rule, T instance) - Validation of one rule for instance entity with arbitrary context.
+* `ValidationResult ValidateMany<T>(IRule<T> rule, T instance)` - Validation of one rule for instance entity with arbitrary context.
 
 ### Message Formatting
 
