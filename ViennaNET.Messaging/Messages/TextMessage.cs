@@ -16,9 +16,15 @@ namespace ViennaNET.Messaging.Messages
     public string Body { get; set; }
 
     /// <inheritdoc />
-    public override string GetBodyAsString()
+    public override string LogBody()
     {
       return Body;
+    }
+
+    /// <inheritdoc cref="BaseMessage" />
+    public override bool IsEmpty()
+    {
+      return string.IsNullOrEmpty(Body);
     }
   }
 }

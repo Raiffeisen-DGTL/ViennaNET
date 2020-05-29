@@ -3,6 +3,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using NUnit.Framework;
+using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Extensions;
 using ViennaNET.Messaging.Messages;
 
@@ -46,6 +47,49 @@ namespace ViennaNET.Messaging.Tests.Unit.Extensions
       var document = message.ReadXml();
 
       Assert.That(document.ToString() == message.Body);
+    }
+
+    [Test]
+    public void GetMessageBodyAsBytes_BytesMessage_BodyReturned()
+    {
+      var body = Encoding.UTF8.GetBytes(_xml.ToString());
+      var message = new BytesMessage { Body = body };
+
+      var result = message.GetMessageBodyAsBytes();
+
+      Assert.That(result == body);
+    }
+
+    [Test]
+    public void GetMessageBodyAsBytes_TextMessage_BodyReturned()
+    {
+      var body = Encoding.UTF8.GetBytes(_xml.ToString());
+      var message = new TextMessage { Body = _xml.ToString() };
+
+      var result = message.GetMessageBodyAsBytes();
+
+      Assert.That(result.ToString().Equals(body.ToString()));
+    }
+
+    [Test]
+    public void GetMessageBodyAsBytes_UnknownTypeMessage_ExceptionThrown()
+    {
+      var message = new TestMessage();
+
+      Assert.Throws<MessagingException>(() => message.GetMessageBodyAsBytes());
+    }
+
+    private class TestMessage : BaseMessage
+    {
+      public override string LogBody()
+      {
+        throw new System.NotImplementedException();
+      }
+
+      public override bool IsEmpty()
+      {
+        throw new System.NotImplementedException();
+      }
     }
   }
 }

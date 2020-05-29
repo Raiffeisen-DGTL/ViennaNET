@@ -1,3 +1,13 @@
+# v0005
+
+### Release Summary
+Update ViennaNET.Messaging
+Add ViennaNET.Messaging.MQSeriesQueue
+
+### Breaking Changes
+Changed CallContextHeaders headers. In case of their use, it is necessary to take into account the new formats.
+
+
 # v0004
 
 ### Release Summary

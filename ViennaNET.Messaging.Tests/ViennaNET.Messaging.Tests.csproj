@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ViennaNET.Messaging.KafkaQueue\ViennaNET.Messaging.KafkaQueue.csproj" />
+    <ProjectReference Include="..\ViennaNET.Messaging.MQSeriesQueue\ViennaNET.Messaging.MQSeriesQueue.csproj" />
     <ProjectReference Include="..\ViennaNET.Messaging.RabbitMQQueue\ViennaNET.Messaging.RabbitMQQueue.csproj" />
     <ProjectReference Include="..\ViennaNET.Messaging\ViennaNET.Messaging.csproj" />
   </ItemGroup>
@@ -65,13 +66,6 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Integration\" />
-    <Folder Include="Unit\Diagnostic\" />
-    <Folder Include="Unit\MqSeries\" />
-    <Folder Include="Unit\Processing\" />
   </ItemGroup>
 
 </Project>

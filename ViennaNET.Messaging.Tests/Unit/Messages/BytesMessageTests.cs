@@ -33,22 +33,22 @@ namespace ViennaNET.Messaging.Tests.Unit.Messages
       {
         get
         {
-          yield return new TestCaseData("testMessage", "testMessage");
-          yield return new TestCaseData("", "");
-          yield return new TestCaseData(null, "");
+          yield return new TestCaseData("testMessage", "bytes buffer with length = 11");
+          yield return new TestCaseData("", "empty bytes buffer");
+          yield return new TestCaseData(null, "empty bytes buffer");
         }
       }
     }
 
     [Test]
     [TestCaseSource(typeof(TestDataProvider), nameof(TestDataProvider.Bodies))]
-    public void GetBodyAsString_MessageBodyHasBeenFilled_CorrectlyReturned(string source, string body)
+    public void LogBody_MessageBodyHasBeenFilled_CorrectlyReturned(string source, string body)
     {
       var message = CreateBytesMessage(string.IsNullOrEmpty(source)
                                          ? null
                                          : Encoding.UTF8.GetBytes(source));
 
-      var result = message.GetBodyAsString();
+      var result = message.LogBody();
 
       Assert.That(result == body);
     }

@@ -218,7 +218,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
 
         if (!processed)
         {
-          Logger.LogError($"The message did not processed. Message body: {message.GetBodyAsString()}");
+          Logger.LogError($"The message did not processed. Message body: {message.LogBody()}");
         }
 
         Interlocked.Exchange(ref _errorCount, 0);

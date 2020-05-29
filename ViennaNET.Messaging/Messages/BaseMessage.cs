@@ -78,8 +78,14 @@ namespace ViennaNET.Messaging.Messages
     }
 
     /// <summary>
-    ///   Получает тело сообщения в виде строки
+    ///   Выдает тело сообщения в виде строки для логирования
     /// </summary>
-    public abstract string GetBodyAsString();
+    public abstract string LogBody();
+
+    /// <summary>
+    ///   Проверяет, пустое ли тело сообщения
+    /// </summary>
+    /// <returns>Признак пустого сообщения</returns>
+    public abstract bool IsEmpty();
   }
 }

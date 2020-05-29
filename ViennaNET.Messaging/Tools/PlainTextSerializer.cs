@@ -11,6 +11,6 @@ namespace ViennaNET.Messaging.Tools
     public BaseMessage Serialize(string message) => new TextMessage { Body = message };
 
     /// <inheritdoc />
-    public string Deserialize(BaseMessage message) => message.GetBodyAsString();
+    public string Deserialize(BaseMessage message) => ((TextMessage)message).Body;
   }
 }

@@ -9,7 +9,7 @@ using ViennaNET.Utils;
 using EasyNetQ;
 using EasyNetQ.Topology;
 using RabbitMQ.Client.Exceptions;
-using System.Text;
+using ViennaNET.Messaging.Extensions;
 
 namespace ViennaNET.Messaging.RabbitMQQueue
 {
@@ -18,7 +18,6 @@ namespace ViennaNET.Messaging.RabbitMQQueue
   /// </summary>
   public class RabbitMqQueueMessageAdapter : IMessageAdapterWithSubscribing
   {
-    private const string DefaultLifeTime = "3600000";
     private const int DefaultReplyTimeout = 30;
     private const string ReplyExchangeName = "replyExchange";
     private const int TempQueueLifetimeAdditionMs = 10000;
@@ -143,7 +142,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       CheckAndReconnect();
 
       Logger.LogDebug($"Try to subscribe to queue with id: {_configuration.Id} with handler: {handler}");
-      _consumer = _advancedBus.Consume(_queue, (body, messageProperties, info) => handler?.Invoke(GetReceivedBaseMessage(body, messageProperties)));
+      _consumer = _advancedBus.Consume(_queue, (body, messageProperties, info) => handler?.Invoke(body.ConvertToBaseMessage(messageProperties)));
       Logger.LogDebug($"Done to subscribe to queue with id: {_configuration.Id} with handler: {handler}");
     }
 
@@ -168,8 +167,8 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       CheckAndReconnect();
       try
       {
-        var body = Encoding.UTF8.GetBytes(message.GetBodyAsString());
-        _advancedBus.Publish(_exchange, _configuration.Id, false, GetProperties(message), body);
+        var body = message.GetMessageBodyAsBytes();
+        _advancedBus.Publish(_exchange, _configuration.Id, false, message.ConvertToProperties(_configuration), body);
         Logger.LogDebug($"Done to send message to queue with id: {_configuration.Id}");
         LogMessageInternal(message, true);
         return message;
@@ -197,7 +196,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
           return null;
         }
 
-        var message = GetReceivedBaseMessage(dataResult.Body, dataResult.Properties);
+        var message = dataResult.Body.ConvertToBaseMessage(dataResult.Properties);
 
         LogMessageInternal(message, false);
         return message;
@@ -265,7 +264,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
                                (body, messageProperties, info) =>
                                  Task.Factory.StartNew(() =>
                                  {
-                                   tcs.SetResult(GetReceivedBaseMessage(body, messageProperties));
+                                   tcs.SetResult(body.ConvertToBaseMessage(messageProperties));
                                  }));
         }
 
@@ -303,8 +302,8 @@ namespace ViennaNET.Messaging.RabbitMQQueue
         var replyExchange = _advancedBus.ExchangeDeclare(ReplyExchangeName, ExchangeType.Direct);
         var queue = _advancedBus.QueueDeclare(message.ReplyQueue, true);
         _advancedBus.Bind(replyExchange, queue, message.ReplyQueue);
-        var body = Encoding.UTF8.GetBytes(message.GetBodyAsString());
-        _advancedBus.Publish(replyExchange, message.ReplyQueue, false, GetProperties(message), body);
+        var body = message.GetMessageBodyAsBytes();
+        _advancedBus.Publish(replyExchange, message.ReplyQueue, false, message.ConvertToProperties(_configuration), body);
         Logger.LogDebug($"Done to send reply message to queue with id: {message.ReplyQueue}");
         LogMessageInternal(message, true);
         return message;
@@ -339,73 +338,11 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       }
     }
 
-    private MessageProperties GetProperties(BaseMessage message)
-    {
-      var properties = new MessageProperties
-      {
-        MessageId = string.IsNullOrEmpty(message.MessageId)
-          ? Guid.NewGuid()
-              .ToString()
-              .ToUpper()
-          : message.MessageId,
-        Headers = message.Properties,
-        DeliveryMode = 2,
-        Expiration = _configuration.Lifetime.HasValue
-          ? ((int)_configuration.Lifetime.Value.TotalMilliseconds).ToString()
-          : DefaultLifeTime,
-        Timestamp = DateTime.Now.ToFileTimeUtc()
-      };
-
-      if (!string.IsNullOrWhiteSpace(message.ReplyQueue))
-      {
-        properties.ReplyTo = message.ReplyQueue;
-      }
-
-      if (!string.IsNullOrEmpty(message.CorrelationId))
-      {
-        properties.CorrelationId = message.CorrelationId;
-      }
-
-      return properties;
-    }
-
-    private BaseMessage GetReceivedBaseMessage(byte[] body, MessageProperties messageProperties)
-    {
-      var message = new BytesMessage
-      {
-        Body = body,
-        MessageId = messageProperties.MessageId,
-        CorrelationId = messageProperties.CorrelationId,
-        ReplyQueue = messageProperties.ReplyTo,
-        LifeTime = TimeSpan.Parse(messageProperties.Expiration),
-        SendDateTime = DateTime.FromFileTimeUtc(messageProperties.Timestamp),
-        ReceiveDate = DateTime.Now,
-      };
-
-      foreach (var header in messageProperties.Headers)
-      {
-        var value = string.Empty;
-        if (header.Value is byte[] bytes)
-        {
-          value = Encoding.UTF8.GetString(bytes);
-        }
-
-        if (header.Value is string stringHeader)
-        {
-          value = stringHeader;
-        }
-
-        message.Properties.Add(header.Key, value);
-      }
-
-      return message;
-    }
-
     private static void LogMessageInternal(BaseMessage message, bool isSend)
     {
       Logger.LogDebug((isSend
                         ? "Message has been sent"
-                        : "Message has been received") + Environment.NewLine + message.GetBodyAsString());
+                        : "Message has been received") + Environment.NewLine + message.LogBody());
     }
   }
 }

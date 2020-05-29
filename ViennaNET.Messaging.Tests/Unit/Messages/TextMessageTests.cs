@@ -41,11 +41,11 @@ namespace ViennaNET.Messaging.Tests.Unit.Messages
 
     [Test]
     [TestCaseSource(typeof(TestDataProvider), nameof(TestDataProvider.Bodies))]
-    public void GetBodyAsString_MessageBodyHasBeenFilled_CorrectlyReturned(string source, string body)
+    public void LogBody_MessageBodyHasBeenFilled_CorrectlyReturned(string source, string body)
     {
       var message = CreateTextMessage(source);
 
-      var result = message.GetBodyAsString();
+      var result = message.LogBody();
 
       Assert.That(result == body);
     }

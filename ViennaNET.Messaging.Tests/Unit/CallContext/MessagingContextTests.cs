@@ -18,11 +18,11 @@ namespace ViennaNET.Messaging.Tests.Unit.CallContext
       {
         Properties =
         {
-          { CallContextHeaders.UserId, "user" },
-          { CallContextHeaders.UserDomain, "domain" },
-          { CallContextHeaders.AuthorizeInfo, "auth" },
-          { CallContextHeaders.RequestCallerIp, "ip" },
-          { CallContextHeaders.RequestId, "reqId" },
+          { MessagingContextHeaders.UserId, "user" },
+          { MessagingContextHeaders.UserDomain, "domain" },
+          { MessagingContextHeaders.AuthorizeInfo, "auth" },
+          { MessagingContextHeaders.RequestCallerIp, "ip" },
+          { MessagingContextHeaders.RequestId, "reqId" },
         }
       };
 
@@ -44,7 +44,7 @@ namespace ViennaNET.Messaging.Tests.Unit.CallContext
     public void Create_RequestIdIsEmpty_Generated()
     {
       // arrange
-      var fakeMessage = new TextMessage() { Properties = { { CallContextHeaders.RequestId, string.Empty } } };
+      var fakeMessage = new TextMessage() { Properties = { { MessagingContextHeaders.RequestId, string.Empty } } };
 
       // act
       var context = MessagingContext.Create(fakeMessage);
@@ -57,7 +57,7 @@ namespace ViennaNET.Messaging.Tests.Unit.CallContext
     public void Create_UserIsEmpty_TookFromEnvironment()
     {
       // arrange
-      var fakeMessage = new TextMessage() { Properties = { { CallContextHeaders.UserId, string.Empty } } };
+      var fakeMessage = new TextMessage() { Properties = { { MessagingContextHeaders.UserId, string.Empty } } };
 
       // act
       var context = MessagingContext.Create(fakeMessage);

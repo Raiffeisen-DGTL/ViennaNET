@@ -5,7 +5,7 @@ using ViennaNET.Messaging.RabbitMQQueue;
 namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
 {
   [TestFixture(Category = "Unit", TestOf = typeof(RabbitMqConfiguration))]
-  public class KafkaConfigurationTests
+  public class RabbitMqConfigurationTests
   {
     [Test]
     public void GetConfiguration_HasOneQueueWithId_ReturnsQueueConfiguration()

@@ -23,9 +23,10 @@ namespace ViennaNET.Messaging.Tools
     /// <inheritdoc />
     public T Deserialize(BaseMessage message)
     {
-      ValidateXml(message.GetBodyAsString());
+      var textMessage = (TextMessage)message;
+      ValidateXml(textMessage.Body);
       var serializer = new XmlSerializer(typeof(T));
-      var reader = new StringReader(message.GetBodyAsString());
+      var reader = new StringReader(textMessage.Body);
       return (T)serializer.Deserialize(reader);
     }
 
@@ -41,6 +42,10 @@ namespace ViennaNET.Messaging.Tools
       return result;
     }
 
+    /// <summary>
+    /// Валидирует входящий XML-документ по списку заданных XSD-схем
+    /// </summary>
+    /// <param name="xml">XML-документ</param>
     protected void ValidateXml(string xml)
     {
       if (!xsd.Any())

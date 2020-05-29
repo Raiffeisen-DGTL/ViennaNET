@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.Messages
@@ -17,11 +16,17 @@ namespace ViennaNET.Messaging.Messages
     public byte[] Body { get; set; }
 
     /// <inheritdoc />
-    public override string GetBodyAsString()
+    public override string LogBody()
     {
-      return Body == null
-        ? string.Empty
-        : Encoding.UTF8.GetString(Body);
+      return IsEmpty()
+        ? "empty bytes buffer"
+        : $"bytes buffer with length = {Body.Length}";
+    }
+
+    /// <inheritdoc cref="BaseMessage"/>
+    public override bool IsEmpty()
+    {
+      return Body == null || Body.Length == 0;
     }
   }
 }

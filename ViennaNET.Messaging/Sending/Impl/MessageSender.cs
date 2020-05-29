@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ViennaNET.CallContext;
+using ViennaNET.Messaging.Context;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Utils;
@@ -114,11 +115,11 @@ namespace ViennaNET.Messaging.Sending.Impl
     {
       var context = _callContextFactory.Create();
 
-      message.Properties.Add(CallContextHeaders.UserId, context.UserId);
-      message.Properties.Add(CallContextHeaders.UserDomain, context.UserDomain);
-      message.Properties.Add(CallContextHeaders.RequestId, context.RequestId);
-      message.Properties.Add(CallContextHeaders.RequestCallerIp, context.RequestCallerIp);
-      message.Properties.Add(CallContextHeaders.AuthorizeInfo, context.AuthorizeInfo);
+      message.Properties.Add(MessagingContextHeaders.UserId, context.UserId);
+      message.Properties.Add(MessagingContextHeaders.UserDomain, context.UserDomain);
+      message.Properties.Add(MessagingContextHeaders.RequestId, context.RequestId);
+      message.Properties.Add(MessagingContextHeaders.RequestCallerIp, context.RequestCallerIp);
+      message.Properties.Add(MessagingContextHeaders.AuthorizeInfo, context.AuthorizeInfo);
     }
 
     protected void FillPropertiesFromQueueConfiguration(BaseMessage message)

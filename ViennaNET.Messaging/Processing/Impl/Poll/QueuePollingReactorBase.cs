@@ -43,6 +43,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
     /// <param name="pollingId">Идентификатор потока для опроса</param>
     /// <param name="serviceHealthDependent">Признак использования диагностики</param>
     /// <param name="healthCheckingService">Ссылка на службу диагностики</param>
+    /// <param name="messagingCallContextAccessor">Контейнер с параметрами вызова для сообщения</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     protected QueuePollingReactorBase(IMessageAdapter messageAdapter,
                                       IEnumerable<IMessageProcessor> messageProcessors,

@@ -125,7 +125,7 @@ namespace ViennaNET.Messaging.Tests.Unit
       {
         Assert.That(result, Is.True);
         Assert.That(dataMessage, Is.EqualTo(data));
-        Assert.That(dataReceivedMessage.GetBodyAsString(), Is.EqualTo("ReBody"));
+        Assert.That(dataReceivedMessage.LogBody(), Is.EqualTo("ReBody"));
       });
     }
 

@@ -4,6 +4,7 @@ using Confluent.Kafka;
 using ViennaNET.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Exceptions;
+using ViennaNET.Messaging.Extensions;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Utils;
 
@@ -295,9 +296,7 @@ namespace ViennaNET.Messaging.KafkaQueue
       {
         Timestamp = new Timestamp(message.SendDateTime.GetValueOrDefault()),
         Headers = headers,
-        Value = message is BytesMessage bytesMessage
-          ? bytesMessage.Body
-          : Encoding.UTF8.GetBytes(message.GetBodyAsString())
+        Value = message.GetMessageBodyAsBytes()
       };
     }
 

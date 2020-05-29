@@ -120,4 +120,67 @@ _________________
     * _ApplicationTitle_ - the name of the application that sent the message.
     * _SendDate_ - date and time of sending the message.
     * _ReceiveDate_ - date and time of receipt of the message.
-    * _LifeTime_ - life time
+    * _LifeTime_ - message lifetime, by default - indefinitely (TimeSpan.Zero).
+    * _Body_ - message body.
+    * _Properties_ - dictionary of additional message properties, by default - an empty dictionary.
+_________________
+_________________
+#### Message serialization / deserialization
+* Interfaces:
+    * **IMessageSerializer / IMessageSerializer<in TMessage>** - Serializes the original message in the Body field of the _BaseMessage_ instance and returns the _BaseMessage_ instance.
+    * **IMessageDeserializer / IMessageDeserializer<out TMessage>** - Deserializes from the Body field of the _BaseMessage_ instance to the message type intended for further use.
+* Classes:
+    * **PlainTextSerializer** - serializer/deserializer for plain text
+    * **XmlMessageSerializer<T>** - xml-serializer/deserializer. It supports validation based on a data scheme - for this you need to set the value of the xsd field using the _SetStream (Stream xsd)_ or _AddStream (Stream xsd)_ methods.
+    * **XmlResourcesMessageSerializer<T>** - xml-serializer/deserealizer. It supports validation based on a data scheme - for this, you need to set the value of the xsd field using an implementation of a descendant of the ResourceStorage class.
+_________________   
+_________________
+#### Queue connection classes their classes generating them
+* Interfaces:
+    * **IMessageAdapter** - Proxy to the queue.
+        > **IMessageAdapter** is implemented in separate assemblies for each individual queue type, since its specific implementations depend on libraries that provide queue APIs.
+
+    * **IMessageAdapterWithSubscribing** - Proxy to the queue, in addition to the _IMessageAdapter_ functionality, which provides the ability to subscribe client classes to queue events.
+        > **IMessageAdapterWithSubscribing** is implemented in separate assemblies for each individual queue type, since its specific implementations depend on the libraries that provide the queue API.
+    * **IMessageAdapterWithTransactions** - Proxy to the queue, in addition to the _IMessageAdapter_ functionality, which provides the possibility of transactional work with the queue.
+        > **IMessageAdapterWithTransactions** is implemented in separate assemblies for each individual queue type, since its specific implementations depend on the libraries that provide the queue API.
+
+    * **IMessageAdapterConstructor** - Creates _IMessageAdapter_ instances for this queue type.
+        > **IMessageAdapterConstructor** is implemented in separate assemblies for each individual queue type, since its specific implementations depend on the libraries that provide the queue API.
+
+    * **IMessageAdapterFactory** - Creates instances **IMessageAdapter** by the queue name defined in the configuration file.
+    * **IMessageReceiver<TMessage>** - Receive messages from the queue.
+    * **IMessageSender** - Sends messages to the queue.
+    * **ISerializedMessageSender<in TMessage>** - Sends messages to the queue with pre-serialization.
+    * **IMessagingComponentFactory** - Creates instances of senders and recipients of messages by the queue name defined in the configuration file.
+
+* Classes:
+    * **MessageAdapterFactory** - Instance Factory _IMessageAdapter_. Creates them by the queue name defined in the configuration file. Contains a collection of _IMessageAdapterConstructor_ instances that are referenced when the adapter is instantiated.
+        > For one type of queue, only one IMessageAdapterConstructor implementation can be defined. Otherwise, a CantFindAdapterConstructorException will be thrown.
+
+    * **MessagingComponentFactory** - Instance factory _IMessageReceiver_ and _IMessageSender_. Creates them by the queue name defined in the configuration file. Contains collections of _IMessageSerializer_ and _IMessageDeserializer_ instances that are referenced when the component is instantiated.
+        > Only one implementation of IMessageReceiver<TMessage> / ISerializedMessageSender<TMessage> messages can be defined for a single queue name. Otherwise, a CantFindSerializerOrDeserializerException will be thrown.
+
+    * **MessageReceiver<TMessage>** - the class of the message recipient.
+    * **MessageSender** - class of message sender.
+    * **SerializedMessageSender<TMessage>** - the class of the sender of messages with serialization.
+_________________
+_________________
+#### Listening to Queues
+* Interfaces:
+    * **IQueueReactor** - A process in memory listening on a queue.
+    * **IQueueReactorFactory** - Creates instances of _IQueueReactor_.
+    * **IPolling** - Provides _IQueueReactor_ operation due to the flow.
+    * **IMessageProcessorRegister** - Registers the message handlers _IMessageProcessor_.
+    * **IMessageProcessor** - Processes messages when they are received.
+        > IMessageProccessor implementations are defined in the assemblies where the message is directly processed.
+
+* Classes:
+    * **QueueReactorFactory** - Creates _IQueueReactor_ instances by the name of the queue based on the collections of _IMessageConstructor_ and _IMessageProcessor_ instances, and also registers _IMessageProcessor_ handlers.
+    > Queues and types implementing IMessageProcessor are registered in the class. If you try to register a processor type already registered in the factory, a MessageProcessorAlreadyRegisterException will be thrown.
+
+* Features:
+    * When the serviceHealthDependent configuration flag is set to true, the current IQueueReactor subscribes to events that are thrown by the root IHealthCheckingService diagnostic service. This allows you to quickly disconnect from the queue in case the service diagnostics fail.
+
+_________________   
+_________________

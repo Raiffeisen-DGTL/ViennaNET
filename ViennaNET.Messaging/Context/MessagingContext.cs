@@ -35,11 +35,11 @@ namespace ViennaNET.Messaging.Context
 
     public static MessagingContext Create(BaseMessage message)
     {
-      message.Properties.TryGetValue(CallContextHeaders.RequestId, out var requestId);
-      message.Properties.TryGetValue(CallContextHeaders.UserId, out var userId);
-      message.Properties.TryGetValue(CallContextHeaders.UserDomain, out var userDomain);
-      message.Properties.TryGetValue(CallContextHeaders.RequestCallerIp, out var requestCallerIp);
-      message.Properties.TryGetValue(CallContextHeaders.AuthorizeInfo, out var authorizeInfo);
+      message.Properties.TryGetValue(MessagingContextHeaders.RequestId, out var requestId);
+      message.Properties.TryGetValue(MessagingContextHeaders.UserId, out var userId);
+      message.Properties.TryGetValue(MessagingContextHeaders.UserDomain, out var userDomain);
+      message.Properties.TryGetValue(MessagingContextHeaders.RequestCallerIp, out var requestCallerIp);
+      message.Properties.TryGetValue(MessagingContextHeaders.AuthorizeInfo, out var authorizeInfo);
 
       var reqId = string.IsNullOrWhiteSpace(requestId as string)
         ? Guid.NewGuid()

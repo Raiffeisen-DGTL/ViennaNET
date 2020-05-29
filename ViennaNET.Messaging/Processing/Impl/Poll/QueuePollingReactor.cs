@@ -51,7 +51,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
 
         if (!processed)
         {
-          Logger.LogError($"The message did not processed. Message body: {message.GetBodyAsString()}");
+          Logger.LogError($"The message did not processed. Message body: {message.LogBody()}");
         }
       }
       catch (SystemException)

@@ -12,9 +12,11 @@ namespace ViennaNET.Messaging.Receiving.Impl
     private readonly IMessageAdapter _adapter;
     private readonly IMessageDeserializer<TMessage> _deserializer;
 
+    private bool _disposed;
+
     /// <summary>
-    ///  Конструктор, инициализирующий экземпляр зависимостями
-    ///  <see cref="IMessageAdapter"/> и <see cref="IMessageDeserializer"/>>
+    ///   Конструктор, инициализирующий экземпляр зависимостями
+    ///   <see cref="IMessageAdapter" /> и <see cref="IMessageDeserializer" />>
     /// </summary>
     /// <param name="adapter"></param>
     /// <param name="deserializer"></param>
@@ -24,73 +26,12 @@ namespace ViennaNET.Messaging.Receiving.Impl
       _deserializer = deserializer.ThrowIfNull(nameof(deserializer));
     }
 
-    private TMessage ReceiveMessageInternal(string correlationId, out BaseMessage receivedMessage)
-    {
-      if (!_adapter.IsConnected)
-      {
-        _adapter.Connect();
-      }
-
-      var msg = _adapter.Receive(correlationId);
-      receivedMessage = msg;
-      if (string.IsNullOrWhiteSpace(msg.GetBodyAsString()))
-      {
-        throw new MessagingException("Can not deserialize message. Message body is empty");
-      }
-
-      try
-      {
-        var deserializedMessage = _deserializer.Deserialize(msg);
-        return deserializedMessage;
-      }
-      catch (Exception ex)
-      {
-        throw new MessagingException(ex, "Can not deserialize message");
-      }
-    }
-
-    private bool TryReceiveMessageInternal(string correlationId, out TMessage message, out BaseMessage receivedMessage)
-    {
-      if (!_adapter.IsConnected)
-      {
-        _adapter.Connect();
-      }
-
-      var isReceived = _adapter.TryReceive(out receivedMessage, correlationId);
-
-
-      if (isReceived && receivedMessage != null)
-      {
-        if (string.IsNullOrWhiteSpace(receivedMessage.GetBodyAsString()))
-        {
-          throw new MessagingException("Can't deserialize message. Message body is empty");
-        }
-
-        try
-        {
-          var deserializedMessage = _deserializer.Deserialize(receivedMessage);
-          message = deserializedMessage;
-          return true;
-        }
-        catch (Exception ex)
-        {
-          throw new MessagingException(ex, "Can't deserialize message");
-        }
-      }
-
-      message = default;
-      receivedMessage = null;
-      return false;
-    }
-
-
     /// <inheritdoc />
     public TMessage Receive()
     {
       CheckDisposed();
       return ReceiveMessageInternal(null, out _);
     }
-
 
     /// <inheritdoc />
     public TMessage Receive(out BaseMessage receivedMessage)
@@ -123,7 +64,7 @@ namespace ViennaNET.Messaging.Receiving.Impl
     public bool TryReceive(out TMessage message)
     {
       CheckDisposed();
-      
+
       return TryReceiveMessageInternal(null, out message, out _);
     }
 
@@ -152,19 +93,8 @@ namespace ViennaNET.Messaging.Receiving.Impl
 
       CheckDisposed();
 
-
-      return TryReceiveMessageInternal(correlationId,  out message, out receivedMessage);
+      return TryReceiveMessageInternal(correlationId, out message, out receivedMessage);
     }
-
-    private void CheckDisposed()
-    {
-      if (_disposed)
-      {
-        throw new ObjectDisposedException("MessageSender", "Message sender is already disposed");
-      }
-    }
-
-    private bool _disposed;
 
     /// <inheritdoc />
     public void Dispose()
@@ -177,6 +107,72 @@ namespace ViennaNET.Messaging.Receiving.Impl
       _disposed = true;
 
       _adapter?.Dispose();
+    }
+
+    private TMessage ReceiveMessageInternal(string correlationId, out BaseMessage receivedMessage)
+    {
+      if (!_adapter.IsConnected)
+      {
+        _adapter.Connect();
+      }
+
+      var msg = _adapter.Receive(correlationId);
+      receivedMessage = msg;
+      if (msg.IsEmpty())
+      {
+        throw new MessagingException("Can not deserialize message. Message body is empty");
+      }
+
+      try
+      {
+        var deserializedMessage = _deserializer.Deserialize(msg);
+        return deserializedMessage;
+      }
+      catch (Exception ex)
+      {
+        throw new MessagingException(ex, "Can not deserialize message");
+      }
+    }
+
+    private bool TryReceiveMessageInternal(string correlationId, out TMessage message, out BaseMessage receivedMessage)
+    {
+      if (!_adapter.IsConnected)
+      {
+        _adapter.Connect();
+      }
+
+      var isReceived = _adapter.TryReceive(out receivedMessage, correlationId);
+
+      if (isReceived && receivedMessage != null)
+      {
+        if (receivedMessage.IsEmpty())
+        {
+          throw new MessagingException("Can't deserialize message. Message body is empty");
+        }
+
+        try
+        {
+          var deserializedMessage = _deserializer.Deserialize(receivedMessage);
+          message = deserializedMessage;
+          return true;
+        }
+        catch (Exception ex)
+        {
+          throw new MessagingException(ex, "Can't deserialize message");
+        }
+      }
+
+      message = default;
+      receivedMessage = null;
+      return false;
+    }
+
+    private void CheckDisposed()
+    {
+      if (_disposed)
+      {
+        throw new ObjectDisposedException("MessageSender", "Message sender is already disposed");
+      }
     }
   }
 }
