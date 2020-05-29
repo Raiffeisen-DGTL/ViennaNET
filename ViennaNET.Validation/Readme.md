@@ -28,6 +28,7 @@ SetCollectionContext(Expression<Func<T, IEnumerable<TEntity>>> expression, IEnum
 
 1. Create a rule class, inherit from the BaseRule class, set the type of the entity being validated. Define the InternalCode constant, which uniquely identifies the rule within the project. After that, we redefine the Validate method as we need. An example of a ready rule:
 
+```csharp
     public class Rule1: BaseRule<Foo>
     {
       private const string InternalCode = "UniqueString";
@@ -47,9 +48,11 @@ SetCollectionContext(Expression<Func<T, IEnumerable<TEntity>>> expression, IEnum
         return null;
       }
     }
+```
 
 2. Let's create a set of rules, having inherited from the BaseVlidationRuleSet class and setting a validated entity common to all the rules. In the constructor, we define the rules and the dependencies between them. An example of a ready-made set of rules:
 
+```csharp
     public class RuleSet1: BaseValidationRuleSet<Foo>
     {
       public RuleSet1(Rule1 r1, Rule2 r2, Rule3 r3, Rule4 r4)
@@ -59,9 +62,11 @@ SetCollectionContext(Expression<Func<T, IEnumerable<TEntity>>> expression, IEnum
         SetRule(r4);
       }
     }
+```
 
 3. To perform validation, you need to create a validator instance and call the validation function. After the validation call, we modify the execution result. Usage example:
 
+```csharp
     public class FooValidator
     {
       private IValidator validator;
@@ -89,6 +94,7 @@ SetCollectionContext(Expression<Func<T, IEnumerable<TEntity>>> expression, IEnum
         }
       }
     }
+```
 
 Instead of using the **IValidator** interface, you can use the static wrapper **RulesValidator**.
 
@@ -98,49 +104,61 @@ To conditionally execute the rules, the WhenXXX methods of the BaseValidationRul
 
 When - rules 2 and 3 will be executed only if rule 1 returns a result that does not contain messages of type ErrorRuleMessage.
 
+```csharp
     When(Rule1, () =>
 	{
       SetRule(Rule2);
       SetRule(Rule3);
     })
+```
 
 WhenNoWarnings - rules 2 and 3 will be executed only if rule 1 returns a result that does not contain messages of the WarningRuleMessage type.
 
+```csharp
     WhenNoWarnings(Rule1, () =>
     {
       SetRule(Rule2);
       SetRule(Rule3);
     })
+```
 
 WhenNoInfos - rules 2 and 3 will be executed only if rule 1 returns a result that does not contain messages of type InfoRuleMessage(Information).
 
+```csharp
     WhenNoWarningsAndErrors(Rule1, () =>
 	{
       SetRule(Rule2);
       SetRule(Rule3);
     })
+```
 
 WhenNoInfosAndWarnings - rules 2 and 3 will be executed only if rule 1 returns a result that does not contain messages of type WarningRuleMessage and messages of type InfoRuleMessage(Information).
 
+```csharp
     WhenNoInfosAndWarnings(Rule1, () =>
 	{
       SetRule(Rule2);
       SetRule(Rule3);
     })
+```
 
 WhenNoInfosAndErrors - rules 2 and 3 will be executed only if rule 1 returns a result that does not contain messages of type InfoRuleMessage (Information) and messages of type ErrorRuleMessage.
 
+```csharp
     WhenNoInfosAndErrors(Rule1, () =>
 	{
       SetRule(Rule2);
       SetRule(Rule3);
     })
+```
 
 ### Chains of dependent rules
 
 To construct chains of dependent rules within a rule set, the DependsOn method is used. Usage example:
 
+```csharp
     SetRule(Rule1()).DependsOn(Rule2()).DependsOn(Rule3());
+```
 
 In this case, the implementation of the first rule will depend on the implementation of 2 and 3. The rules are executed from right to left. If rule 3 returns an error, then rule 2 and 1 will not be executed. The result of each rule will be recorded in the validation result.
 
@@ -148,7 +166,9 @@ In this case, the implementation of the first rule will depend on the implementa
 
 To immediately stop the validation process after an error in a rule within a rule set, you must use the StopOnFailure function when defining a rule in the set. Usage example:
 
+```csharp
     SetRule(Rule1).StopOnFailure();
+```
 
 If Rule1 returns an invalid result, then all the rules specified after it will not be executed.
 
@@ -156,6 +176,7 @@ If Rule1 returns an invalid result, then all the rules specified after it will n
 
 If the rule is a simple set of checks that do not require complex logic, you can use it when creating it with the BaseFluentRule base class. Its Validate method does not involve redefinition, and all checks must be written in the designer in the form of chains of a certain format. The following is an example of setting such a rule:
 
+```csharp
     public class FluentRule: BaseFluentRule<Foo>
     {
       private const string InternalCode = "UniqueString";
@@ -165,12 +186,14 @@ If the rule is a simple set of checks that do not require complex logic, you can
          .Must((x, с) => x! = ActionType.Update).WithErrorMessage("UniqueMessage2", "The type of action should not be updated");
       }
     }
+```
 
 The ForProperty function sets a lambda that returns the property of the entity being checked. Further along the chain, various checks can be applied to it. Each check can go with a message bound to it, specified by the WithWarningMessage and WithErrorMessage methods.
 The Must function is a special case of the rule validator; it can be used if the library does not have a predefined validator for your case. The input accepts not only the value of the validated property, but also the execution context.
 
 If you need to impose a condition on the rule, you can use the When function. It takes a lambda that returns a boolean value. If True, then the rule will be executed, otherwise the rule will be skipped.
 
+```csharp
     public class FluentRule: BaseFluentRule<Foo>
     {
       public FluentRule()
@@ -178,6 +201,7 @@ If you need to impose a condition on the rule, you can use the When function. It
         ForProperty(x => x.ActionType).When((x, c) => x.ActionTypeEnabled).NotNull().WithWarningMessage("UniqueMessage1", "Action type not set");
       }
     }
+```
 
 In addition to the property value, the When function takes an execution context.
 
@@ -187,6 +211,7 @@ Rule sets are used to group rules. However, there are cases when the validation 
 In such a situation, it may be necessary to validate properties, which themselves are composite objects, and for them there are already created validation rules.
 In this case, you can use the validator that takes the rule as an input.
 
+```csharp
     internal class UseIRuleFluentRule: BaseFluentRule<IMainEntity>
     {
       public UseIRuleFluentRule()
@@ -195,6 +220,7 @@ In this case, you can use the validator that takes the rule as an input.
           .UseRule(new AccountsInfoFluentRule());
       }
     }
+```
 
 ### Validator
 
@@ -212,6 +238,7 @@ The ValidationContext class is used to pass general state and state exchange bet
 
 Sometimes a set of rules is degenerate, it contains just a few consecutive rules.
 
+```csharp
     public class DummyRuleSet: BaseValidationRuleSet<SomeClass>
     {
       public DummyRuleSet(Rule1 rule1, Rule2 rule2)
@@ -220,6 +247,7 @@ Sometimes a set of rules is degenerate, it contains just a few consecutive rules
         SetRule(rule2);
       }
     }
+```
 
 In this case, you can use functions that accept not rulesets, but the rules themselves:
 
@@ -233,6 +261,8 @@ To change the text of messages received during validation, you must create your 
 
 Formatting rules are specified in the class constructor. To do this, you need to build a chain of the form:
 
+```csharp
     ForRule(Rule1.InternalCode).ForMessage("Message1").OverrideMessage("Replaced String");
+```
 
 To identify a message, 2 unique identifiers are used - the rule identifier and the message identifier in the rule.
