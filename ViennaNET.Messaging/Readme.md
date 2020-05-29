@@ -107,14 +107,15 @@ Section in the configuration file:
 
 _________________
 ##### Enumerations Used in the Configuration
-* **MessageProcessingType** - type of processing for listening to the queue. Values:
-    * _ThreadStrategy_ - based on work in an infinite loop in one thread.
-    * _Subscribe_ - based on a subscription to queue events.
-    * _SubscribeAndReply_ - based on subscribing to queue events and the ability to respond.
+- **MessageProcessingType** - type of processing for listening to the queue. Values:
+    - _ThreadStrategy_ - based on work in an infinite loop in one thread.
+    - _Subscribe_ - based on a subscription to queue events.
+    - _SubscribeAndReply_ - based on subscribing to queue events and the ability to respond.
 _________________
 ##### Messages
 * **BaseMessage** - The main class of messages to send to the queue. Any messages containing data must be serialized in the Body field and deserialized from it.
  Properties:
+ 
     * _MessageId_ - message identifier.
     * _CorrelationId_ - correlation identifier.
     * _ApplicationTitle_ - the name of the application that sent the message.
