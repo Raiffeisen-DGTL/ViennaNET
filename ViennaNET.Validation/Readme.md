@@ -183,7 +183,8 @@ If the rule is a simple set of checks that do not require complex logic, you can
       public FluentRule(): base(InternalCode)
       {
         ForProperty(x => x.ActionType).NotNull().WithWarningMessage("UniqueMessage1", "Action Type Not Set")
-         .Must((x, с) => x! = ActionType.Update).WithErrorMessage("UniqueMessage2", "The type of action should not be updated");
+         .Must((x, с) => x! = ActionType.Update)
+	 .WithErrorMessage("UniqueMessage2", "The type of action should not be updated");
       }
     }
 ```
@@ -198,7 +199,10 @@ If you need to impose a condition on the rule, you can use the When function. It
     {
       public FluentRule()
       {
-        ForProperty(x => x.ActionType).When((x, c) => x.ActionTypeEnabled).NotNull().WithWarningMessage("UniqueMessage1", "Action type not set");
+        ForProperty(x => x.ActionType)
+	  .When((x, c) => x.ActionTypeEnabled)
+	  .NotNull()
+	  .WithWarningMessage("UniqueMessage1", "Action type not set");
       }
     }
 ```
