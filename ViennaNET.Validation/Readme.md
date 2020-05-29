@@ -182,9 +182,11 @@ If the rule is a simple set of checks that do not require complex logic, you can
       private const string InternalCode = "UniqueString";
       public FluentRule(): base(InternalCode)
       {
-        ForProperty(x => x.ActionType).NotNull().WithWarningMessage("UniqueMessage1", "Action Type Not Set")
-         .Must((x, с) => x! = ActionType.Update)
-	 .WithErrorMessage("UniqueMessage2", "The type of action should not be updated");
+        ForProperty(x => x.ActionType)
+	  .NotNull()
+	  .WithWarningMessage("UniqueMessage1", "Action Type Not Set")
+          .Must((x, с) => x! = ActionType.Update)
+	  .WithErrorMessage("UniqueMessage2", "The type of action should not be updated");
       }
     }
 ```
