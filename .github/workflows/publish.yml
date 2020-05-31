@@ -1,6 +1,10 @@
 name: Publish packages
 
-on: [repository_dispatch]
+on: 
+  repository_dispatch:
+  release:
+    types:
+      - created
 
 jobs:
   build:
