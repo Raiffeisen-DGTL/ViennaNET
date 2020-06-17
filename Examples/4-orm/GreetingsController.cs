@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrmService.Entities;
 using ViennaNET.Orm.Application;
