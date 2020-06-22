@@ -15,7 +15,7 @@ namespace SagaService
     }
 
     [HttpPost("")]
-    public async Task<IActionResult> Get([FromBody]bool isTalkEndless)
+    public async Task<IActionResult> StartTalk([FromBody]bool isTalkEndless)
     {
       var context = new TalkContext(isTalkEndless);
       await _talkSaga.Execute(context);
