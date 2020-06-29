@@ -23,18 +23,18 @@ namespace ViennaNET.Messaging.Tests.Unit.Receiving
 
       var deserializer = new XmlMessageSerializer<TextMessage>();
       adapter = new Mock<IMessageAdapter>();
-      adapter.Setup(x => x.Receive(It.IsAny<string>()))
-             .Returns((Func<string, BaseMessage>)(x => x == "corrId"
+      adapter.Setup(x => x.Receive(It.IsAny<string>(), It.IsAny<TimeSpan?>(), It.IsAny<(string, string)[]>()))
+             .Returns((Func<string, TimeSpan?, (string, string)[], BaseMessage >)((x, y, z) => x == "corrId"
                         ? new TextMessage()
                         : new TextMessage { Body = MessageText }));
       adapter.SetupGet(x => x.IsConnected)
              .Returns(adapterIsConnected);
 
-      adapter.Setup(x => x.TryReceive(out message, null))
+      adapter.Setup(x => x.TryReceive(out message, null, null))
              .Returns(true);
-      adapter.Setup(x => x.TryReceive(out emptyMessage, "corrId"))
+      adapter.Setup(x => x.TryReceive(out emptyMessage, "corrId", null))
              .Returns(true);
-      adapter.Setup(x => x.TryReceive(out emptyMessage, "falseId"))
+      adapter.Setup(x => x.TryReceive(out emptyMessage, "falseId", null))
              .Returns(false);
 
       var receiver = new MessageReceiver<TextMessage>(adapter.Object, deserializer);

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using NUnit.Framework;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.Receiving.Impl;
@@ -16,7 +17,7 @@ namespace ViennaNET.Messaging.Tests.Unit
     public void Setup()
     {
       _adapter = new Mock<IMessageAdapter>();
-      _adapter.Setup(x => x.Receive(It.IsAny<string>()))
+      _adapter.Setup(x => x.Receive(It.IsAny<string>(), It.IsAny<TimeSpan?>()))
               .Returns(new TextMessage { Body = "E" });
       _deserializer = new Mock<IMessageDeserializer<object>>();
     }
@@ -220,7 +221,7 @@ namespace ViennaNET.Messaging.Tests.Unit
     {
       _deserializer.Setup(x => x.Deserialize(It.IsAny<BaseMessage>()))
                    .Returns(data);
-      _adapter.Setup(x => x.Receive(It.IsAny<string>()))
+      _adapter.Setup(x => x.Receive(It.IsAny<string>(), It.IsAny<TimeSpan?>()))
               .Returns(new TextMessage { Body = "ReBody" });
     }
 
@@ -230,7 +231,7 @@ namespace ViennaNET.Messaging.Tests.Unit
                    .Returns(data);
 
       BaseMessage dataMessage = new TextMessage { Body = "ReBody" };
-      _adapter.Setup(x => x.TryReceive(out dataMessage, It.IsAny<string>()))
+      _adapter.Setup(x => x.TryReceive(out dataMessage, It.IsAny<string>(), It.IsAny<TimeSpan?>()))
               .Returns(true);
     }
   }

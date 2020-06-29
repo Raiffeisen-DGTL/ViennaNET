@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Text;
 using System.Xml.Linq;
+using NUnit.Framework;
 using ViennaNET.Logging;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Extensions;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.MQSeriesQueue;
-using NUnit.Framework;
 
 namespace ViennaNET.Messaging.Tests.Integration
 {
-  [TestFixture(Category = "Integration", TestOf = typeof(MqSeriesQueueMessageAdapter))]
+  [TestFixture(Category = "Integration", TestOf = typeof(MqSeriesQueueMessageAdapter), Explicit = true)]
   public class MqQueueMessageAdapterTests
   {
     private readonly MqSeriesQueueConfiguration _configuration = new MqSeriesQueueConfiguration
@@ -32,21 +32,10 @@ namespace ViennaNET.Messaging.Tests.Integration
     };
 
     [Test]
-    public void MQSeriesMessageAdapter_ConnectDisconnect()
-    {
-      using (
-        var adapter = new MqSeriesQueueMessageAdapter(_configuration))
-      {
-        adapter.Connect();
-        adapter.Disconnect();
-      }
-    }
-
-    [Test]
     public void CorrelationId_Test()
     {
       var doc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"),
-                              new XElement("mess", new XElement("messtype", "OPUstart"), new XElement("starttype", "2")));
+        new XElement("mess", new XElement("messtype", "OPUstart"), new XElement("starttype", "2")));
 
       var message = new TextMessage();
       message.WriteXml(doc, Encoding.UTF8);
@@ -56,7 +45,7 @@ namespace ViennaNET.Messaging.Tests.Integration
       {
         adapter.Connect();
         correlationID = adapter.Send(message)
-                               .CorrelationId;
+          .CorrelationId;
         adapter.Disconnect();
       }
 
@@ -76,6 +65,14 @@ namespace ViennaNET.Messaging.Tests.Integration
           adapter.Disconnect();
         }
       }
+    }
+
+    [Test]
+    public void MQSeriesMessageAdapter_ConnectDisconnect()
+    {
+      using var adapter = new MqSeriesQueueMessageAdapter(_configuration);
+      adapter.Connect();
+      adapter.Disconnect();
     }
   }
 }

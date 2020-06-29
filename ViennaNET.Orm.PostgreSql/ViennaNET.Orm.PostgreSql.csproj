@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ViennaNET.Orm\ViennaNET.Orm.csproj" />
+    <ProjectReference Include="..\ViennaNET.Protection\ViennaNET.Protection.csproj" />
   </ItemGroup>
 
 </Project>

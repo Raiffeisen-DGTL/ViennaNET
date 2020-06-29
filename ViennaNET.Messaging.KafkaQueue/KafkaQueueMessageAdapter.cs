@@ -159,7 +159,8 @@ namespace ViennaNET.Messaging.KafkaQueue
     }
 
     /// <inheritdoc />
-    public BaseMessage Receive(string correlationId = null)
+    public BaseMessage Receive(
+      string correlationId = null, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
     {
       Logger.LogDebug($"Try to receive message from queue with id: {_configuration.Id}");
       CheckDisposed();
@@ -171,7 +172,7 @@ namespace ViennaNET.Messaging.KafkaQueue
         if (dataResult == null)
         {
           Logger.LogDebugFormat("No messages available");
-          return null;
+          throw new MessageDidNotReceivedException("Can not receive message because queue is empty");
         }
 
         var message = new BytesMessage
@@ -204,7 +205,9 @@ namespace ViennaNET.Messaging.KafkaQueue
     }
 
     /// <inheritdoc />
-    public bool TryReceive(out BaseMessage message, string correlationId = null)
+    public bool TryReceive(
+      out BaseMessage message, string correlationId = null, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
     {
       Logger.LogDebug($"Try to receive message from queue with id: {_configuration.Id}");
       try
@@ -294,9 +297,7 @@ namespace ViennaNET.Messaging.KafkaQueue
       LogMessageInternal(message, true);
       return new Message<Null, byte[]>
       {
-        Timestamp = new Timestamp(message.SendDateTime.GetValueOrDefault()),
-        Headers = headers,
-        Value = message.GetMessageBodyAsBytes()
+        Timestamp = new Timestamp(message.SendDateTime.GetValueOrDefault()), Headers = headers, Value = message.GetMessageBodyAsBytes()
       };
     }
 

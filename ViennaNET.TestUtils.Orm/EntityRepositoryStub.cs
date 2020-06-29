@@ -47,7 +47,7 @@ namespace ViennaNET.TestUtils.Orm
     where T : class, IEntityKey<TKeyType>
     where TKeyType : IComparable, IEquatable<TKeyType>, IComparable<TKeyType>
   {
-    private readonly IList<T> _items;
+    private readonly ICollection<T> _items;
 
     public EntityRepositoryStub(IEnumerable<T> items)
     {
@@ -71,7 +71,7 @@ namespace ViennaNET.TestUtils.Orm
 
     public T Get<TKey>(TKey id)
     {
-      return _items.Single(i => i.Id.Equals(id));
+      return _items.SingleOrDefault(i => i.Id.Equals(id));
     }
 
     public Task<T> GetAsync<TKey>(TKey id, CancellationToken token = new CancellationToken())
@@ -81,12 +81,24 @@ namespace ViennaNET.TestUtils.Orm
 
     public void Add(T entity)
     {
+      _items.Remove(entity);
       _items.Add(entity);
     }
 
     public Task AddAsync(T entity, CancellationToken token = new CancellationToken())
     {
-      _items.Add(entity);
+      var items = _items
+        .Where(i => !i.Id.Equals(entity.Id))
+        .Union(new []{ entity })
+        .ToList();
+
+      _items.Clear();
+
+      foreach (var item in items)
+      {
+        _items.Add(item);
+      }
+
       return Task.CompletedTask;
     }
 

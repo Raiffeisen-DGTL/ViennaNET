@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ViennaNET.Messaging.Configuration;
+﻿using ViennaNET.Messaging.Configuration;
 
 namespace ViennaNET.Messaging.MQSeriesQueue
 {
@@ -29,9 +28,9 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     public string Channel { get; set; }
 
     /// <summary>
-    /// Селекторы для вычитывания из очереди
+    /// Селектор для вычитывания из очереди отфильтрованных сообщений
     /// </summary>
-    public List<CustomHeader> Selectors { get; set; }
+    public string Selector { get; set; }
 
     /// <summary>
     /// Строка подключения

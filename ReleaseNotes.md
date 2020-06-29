@@ -1,8 +1,12 @@
-# v0005
+# v0006
 
 ### Release Summary
-Update ViennaNET.Messaging
-Add ViennaNET.Messaging.MQSeriesQueue
+1. MQSeriesQueue - selectors improved
+2. Protection - added the ability to encrypt passwords for connecting to databases
+3. HttpClients.NoAuthentication - added the ability to anonymously connect to other services
+4. WebApi.CompanyHostBuilder - add enironment variables to configuration
+
+# v0005
 
 ### Breaking Changes
 Changed CallContextHeaders headers. In case of their use, it is necessary to take into account the new formats.

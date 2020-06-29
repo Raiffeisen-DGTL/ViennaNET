@@ -8,11 +8,16 @@
     /// <summary>
     /// Тип Http-клиента с JWT-авторизацией
     /// </summary>
-    public const string Jwt = "jwt";
+    public static readonly string Jwt = "jwt";
 
     /// <summary>
     /// Тип Http-клиента с NTLM-авторизацией
     /// </summary>
-    public const string Ntlm = "ntlm";
+    public static readonly string Ntlm = "ntlm";
+
+    /// <summary>
+    /// Тип Http-клиента без авторизации
+    /// </summary>
+    public static readonly string NoAuth = "noauth";
   }
 }
