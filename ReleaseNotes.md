@@ -54,33 +54,42 @@ In the new version, the use of composite configurators has become easier, for ex
 6. We redo the configuration file:
    * Remove unnecessary parameters from the webApiConfiguration section: logRequests and swaggerSubmit
    * If you want to use the dynamic search for SimpleInjector packages, as is happening now, you need to add a section:
-  
+
+```
        "simpleInjector": {
          "loadPackagesDynamically": true
        },
-       
+```
+
    The loadPackagesDynamically flag is responsible for enabling automatic loading of packages from all assemblies that are at the root of the application folder, so that all dependencies get to the application folder, you need to add the parameter to the service project file:
-  
+
+```
        <PropertyGroup>
           <CopyLocalLockFileAssemblies> true </CopyLocalLockFileAssemblies>
        </PropertyGroup>
-       
+```
+
    By default, the flag is considered set to false, which means that all dependencies must be connected explicitly manually, using the extension method for the container from the ViennaNET.SimpleInjector.Extensions assembly in the root service package, for example:
 
-       container.AddPackage (new DiagnosingPackage ())
-                .AddPackage (new RabbitMqPackage ())
-                .AddPackage (new MessagingPackage ())
-      
+```csharp
+       container.AddPackage(new DiagnosingPackage())
+                .AddPackage(new RabbitMqPackage())
+                .AddPackage(new MessagingPackage())
+```
+
    In this case, there is no need to use the CopyLocalLockFileAssemblies parameter
 7. The swagger enable flag has been moved from the webApiConfiguration section to the swagger section with the renaming swaggerSubmit -> useSwagger
 
+```
        "swagger": {
          "useSwagger": true,
          ...
        },
+```
 
 8. If you used HttpClients through the ViennaNET.WebApi.Configurators.HttpClients.Jwt/Ntlm assemblies, you need to add a parameter with an authentication type to the section of each webApiEndpoints:
 
+```
        "webApiEndpoints": [
          ...
          {
@@ -93,21 +102,24 @@ In the new version, the use of composite configurators has become easier, for ex
          },
          ...
        ],
+```
 
 #### Case II. The service was built manually (without using DefaultKestrelRunner or DefaultHttpSysRunner)
-1) In all assemblies using <TargetFramework> netcoreapp2.2 </TargetFramework>, change to <TargetFramework> netcoreapp3.1 </TargetFramework>.
+1) In all assemblies using <TargetFramework>netcoreapp2.2</TargetFramework>, change to <TargetFramework>netcoreapp3.1</TargetFramework>.
 2) Assemblies with configurators were renamed to ViennaNET.WebApi.Configurators. *, As well as some of them were merged or divided, so you need to familiarize yourself with their description and select the ones you need.
 
    Example:
-     
-       return CompanyHostBuilder.Create ()
-                                .UseKestrel ()
-                                .UseCommonModules ()
-                                .UseSimpleInjector ()
-                                .UseSwaggerWithJwtAuth ()
-                                .UseDiagnosing ()
-                                .UseJwtHttpClients ()
-                                .UseJwtAuth ();
+
+```csharp
+       return CompanyHostBuilder.Create()
+                                .UseKestrel()
+                                .UseCommonModule ()
+                                .UseSimpleInjector()
+                                .UseSwaggerWithJwtAuth()
+                                .UseDiagnosing()
+                                .UseJwtHttpClients()                                
+                                .UseJwtAuth();
+```                                
 
 3) We update versions of Company libraries to (2. *. *) In all assemblies. Version conflicts with third-party libraries (for example, SimpleInjector) may occur, so they need to be synchronized.
 
