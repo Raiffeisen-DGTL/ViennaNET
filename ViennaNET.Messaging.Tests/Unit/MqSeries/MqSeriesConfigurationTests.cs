@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
-using ViennaNET.Messaging.Configuration;
+﻿using NUnit.Framework;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.MQSeriesQueue;
 
@@ -57,11 +55,11 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     {
       var configuration = new MqSeriesConfiguration();
 
-      configuration.Queues.Add(new MqSeriesQueueConfiguration{Id = "id", Selectors = new List<CustomHeader>{new CustomHeader{Key = "TEST", Value = "TEST"}}});
+      configuration.Queues.Add(new MqSeriesQueueConfiguration{Id = "id", Selector = "TEST = 'TEST'" });
 
       var result = configuration.GetQueueConfiguration("id");
 
-      Assert.That(result.Selectors != null);
+      Assert.That(result.Selector == "TEST = 'TEST'");
     }
   }
 }

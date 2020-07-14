@@ -95,6 +95,7 @@ namespace ViennaNET.WebApi
 
       config.AddInMemoryCollection(serviceAssemblyProps);
       config.AddJsonFile(Path.GetDirectoryName(_serviceAssembly.Location) + "/conf/appsettings.json");
+      config.AddEnvironmentVariables();
       Configuration = config.Build();
     }
 

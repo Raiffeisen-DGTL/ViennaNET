@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using IBM.XMS;
 using ViennaNET.Logging;
 using ViennaNET.Messaging.Configuration;
@@ -10,9 +13,14 @@ using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.MQSeriesQueue
 {
-  /// <inheritdoc />
-  public class MqSeriesQueueMessageAdapter : IMessageAdapterWithTransactions
+  /// <summary>
+  ///   Адаптер, реализующий взаимодействие с очередью IBM MQ
+  /// </summary>
+  public class MqSeriesQueueMessageAdapter : IMessageAdapterWithTransactions, IMessageAdapterWithSubscribing
   {
+    private const long NoWaitTimeout = -1L;
+    private const long InfiniteWaitTimeout = 0L;
+
     private static readonly object ConnectionLock = new object();
     private readonly object _browserLock = new object();
     private readonly MqSeriesQueueConfiguration _configuration;
@@ -63,7 +71,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
           _connectionFactory.SetStringProperty(XMSC.WMQ_CHANNEL, _configuration.Channel);
           _connectionFactory.SetIntProperty(XMSC.WMQ_CONNECTION_MODE, XMSC.WMQ_CM_CLIENT);
           _connectionFactory.SetStringProperty(XMSC.WMQ_QUEUE_MANAGER, _configuration.QueueManager);
-          _connectionFactory.SetIntProperty(XMSC.WMQ_BROKER_VERSION, XMSC.WMQ_BROKER_DEFAULT); //TODO is it necessary?
+          _connectionFactory.SetIntProperty(XMSC.WMQ_BROKER_VERSION, XMSC.WMQ_BROKER_DEFAULT);
 
           _connection = string.IsNullOrEmpty(_configuration.User)
             ? _connectionFactory.CreateConnection()
@@ -73,7 +81,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
         }
         catch (XMSException ex)
         {
-          DisconectInternal();
+          DisconnectInternal();
           Logger.LogDebug("MQ connect failure:");
           LogXmsException(ex);
           throw new MessagingException(ex, "Error while connect to the queue. See inner exception for more details");
@@ -81,7 +89,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
         catch (Exception ex)
         {
           Logger.LogError(ex, "Error while connect to the queue. See inner exception for more details");
-          DisconectInternal();
+          DisconnectInternal();
           throw;
         }
       }
@@ -97,7 +105,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       ThrowIfDisposed();
       try
       {
-        DisconectInternal();
+        DisconnectInternal();
       }
       catch (XMSException ex)
       {
@@ -132,36 +140,30 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       return SendInternal(message);
     }
 
-    /// <summary>
-    ///   Получить сообщение из очереди
-    /// </summary>
-    /// <param name="correlationId">Correlation id of message</param>
-    /// <returns>Полученное сообщение</returns>
-    public BaseMessage Receive(string correlationId = null)
+    /// <inheritdoc />
+    public BaseMessage Receive(string correlationId = null, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
     {
       ThrowIfDisposed();
       ThrowIfNotConnected();
 
-      var msg = ReceiveInternal(false, correlationId);
+      var msg = ReceiveInternal(false, correlationId, timeout, additionalParameters);
       if (msg == null)
       {
-        throw new MessagingException("Can not receive message because queue is empty");
+        throw new MessageDidNotReceivedException("Can not receive message because queue is empty");
       }
 
       return msg;
     }
 
-    /// <summary>
-    /// </summary>
-    /// <param name="message">Сообщение</param>
-    /// <param name="correlationId"></param>
-    /// <returns>True если сообщение было считано из очереди. False если сообщение не было считано из очереди</returns>
-    public bool TryReceive(out BaseMessage message, string correlationId = null)
+    /// <inheritdoc />
+    public bool TryReceive(
+      out BaseMessage message, string correlationId = null, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
     {
       ThrowIfDisposed();
       ThrowIfNotConnected();
 
-      var msg = ReceiveInternal(false, correlationId);
+      var msg = ReceiveInternal(false, correlationId, timeout, additionalParameters);
       if (msg != null)
       {
         message = msg;
@@ -224,7 +226,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     /// <inheritdoc />
     public bool SupportProcessingType(MessageProcessingType processingType)
     {
-      return processingType == MessageProcessingType.ThreadStrategy;
+      return processingType == MessageProcessingType.ThreadStrategy || processingType == MessageProcessingType.Subscribe;
     }
 
     private static void LogXmsException(XMSException ex)
@@ -241,28 +243,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     {
       try
       {
-        var mes = ConvertToInternalMessage(message);
-        mes.JMSMessageID = string.IsNullOrWhiteSpace(message.MessageId)
-          ? Guid.NewGuid()
-                .ToString()
-                .ToUpper()
-          : message.MessageId;
-        mes.JMSCorrelationID = string.IsNullOrWhiteSpace(message.CorrelationId)
-          ? mes.JMSMessageID
-          : message.CorrelationId;
-        mes.JMSExpiration = (int)message.LifeTime.TotalSeconds * 10; // взято из MQSeriesMessageAdapter
-
-        if (!string.IsNullOrWhiteSpace(message.ReplyQueue))
-        {
-          var replayQueue = GetSession()
-            .CreateQueue(message.ReplyQueue.Trim());
-          mes.JMSReplyTo = replayQueue;
-        }
-
-        foreach (var kv in message.Properties)
-        {
-          mes.SetObjectProperty(kv.Key, kv.Value);
-        }
+        var mes = message.ConvertToMqMessage(GetSession());
 
         GetProducer()
           .Send(mes);
@@ -290,37 +271,6 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
     }
 
-    private IMessage ConvertToInternalMessage(BaseMessage message)
-    {
-      switch (message)
-      {
-        case TextMessage textMessage:
-          return GetSession()
-            .CreateTextMessage(textMessage.Body);
-        case BytesMessage bytesMessage:
-          var result = GetSession()
-            .CreateBytesMessage();
-          result.WriteBytes(bytesMessage.Body);
-          return result;
-        default: throw new ArgumentException($"Unknown inherited type of BaseMessage ({message.GetType()}) while converting to IMessage");
-      }
-    }
-
-    private static BaseMessage ConvertToBaseMessage(IMessage message)
-    {
-      switch (message)
-      {
-        case ITextMessage textMessage:
-          return new TextMessage { Body = textMessage.Text };
-        case IBytesMessage bytesMessage:
-          var buffer = new byte[bytesMessage.BodyLength];
-          bytesMessage.ReadBytes(buffer);
-          return new BytesMessage { Body = buffer };
-        default:
-          return new TextMessage { Body = string.Empty };
-      }
-    }
-
     /// <summary>
     ///   Protected implementation of Dispose pattern.
     /// </summary>
@@ -336,7 +286,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       {
         try
         {
-          FreeResources();
+          DisconnectInternal();
         }
         catch (Exception ex)
         {
@@ -349,33 +299,42 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       _isDisposed = true;
     }
 
+    /// <inheritdoc />
     ~MqSeriesQueueMessageAdapter()
     {
-      try
-      {
-        FreeResources();
-      }
-      catch
-      {
-        // ignored
-      }
+      Dispose(false);
     }
 
-    private BaseMessage ReceiveInternal(bool isBrowse, string correlationId = null)
+    private BaseMessage ReceiveInternal(
+      bool isBrowse, string correlationId, TimeSpan? timeout, params (string Name, string Value)[] additionalParameters)
     {
       try
       {
         IMessage receivedMessage;
         if (isBrowse)
         {
-          var browser = GetBrowser(correlationId);
+          var browser = GetBrowser(correlationId, additionalParameters);
           receivedMessage = (IMessage)browser.GetEnumerator()
                                              .Current;
         }
         else
         {
-          receivedMessage = GetConsumer(correlationId)
-            .ReceiveNoWait();
+          var waitTimeout = GetTimeout(timeout);
+          if (waitTimeout > 0L)
+          {
+            receivedMessage = GetConsumer(correlationId, additionalParameters)
+              .Receive(waitTimeout);
+          }
+          else if (waitTimeout == NoWaitTimeout)
+          {
+            receivedMessage = GetConsumer(correlationId, additionalParameters)
+              .ReceiveNoWait();
+          }
+          else
+          {
+            receivedMessage = GetConsumer(correlationId, additionalParameters)
+              .Receive();
+          }
         }
 
         if (receivedMessage == null)
@@ -383,31 +342,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
           return null;
         }
 
-        var sendDate = ConvertJavaTimestampToDateTime(receivedMessage.JMSTimestamp);
-        var expirationDate = ConvertJavaTimestampToDateTime(receivedMessage.JMSExpiration);
-
-        var message = ConvertToBaseMessage(receivedMessage);
-        message.MessageId = receivedMessage.JMSMessageID;
-        message.CorrelationId = receivedMessage.JMSCorrelationID;
-        message.SendDateTime = sendDate;
-        message.ReceiveDate = DateTime.Now;
-        message.ReplyQueue = receivedMessage.JMSReplyTo?.Name;
-        message.LifeTime = expirationDate > sendDate
-          ? expirationDate - sendDate
-          : new TimeSpan();
-
-        // чтение properties сообщения web sphere.
-        var propertyNames = receivedMessage.PropertyNames;
-        var messageProps = string.Empty;
-        while (propertyNames.MoveNext())
-        {
-          var name = (string)propertyNames.Current ?? string.Empty;
-          var prop = receivedMessage.GetObjectProperty(name);
-          message.Properties.Add(name, prop);
-          messageProps += name + " = " + prop + ";\n";
-        }
-
-        Logger.LogDebugFormat("Message Properties: \n" + messageProps);
+        var message = receivedMessage.ConvertToBaseMessage();
 
         Logger.LogDebugFormat("Received message: {0}", receivedMessage);
         LogMessageInternal(message, false);
@@ -420,6 +355,27 @@ namespace ViennaNET.Messaging.MQSeriesQueue
         LogXmsException(ex);
         throw new MessagingException(ex, "Error while receiving message. See inner exception for more details");
       }
+    }
+
+    internal static long GetTimeout(TimeSpan? timeout)
+    {
+      if (timeout == Timeout.InfiniteTimeSpan || timeout == TimeSpan.MaxValue)
+      {
+        return InfiniteWaitTimeout;
+      }
+
+      if (timeout == TimeSpan.MinValue)
+      {
+        return NoWaitTimeout;
+      }
+
+      var waitTimeout = timeout.HasValue
+        ? (long)timeout.Value.TotalMilliseconds
+        : NoWaitTimeout;
+
+      return waitTimeout <= 0L
+        ? NoWaitTimeout
+        : waitTimeout;
     }
 
     private IMessageProducer GetProducer()
@@ -447,11 +403,11 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       return _producer;
     }
 
-    private IMessageConsumer GetConsumer(string correlationId = "")
+    private IMessageConsumer GetConsumer(string correlationId = "", params (string Name, string Value)[] additionalParameters)
     {
       if (!string.IsNullOrWhiteSpace(correlationId))
       {
-        var specialConsumer = CreateConsumer(correlationId);
+        var specialConsumer = CreateConsumer(correlationId, additionalParameters);
         _connection.Start();
         return specialConsumer;
       }
@@ -468,61 +424,62 @@ namespace ViennaNET.Messaging.MQSeriesQueue
           return _consumer;
         }
 
-        _consumer = CreateConsumer(correlationId);
+        _consumer = CreateConsumer(correlationId, additionalParameters);
         _connection.Start();
       }
 
       return _consumer;
     }
 
-    private IMessageConsumer CreateConsumer(string corellationId)
+    private IMessageConsumer CreateConsumer(string correlationId, (string Name, string Value)[] additionalParameters)
     {
       var session = GetSession();
       var destination = GetDestination(session);
 
-      var corellationIdSelector = "";
-      if (!string.IsNullOrWhiteSpace(corellationId))
-      {
-        corellationIdSelector = $"JMSCorrelationID=\'{corellationId}\'";
-      }
+      var selector = CreateSelector(correlationId, additionalParameters);
 
-      var combinedSelector = string.Join(" AND ", new[] { string.Empty, corellationIdSelector }.Where(s => !string.IsNullOrWhiteSpace(s))
-                                                                                               .Select(s => s));
-      combinedSelector = AddSelectorFromConfig(combinedSelector);
-
-      return string.IsNullOrEmpty(combinedSelector)
+      return string.IsNullOrEmpty(selector)
         ? session.CreateConsumer(destination)
-        : session.CreateConsumer(destination, combinedSelector);
+        : session.CreateConsumer(destination, selector);
     }
 
-    internal string AddSelectorFromConfig(string combinedSelector)
+    internal string CreateSelector(string correlationId, IEnumerable<(string Name, string Value)> additionalParameters)
     {
-      if (_configuration.Selectors != null)
+      var correlationIdSelector = string.Empty;
+      if (!string.IsNullOrWhiteSpace(correlationId))
       {
-        var selectorsStr = _configuration.Selectors.Select(s => $"{s.Key} = \'{s.Value}\'");
-
-        var customSelector = string.Join(" AND ", selectorsStr);
-
-        if (!string.IsNullOrEmpty(combinedSelector))
-        {
-          combinedSelector = string.Join(" AND ", combinedSelector, customSelector);
-        }
-        else
-        {
-          combinedSelector = customSelector;
-        }
+        correlationIdSelector = $"(JMSCorrelationID=\'{correlationId}\')";
       }
 
-      Logger.LogInfo($"MQ Selector: {combinedSelector}");
-
+      var combinedSelector = AddSelectorFromConfig(correlationIdSelector, additionalParameters);
       return combinedSelector;
     }
 
-    private IQueueBrowser GetBrowser(string correlationId = "")
+    private string AddSelectorFromConfig(string correlationIdSelector, IEnumerable<(string Name, string Value)> additionalParameters)
+    {
+      if (string.IsNullOrWhiteSpace(_configuration.Selector))
+      {
+        return correlationIdSelector;
+      }
+
+      var additionalSelector = additionalParameters.Aggregate(_configuration.Selector,
+                                                              (current, param) =>
+                                                                current.Replace($":{param.Name}", $"\'{param.Value}\'"));
+
+      var result = string.IsNullOrWhiteSpace(correlationIdSelector)
+        ? additionalSelector
+        : string.Join(" AND ", correlationIdSelector, additionalSelector);
+
+      Logger.LogInfo($"MQ Selector: {result}");
+
+      return result;
+    }
+
+    private IQueueBrowser GetBrowser(string correlationId = "", params (string Name, string Value)[] additionalParameters)
     {
       if (!string.IsNullOrWhiteSpace(correlationId))
       {
-        var specialBrowser = CreateBrowser(correlationId);
+        var specialBrowser = CreateBrowser(correlationId, additionalParameters);
         _connection.Start();
         return specialBrowser;
       }
@@ -539,29 +496,23 @@ namespace ViennaNET.Messaging.MQSeriesQueue
           return _browser;
         }
 
-        _browser = CreateBrowser(correlationId);
+        _browser = CreateBrowser(correlationId, additionalParameters);
         _connection.Start();
       }
 
       return _browser;
     }
 
-    private IQueueBrowser CreateBrowser(string corellationId)
+    private IQueueBrowser CreateBrowser(string correlationId, (string Name, string Value)[] additionalParameters)
     {
       var session = GetSession();
       var destination = GetDestination(session);
 
-      var corellationIdSelector = "";
-      if (!string.IsNullOrWhiteSpace(corellationId))
-      {
-        corellationIdSelector = $"JMSCorrelationID=\'{corellationId}\'";
-      }
+      var selector = CreateSelector(correlationId, additionalParameters);
 
-      var combinedSelector = string.Join(" AND ", new[] { string.Empty, corellationIdSelector }.Where(s => !string.IsNullOrWhiteSpace(s))
-                                                                                               .Select(s => "(" + s + ")"));
-      return string.IsNullOrEmpty(combinedSelector)
+      return string.IsNullOrEmpty(selector)
         ? session.CreateBrowser(destination)
-        : session.CreateBrowser(destination, combinedSelector);
+        : session.CreateBrowser(destination, selector);
     }
 
     private IDestination GetDestination(ISession session)
@@ -618,13 +569,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
     }
 
-    private void FreeResources()
-    {
-      DisconectInternal();
-      _isDisposed = true;
-    }
-
-    private void DisconectInternal()
+    private void DisconnectInternal()
     {
       if (_consumer != null)
       {
@@ -658,14 +603,6 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       _isConnected = false;
     }
 
-    private static DateTime ConvertJavaTimestampToDateTime(long jmsTimestamp)
-    {
-      // Example:  Converting Java millis time to .NET time
-      var baseTime = new DateTime(1970, 1, 1, 0, 0, 0);
-      var utcTimeTicks = jmsTimestamp * 10000 + baseTime.Ticks;
-      return new DateTime(utcTimeTicks, DateTimeKind.Utc);
-    }
-
     private static void LogMessageInternal(BaseMessage msg, bool isSend)
     {
       Logger.LogDebug(new StringBuilder().AppendLine(isSend
@@ -675,6 +612,37 @@ namespace ViennaNET.Messaging.MQSeriesQueue
                                          .AppendLine($"CorrelationId = {msg.CorrelationId}")
                                          .AppendLine($"Body = {msg.LogBody()}")
                                          .ToString());
+    }
+
+    /// <inheritdoc />
+    public void Subscribe(Func<BaseMessage, Task> handler)
+    {
+      ThrowIfDisposed();
+      ThrowIfNotConnected();
+
+      GetConsumer()
+        .MessageListener = msg => handler.Invoke(msg.ConvertToBaseMessage());
+    }
+
+    /// <inheritdoc />
+    public void Unsubscribe()
+    {
+      GetConsumer()
+        .MessageListener = null;
+    }
+
+    /// <inheritdoc />
+    public Task<BaseMessage> RequestAndWaitResponse(BaseMessage message)
+    {
+      // TODO Данный метод нужно решить на другом уровне абстракции
+      return Task.FromResult<BaseMessage>(null);
+    }
+
+    /// <inheritdoc />
+    public BaseMessage Reply(BaseMessage message)
+    {
+      // TODO Данный метод нужно решить на другом уровне абстракции
+      return null;
     }
   }
 }

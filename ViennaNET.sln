@@ -232,6 +232,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6-messaging", "6-messaging", "{A7244BD9-FBEB-4DE7-9E44-41B63137BC06}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingService", "Examples\6-messaging\MessagingService.csproj", "{DD1F0D81-269D-45A1-827E-4885675D999A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Protection", "ViennaNET.Protection\ViennaNET.Protection.csproj", "{D12D13EE-81EE-4416-B4C0-75BAFD665F10}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Protection.Tests", "ViennaNET.Protection.Tests\ViennaNET.Protection.Tests.csproj", "{51935105-D112-4F20-8B81-94F692D6BF87}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests", "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests.csproj", "{630BFA0C-0ED2-4BAC-A1D7-56E18836D497}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication", "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.csproj", "{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -595,6 +602,22 @@ Global
 		{DD1F0D81-269D-45A1-827E-4885675D999A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD1F0D81-269D-45A1-827E-4885675D999A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD1F0D81-269D-45A1-827E-4885675D999A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D12D13EE-81EE-4416-B4C0-75BAFD665F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12D13EE-81EE-4416-B4C0-75BAFD665F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D12D13EE-81EE-4416-B4C0-75BAFD665F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D12D13EE-81EE-4416-B4C0-75BAFD665F10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51935105-D112-4F20-8B81-94F692D6BF87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51935105-D112-4F20-8B81-94F692D6BF87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51935105-D112-4F20-8B81-94F692D6BF87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51935105-D112-4F20-8B81-94F692D6BF87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{630BFA0C-0ED2-4BAC-A1D7-56E18836D497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{630BFA0C-0ED2-4BAC-A1D7-56E18836D497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{630BFA0C-0ED2-4BAC-A1D7-56E18836D497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{630BFA0C-0ED2-4BAC-A1D7-56E18836D497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -687,6 +710,8 @@ Global
 		{BD51CF6A-EA25-47D2-8C92-C2B03EEBC77D} = {8C8397C1-3E51-4F1C-BAAE-FDE344DC5A58}
 		{A7244BD9-FBEB-4DE7-9E44-41B63137BC06} = {21F07B8A-0B65-4548-842A-D69C5132B033}
 		{DD1F0D81-269D-45A1-827E-4885675D999A} = {A7244BD9-FBEB-4DE7-9E44-41B63137BC06}
+		{630BFA0C-0ED2-4BAC-A1D7-56E18836D497} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
+		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {21931976-D091-46E5-A4E3-F3BA29D6DB9C}

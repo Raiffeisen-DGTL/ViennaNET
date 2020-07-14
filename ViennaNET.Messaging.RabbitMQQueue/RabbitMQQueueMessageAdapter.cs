@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViennaNET.Logging;
-using ViennaNET.Messaging.Configuration;
-using ViennaNET.Messaging.Exceptions;
-using ViennaNET.Messaging.Messages;
-using ViennaNET.Utils;
 using EasyNetQ;
 using EasyNetQ.Topology;
 using RabbitMQ.Client.Exceptions;
+using ViennaNET.Logging;
+using ViennaNET.Messaging.Configuration;
+using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Extensions;
+using ViennaNET.Messaging.Messages;
+using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.RabbitMQQueue
 {
@@ -78,8 +78,8 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       {
         try
         {
-          _advancedBus = RabbitHutch.CreateBus(_configuration.Server, _configuration.Port, _configuration.VirtualHost ?? "/", _configuration.User,
-                                               _configuration.Password, 10, x =>
+          _advancedBus = RabbitHutch.CreateBus(_configuration.Server, _configuration.Port, _configuration.VirtualHost ?? "/",
+                                               _configuration.User, _configuration.Password, 10, x =>
                                                {
                                                })
                                     .Advanced;
@@ -142,7 +142,8 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       CheckAndReconnect();
 
       Logger.LogDebug($"Try to subscribe to queue with id: {_configuration.Id} with handler: {handler}");
-      _consumer = _advancedBus.Consume(_queue, (body, messageProperties, info) => handler?.Invoke(body.ConvertToBaseMessage(messageProperties)));
+      _consumer =
+        _advancedBus.Consume(_queue, (body, messageProperties, info) => handler?.Invoke(body.ConvertToBaseMessage(messageProperties)));
       Logger.LogDebug($"Done to subscribe to queue with id: {_configuration.Id} with handler: {handler}");
     }
 
@@ -181,7 +182,8 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     }
 
     /// <inheritdoc />
-    public BaseMessage Receive(string correlationId = null)
+    public BaseMessage Receive(
+      string correlationId = null, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
     {
       Logger.LogDebug($"Try to receive message from queue with id: {_configuration.Id}");
       CheckDisposed();
@@ -215,7 +217,9 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     }
 
     /// <inheritdoc />
-    public bool TryReceive(out BaseMessage message, string correlationId = null)
+    public bool TryReceive(
+      out BaseMessage message, string correlationId = null, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
     {
       Logger.LogDebug($"Try to receive message from queue with id: {_configuration.Id}");
       try
@@ -260,12 +264,10 @@ namespace ViennaNET.Messaging.RabbitMQQueue
                                                      expires: (_configuration.ReplyTimeout ?? DefaultReplyTimeout) * 1000
                                                               + TempQueueLifetimeAdditionMs);
           _advancedBus.Bind(replyExchange, replyQueue, replyQueueName);
-          _advancedBus.Consume(replyQueue,
-                               (body, messageProperties, info) =>
-                                 Task.Factory.StartNew(() =>
-                                 {
-                                   tcs.SetResult(body.ConvertToBaseMessage(messageProperties));
-                                 }));
+          _advancedBus.Consume(replyQueue, (body, messageProperties, info) => Task.Factory.StartNew(() =>
+          {
+            tcs.SetResult(body.ConvertToBaseMessage(messageProperties));
+          }));
         }
 
         var timer = new Timer(state =>

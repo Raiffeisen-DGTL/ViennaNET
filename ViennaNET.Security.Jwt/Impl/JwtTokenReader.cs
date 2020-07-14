@@ -40,7 +40,7 @@ namespace ViennaNET.Security.Jwt.Impl
 
     private static string ClearToken(string token)
     {
-      return token.Split(" ")
+      return token.Split(' ')
                   .Last();
     }
 

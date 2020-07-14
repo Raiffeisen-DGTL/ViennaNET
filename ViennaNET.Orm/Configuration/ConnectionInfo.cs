@@ -1,4 +1,5 @@
 ﻿using System;
+using ViennaNET.Protection;
 
 namespace ViennaNET.Orm.Configuration
 {
@@ -8,6 +9,8 @@ namespace ViennaNET.Orm.Configuration
   [Serializable]
   public class ConnectionInfo
   {
+    private string _password;
+
     /// <summary>
     ///   Тип БД
     /// </summary>
@@ -22,6 +25,18 @@ namespace ViennaNET.Orm.Configuration
     ///   Строка подключения
     /// </summary>
     public string ConnectionString { get; set; }
+
+    /// <summary>
+    ///   Зашифрованный пароль
+    /// </summary>
+    public string EncPassword
+    {
+      get => _password;
+      set =>
+        _password = !string.IsNullOrEmpty(value)
+          ? value.Unprotect()
+          : string.Empty;
+    }
 
     /// <summary>
     ///   Признак использования контекста выполнения

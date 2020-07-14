@@ -9,6 +9,11 @@ namespace ViennaNET.Orm.MSSQL
     {
       var connectionStringBuilder = new SqlConnectionStringBuilder { ConnectionString = info.ConnectionString };
 
+      if (!string.IsNullOrWhiteSpace(info.EncPassword))
+      {
+        connectionStringBuilder.Password = info.EncPassword;
+      }
+
       return connectionStringBuilder.ConnectionString;
     }
   }

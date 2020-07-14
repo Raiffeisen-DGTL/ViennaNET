@@ -206,5 +206,40 @@ namespace ViennaNET.TestUtils.Orm.Tests
       var repoContentAfterAdding = repo.Query().ToList();
       Assert.That(repoContentAfterAdding, Is.EquivalentTo(cardsExpectedToBeKept));
     }
+
+    [Test]
+    public async Task CreatedRepositoryStubWithIntKey_AddShouldBeToDeleteAndInsert()
+    {
+      // Arrange
+      var cardEntities = CreateSomeCards().ToArray();
+      var repo = CreateCardsRepository(cardEntities);
+
+      // Act
+      const int newCardId = 100;
+      var newCardPan = "9999888877776666";
+      var newCard = new CardEntity(newCardId, newCardPan);
+      await repo.AddAsync(newCard);
+      newCardPan = Guid.NewGuid().ToString();
+      var newCard1 = new CardEntity(newCardId, newCardPan);
+      await repo.AddAsync(newCard1);
+
+      // Assert
+      var updatedCard = await repo.GetAsync(newCardId);
+      Assert.AreEqual(newCardPan, updatedCard.Pan);
+    }
+
+    [Test]
+    public async Task CreatedRepositoryStubWithIntKey_GetWithWrongIds_ShouldBeNull()
+    {
+      // Arrange
+      var cardEntities = CreateSomeCards().ToArray();
+      var repo = CreateCardsRepository(cardEntities);
+
+      // Act
+      var card = await repo.GetAsync(-1000);
+
+      // Assert
+      Assert.IsNull(card);
+    }
   }
 }

@@ -27,76 +27,6 @@ namespace ViennaNET.Messaging.Receiving.Impl
     }
 
     /// <inheritdoc />
-    public TMessage Receive()
-    {
-      CheckDisposed();
-      return ReceiveMessageInternal(null, out _);
-    }
-
-    /// <inheritdoc />
-    public TMessage Receive(out BaseMessage receivedMessage)
-    {
-      CheckDisposed();
-      return ReceiveMessageInternal(null, out receivedMessage);
-    }
-
-    /// <inheritdoc />
-    public TMessage Receive(string correlationId)
-    {
-      correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
-
-      CheckDisposed();
-
-      return ReceiveMessageInternal(correlationId, out _);
-    }
-
-    /// <inheritdoc />
-    public TMessage Receive(string correlationId, out BaseMessage receivedMessage)
-    {
-      correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
-
-      CheckDisposed();
-
-      return ReceiveMessageInternal(correlationId, out receivedMessage);
-    }
-
-    /// <inheritdoc />
-    public bool TryReceive(out TMessage message)
-    {
-      CheckDisposed();
-
-      return TryReceiveMessageInternal(null, out message, out _);
-    }
-
-    /// <inheritdoc />
-    public bool TryReceive(out TMessage message, out BaseMessage receivedMessage)
-    {
-      CheckDisposed();
-
-      return TryReceiveMessageInternal(null, out message, out receivedMessage);
-    }
-
-    /// <inheritdoc />
-    public bool TryReceive(string correlationId, out TMessage message)
-    {
-      correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
-
-      CheckDisposed();
-
-      return TryReceiveMessageInternal(correlationId, out message, out _);
-    }
-
-    /// <inheritdoc />
-    public bool TryReceive(string correlationId, out TMessage message, out BaseMessage receivedMessage)
-    {
-      correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
-
-      CheckDisposed();
-
-      return TryReceiveMessageInternal(correlationId, out message, out receivedMessage);
-    }
-
-    /// <inheritdoc />
     public void Dispose()
     {
       if (_disposed)
@@ -109,14 +39,93 @@ namespace ViennaNET.Messaging.Receiving.Impl
       _adapter?.Dispose();
     }
 
-    private TMessage ReceiveMessageInternal(string correlationId, out BaseMessage receivedMessage)
+    /// <inheritdoc />
+    public TMessage Receive(TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+    {
+      CheckDisposed();
+      return ReceiveMessageInternal(null, timeout, out _, additionalParameters);
+    }
+
+    /// <inheritdoc />
+    public TMessage Receive(
+      out BaseMessage receivedMessage, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+    {
+      CheckDisposed();
+      return ReceiveMessageInternal(null, timeout, out receivedMessage, additionalParameters);
+    }
+
+    /// <inheritdoc />
+    public TMessage Receive(string correlationId, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+    {
+      correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
+
+      CheckDisposed();
+
+      return ReceiveMessageInternal(correlationId, timeout, out _, additionalParameters);
+    }
+
+    /// <inheritdoc />
+    public TMessage Receive(
+      string correlationId, out BaseMessage receivedMessage, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
+    {
+      correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
+
+      CheckDisposed();
+
+      return ReceiveMessageInternal(correlationId, timeout, out receivedMessage, additionalParameters);
+    }
+
+    /// <inheritdoc />
+    public bool TryReceive(out TMessage message, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+    {
+      CheckDisposed();
+
+      return TryReceiveMessageInternal(null, timeout, out message, out _, additionalParameters);
+    }
+
+    /// <inheritdoc />
+    public bool TryReceive(
+      out TMessage message, out BaseMessage receivedMessage, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
+    {
+      CheckDisposed();
+
+      return TryReceiveMessageInternal(null, timeout, out message, out receivedMessage, additionalParameters);
+    }
+
+    /// <inheritdoc />
+    public bool TryReceive(
+      string correlationId, out TMessage message, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+    {
+      correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
+
+      CheckDisposed();
+
+      return TryReceiveMessageInternal(correlationId, timeout, out message, out _, additionalParameters);
+    }
+
+    /// <inheritdoc />
+    public bool TryReceive(
+      string correlationId, out TMessage message, out BaseMessage receivedMessage, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
+    {
+      correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
+
+      CheckDisposed();
+
+      return TryReceiveMessageInternal(correlationId, timeout, out message, out receivedMessage, additionalParameters);
+    }
+
+    private TMessage ReceiveMessageInternal(
+      string correlationId, TimeSpan? timeout, out BaseMessage receivedMessage, params (string Name, string Value)[] additionalParameters)
     {
       if (!_adapter.IsConnected)
       {
         _adapter.Connect();
       }
 
-      var msg = _adapter.Receive(correlationId);
+      var msg = _adapter.Receive(correlationId, timeout, additionalParameters);
       receivedMessage = msg;
       if (msg.IsEmpty())
       {
@@ -134,14 +143,16 @@ namespace ViennaNET.Messaging.Receiving.Impl
       }
     }
 
-    private bool TryReceiveMessageInternal(string correlationId, out TMessage message, out BaseMessage receivedMessage)
+    private bool TryReceiveMessageInternal(
+      string correlationId, TimeSpan? timeout, out TMessage message, out BaseMessage receivedMessage,
+      params (string Name, string Value)[] additionalParameters)
     {
       if (!_adapter.IsConnected)
       {
         _adapter.Connect();
       }
 
-      var isReceived = _adapter.TryReceive(out receivedMessage, correlationId);
+      var isReceived = _adapter.TryReceive(out receivedMessage, correlationId, timeout, additionalParameters);
 
       if (isReceived && receivedMessage != null)
       {
