@@ -9,9 +9,9 @@ using ViennaNET.WebApi.Configurators.Common;
 
 namespace OrmService
 {
-  internal class Program
+  internal static class Program
   {
-    public static void Main(string[] args)
+    internal static void Main(string[] args)
     {
       CompanyHostBuilder.Create()
                   .UseKestrel()

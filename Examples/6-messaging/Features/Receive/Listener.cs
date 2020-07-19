@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using EmptyService.Features.Receive.Processors;
+﻿using MessagingService.Features.Receive.Processors;
 using ViennaNET.Messaging.Processing;
 
-namespace EmptyService.Features.Receive
+namespace MessagingService.Features.Receive
 {
   public class Listener
   {

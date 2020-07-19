@@ -1,4 +1,4 @@
-﻿namespace EmptyService.Features.Send.Messages
+﻿namespace MessagingService.Features.Send.Messages
 {
   public class ExampleMessage
   {

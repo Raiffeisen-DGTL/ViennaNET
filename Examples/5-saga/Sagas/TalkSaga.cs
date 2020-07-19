@@ -58,7 +58,7 @@ namespace SagaService.Sagas
 
     private void CanTalkEnds(TalkContext context)
     {
-      if (!context.isTalkEndless)
+      if (context.InterruptTalk)
       {
         throw new AbortSagaExecutingException();
       }

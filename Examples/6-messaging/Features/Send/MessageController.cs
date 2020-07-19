@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using EmptyService.Features.Send.Services;
+using MessagingService.Features.Send.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EmptyService.Features.Send
+namespace MessagingService.Features.Send
 {
   [Route("api/[controller]")]
   public class MessageController : ControllerBase

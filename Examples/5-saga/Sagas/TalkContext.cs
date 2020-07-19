@@ -4,13 +4,13 @@ namespace SagaService.Sagas
 {
   public class TalkContext
   {
-    public readonly bool isTalkEndless;
+    public bool InterruptTalk { get; }
 
-    public List<string> Talk;
+    public List<string> Talk { get; }
 
-    public TalkContext(bool isEndlessTalk)
+    public TalkContext(bool interruptTalk)
     {
-      isTalkEndless = isEndlessTalk;
+      InterruptTalk = interruptTalk;
 
       Talk = new List<string>();
     }

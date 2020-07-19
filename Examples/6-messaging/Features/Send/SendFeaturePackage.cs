@@ -1,10 +1,10 @@
-﻿using EmptyService.Features.Send.Messages;
-using EmptyService.Features.Send.Services;
+﻿using MessagingService.Features.Send.Messages;
+using MessagingService.Features.Send.Services;
 using SimpleInjector;
 using SimpleInjector.Packaging;
 using ViennaNET.Messaging.Tools;
 
-namespace EmptyService.Features.Send
+namespace MessagingService.Features.Send
 {
   public class SendFeaturePackage : IPackage
   {

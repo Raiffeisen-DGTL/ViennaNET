@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using EmptyService.Features.Send.Messages;
+using MessagingService.Features.Send.Messages;
 using ViennaNET.Messaging.Factories;
 
-namespace EmptyService.Features.Send.Services
+namespace MessagingService.Features.Send.Services
 {
   public class SendingService : ISendingService
   {

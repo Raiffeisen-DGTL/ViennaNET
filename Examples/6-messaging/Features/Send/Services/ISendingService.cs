@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace EmptyService.Features.Send.Services
+namespace MessagingService.Features.Send.Services
 {
   public interface ISendingService
   {

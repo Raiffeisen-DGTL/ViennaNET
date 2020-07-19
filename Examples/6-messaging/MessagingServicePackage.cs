@@ -4,7 +4,7 @@ using ViennaNET.Messaging.DefaultConfiguration;
 using ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration;
 using ViennaNET.SimpleInjector.Extensions;
 
-namespace EmptyService
+namespace MessagingService
 {
   public class MessagingServicePackage : IPackage
   {

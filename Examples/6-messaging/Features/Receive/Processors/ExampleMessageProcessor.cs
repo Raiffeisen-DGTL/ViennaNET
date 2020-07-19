@@ -1,10 +1,10 @@
-﻿using EmptyService.Features.Receive.Messages;
+﻿using MessagingService.Features.Receive.Messages;
 using ViennaNET.Messaging;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.Tools;
 using ViennaNET.Logging;
 
-namespace EmptyService.Features.Receive.Processors
+namespace MessagingService.Features.Receive.Processors
 {
   public class ExampleMessageProcessor : IMessageProcessor
   {

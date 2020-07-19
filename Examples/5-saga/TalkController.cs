@@ -14,10 +14,15 @@ namespace SagaService
       _talkSaga = talkSaga;
     }
 
+    /// <summary>
+    /// StartTalk
+    /// </summary>
+    /// <param name="interruptTalk">flag to interrupt talk</param>
+    /// <returns>all talk log</returns>
     [HttpPost("")]
-    public async Task<IActionResult> StartTalk([FromBody]bool isTalkEndless)
+    public async Task<IActionResult> StartTalk([FromBody]bool interruptTalk)
     {
-      var context = new TalkContext(isTalkEndless);
+      var context = new TalkContext(interruptTalk);
       await _talkSaga.Execute(context);
 
       return Ok(context.Talk);

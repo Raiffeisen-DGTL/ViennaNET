@@ -30,6 +30,11 @@ namespace EmptyService
     [HttpPost("")]
     public IActionResult Get([FromBody] string value)
     {
+      if(!ModelState.IsValid)
+      {
+        return BadRequest(ModelState);
+      }
+
       using var uow = _efs.Create();
       var repository = _efs.Create<Greeting>();
 

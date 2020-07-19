@@ -1,4 +1,4 @@
-﻿using EmptyService.Features.Receive;
+﻿using MessagingService.Features.Receive;
 using Microsoft.AspNetCore.Hosting;
 using ViennaNET.WebApi;
 using ViennaNET.WebApi.Configurators.CallContext;
@@ -11,9 +11,9 @@ using ViennaNET.WebApi.Runners.Extensions;
 
 namespace MessagingService
 {
-  class Program
+  internal static class Program
   {
-    static void Main(string[] args)
+    internal static void Main(string[] args)
     {
       CompanyHostBuilder.Create()
                         .UseCommonModules()

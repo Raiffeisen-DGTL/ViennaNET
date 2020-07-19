@@ -1,10 +1,10 @@
-﻿using EmptyService.Features.Receive.Messages;
+﻿using MessagingService.Features.Receive.Messages;
 using SimpleInjector;
 using SimpleInjector.Packaging;
 using ViennaNET.Messaging.Tools;
 using ViennaNET.Messaging.DefaultConfiguration;
 
-namespace EmptyService.Features.Receive
+namespace MessagingService.Features.Receive
 {
   public class ReceiveFeaturePackage : IPackage
   {

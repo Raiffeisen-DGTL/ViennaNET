@@ -6,7 +6,7 @@ namespace OrmService
 {
   internal sealed class DbContext : ApplicationContext
   {
-    private const string dbConnectionName = "sqlite";
+    private const string dbConnectionName = "default";
 
     public DbContext()
     {
