@@ -4,7 +4,7 @@ using OrmService.Entities;
 using ViennaNET.Orm.Application;
 using ViennaNET.Utils;
 
-namespace EmptyService
+namespace OrmService
 {
   [Route("api/[controller]")]
   [AllowAnonymous]
@@ -30,7 +30,7 @@ namespace EmptyService
     [HttpPost("")]
     public IActionResult Get([FromBody] string value)
     {
-      if(!ModelState.IsValid)
+      if (!ModelState.IsValid)
       {
         return BadRequest(ModelState);
       }
