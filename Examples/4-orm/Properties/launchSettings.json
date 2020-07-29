@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "OrmService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "TOKEN_SECRET_KEY": "1234567891234567"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>EmptyService</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ViennaNET.Sagas\ViennaNET.Sagas.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Kestrel\ViennaNET.WebApi.Configurators.Kestrel.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Swagger\ViennaNET.WebApi.Configurators.Swagger.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.WebApi\ViennaNET.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="conf\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
