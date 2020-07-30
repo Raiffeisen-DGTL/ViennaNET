@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using ViennaNET.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Polly;
+using ViennaNET.Utils;
 
 namespace ViennaNET.HttpClient
 {
@@ -68,7 +68,7 @@ namespace ViennaNET.HttpClient
       _secondsTimeout = secondsTimeout;
       return this;
     }
-
+    
     private readonly List<Action<IServiceCollection, IHttpClientBuilder>> _addHandlerActions;
 
     /// <summary>
@@ -83,6 +83,19 @@ namespace ViennaNET.HttpClient
         services.TryAddTransient<T>();
         clientBuilder.AddHttpMessageHandler<T>();
       });
+      return this;
+    }
+
+    /// <summary>
+    /// Регистрирует стандартное middleware, без привязки к стороннему контейнеру
+    /// </summary>
+    public HttpClientRegistrator WithHandler<T>(Func<T> configureHandler) where T : DelegatingHandler
+    {
+      _addHandlerActions.Add((services, clientBuilder) =>
+      {
+        clientBuilder.AddHttpMessageHandler(configureHandler);
+      });
+
       return this;
     }
 

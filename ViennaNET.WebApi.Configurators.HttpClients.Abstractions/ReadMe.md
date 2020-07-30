@@ -7,6 +7,6 @@ Contains:
 * BaseCompanyRequestHeadersHandler - a handler for adding / forwarding the following headers to outgoing Http requests:
 
 	X-Request-Id
-	X-user-id
+	X-User-Id
 	X-User-Domain
-	X-caller-ip
+	X-Caller-Ip

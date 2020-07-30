@@ -31,5 +31,10 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     ///   Virtual host for RabbitMq
     /// </summary>
     public string VirtualHost { get; set; }
+
+    /// <summary>
+    ///   Дополнительные роутинги из точки обмена к очереди
+    /// </summary>
+    public string[] Routings { get; set; }
   }
 }

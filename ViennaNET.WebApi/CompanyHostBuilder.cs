@@ -94,8 +94,15 @@ namespace ViennaNET.WebApi
       };
 
       config.AddInMemoryCollection(serviceAssemblyProps);
-      config.AddJsonFile(Path.GetDirectoryName(_serviceAssembly.Location) + "/conf/appsettings.json");
+
+      var configFileBasePath = Path.GetDirectoryName(_serviceAssembly.Location) + "/conf/";
+
+      config.AddJsonFile(configFileBasePath + "appsettings.json")
+        .AddJsonFile(
+          configFileBasePath + $"appsettings.{HostingEnvironment.EnvironmentName}.json", optional: true);
+
       config.AddEnvironmentVariables();
+
       Configuration = config.Build();
     }
 

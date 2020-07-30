@@ -8,15 +8,19 @@ namespace ViennaNET.Messaging.RabbitMQQueue
   public class RabbitMqQueueMessageAdapterConstructor : QueueMessageAdapterConstructorBase<RabbitMqConfiguration,
     RabbitMqQueueConfiguration>
   {
+    private readonly IAdvancedBusFactory _advancedBusFactory;
+
     /// <inheritdoc />
-    public RabbitMqQueueMessageAdapterConstructor(IConfiguration configuration) : base(configuration, "rabbitmq")
+    public RabbitMqQueueMessageAdapterConstructor(IAdvancedBusFactory advancedBusFactory, IConfiguration configuration) :
+      base(configuration, "rabbitmq")
     {
+      _advancedBusFactory = advancedBusFactory.ThrowIfNull(nameof(advancedBusFactory));
     }
 
     /// <inheritdoc />
     protected override IMessageAdapter CreateAdapter(RabbitMqQueueConfiguration queueConfiguration, bool isDiagnostic)
     {
-      return new RabbitMqQueueMessageAdapter(queueConfiguration, isDiagnostic);
+      return new RabbitMqQueueMessageAdapter(_advancedBusFactory, queueConfiguration, isDiagnostic);
     }
 
     /// <inheritdoc />

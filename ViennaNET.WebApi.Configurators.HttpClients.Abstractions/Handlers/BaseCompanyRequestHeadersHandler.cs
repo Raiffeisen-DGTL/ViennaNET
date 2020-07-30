@@ -37,7 +37,6 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Handlers
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-
       var context = _callContextFactory.Create();
 
       SetHeaderParameter(request, CompanyHttpHeaders.RequestId, context, x => x.RequestId);

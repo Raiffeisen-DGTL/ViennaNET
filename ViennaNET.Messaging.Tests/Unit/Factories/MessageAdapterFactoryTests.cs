@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using NUnit.Framework;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Factories;
@@ -25,9 +26,10 @@ namespace ViennaNET.Messaging.Tests.Unit.Factories
     [Test]
     public void CreateTest()
     {
+      var fakeAdvancedBusFactory = new Mock<IAdvancedBusFactory>();
       var adapterConstructors = new List<IMessageAdapterConstructor>
       {
-        new MqSeriesQueueMessageAdapterConstructor(_configuration), new RabbitMqQueueMessageAdapterConstructor(_configuration), new KafkaQueueMessageAdapterConstructor(_configuration)
+        new MqSeriesQueueMessageAdapterConstructor(_configuration), new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, _configuration), new KafkaQueueMessageAdapterConstructor(_configuration)
       };
       var messageAdapterFactory = new MessageAdapterFactory(adapterConstructors);
       Assert.Multiple(() =>
@@ -41,7 +43,7 @@ namespace ViennaNET.Messaging.Tests.Unit.Factories
         Assert.Throws<MessagingConfigurationException>(() => messageAdapterFactory.Create("SomeOther", false));
         Assert.Throws<MessagingConfigurationException>(() => messageAdapterFactory.Create("T2", false));
 
-        adapterConstructors.Add(new RabbitMqQueueMessageAdapterConstructor(_configuration));
+        adapterConstructors.Add(new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, _configuration));
         Assert.Throws<MessagingConfigurationException>(() => messageAdapterFactory.Create("T1", false));
 
         adapterConstructors.Clear();

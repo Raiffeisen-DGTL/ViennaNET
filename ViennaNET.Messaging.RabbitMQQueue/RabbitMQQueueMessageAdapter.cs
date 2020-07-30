@@ -18,6 +18,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
   /// </summary>
   public class RabbitMqQueueMessageAdapter : IMessageAdapterWithSubscribing
   {
+    private const ushort defaultRequestedHeartbeat = 10;
     private const int DefaultReplyTimeout = 30;
     private const string ReplyExchangeName = "replyExchange";
     private const int TempQueueLifetimeAdditionMs = 10000;
@@ -32,14 +33,19 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     private IExchange _exchange;
     private IQueue _queue;
 
+    private readonly IAdvancedBusFactory _advancedBusFactory;
+
     /// <summary>
-    ///   Инициализирует экземпляр переменной типа <see cref="QueueConfigurationBase" />
+    ///   Инициализирует экземпляр фабрикой, создающей <see cref="IAdvancedBus" />,
+    ///   переменной типа <see cref="QueueConfigurationBase" />
     ///   и признаком необходимости проводить диагностику
     /// </summary>
+    /// <param name="advancedBusFactory">Фабрика для создания <see cref="IAdvancedBus" /></param>
     /// <param name="configuration">Конфигурация очереди</param>
     /// <param name="isDiagnostic">Признак проведения диагностики</param>
-    public RabbitMqQueueMessageAdapter(RabbitMqQueueConfiguration configuration, bool isDiagnostic)
+    public RabbitMqQueueMessageAdapter(IAdvancedBusFactory advancedBusFactory, RabbitMqQueueConfiguration configuration, bool isDiagnostic)
     {
+      _advancedBusFactory = advancedBusFactory.ThrowIfNull(nameof(advancedBusFactory));
       _configuration = configuration.ThrowIfNull(nameof(configuration));
       _connectionLock = new object();
       _isDisposed = false;
@@ -78,11 +84,8 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       {
         try
         {
-          _advancedBus = RabbitHutch.CreateBus(_configuration.Server, _configuration.Port, _configuration.VirtualHost ?? "/",
-                                               _configuration.User, _configuration.Password, 10, x =>
-                                               {
-                                               })
-                                    .Advanced;
+          _advancedBus = _advancedBusFactory.Create(_configuration.Server, _configuration.Port, _configuration.VirtualHost ?? "/",
+                                                    _configuration.User, _configuration.Password, defaultRequestedHeartbeat, x => {});
 
           var isQueueNameSpecified = !string.IsNullOrWhiteSpace(_configuration.QueueName);
           var isExchangeNameSpecified = !string.IsNullOrWhiteSpace(_configuration.ExchangeName);
@@ -102,7 +105,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
 
           if (isQueueNameSpecified && isExchangeNameSpecified)
           {
-            _advancedBus.Bind(_exchange, _queue, _configuration.Id);
+            InitializeBinds();
           }
 
           if (_isDiagnostic)
@@ -120,6 +123,20 @@ namespace ViennaNET.Messaging.RabbitMQQueue
           Disconnect();
           throw;
         }
+      }
+    }
+
+    private void InitializeBinds()
+    {
+      _advancedBus.Bind(_exchange, _queue, _configuration.Id);
+      if (_configuration.Routings == null)
+      {
+        return;
+      }
+
+      foreach (var routing in _configuration.Routings)
+      {
+        _advancedBus.Bind(_exchange, _queue, routing);
       }
     }
 

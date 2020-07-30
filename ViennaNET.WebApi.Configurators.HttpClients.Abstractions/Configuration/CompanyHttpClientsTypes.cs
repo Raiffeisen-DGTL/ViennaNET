@@ -19,5 +19,10 @@
     /// Тип Http-клиента без авторизации
     /// </summary>
     public static readonly string NoAuth = "noauth";
+
+    /// <summary>
+    /// Тип Http-клиента с basic-авторизацией 
+    /// </summary>
+    public static readonly string Basic = "basic";
   }
 }

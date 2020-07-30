@@ -1,3 +1,19 @@
+# v0007
+
+### Release Summary
+1. For Rabbit queues, added the ability to create additional bindings through the routings configuration. 
+Bindgin is the link between the exchange point and the queue. For exchageType direct and topic, 
+you can create multiple peer-to-queue connections, and when sending a message with different rountigKey values ​​to the peer, 
+messages to one or more queues. The direct type requires a complete match of rountigKey with the name of the link between 
+the exchange point and the queue. Whereas topic allows you to use a pattern such as \*.green.\* In the name of the connection.
+This revision allows you to create additional links of the exchange point with the queue to the default link, 
+which has the name of the queue identifier from the configuration. This is necessary in order to be able to control where 
+the message will go when it is sent to the exchange point in one or more queues, with the same configuration of routes from 
+the exchange point to the queues.
+2. For HttpClients added Basic-authentication
+3. Added optional loading of an additional configuration file, which is selected by the value of the environment variable:
+   https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1
+   
 # v0006
 
 ### Release Summary

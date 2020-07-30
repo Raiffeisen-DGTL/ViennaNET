@@ -232,6 +232,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6-messaging", "6-messaging", "{A7244BD9-FBEB-4DE7-9E44-41B63137BC06}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingService", "Examples\6-messaging\MessagingService.csproj", "{DD1F0D81-269D-45A1-827E-4885675D999A}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Protection", "ViennaNET.Protection\ViennaNET.Protection.csproj", "{D12D13EE-81EE-4416-B4C0-75BAFD665F10}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Protection.Tests", "ViennaNET.Protection.Tests\ViennaNET.Protection.Tests.csproj", "{51935105-D112-4F20-8B81-94F692D6BF87}"
@@ -239,6 +240,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests", "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests.csproj", "{630BFA0C-0ED2-4BAC-A1D7-56E18836D497}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication", "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.csproj", "{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.Basic", "ViennaNET.WebApi.Configurators.HttpClients.Basic\ViennaNET.WebApi.Configurators.HttpClients.Basic.csproj", "{B30C3761-20BB-4FDD-8C0E-C079F0F1C81B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests", "ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests\ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests.csproj", "{FD515FCC-1C24-43A1-BEE2-1F5A18C32A99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -618,6 +623,14 @@ Global
 		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B30C3761-20BB-4FDD-8C0E-C079F0F1C81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B30C3761-20BB-4FDD-8C0E-C079F0F1C81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B30C3761-20BB-4FDD-8C0E-C079F0F1C81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B30C3761-20BB-4FDD-8C0E-C079F0F1C81B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD515FCC-1C24-43A1-BEE2-1F5A18C32A99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD515FCC-1C24-43A1-BEE2-1F5A18C32A99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD515FCC-1C24-43A1-BEE2-1F5A18C32A99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD515FCC-1C24-43A1-BEE2-1F5A18C32A99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -712,6 +725,8 @@ Global
 		{DD1F0D81-269D-45A1-827E-4885675D999A} = {A7244BD9-FBEB-4DE7-9E44-41B63137BC06}
 		{630BFA0C-0ED2-4BAC-A1D7-56E18836D497} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
 		{BF71D5A0-0DED-4F17-8BA0-BB51EDC4FEC3} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
+		{B30C3761-20BB-4FDD-8C0E-C079F0F1C81B} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
+		{FD515FCC-1C24-43A1-BEE2-1F5A18C32A99} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {21931976-D091-46E5-A4E3-F3BA29D6DB9C}

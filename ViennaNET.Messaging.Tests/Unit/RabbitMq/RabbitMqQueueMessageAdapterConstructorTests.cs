@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using NUnit.Framework;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.RabbitMQQueue;
@@ -18,10 +19,11 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     [OneTimeSetUp]
     public void RabbitMqQueueMessageAdapterConstructorSetup()
     {
+      var fakeAdvancedBusFactory = new Mock<IAdvancedBusFactory>();
       var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true)
                                                  .Build();
 
-      _constructor = new RabbitMqQueueMessageAdapterConstructor(configuration);
+      _constructor = new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, configuration);
     }
 
     [Test]
@@ -52,10 +54,11 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     [Test]
     public void CreateAll_HasConfig_ReturnAdapters()
     {
+      var fakeAdvancedBusFactory = new Mock<IAdvancedBusFactory>();
       var configuration = new ConfigurationBuilder().AddJsonFile("appsettingsAll.json", true)
                                                     .Build();
 
-      var constructor = new RabbitMqQueueMessageAdapterConstructor(configuration);
+      var constructor = new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, configuration);
 
       var adapters = constructor.CreateAll(false);
 
