@@ -21,7 +21,8 @@ ___
               "replyQueue": "<name of the queue for receiving messages>",
               "lifetime": "<lifetime of messages in TimeSpan format>",
               "customHeaders": {"values": []} // additional headers for working with queues
-              "serviceHealthDependent": <flag of the dependence of the subscription to the queue on the state of the service obtained as a result of the diagnostic call true | false>
+              "serviceHealthDependent": <flag of the dependence of the subscription to the queue on the state of the service 
+                                         obtained as a result of the diagnostic call true | false>
               // the parameters below apply only to the RabbitMQ queue
               "exchangeType": "<type of exchange point>",
               "exchangeName": "<exchange point name>",
