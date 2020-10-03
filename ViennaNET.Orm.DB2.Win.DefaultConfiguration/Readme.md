@@ -31,10 +31,10 @@ There should be something like this:
 Replace with
 
 ```
-	<PackageReference Include="ViennaNET.Orm.DB2.Lnx" Version="0.1.4171.15418" Condition="'$ (RuntimeIdentifier)' == 'linux-x64'" />
-	<PackageReference Include="ViennaNET.Orm.DB2.Lnx.DefaultConfiguration" Version="0.1.4171.15418" Condition="'$ (RuntimeIdentifier)' == 'linux-x64'" />
-	<PackageReference Include="ViennaNET.Orm.DB2.Win" Version="0.1.4171.15418" Condition="'$ (RuntimeIdentifier)' == 'win-x64'" />
-	<PackageReference Include="ViennaNET.Orm.DB2.Win.DefaultConfiguration" Version="0.1.4171.15418" Condition="'$ (RuntimeIdentifier)' == 'win-x64'" />
+<PackageReference Include="ViennaNET.Orm.DB2.Lnx" Version="0.1.4171.15418" Condition="'$ (RuntimeIdentifier)' == 'linux-x64'" />
+<PackageReference Include="ViennaNET.Orm.DB2.Lnx.DefaultConfiguration" Version="0.1.4171.15418" Condition="'$ (RuntimeIdentifier)' == 'linux-x64'" />
+<PackageReference Include="ViennaNET.Orm.DB2.Win" Version="0.1.4171.15418" Condition="'$ (RuntimeIdentifier)' == 'win-x64'" />
+<PackageReference Include="ViennaNET.Orm.DB2.Win.DefaultConfiguration" Version="0.1.4171.15418" Condition="'$ (RuntimeIdentifier)' == 'win-x64'" />
 ```
 
 > Check to make sure the versions match!
