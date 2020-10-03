@@ -46,19 +46,19 @@
 
 > MSSql:
 > *  [**ViennaNET.Orm.MSSQL**](ViennaNET.Orm.MSSQL) - connection of the MSSql driver
-> *  [**ViennaNET.Orm.MSSQL.DefaultConfiguration**](ViennaNET.Orm.MSSQL.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+> *  **ViennaNET.Orm.MSSQL.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 > Oracle:
 > *  [**ViennaNET.Orm.Oracle**](ViennaNET.Orm.Oracle) - connecting the Oracle driver
-> *  [**ViennaNET.Orm.Oracle.DefaultConfiguration**](ViennaNET.Orm.Oracle.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+> *  **ViennaNET.Orm.Oracle.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 > PostgreSQL:
 > *  [**ViennaNET.Orm.PostgreSql**](ViennaNET.Orm.PostgreSql) - connecting the PostgreSql driver
-> *  [**ViennaNET.Orm.PostgreSql.DefaultConfiguration**](ViennaNET.Orm.PostgreSql.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+> *  **ViennaNET.Orm.PostgreSql.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 > SQLite:
 > *  [**ViennaNET.Orm.SQLite**](ViennaNET.Orm.SQLite) - connecting the SQLite driver
-> *  [**ViennaNET.Orm.SQLite.DefaultConfiguration**](ViennaNET.Orm.SQLite.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+> *  **ViennaNET.Orm.SQLite.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 #### Redis
 *  [**ViennaNET.Redis**](ViennaNET.Redis) - services for working with Redis
