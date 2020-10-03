@@ -66,3 +66,7 @@
 * [**ViennaNET.Validation**](ViennaNET.Validation) - implementation of validation services
 * **ViennaNET.Specifications** - library for creating and using specifications
 * [**ViennaNET.Sagas**](ViennaNET.Sagas) - basic implementation of the sagas mechanism
+
+
+### Quickstart
+* [**Simple empty service example**](Examples/1-empty-service)
