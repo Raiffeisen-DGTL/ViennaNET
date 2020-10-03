@@ -77,3 +77,7 @@
 * [**Example of microservice with database**](Examples/4-orm)
 * [**Example of microservice with simple saga implementation**](Examples/5-saga)
 * [**Example of microservice with messaging**](Examples/6-messaging)
+
+### Description
+* [**ViennaNET part1 (WebApi, Mediator, Validation, Redis, Specifications)**](https://habr.com/ru/company/raiffeisenbank/blog/494830/)
+* [**ViennaNET part2 (Sagas, Orm, Messaging, CallContext)**](https://habr.com/ru/company/raiffeisenbank/blog/516540/)
