@@ -7,10 +7,11 @@ ___
 
  Section in the configuration file:
 
+```JavaScript
         "mqseries": { 
           "queues": [ 
             {
-			  "id": "<queue identifier>", // usually the queue name is specified
+              "id": "<queue identifier>", // usually the queue name is specified
               "processingtype": "<processing type to listen on the queue>", // one of the values ​​of MessageProcessingType
               "server": "<queue server>",
               "port": "<queue connection port>",
@@ -31,6 +32,7 @@ ___
             } 
           ] 
         }
+```
 _________________
 #### Message header features
 * Headings must not contain a character as a separator "-". 
