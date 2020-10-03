@@ -40,9 +40,8 @@
 *  [**ViennaNET.Orm.Seedwork**](ViennaNET.Orm.Seedwork) - assembly with interfaces
 
 > DB2:
-> *  [**ViennaNET.Orm.DB2**](ViennaNET.Orm.DB2) - connection of the DB2 driver
-> *  [**ViennaNET.Orm.DB2.Win**](ViennaNET.Orm.DB2.Win.DefaultConfiguration) - contains a driver for connecting to IBM DB2 under Windows
-> *  [**ViennaNET.Orm.DB2.Lnx**](ViennaNET.Orm.DB2.Lnx.DefaultConfiguration) - contains a driver for connecting to IBM DB2 under Linux
+> *  [**ViennaNET.Orm.DB2.Win**](ViennaNET.Orm.DB2.Win.DefaultConfiguration) - driver for connecting to IBM DB2 under Windows
+> *  [**ViennaNET.Orm.DB2.Lnx**](ViennaNET.Orm.DB2.Lnx.DefaultConfiguration) - driver for connecting to IBM DB2 under Linux
 
 > MSSql:
 > *  [**ViennaNET.Orm.MSSQL**](ViennaNET.Orm.MSSQL) - connection of the MSSql driver
