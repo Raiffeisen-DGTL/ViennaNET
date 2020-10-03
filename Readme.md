@@ -13,7 +13,28 @@
 *  [**ViennaNET.ArcSight**](ViennaNET.ArcSight) - library with ArcSight connection logic
 *  **ViennaNET.ArcSight.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
-#### DAL
+#### Mediator (inner bus)
+*  [**ViennaNET.Mediator**](ViennaNET.Mediator) - implementation of the internal message bus
+*  **ViennaNET.Mediator.DefaultConfiguration** - assembly integration into the project through SimpleInjector
+*  [**ViennaNET.Mediator.Seedwork**](ViennaNET.Mediator.Seedwork) - assembly with interfaces
+
+#### Messaging
+*  [**ViennaNET.Messaging**](ViennaNET.Messaging) - assembly with classes and interfaces providing a common functionality for working with queues
+*  [**ViennaNET.Messaging.DefaultConfiguration**](ViennaNET.Messaging.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+
+> IBM MQ:
+> *  [**ViennaNET.Messaging.MQSeriesQueue**](ViennaNET.Messaging.MQSeriesQueue) - assembly providing work with the IBM MQ Series queue
+> *  [**ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration**](ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+
+> Kafka:
+> *  [**ViennaNET.Messaging.Kafka**](ViennaNET.Messaging.MQSeriesQueue) - assembly providing work with the Kafka queue
+> *  [**ViennaNET.Messaging.Kafka.DefaultConfiguration**](ViennaNET.Messaging.Kafka.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+
+> RabbitMQ:
+> *  [**ViennaNET.Messaging.RabbitMQ**](ViennaNET.Messaging.RabbitMQ) - assembly providing work with the RabbitMQ queue
+> *  [**ViennaNET.Messaging.RabbitMQ.DefaultConfiguration**](ViennaNET.Messaging.RabbitMQ.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+
+#### ORM
 *  [**ViennaNET.Orm**](ViennaNET.Orm) - DAL, wrapper over NHibernate
 *  **ViennaNET.Orm.DefaultConfiguration** - build integration into the project through SimpleInjector
 *  [**ViennaNET.Orm.Seedwork**](ViennaNET.Orm.Seedwork) - assembly with interfaces
@@ -38,30 +59,6 @@
 > SQLite:
 > *  [**ViennaNET.Orm.SQLite**](ViennaNET.Orm.SQLite) - connecting the SQLite driver
 > *  [**ViennaNET.Orm.SQLite.DefaultConfiguration**](ViennaNET.Orm.SQLite.DefaultConfiguration) - assembly integration into the project through SimpleInjector
-
-#### Logging
-* **ViennaNET.Logging** - a logging library based on log4net
-
-#### Mediator (inner bus)
-*  [**ViennaNET.Mediator**](ViennaNET.Mediator) - implementation of the internal message bus
-*  **ViennaNET.Mediator.DefaultConfiguration** - assembly integration into the project through SimpleInjector
-*  [**ViennaNET.Mediator.Seedwork**](ViennaNET.Mediator.Seedwork) - assembly with interfaces
-
-#### Messaging
-*  [**ViennaNET.Messaging**](ViennaNET.Messaging) - assembly with classes and interfaces providing a common functionality for working with queues
-*  [**ViennaNET.Messaging.DefaultConfiguration**](ViennaNET.Messaging.DefaultConfiguration) - assembly integration into the project through SimpleInjector
-
-> IBM MQ:
-> *  [**ViennaNET.Messaging.MQSeriesQueue**](ViennaNET.Messaging.MQSeriesQueue) - assembly providing work with the IBM MQ Series queue
-> *  [**ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration**](ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration) - assembly integration into the project through SimpleInjector
-
-> Kafka:
-> *  [**ViennaNET.Messaging.Kafka**](ViennaNET.Messaging.MQSeriesQueue) - assembly providing work with the Kafka queue
-> *  [**ViennaNET.Messaging.Kafka.DefaultConfiguration**](ViennaNET.Messaging.Kafka.DefaultConfiguration) - assembly integration into the project through SimpleInjector
-
-> RabbitMQ:
-> *  [**ViennaNET.Messaging.RabbitMQ**](ViennaNET.Messaging.RabbitMQ) - assembly providing work with the RabbitMQ queue
-> *  [**ViennaNET.Messaging.RabbitMQ.DefaultConfiguration**](ViennaNET.Messaging.RabbitMQ.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 #### Redis
 *  [**ViennaNET.Redis**](ViennaNET.Redis) - services for working with Redis
