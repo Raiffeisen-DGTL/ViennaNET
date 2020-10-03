@@ -1,4 +1,4 @@
-# Build with classes and interfaces providing a common functionality for working with queues
+# Assembly with classes and interfaces providing a common functionality for working with queues
 ___
 ### The principle of operation and use of the assembly
 The assembly contains basic interfaces and implementations for working with abstract queues. Expands by adapters to secret queues in the form of separate assemblies. The assembly does not contain information about the specific queues used.
