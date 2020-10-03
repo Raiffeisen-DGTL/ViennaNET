@@ -36,6 +36,10 @@
 > *  [**ViennaNET.Orm.Oracle**](ViennaNET.Orm.Oracle) - connecting the Oracle driver
 > *  **ViennaNET.Orm.Oracle.DefaultConfiguration** - build integration into the project through SimpleInjector
 
+> PostgreSQL:
+> *  [**ViennaNET.Orm.PostgreSql**](ViennaNET.Orm.PostgreSql) - connecting the PostgreSql driver
+> *  **ViennaNET.Orm.PostgreSql.DefaultConfiguration** - build integration into the project through SimpleInjector
+
 > SQLite:
 > *  [**ViennaNET.Orm.SQLite**](ViennaNET.Orm.SQLite) - connecting the SQLite driver
 > *  **ViennaNET.Orm.SQLite.DefaultConfiguration** - build integration into the project through SimpleInjector
