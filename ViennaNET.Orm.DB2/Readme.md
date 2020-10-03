@@ -1,4 +1,4 @@
-# Build to create a connection to the DB2 database through NHibernate
+# Assembly to create a connection to the DB2 database through NHibernate
 
 ### Key Entities
 
