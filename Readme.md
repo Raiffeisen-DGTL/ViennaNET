@@ -24,7 +24,7 @@
 
 > IBM MQ:
 > *  [**ViennaNET.Messaging.MQSeriesQueue**](ViennaNET.Messaging.MQSeriesQueue) - work with the IBM MQ Series queue
-> *  [**ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration**](ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration) - integration through SimpleInjector
+> *  [**ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration**](ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration) - integration into the project through SimpleInjector
 
 > Kafka:
 > *  [**ViennaNET.Messaging.Kafka**](ViennaNET.Messaging.MQSeriesQueue) - work with the Kafka queue
@@ -36,7 +36,7 @@
 
 #### ORM
 *  [**ViennaNET.Orm**](ViennaNET.Orm) - DAL, wrapper over NHibernate
-*  **ViennaNET.Orm.DefaultConfiguration** - build integration into the project through SimpleInjector
+*  **ViennaNET.Orm.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 *  [**ViennaNET.Orm.Seedwork**](ViennaNET.Orm.Seedwork) - assembly with interfaces
 
 > DB2:
