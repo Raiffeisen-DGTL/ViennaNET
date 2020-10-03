@@ -27,12 +27,12 @@
 > *  [**ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration**](ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration) - integration through SimpleInjector
 
 > Kafka:
-> *  [**ViennaNET.Messaging.Kafka**](ViennaNET.Messaging.MQSeriesQueue) - work with the Kafka queue
-> *  [**ViennaNET.Messaging.Kafka.DefaultConfiguration**](ViennaNET.Messaging.Kafka.DefaultConfiguration) - integration through SimpleInjector
+> *  [**ViennaNET.Messaging.KafkaQueue**](ViennaNET.Messaging.KafkaQueue) - work with the Kafka queue
+> *  [**ViennaNET.Messaging.KafkaQueue.DefaultConfiguration**](ViennaNET.Messaging.KafkaQueue.DefaultConfiguration) - integration through SimpleInjector
 
 > RabbitMQ:
-> *  [**ViennaNET.Messaging.RabbitMQ**](ViennaNET.Messaging.RabbitMQ) - work with the RabbitMQ queue
-> *  [**ViennaNET.Messaging.RabbitMQ.DefaultConfiguration**](ViennaNET.Messaging.RabbitMQ.DefaultConfiguration) - integration through SimpleInjector
+> *  [**ViennaNET.Messaging.RabbitMQQueue**](ViennaNET.Messaging.RabbitMQQueue) - work with the RabbitMQ queue
+> *  [**ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration**](ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration) - integration through SimpleInjector
 
 #### ORM
 *  [**ViennaNET.Orm**](ViennaNET.Orm) - DAL, wrapper over NHibernate
