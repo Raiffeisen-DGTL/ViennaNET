@@ -49,7 +49,7 @@
 
 #### Messaging
 *  [**ViennaNET.Messaging**](ViennaNET.Messaging) - assembly with classes and interfaces providing a common functionality for working with queues
-*  **ViennaNET.Messaging.DefaultConfiguration**(ViennaNET.Messaging.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+*  [**ViennaNET.Messaging.DefaultConfiguration**](ViennaNET.Messaging.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 > IBM MQ:
 > *  [**ViennaNET.Messaging.MQSeriesQueue**](ViennaNET.Messaging.MQSeriesQueue) - connection of the MSSql driver
