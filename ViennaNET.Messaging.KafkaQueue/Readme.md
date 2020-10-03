@@ -25,7 +25,7 @@ ___
              "exchangeType": "<type of exchange point>",
             "exchangeName": "<exchange point name>",
             "serviceHealthDependent": "<flag of the dependence of the subscription to the queue on the state of the service 
-                                        obtained as a result of the diagnostic call true | false> ",
+                                        obtained as a result of the diagnostic call true | false>",
              "isConsumer": "<flag that determines whether the adapter accepts or sends true | false>",
             "serviceName": "<service name>",
             "keyTab": "<path to the *.keytab file, required for SASL authentication on unix-based servers>",
