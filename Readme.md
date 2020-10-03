@@ -19,25 +19,25 @@
 *  [**ViennaNET.Orm.Seedwork**](ViennaNET.Orm.Seedwork) - assembly with interfaces
 
 > DB2:
+> *  [**ViennaNET.Orm.DB2**](ViennaNET.Orm.DB2) - connection of the DB2 driver
 > *  [**ViennaNET.Orm.DB2.Win**](ViennaNET.Orm.DB2.Win.DefaultConfiguration) - contains a driver for connecting to IBM DB2 under Windows
 > *  [**ViennaNET.Orm.DB2.Lnx**](ViennaNET.Orm.DB2.Lnx.DefaultConfiguration) - contains a driver for connecting to IBM DB2 under Linux
-> *  **ViennaNET.Orm.DB2.DefaultConfiguration.** - assembly integration into the project via SimpleInjector
 
 > MSSql:
 > *  [**ViennaNET.Orm.MSSQL**](ViennaNET.Orm.MSSQL) - connection of the MSSql driver
-> *  **ViennaNET.Orm.MSSQL.DefaultConfiguration** - assembly integration into the project through SimpleInjector
+> *  [**ViennaNET.Orm.MSSQL.DefaultConfiguration**](ViennaNET.Orm.MSSQL.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 > Oracle:
 > *  [**ViennaNET.Orm.Oracle**](ViennaNET.Orm.Oracle) - connecting the Oracle driver
-> *  **ViennaNET.Orm.Oracle.DefaultConfiguration** - assembly integration into the project through SimpleInjector
+> *  [**ViennaNET.Orm.Oracle.DefaultConfiguration**](ViennaNET.Orm.Oracle.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 > PostgreSQL:
 > *  [**ViennaNET.Orm.PostgreSql**](ViennaNET.Orm.PostgreSql) - connecting the PostgreSql driver
-> *  **ViennaNET.Orm.PostgreSql.DefaultConfiguration** - assembly integration into the project through SimpleInjector
+> *  [**ViennaNET.Orm.PostgreSql.DefaultConfiguration**](ViennaNET.Orm.PostgreSql.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 > SQLite:
 > *  [**ViennaNET.Orm.SQLite**](ViennaNET.Orm.SQLite) - connecting the SQLite driver
-> *  **ViennaNET.Orm.SQLite.DefaultConfiguration** - assembly integration into the project through SimpleInjector
+> *  [**ViennaNET.Orm.SQLite.DefaultConfiguration**](ViennaNET.Orm.SQLite.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 #### Logging
 * **ViennaNET.Logging** - a logging library based on log4net
@@ -52,9 +52,16 @@
 *  [**ViennaNET.Messaging.DefaultConfiguration**](ViennaNET.Messaging.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 > IBM MQ:
-> *  [**ViennaNET.Messaging.MQSeriesQueue**](ViennaNET.Messaging.MQSeriesQueue) - connection of the MSSql driver
+> *  [**ViennaNET.Messaging.MQSeriesQueue**](ViennaNET.Messaging.MQSeriesQueue) - assembly providing work with the IBM MQ Series queue
 > *  [**ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration**](ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
+> Kafka:
+> *  [**ViennaNET.Messaging.Kafka**](ViennaNET.Messaging.MQSeriesQueue) - assembly providing work with the Kafka queue
+> *  [**ViennaNET.Messaging.Kafka.DefaultConfiguration**](ViennaNET.Messaging.Kafka.DefaultConfiguration) - assembly integration into the project through SimpleInjector
+
+> RabbitMQ:
+> *  [**ViennaNET.Messaging.RabbitMQ**](ViennaNET.Messaging.RabbitMQ) - assembly providing work with the RabbitMQ queue
+> *  [**ViennaNET.Messaging.RabbitMQ.DefaultConfiguration**](ViennaNET.Messaging.RabbitMQ.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 #### Redis
 *  [**ViennaNET.Redis**](ViennaNET.Redis) - services for working with Redis
