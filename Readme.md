@@ -81,3 +81,13 @@
 ### Description
 * [**ViennaNET part1 (WebApi, Mediator, Validation, Redis, Specifications)**](https://habr.com/ru/company/raiffeisenbank/blog/494830/)
 * [**ViennaNET part2 (Sagas, Orm, Messaging, CallContext)**](https://habr.com/ru/company/raiffeisenbank/blog/516540/)
+
+### [Video materials](https://github.com/Raiffeisen-DGTL/ViennaNET/wiki/Video-materials)
+
+
+# Let's contribute
+
+* [**Open issues**](https://github.com/Raiffeisen-DGTL/ViennaNET/issues)
+* [**Codestyle conventions**](https://github.com/Raiffeisen-DGTL/ViennaNET/wiki/Codestyle-conventions)
+* [**ReleaseNotes**](ReleaseNotes.md)
+* [**Contributors**](https://github.com/Raiffeisen-DGTL/ViennaNET/wiki/Contributors)
