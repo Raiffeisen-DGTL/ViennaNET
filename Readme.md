@@ -68,5 +68,12 @@
 * [**ViennaNET.Sagas**](ViennaNET.Sagas) - basic implementation of the sagas mechanism
 
 
-### Quickstart
-* [**Simple empty service example**](Examples/1-empty-service)
+# Quickstart
+
+### Examples
+* [**Simple empty microservice example**](Examples/1-empty-service)
+* [**Example of microservice with Mediator and SimpleInjector**](Examples/2-mediator)
+* [**Example of microservice with validation**](Examples/3-validation)
+* [**Example of microservice with database**](Examples/4-orm)
+* [**Example of microservice with simple saga implementation**](Examples/5-saga)
+* [**Example of microservice with messaging**](Examples/6-messaging)
