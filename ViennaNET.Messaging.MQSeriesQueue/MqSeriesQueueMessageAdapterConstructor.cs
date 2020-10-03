@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Factories.Impl;
+using ViennaNET.Messaging.MQSeriesQueue.Infrastructure;
 using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.MQSeriesQueue
@@ -16,7 +18,12 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     /// <inheritdoc />
     protected override IMessageAdapter CreateAdapter(MqSeriesQueueConfiguration queueConfiguration, bool isDiagnostic)
     {
-      return new MqSeriesQueueMessageAdapter(queueConfiguration);
+      queueConfiguration.ThrowIfNull(nameof(queueConfiguration));
+
+      var connectionFactoryProvider = new MqSeriesQueueConnectionFactoryProvider();
+      return queueConfiguration.TransactionEnabled || queueConfiguration.ProcessingType == MessageProcessingType.ThreadStrategy
+        ? new MqSeriesQueueTransactedMessageAdapter(connectionFactoryProvider, queueConfiguration)
+        : (IMessageAdapter)new MqSeriesQueueSubscribingMessageAdapter(connectionFactoryProvider, queueConfiguration);
     }
 
     /// <inheritdoc />

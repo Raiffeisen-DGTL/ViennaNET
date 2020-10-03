@@ -17,6 +17,8 @@ namespace ViennaNET.Messaging.Tools
         Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic), IgnoreNullValues = true
       };
 
+    private const string _contentType = "application/json";
+
     /// <inheritdoc />
     public T Deserialize(BaseMessage message)
     {
@@ -30,7 +32,7 @@ namespace ViennaNET.Messaging.Tools
       var result = new TextMessage();
       var json = JsonSerializer.Serialize(message, options);
       result.Body = json;
-
+      result.ContentType = _contentType;
       return result;
     }
   }

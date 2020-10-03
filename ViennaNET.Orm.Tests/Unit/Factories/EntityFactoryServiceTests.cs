@@ -5,6 +5,7 @@ using Moq;
 using NHibernate;
 using NUnit.Framework;
 using ViennaNET.Orm.Application;
+using ViennaNET.Orm.Tests.Unit.DSL;
 
 namespace ViennaNET.Orm.Tests.Unit.Factories
 {

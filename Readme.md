@@ -23,6 +23,11 @@
 *  **ViennaNET.Orm.DefaultConfiguration** - build integration into the project through SimpleInjector
 *  [**ViennaNET.Orm.Seedwork**](ViennaNET.Orm.Seedwork) - assembly with interfaces
 
+> DB2:
+> *  [**ViennaNET.Orm.DB2.Win**](ViennaNET.Orm.DB2.Win.DefaultConfiguration) - contains a driver for connecting to IBM DB2 under Windows
+> *  [**ViennaNET.Orm.DB2.Lnx**](ViennaNET.Orm.DB2.Lnx.DefaultConfiguration) - contains a driver for connecting to IBM DB2 under Linux
+> *  **ViennaNET.Orm.DB2.DefaultConfiguration.** - assembly integration into the project via SimpleInjector
+
 > MSSql:
 > *  [**ViennaNET.Orm.MSSQL**](ViennaNET.Orm.MSSQL) - connection of the MSSql driver
 > *  **ViennaNET.Orm.MSSQL.DefaultConfiguration** - build integration into the project through SimpleInjector

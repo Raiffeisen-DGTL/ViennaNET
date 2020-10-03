@@ -35,5 +35,10 @@
     /// Максимальное время подключения
     /// </summary>
     public int? Timeout { get; set; }
+
+    /// <summary>
+    /// Максимальное количество открытых подключений 
+    /// </summary>
+    public int? MaxConnections { get; set; }
   }
 }

@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.Orm.DB2.Win.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.Orm.DB2.Win.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector.Packaging" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.Orm.DB2.Win\ViennaNET.Orm.DB2.Win.csproj" />
+    <ProjectReference Include="..\ViennaNET.Orm.DefaultConfiguration\ViennaNET.Orm.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\ViennaNET.Orm\ViennaNET.Orm.csproj" />
+    <ProjectReference Include="..\ViennaNET.Security\ViennaNET.Security.csproj" />
+    <ProjectReference Include="..\ViennaNET.Utils\ViennaNET.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

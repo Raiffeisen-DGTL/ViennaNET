@@ -47,9 +47,9 @@ namespace ViennaNET.Orm.Application
     /// <summary>
     /// Создает исполнитель команд 
     /// </summary>
-    /// <typeparam name="T">Тип команды<see cref="BaseCommand"/>></typeparam>
+    /// <typeparam name="T">Тип команды<see cref="ICommand"/></typeparam>
     /// <returns>Экземпляр исполнителя команд</returns>
-    ICommandExecutor<T> CreateCommandExecutor<T>() where T : BaseCommand;
+    ICommandExecutor<T> CreateCommandExecutor<T>() where T : class, ICommand;
 
     /// <summary>
     /// Создает исполнитель запросов

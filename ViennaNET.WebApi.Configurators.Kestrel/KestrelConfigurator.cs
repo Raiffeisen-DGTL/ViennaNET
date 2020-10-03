@@ -38,6 +38,11 @@ namespace ViennaNET.WebApi.Configurators.Kestrel
       var hostConfiguration = context.Configuration.GetSection(WebApiConfiguration.SectionName)
                                      .Get<WebApiConfiguration>();
 
+      if (hostConfiguration == null)
+      {
+        return;
+      }
+
       options.Listen(IPAddress.Any, hostConfiguration.PortNumber);
 
       if (!hostConfiguration.HttpsPort.HasValue)
@@ -69,7 +74,7 @@ namespace ViennaNET.WebApi.Configurators.Kestrel
       var hostConfiguration = configuration.GetSection(WebApiConfiguration.SectionName)
                                            .Get<WebApiConfiguration>();
 
-      if (!hostConfiguration.HttpsPort.HasValue)
+      if (hostConfiguration?.HttpsPort == null)
       {
         return;
       }
@@ -95,7 +100,7 @@ namespace ViennaNET.WebApi.Configurators.Kestrel
       var hostConfiguration = configuration.GetSection(WebApiConfiguration.SectionName)
                                            .Get<WebApiConfiguration>();
 
-      if (!hostConfiguration.HttpsPort.HasValue)
+      if (hostConfiguration?.HttpsPort == null)
       {
         return;
       }

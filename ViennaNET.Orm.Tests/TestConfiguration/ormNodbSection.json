@@ -4,7 +4,6 @@
       "nick": "default",
       "dbServerType": "DB2",
       "ConnectionString": "Server=ReServer:50000;Database=ReDatabase;UserID=ReUser;Password=RePassword;CurrentSchema=ReSchema;",
-      "useCallContext": true
     }
   ]
 }

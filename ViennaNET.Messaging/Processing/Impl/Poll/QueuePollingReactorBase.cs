@@ -22,13 +22,15 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
     private readonly IMessageAdapter _adapter;
     private readonly IEnumerable<IMessageProcessor> _messageProcessors;
     private readonly IEnumerable<IMessageProcessorAsync> _asyncMessageProcessors;
-    private readonly IPolling _subscribePolling;
+    private readonly int _subscribeInterval;
+    private readonly string _pollingId;
 
     private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
     private readonly IHealthCheckingService _healthCheckingService;
     private readonly bool _serviceHealthDependent;
     private bool _hasDiagnosticErrors;
 
+    private Polling _subscribePolling;
     private bool _isDisposed;
     private int _errorCount;
 
@@ -67,13 +69,14 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
 
       _messagingCallContextAccessor = messagingCallContextAccessor;
 
-      _subscribePolling = new Polling(subscribeInterval, pollingId);
+      _subscribeInterval = subscribeInterval;
+      _pollingId = pollingId;
     }
 
     /// <inheritdoc/>
     public bool StartProcessing()
     {
-      if (_subscribePolling.IsStarted)
+      if (_subscribePolling != null && _subscribePolling.IsStarted)
       {
         return false;
       }
@@ -84,7 +87,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
         _healthCheckingService.DiagnosticFailedEvent += OnDiagnosticFailed;
       }
 
-      _subscribePolling.StartPolling(ListenMessagesAsync);
+      _subscribePolling = new Polling(_subscribeInterval, ListenMessagesAsync, _pollingId);
+      _subscribePolling.StartPolling();
       return _subscribePolling.IsStarted;
     }
 
@@ -111,7 +115,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
           _healthCheckingService.DiagnosticPassedEvent -= OnDiagnosticPassed;
         }
 
-        _subscribePolling.StopPolling();
+        _subscribePolling.Dispose();
+        _subscribePolling = null;
       }
       finally
       {
@@ -167,8 +172,10 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       }
     }
 
-    private async Task ListenMessagesAsync(CancellationToken cancellationToken)
+    private async Task<bool> ListenMessagesAsync(CancellationToken cancellationToken)
     {
+      var hasMessage = false;
+
       try
       {
         Logger.LogDebug("Listen messages ...");
@@ -176,7 +183,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
         if (_serviceHealthDependent && _hasDiagnosticErrors)
         {
           Logger.LogDebug("Diagnostic not passed. Skip listening");
-          return;
+          return false;
         }
 
         if (!_adapter.IsConnected)
@@ -188,6 +195,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
         {
           SetCallContextFromMessage(message);
           await ProcessReceivedMessage(message);
+          hasMessage = true;
         }
 
         Interlocked.Exchange(ref _errorCount, 0);
@@ -201,6 +209,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       {
         CleanCallContext();
       }
+
+      return hasMessage;
     }
 
     /// <summary>

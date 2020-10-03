@@ -15,10 +15,5 @@ namespace ViennaNET.Orm.Seedwork
     /// Коллекция сущностей
     /// </summary>
     IReadOnlyCollection<(Type, string, Assembly)> Entities { get; }
-
-    /// <summary>
-    /// Позволяет добавить новую сущность в контекст
-    /// </summary>
-    IBoundedContext AddEntity<T>(string nick = null, Assembly assembly = null) where T : class;
   }
 }

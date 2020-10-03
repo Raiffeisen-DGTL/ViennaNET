@@ -16,6 +16,7 @@ using System.Reflection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using ViennaNET.WebApi.Logging;
 
 namespace ViennaNET.WebApi
 {
@@ -49,8 +50,6 @@ namespace ViennaNET.WebApi
     private Action<IConfiguration> _onStartAction;
     private Action<IConfiguration> _onStopAction;
 
-    private bool _useDefaultLogging = false;
-
     private CompanyHostBuilder(Assembly serviceAssembly)
     {
       _serviceAssembly = serviceAssembly;
@@ -60,17 +59,6 @@ namespace ViennaNET.WebApi
       _servicesToRegister = new List<Action<IServiceCollection, IConfiguration>>();
       _mvcBuilderActions = new List<Action<IMvcCoreBuilder, IConfiguration>>();
       _servicesToRegisterInContainer = new List<Action<IServiceCollection, object, IConfiguration>>();
-    }
-
-    /// <summary>
-    /// Включает встроенный логгер
-    /// </summary>
-    /// <returns></returns>
-    public CompanyHostBuilder UseDefaultLogging()
-    {
-      _useDefaultLogging = true;
-
-      return this;
     }
 
     /// <summary>
@@ -212,9 +200,10 @@ namespace ViennaNET.WebApi
                  .Configure(ConfigureAppBuilder)
                  .ConfigureLogging(logBuilder =>
                  {
-                   if (!_useDefaultLogging)
+                   if (Configuration.GetValue<bool>("Logging:UseLegacyLogger"))
                    {
                      logBuilder.ClearProviders();
+                     logBuilder.AddProvider(new LoggingAdapterProvider());
                    }
                  });
 

@@ -349,7 +349,7 @@ namespace ViennaNET.Utils
 
     /// <summary>
     /// Генерирует <see cref="ArgumentNullException"/> в случае
-    /// если строка не пуста, и ссылка на нее не равна null
+    /// если строка пуста, или ссылка на нее равна null
     /// </summary>
     /// <param name="param">Ссылка на строку</param>
     /// <param name="paramName">Имя параметра</param>

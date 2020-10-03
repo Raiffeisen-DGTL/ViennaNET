@@ -35,7 +35,7 @@ namespace ViennaNET.Messaging.Tests.Unit.Factories
       Assert.Multiple(() =>
       {
         Assert.That(messageAdapterFactory.Create("ReValue", false), Is.Not.Null);
-        Assert.That(messageAdapterFactory.Create("ReValue", false) is MqSeriesQueueMessageAdapter, Is.True);
+        Assert.That(messageAdapterFactory.Create("ReValue", false) is MqSeriesQueueMessageAdapterBase, Is.True);
         Assert.That(messageAdapterFactory.Create("Rabbit", false), Is.Not.Null);
         Assert.That(messageAdapterFactory.Create("Rabbit", false) is RabbitMqQueueMessageAdapter, Is.True);
         Assert.That(messageAdapterFactory.Create("testKafkaQueue", false), Is.Not.Null);

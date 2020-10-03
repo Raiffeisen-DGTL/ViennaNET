@@ -35,3 +35,7 @@ _________________
 #### Message header features
 * Headings must not contain a character as a separator "-". 
 https://stackoverflow.com/questions/50608415/cwsia0112e-the-property-name-keep-alive-is-not-a-valid-java-identifier https://www.ibm.com/support/knowledgecenter/SSFKSJ_7.5.0/com.ibm.mq.dev.doc/q022940_.htm
+
+#### Listening mode (processingType)
+* Transactions are only supported in ThreadStrategy mode.
+* If transactions are disabled (transactionEnabled == false), then it can use both ThreadStrategy and the subscription mode (Subscribe).

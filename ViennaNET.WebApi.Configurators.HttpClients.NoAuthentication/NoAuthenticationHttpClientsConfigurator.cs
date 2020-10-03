@@ -70,7 +70,8 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication
                                   .ConfigureBuilder(x => x.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
                                   {
                                     AllowAutoRedirect = false,
-                                    UseProxy = false
+                                    UseProxy = false,
+                                    MaxConnectionsPerServer = endpoint.MaxConnections ?? int.MaxValue
                                   }));
     }
   }

@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Text;
 using System.Xml.Linq;
-using NUnit.Framework;
 using ViennaNET.Logging;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Extensions;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.MQSeriesQueue;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace ViennaNET.Messaging.Tests.Integration
 {
-  [TestFixture(Category = "Integration", TestOf = typeof(MqSeriesQueueMessageAdapter), Explicit = true)]
+  [Explicit]
+  [TestFixture(Category = "Integration", TestOf = typeof(MqSeriesQueueMessageAdapterBase))]
   public class MqQueueMessageAdapterTests
   {
-    private readonly MqSeriesQueueConfiguration _configuration = new MqSeriesQueueConfiguration
+    private static readonly MqSeriesQueueConfiguration _configuration = new MqSeriesQueueConfiguration
     {
       Id = "test.queue",
       ClientId = "test.system",
@@ -31,25 +33,50 @@ namespace ViennaNET.Messaging.Tests.Integration
       Lifetime = TimeSpan.Parse("6:12")
     };
 
+    public static IEnumerable<Type> GetAdapterTypes()
+    {
+      return new[]
+      {
+        typeof(MqSeriesQueueSubscribingMessageAdapter),
+        typeof(MqSeriesQueueTransactedMessageAdapter)
+      };
+    }
+
+    private MqSeriesQueueMessageAdapterBase CreateAdapter(Type type)
+    {
+      return (MqSeriesQueueMessageAdapterBase)type.GetConstructor(new[] { typeof(MqSeriesQueueConfiguration) }).Invoke(new[] { _configuration });
+    }
+
     [Test]
-    public void CorrelationId_Test()
+    public void MQSeriesMessageAdapter_ConnectDisconnect([ValueSource("GetAdapterTypes")]Type adapterType)
+    {
+      using (
+        var adapter = CreateAdapter(adapterType))
+      {
+        adapter.Connect();
+        adapter.Disconnect();
+      }
+    }
+
+    [Test]
+    public void CorrelationId_Test([ValueSource("GetAdapterTypes")] Type adapterType)
     {
       var doc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"),
-        new XElement("mess", new XElement("messtype", "OPUstart"), new XElement("starttype", "2")));
+                              new XElement("mess", new XElement("messtype", "OPUstart"), new XElement("starttype", "2")));
 
       var message = new TextMessage();
       message.WriteXml(doc, Encoding.UTF8);
 
       string correlationID;
-      using (var adapter = new MqSeriesQueueMessageAdapter(_configuration))
+      using (var adapter = CreateAdapter(adapterType))
       {
         adapter.Connect();
         correlationID = adapter.Send(message)
-          .CorrelationId;
+                               .CorrelationId;
         adapter.Disconnect();
       }
 
-      using (var adapter = new MqSeriesQueueMessageAdapter(_configuration))
+      using (var adapter = CreateAdapter(adapterType))
       {
         adapter.Connect();
         try
@@ -65,14 +92,6 @@ namespace ViennaNET.Messaging.Tests.Integration
           adapter.Disconnect();
         }
       }
-    }
-
-    [Test]
-    public void MQSeriesMessageAdapter_ConnectDisconnect()
-    {
-      using var adapter = new MqSeriesQueueMessageAdapter(_configuration);
-      adapter.Connect();
-      adapter.Disconnect();
     }
   }
 }

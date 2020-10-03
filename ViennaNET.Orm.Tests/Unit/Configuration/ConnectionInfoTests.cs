@@ -83,24 +83,21 @@ namespace ViennaNET.Orm.Tests.Unit.Configuration
     }
 
     [Test]
-    public void ToString_EncriptedPasswordDidntSet_CorrectString()
+    public void ToStringTest()
     {
       var connectionInfo = new ConnectionInfo
       {
         Nick = "mssql",
         ConnectionString = "Server=some_server,1433;Database=some_db;User ID=some_user;Password=some_password;",
-        DbServerType = "MSSQL",
-        EncPassword = "",
-        UseCallContext = false,
-        IsSkipHealthCheckEntity = false
+        DbServerType = "MSSQL"
       };
 
       var connection = connectionInfo.ToString();
 
       Assert.That(connection,
         Is.EqualTo("Nick=mssql, Type=MSSQL, " +
-        "ConnectionString=Server=some_server,1433;Database=some_db;User ID=some_user;Password=some_password;," +
-        " UseCallContext=False, IsSkipHealthCheckEntity=False"));
+        "ConnectionString=Server=some_server,1433;Database=some_db;User ID=some_user;Password=some_password;, " +
+        "IsSkipHealthCheckEntity=False"));
     }
   }
 }

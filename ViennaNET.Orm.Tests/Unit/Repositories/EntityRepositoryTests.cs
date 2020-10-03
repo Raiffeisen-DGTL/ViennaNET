@@ -6,6 +6,7 @@ using Moq;
 using NHibernate;
 using NHibernate.Transform;
 using NUnit.Framework;
+using ViennaNET.Orm.Tests.Unit.DSL;
 
 namespace ViennaNET.Orm.Tests.Unit.Repositories
 {
@@ -16,12 +17,12 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
     public void Add_SessionNotReadOnly_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      repository.Add(command);
+      repository.Add(entity);
 
-      session.Verify(x => x.SaveOrUpdate(command), Times.Once);
+      session.Verify(x => x.SaveOrUpdate(entity), Times.Once);
     }
 
     [Test]
@@ -30,22 +31,22 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
       var session = new Mock<ISession>();
       session.Setup(x => x.DefaultReadOnly)
              .Returns(true);
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      Assert.Throws<EntityRepositoryException>(() => repository.Add(command), "The Repository is read-only");
+      Assert.Throws<EntityRepositoryException>(() => repository.Add(entity), "The Repository is read-only");
     }
 
     [Test]
     public async Task AddAsync_SessionNotReadOnly_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      await repository.AddAsync(command);
+      await repository.AddAsync(entity);
 
-      session.Verify(x => x.SaveOrUpdateAsync(command, default(CancellationToken)), Times.Once);
+      session.Verify(x => x.SaveOrUpdateAsync(entity, default), Times.Once);
     }
 
     [Test]
@@ -54,10 +55,10 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
       var session = new Mock<ISession>();
       session.Setup(x => x.DefaultReadOnly)
              .Returns(true);
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      Assert.ThrowsAsync<EntityRepositoryException>(async () => await repository.AddAsync(command, default(CancellationToken)),
+      Assert.ThrowsAsync<EntityRepositoryException>(async () => await repository.AddAsync(entity, default),
                                                     "The Repository is read-only");
     }
 
@@ -105,10 +106,10 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
       var session = new Mock<ISession>();
       session.Setup(x => x.DefaultReadOnly)
              .Returns(true);
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      Assert.Throws<EntityRepositoryException>(() => repository.Delete(command), "The Repository is read-only");
+      Assert.Throws<EntityRepositoryException>(() => repository.Delete(entity), "The Repository is read-only");
     }
 
     [Test]
@@ -117,10 +118,10 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
       var session = new Mock<ISession>();
       session.Setup(x => x.DefaultReadOnly)
              .Returns(true);
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      Assert.ThrowsAsync<EntityRepositoryException>(async () => await repository.DeleteAsync(command),
+      Assert.ThrowsAsync<EntityRepositoryException>(async () => await repository.DeleteAsync(entity),
                                                     "The Repository is read-only");
     }
 
@@ -128,73 +129,73 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
     public void Get_NullableTypeKey_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
+      var repository = new EntityRepository<TestEntity>(session.Object);
 
       repository.Get<int?>(12);
 
-      session.Verify(x => x.Get<TestCommand>(12), Times.Once);
+      session.Verify(x => x.Get<TestEntity>(12), Times.Once);
     }
 
     [Test]
     public void Get_NullableTypeKeyHasNoValue_SessionMethodDidNotCall()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
+      var repository = new EntityRepository<TestEntity>(session.Object);
 
       repository.Get<int?>(null);
 
-      session.Verify(x => x.Get<TestCommand>(12), Times.Never);
+      session.Verify(x => x.Get<TestEntity>(12), Times.Never);
     }
 
     [Test]
     public void Get_ValueTypeKey_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
+      var repository = new EntityRepository<TestEntity>(session.Object);
 
       repository.Get(12);
 
-      session.Verify(x => x.Get<TestCommand>(12), Times.Once);
+      session.Verify(x => x.Get<TestEntity>(12), Times.Once);
     }
 
     [Test]
     public async Task GetAsync_NullableTypeKey_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
+      var repository = new EntityRepository<TestEntity>(session.Object);
 
       await repository.GetAsync<int?>(12);
 
-      session.Verify(x => x.GetAsync<TestCommand>(12, default(CancellationToken)), Times.Once);
+      session.Verify(x => x.GetAsync<TestEntity>(12, default), Times.Once);
     }
 
     [Test]
     public async Task GetAsync_NullableTypeKeyHasNoValue_SessionMethodDidNotCall()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
+      var repository = new EntityRepository<TestEntity>(session.Object);
 
       await repository.GetAsync<int?>(null);
 
-      session.Verify(x => x.GetAsync<TestCommand>(12, default(CancellationToken)), Times.Never);
+      session.Verify(x => x.GetAsync<TestEntity>(12, default), Times.Never);
     }
 
     [Test]
     public async Task GetAsync_ValueTypeKey_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
+      var repository = new EntityRepository<TestEntity>(session.Object);
 
       await repository.GetAsync(12);
 
-      session.Verify(x => x.GetAsync<TestCommand>(12, default(CancellationToken)), Times.Once);
+      session.Verify(x => x.GetAsync<TestEntity>(12, default), Times.Once);
     }
 
     [Test]
     public void GetCurrentSession_SessionPassedToRepo_SessionReturned()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
+      var repository = new EntityRepository<TestEntity>(session.Object);
 
       var currentSession = repository.GetCurrentSession();
 
@@ -205,12 +206,12 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
     public void Insert_SessionNotReadOnly_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      repository.Insert(command);
+      repository.Insert(entity);
 
-      session.Verify(x => x.Persist(command), Times.Once);
+      session.Verify(x => x.Persist(entity), Times.Once);
     }
 
     [Test]
@@ -219,22 +220,22 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
       var session = new Mock<ISession>();
       session.Setup(x => x.DefaultReadOnly)
              .Returns(true);
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      Assert.Throws<EntityRepositoryException>(() => repository.Insert(command), "The Repository is read-only");
+      Assert.Throws<EntityRepositoryException>(() => repository.Insert(entity), "The Repository is read-only");
     }
 
     [Test]
     public async Task InsertAsync_SessionNotReadOnly_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entity = new TestEntity();
 
-      await repository.InsertAsync(command);
+      await repository.InsertAsync(entity);
 
-      session.Verify(x => x.PersistAsync(command, default(CancellationToken)), Times.Once);
+      session.Verify(x => x.PersistAsync(entity, default), Times.Once);
     }
 
     [Test]
@@ -243,10 +244,10 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
       var session = new Mock<ISession>();
       session.Setup(x => x.DefaultReadOnly)
              .Returns(true);
-      var repository = new EntityRepository<TestCommand>(session.Object);
-      var command = new TestCommand();
+      var repository = new EntityRepository<TestEntity>(session.Object);
+      var entoty = new TestEntity();
 
-      Assert.ThrowsAsync<EntityRepositoryException>(async () => await repository.InsertAsync(command),
+      Assert.ThrowsAsync<EntityRepositoryException>(async () => await repository.InsertAsync(entoty),
                                                     "The Repository is read-only");
     }
 
@@ -254,11 +255,11 @@ namespace ViennaNET.Orm.Tests.Unit.Repositories
     public void Query_SimpleCall_SessionMethodCalled()
     {
       var session = new Mock<ISession>();
-      var repository = new EntityRepository<TestCommand>(session.Object);
+      var repository = new EntityRepository<TestEntity>(session.Object);
 
       repository.Query();
 
-      session.Verify(x => x.Query<TestCommand>(), Times.Once);
+      session.Verify(x => x.Query<TestEntity>(), Times.Once);
     }
   }
 }

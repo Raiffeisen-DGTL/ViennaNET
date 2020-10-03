@@ -49,10 +49,27 @@ namespace ViennaNET.Messaging.Processing.Impl
 
     /// <inheritdoc />
     /// <exception cref="MessageProcessorAlreadyRegisterException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
     public IMessageProcessorRegister Register<T>(string queueId) where T : class
     {
+      return Register(typeof(T), queueId);
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="MessageProcessorAlreadyRegisterException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    public IMessageProcessorRegister Register(Type type, string queueId)
+    {
+      type.ThrowIfNull(nameof(type));
+      if (!type.IsClass)
+      {
+        throw new ArgumentException("Only class can be registered as message processor", nameof(type));
+      }
+
       queueId.ThrowIfNullOrEmpty(nameof(queueId));
-      var type = typeof(T);
+
       Logger.LogDebug($"Try to register message processor with type: {type} for queue: {queueId}");
       if (_registrations.ContainsKey(type))
       {
@@ -61,7 +78,7 @@ namespace ViennaNET.Messaging.Processing.Impl
       }
 
       _registrations.Add(type, queueId);
-      Logger.LogDebug($"Processor with type: {typeof(T)} for queue: {queueId} has been registered");
+      Logger.LogDebug($"Processor with type: {type} for queue: {queueId} has been registered");
       return this;
     }
 
@@ -76,7 +93,7 @@ namespace ViennaNET.Messaging.Processing.Impl
       if (!adapter.SupportProcessingType(queueConfiguration.ProcessingType))
       {
         throw new
-          MessagingException($"Processing type: '{queueConfiguration.ProcessingType}' not available for queue named: '{queueConfiguration.QueueName}'");
+          MessagingException($"Processing type: '{queueConfiguration.ProcessingType}' not available for queue: '{queueId}'");
       }
 
       var messageProcessors = processors.OfType<IMessageProcessor>();
@@ -133,46 +150,50 @@ namespace ViennaNET.Messaging.Processing.Impl
     }
 
     private void GetAllProcessors(
-      string queueName, out IReadOnlyCollection<IProcessor> processors, out IReadOnlyCollection<IProcessorAsync> asyncProcessors)
+      string queueId, out IReadOnlyCollection<IProcessor> processors, out IReadOnlyCollection<IProcessorAsync> asyncProcessors)
     {
-      var unregistered = new List<IProcessor>();
-      var asyncUnregistered = new List<IProcessorAsync>();
-      processors = _processors.Where(x => ConfiguredWithQueueName(x, queueName, unregistered))
-                              .ToArray();
-      asyncProcessors = _asyncProcessors.Where(x => ConfiguredWithQueueName(x, queueName, asyncUnregistered))
-                                        .ToArray();
-      if (unregistered.Any() && asyncUnregistered.Any())
+      ValidateProcessorRegistrations();
+
+      processors = _processors.Where(x => ConfiguredWithQueueName(x, queueId)).ToArray();
+      asyncProcessors = _asyncProcessors.Where(x => ConfiguredWithQueueName(x, queueId)).ToArray();
+
+      if (!processors.Any() && !asyncProcessors.Any())
       {
-        var unregisteredNames = unregistered.Select(x => x.GetType()
-                                                          .Name);
-        var asyncUnregisteredNames = asyncUnregistered.Select(x => x.GetType()
-                                                                    .Name);
-        var allUnregisteredNames = unregisteredNames.Union(asyncUnregisteredNames);
-        var allUnregisteredString = string.Join(",", allUnregisteredNames);
-        throw new MessagingException($"The message processors: {allUnregisteredString} not registered in the queue factory");
+        throw new MessagingException($"There are no message processors registered for queue '{queueId}'");
       }
     }
 
-    private bool ConfiguredWithQueueName(IProcessor messageProcessor, string queueId, ICollection<IProcessor> unregistered)
+    private void ValidateProcessorRegistrations()
     {
-      if (_registrations.TryGetValue(messageProcessor.GetType(), out var processorQueue))
+      var unregistered = new LinkedList<string>();
+
+      foreach (var processor in _processors)
       {
-        return processorQueue == queueId;
+        var type = processor.GetType();
+        if (!_registrations.ContainsKey(type))
+        {
+          unregistered.AddLast(type.Name);
+        }
+      }
+      foreach (var processor in _asyncProcessors)
+      {
+        var type = processor.GetType();
+        if (!_registrations.ContainsKey(type))
+        {
+          unregistered.AddLast(type.Name);
+        }
       }
 
-      unregistered.Add(messageProcessor);
-      return false;
+      if (unregistered.Count > 0)
+      {
+        var allUnregisteredString = string.Join(", ", unregistered);
+        throw new MessagingException($"The message processors {allUnregisteredString} are not registered in the queue factory");
+      }
     }
 
-    private bool ConfiguredWithQueueName(IProcessorAsync messageProcessor, string queueId, ICollection<IProcessorAsync> unregistered)
+    private bool ConfiguredWithQueueName(object messageProcessor, string queueId)
     {
-      if (_registrations.TryGetValue(messageProcessor.GetType(), out var processorQueue))
-      {
-        return processorQueue == queueId;
-      }
-
-      unregistered.Add(messageProcessor);
-      return false;
+      return _registrations.TryGetValue(messageProcessor.GetType(), out var processorQueue) && processorQueue == queueId;
     }
   }
 }

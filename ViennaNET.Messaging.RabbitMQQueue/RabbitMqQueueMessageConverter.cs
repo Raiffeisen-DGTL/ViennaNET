@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using EasyNetQ;
 using ViennaNET.Messaging.Messages;
@@ -11,6 +12,8 @@ namespace ViennaNET.Messaging.RabbitMQQueue
 
     public static MessageProperties ConvertToProperties(this BaseMessage message, RabbitMqQueueConfiguration configuration)
     {
+      var expiration = GetExpiration(message, configuration);
+
       var properties = new MessageProperties
       {
         MessageId = string.IsNullOrEmpty(message.MessageId)
@@ -20,9 +23,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
           : message.MessageId,
         Headers = message.Properties,
         DeliveryMode = 2,
-        Expiration = configuration.Lifetime.HasValue
-          ? ((int)configuration.Lifetime.Value.TotalMilliseconds).ToString()
-          : DefaultLifeTime,
+        Expiration = expiration,
         Timestamp = DateTime.Now.ToFileTimeUtc(),
         ContentType = GetContentType(message)
       };
@@ -40,12 +41,27 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       return properties;
     }
 
+    private static string GetExpiration(BaseMessage message, RabbitMqQueueConfiguration configuration)
+    {
+      if (message.LifeTime.TotalMilliseconds > 0)
+      {
+        return message.LifeTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture);
+      }
+
+      if (configuration.Lifetime.HasValue)
+      {
+        return ((int)configuration.Lifetime.Value.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
+      }
+
+      return DefaultLifeTime;
+    }
+
     private static string GetContentType(BaseMessage message)
     {
       switch (message)
       {
-        case TextMessage _:
-          return ContentType.Text.ToString("G");
+        case TextMessage mes:
+          return mes.ContentType ?? ContentType.Text.ToString("G");
         case BytesMessage _:
           return ContentType.Bytes.ToString("G");
         default:

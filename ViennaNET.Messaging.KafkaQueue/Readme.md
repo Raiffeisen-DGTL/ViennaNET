@@ -36,4 +36,7 @@ ___
            }
          ]
        }
-```       
+```
+
+> Features of configuring Kafka
+> * processingtype - can only take the value of ThreadStrategy to create a subscriber that reads messages at certain intervals (Polling)

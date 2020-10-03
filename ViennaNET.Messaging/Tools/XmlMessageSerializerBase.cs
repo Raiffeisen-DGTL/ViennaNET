@@ -20,6 +20,8 @@ namespace ViennaNET.Messaging.Tools
     /// </summary>
     protected IList<Stream> xsd = new List<Stream>();
 
+    private const string _contentType = "application/xml";
+
     /// <inheritdoc />
     public T Deserialize(BaseMessage message)
     {
@@ -39,6 +41,7 @@ namespace ViennaNET.Messaging.Tools
       var xml = writer.ToString();
       ValidateXml(xml);
       result.Body = xml;
+      result.ContentType = _contentType;
       return result;
     }
 

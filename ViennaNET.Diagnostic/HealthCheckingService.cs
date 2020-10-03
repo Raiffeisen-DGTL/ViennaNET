@@ -33,7 +33,7 @@ namespace ViennaNET.Diagnostic
       var result = (await Task.WhenAll(tasks)
                               .ConfigureAwait(false)).SelectMany(diagnosticInfos => diagnosticInfos)
                                                      .ToList();
-      if (result.Any(x => x.Status != DiagnosticStatus.Ok))
+      if (result.Any(x => x.Status != DiagnosticStatus.Ok && !x.IsSkipResult))
       {
         DiagnosticFailedEvent?.Invoke();
       }

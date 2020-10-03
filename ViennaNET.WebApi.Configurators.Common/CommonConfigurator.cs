@@ -62,7 +62,7 @@ namespace ViennaNET.WebApi.Configurators.Common
     internal static void ConfigureLoggerMiddleware(
       IApplicationBuilder builder, IConfiguration configuration, IHostEnvironment env, object container)
     {
-      builder.UseMiddleware<SetUpLoggerMiddleware>();
+      builder.UseMiddleware<SetLoggingScopeMiddleware>();
       builder.UseMiddleware<LogRequestAndResponseMiddleware>();
     }
   }

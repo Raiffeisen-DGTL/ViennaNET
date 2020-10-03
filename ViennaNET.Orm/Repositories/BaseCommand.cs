@@ -7,11 +7,10 @@ namespace ViennaNET.Orm.Repositories
   public abstract class BaseCommand : ICommand
   {
     protected string Sql;
+    protected Dictionary<string, TypeWrapper> Parameters = new Dictionary<string, TypeWrapper>();
 
-    /// <summary>
-    /// Параметры для записи в формируемую SQL-команду
-    /// </summary>
-    public IDictionary<string, TypeWrapper> Parameters { get; set; }
+    /// <inheritdoc />
+    IDictionary<string, TypeWrapper> ICommand.Parameters => Parameters;
 
     /// <inheritdoc />
     string ICommand.Sql => Sql;

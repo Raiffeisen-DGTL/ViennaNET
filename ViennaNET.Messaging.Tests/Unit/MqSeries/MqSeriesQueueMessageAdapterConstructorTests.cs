@@ -13,6 +13,9 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     private const string QueueId = "ReValue";
     private const string NoQueueStringNotUsingQueueId = "NoQueueStringNotUsing";
     private const string NoServerQueueId = "NoServer";
+    private const string ThreadQueueId = "ReValue";
+    private const string TransactedQueueId = "Transacted";
+    private const string SubscribingQueueId = "Subscribing";
 
     private MqSeriesQueueMessageAdapterConstructor _constructor;
 
@@ -36,6 +39,30 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
         Assert.That(adapter.Configuration, Is.Not.Null);
         Assert.That(adapter.Configuration.Id, Is.EqualTo(QueueId));
       });
+    }
+
+    [Test]
+    public void Create_ThreadedNoTrans_ReturnsTransactedAdapter()
+    {
+      var adapter = _constructor.Create(ThreadQueueId, false);
+
+      Assert.That(adapter, Is.InstanceOf<MqSeriesQueueTransactedMessageAdapter>());
+    }
+
+    [Test]
+    public void Create_ThreadedWithTrans_ReturnsTransactedAdapter()
+    {
+      var adapter = _constructor.Create(TransactedQueueId, false);
+
+      Assert.That(adapter, Is.InstanceOf<MqSeriesQueueTransactedMessageAdapter>());
+    }
+
+    [Test]
+    public void Create_Subscribing_ReturnsSubscribingAdapter()
+    {
+      var adapter = _constructor.Create(SubscribingQueueId, false);
+
+      Assert.That(adapter, Is.InstanceOf<MqSeriesQueueSubscribingMessageAdapter>());
     }
 
     [Test]

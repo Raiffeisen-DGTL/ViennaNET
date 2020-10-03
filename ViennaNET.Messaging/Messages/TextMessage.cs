@@ -15,6 +15,11 @@ namespace ViennaNET.Messaging.Messages
     [NotNull]
     public string Body { get; set; }
 
+    /// <summary>
+    ///   Mime тип содержимого сообщения
+    /// </summary>
+    public string ContentType { get; set; } 
+
     /// <inheritdoc />
     public override string LogBody()
     {

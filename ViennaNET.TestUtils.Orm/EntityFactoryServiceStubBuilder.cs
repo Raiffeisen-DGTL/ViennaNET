@@ -88,7 +88,7 @@ namespace ViennaNET.TestUtils.Orm
         throw new NotImplementedException();
       }
 
-      public ICommandExecutor<T> CreateCommandExecutor<T>() where T : BaseCommand
+      public ICommandExecutor<T> CreateCommandExecutor<T>() where T : class, ICommand
       {
         throw new NotImplementedException();
       }

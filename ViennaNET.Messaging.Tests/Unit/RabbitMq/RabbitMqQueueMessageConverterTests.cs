@@ -134,6 +134,31 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     }
 
     [Test]
+    public void ConvertToProperties_ConfigurationWithLifeTime_ExpirationFromConfigurationReturned()
+    {
+      var queueConfiguration = new RabbitMqQueueConfiguration { Id = QueueId, Lifetime = TimeSpan.FromMilliseconds(100) };
+      var message = new TextMessage();
+
+      var properties = message.ConvertToProperties(queueConfiguration);
+
+      Assert.That(properties.Expiration == "100");
+    }
+
+    [Test]
+    public void ConvertToProperties_MessageWithLifetime_MessageLifetimeReturned()
+    {
+      var queueConfiguration = new RabbitMqQueueConfiguration { Id = QueueId };
+      var message = new TextMessage()
+      {
+        LifeTime = TimeSpan.FromMilliseconds(100)
+      };
+
+      var properties = message.ConvertToProperties(queueConfiguration);
+
+      Assert.That(properties.Expiration == "100");
+    }
+
+    [Test]
     public void ConvertToProperties_CorrectMessage_CorrectResult()
     {
       var queueConfiguration = new RabbitMqQueueConfiguration { Id = QueueId, Lifetime = TimeSpan.Zero };
@@ -165,14 +190,15 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     }
 
     [Test]
-    public void ConvertToProperties_TextMessage_TypeIsText()
+    public void ConvertToProperties_TextMessage_TypeIsCorrect()
     {
       var queueConfiguration = new RabbitMqQueueConfiguration { Id = QueueId, Lifetime = TimeSpan.Zero };
-      var message = new TextMessage();
+      var contentType = "application/xml";
+      var message = new TextMessage { ContentType = contentType };
 
       var properties = message.ConvertToProperties(queueConfiguration);
 
-      Assert.That(properties.ContentType == TextContentType);
+      Assert.That(properties.ContentType == contentType);
     }
 
     [Test]

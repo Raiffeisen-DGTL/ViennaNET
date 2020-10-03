@@ -30,7 +30,6 @@ namespace ViennaNET.Orm.DefaultConfiguration
       container.Register<ISessionManagerProvider, SessionManagerProvider>(Lifestyle.Singleton);
       container.Register<ISessionFactoryProvidersManager, SessionFactoryProvidersManager>(Lifestyle.Singleton);
       container.Register<ISessionManager, ScopedSessionManager>(Lifestyle.Scoped);
-      container.Register<ICallContextProvider, DefaultCallContextProvider>(Lifestyle.Singleton);
       container.Register<IApplicationContextProvider, ApplicationContextProvider>(Lifestyle.Singleton);
 
       container.Collection.Register<IBoundedContext>(GetType().Assembly);

@@ -7,7 +7,7 @@ using ViennaNET.Orm.Application;
 namespace ViennaNET.Orm.Repositories
 {
   /// <inheritdoc />
-  public sealed class CommandExecutor<T> : ICommandExecutor<T> where T : BaseCommand
+  public sealed class CommandExecutor<T> : ICommandExecutor<T> where T : class, ICommand
   {
     private readonly ISession _session;
 
@@ -23,10 +23,9 @@ namespace ViennaNET.Orm.Repositories
     /// <inheritdoc />
     public void Execute(T command)
     {
-      var commandInt = (ICommand)command;
-      using (new LogAutoStopWatch($"Starting command '{commandInt.Sql}'...", LogLevel.Debug))
+      using (new LogAutoStopWatch($"Starting command '{command.Sql}'...", LogLevel.Debug))
       {
-        var nhQuery = _session.CreateSQLQuery(commandInt.Sql);
+        var nhQuery = _session.CreateSQLQuery(command.Sql);
 
         if (command.Parameters != null && command.Parameters.Any())
         {

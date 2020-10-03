@@ -10,7 +10,6 @@ namespace EmptyService
     static void Main(string[] args)
     {
       CompanyHostBuilder.Create()
-                        .UseDefaultLogging()
                         .UseKestrel()
                         .UseSwagger()
                         .BuildWebHost(args)

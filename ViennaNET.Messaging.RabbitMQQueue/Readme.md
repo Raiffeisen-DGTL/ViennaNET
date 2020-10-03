@@ -32,6 +32,7 @@ ___
 ```
 
 > RabbitMQ configuration features
+> * processingtype - can take the value Subscribe or SubscribeAndReply to create a subscriber that reads messages as they arrive (by event), or for the same subscriber, but with the ability to send a response message, respectively
 > * exchangeType - can take one of the values ​​direct | topic | fanout | headers, if not specified, then by default fanout
 > * exchangeName - if not specified, then the exchange point is not automatically created
 > * queuename - if not specified, then the queue is not automatically created

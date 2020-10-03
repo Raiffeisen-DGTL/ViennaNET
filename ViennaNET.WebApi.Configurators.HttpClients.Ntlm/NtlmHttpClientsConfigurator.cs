@@ -65,7 +65,10 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Ntlm
         {
           x.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
           {
-            AllowAutoRedirect = false, UseDefaultCredentials = true, PreAuthenticate = true
+            AllowAutoRedirect = false, 
+            UseDefaultCredentials = true, 
+            PreAuthenticate = true,
+            MaxConnectionsPerServer = endpoint.MaxConnections ?? int.MaxValue
           });
         });
     }

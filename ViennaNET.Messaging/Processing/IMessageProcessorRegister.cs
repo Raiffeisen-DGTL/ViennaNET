@@ -1,4 +1,5 @@
-﻿using ViennaNET.Messaging.Messages;
+﻿using System;
+using ViennaNET.Messaging.Messages;
 
 namespace ViennaNET.Messaging.Processing
 {
@@ -12,5 +13,11 @@ namespace ViennaNET.Messaging.Processing
     /// </summary>
     /// <returns>Регистратор <see cref="IMessageProcessorRegister"/></returns>
     IMessageProcessorRegister Register<T>(string queueId) where T : class;
+
+    /// <summary>
+    /// Регистрация обработчика <see cref="IMessageProcessor"/> сообщений <see cref="BaseMessage" />
+    /// </summary>
+    /// <returns>Регистратор <see cref="IMessageProcessorRegister"/></returns>
+    IMessageProcessorRegister Register(Type type, string queueId);
   }
 }

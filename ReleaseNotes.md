@@ -1,3 +1,25 @@
+# v0009
+
+### Release Summary
+1. Added ORM DB2 integration
+2. Change Messaging pooling process
+3. Added LoggingAdapterProvider - wrapper over ViennaNET.Logging.Logger to switch to standard Microsoft.Extensions.Logging.ILogger<T>. Now ILogger<T> can be used, but internally it will work like ViennaNET.Logging.Logger.
+After the complete translation of the libraries to ILogger<T>, the ViennaNET.Logging library will be abandoned
+
+### Breaking Changes
+In order for the current logging option to continue working as it is, you need to add the section to the service configuration file:
+
+```
+    "Logging": {
+        "UseLegacyLogger": true,
+        "LogLevel": {
+          "Default": "Trace",
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information"
+        }
+    }
+```	
+
 # v0007
 
 ### Release Summary
@@ -13,7 +35,7 @@ the exchange point to the queues.
 2. For HttpClients added Basic-authentication
 3. Added optional loading of an additional configuration file, which is selected by the value of the environment variable:
    https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1
-   
+
 # v0006
 
 ### Release Summary
@@ -129,7 +151,7 @@ In the new version, the use of composite configurators has become easier, for ex
 ```csharp
        return CompanyHostBuilder.Create()
                                 .UseKestrel()
-                                .UseCommonModule ()
+                                .UseCommonModule()
                                 .UseSimpleInjector()
                                 .UseSwaggerWithJwtAuth()
                                 .UseDiagnosing()

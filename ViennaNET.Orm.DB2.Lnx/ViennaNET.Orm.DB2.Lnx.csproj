@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.Orm.DB2.Lnx.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\Bin</OutputPath>
+    <DocumentationFile>..\Bin\ViennaNET.Orm.DB2.Lnx.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.Orm\ViennaNET.Orm.csproj" />
+    <ProjectReference Include="..\ViennaNET.Protection\ViennaNET.Protection.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IBM.Data.DB2.Core-lnx" Version="1.3.0.100" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(PkgIBM_Data_DB2_Core-lnx)\build\clidriver\**" Pack="true" PackagePath="build\clidriver" PackageCopyToOutput="false" />
+    <Content Include="$(PkgIBM_Data_DB2_Core-lnx)\build\*.targets" Pack="true" PackagePath="build\$(TargetName).targets" PackageCopyToOutput="false" />
+  </ItemGroup>
+
+</Project>

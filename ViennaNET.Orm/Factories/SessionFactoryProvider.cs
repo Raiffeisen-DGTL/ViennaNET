@@ -11,6 +11,7 @@ using FluentNHibernate.Mapping;
 using Microsoft.Extensions.Configuration;
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Connection;
 using NHibernate.Context;
 using NhConfiguration = NHibernate.Cfg.Configuration;
 using Environment = NHibernate.Cfg.Environment;
@@ -41,6 +42,8 @@ namespace ViennaNET.Orm.Factories
       nhConfig.SetProperty(Environment.SessionFactoryName, nick);
       nhConfig.Interceptor = interceptor ?? new EmptyInterceptor();
       nhConfig.SetProperty(Environment.UseSecondLevelCache, "false");
+      nhConfig.SetProperty(Environment.ConnectionProvider, typeof(DriverConnectionProvider).AssemblyQualifiedName);
+
       Logger.LogDebug("NHibernate configuration: " + $"DbNick: {nhConfig.GetProperty(Environment.SessionFactoryName)}, "
                                                    + $"UseSecondLevelCache: {nhConfig.GetProperty(Environment.UseSecondLevelCache)}, "
                                                    + $"CacheDefaultExpiration: {nhConfig.GetProperty(Environment.CacheDefaultExpiration)}");

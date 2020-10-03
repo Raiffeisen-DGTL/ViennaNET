@@ -62,7 +62,7 @@ namespace ViennaNET.Orm.Factories
     }
 
     /// <inheritdoc />
-    public ICommandExecutor<T> CreateCommandExecutor<T>() where T : BaseCommand
+    public ICommandExecutor<T> CreateCommandExecutor<T>() where T : class, ICommand
     {
       var type = typeof(T);
       var nick = _applicationContextProvider.GetNickForCommand(type);

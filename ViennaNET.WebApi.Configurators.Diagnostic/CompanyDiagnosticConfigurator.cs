@@ -1,4 +1,6 @@
-﻿using ViennaNET.WebApi.Abstractions;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using ViennaNET.WebApi.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
@@ -9,6 +11,7 @@ namespace ViennaNET.WebApi.Configurators.Diagnostic
   /// <summary>
   /// Регистрирует контроллер с диагностикой сервисов
   /// </summary>
+  [ExcludeFromCodeCoverage]
   public static class CompanyDiagnosticConfigurator
   {
     public static ICompanyHostBuilder UseDiagnosing(this ICompanyHostBuilder companyHostBuilder)
@@ -25,9 +28,19 @@ namespace ViennaNET.WebApi.Configurators.Diagnostic
     internal static void RegisterServices(IServiceCollection services, object container, IConfiguration configuration)
     {
       var typedContainer = (Container)container;
+      services.AddSingleton<IDiagnosticImplementor, EmptyDiagnosticImplementor>();
 
-      typedContainer.Collection.Append<IDiagnosticImplementor, EmptyDiagnosticImplementor>();
-      typedContainer.RegisterSingleton<IHealthCheckingService, HealthCheckingService>();
+      services.AddSingleton<IHealthCheckingService>(p =>
+      {
+        var internalImplementors = p.GetServices<IDiagnosticImplementor>();
+        var externalImplementors = typedContainer.GetAllInstances<IDiagnosticImplementor>();
+        
+        var allImplementors = new List<IDiagnosticImplementor>();
+        allImplementors.AddRange(internalImplementors);
+        allImplementors.AddRange(externalImplementors);
+
+        return new HealthCheckingService(allImplementors);
+      });
     }
   }
 }

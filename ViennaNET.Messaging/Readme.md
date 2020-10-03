@@ -87,7 +87,9 @@ ___
 Section in the configuration file:
 
 ```javascript
-"messaging": { "ApplicationName": <name of the application performing work with queues> }
+    "messaging": {
+        "ApplicationName": <name of the application handling the queues>,
+    }
 ```
 
 * **QueueConfigurationBase** - The base class of the configuration section. It contains the necessary information to work with all types of queues.

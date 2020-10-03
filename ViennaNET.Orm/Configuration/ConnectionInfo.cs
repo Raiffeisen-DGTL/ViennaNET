@@ -39,11 +39,6 @@ namespace ViennaNET.Orm.Configuration
     }
 
     /// <summary>
-    ///   Признак использования контекста выполнения
-    /// </summary>
-    public bool UseCallContext { get; set; }
-
-    /// <summary>
     ///   Признак диагностирования сущностей в БД
     /// </summary>
     public bool IsSkipHealthCheckEntity { get; set; }
@@ -52,7 +47,7 @@ namespace ViennaNET.Orm.Configuration
     public override string ToString()
     {
       return
-        $"Nick={Nick}, Type={DbServerType}, ConnectionString={ConnectionString}, UseCallContext={UseCallContext}, IsSkipHealthCheckEntity={IsSkipHealthCheckEntity}";
+        $"Nick={Nick}, Type={DbServerType}, ConnectionString={ConnectionString}, IsSkipHealthCheckEntity={IsSkipHealthCheckEntity}";
     }
   }
 }

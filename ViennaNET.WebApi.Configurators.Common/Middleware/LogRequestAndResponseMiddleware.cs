@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using ViennaNET.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace ViennaNET.WebApi.Configurators.Common.Middleware
 {
   /// <summary>
   ///   Логирует входящий запрос и исходящий ответ сервиса
   /// </summary>
+  [Obsolete("Не используйте данный Middleware. После перехода на систему ведения журналов платформы, будет поддерживать из коробки.")]
   public class LogRequestAndResponseMiddleware
   {
     private static readonly string[] loggingContentTypes = { "application/json", "text/plain" };
@@ -39,13 +41,14 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware
         requestBody = context.Request.ContentType;
       }
 
+      var url = context.Request.GetEncodedUrl();
       if (isRequestDiagnostic)
       {
-        Logger.LogDiagnostic($"Request:\nHTTP {context.Request.Method} {context.Request.Path}\n{requestBody}");
+        Logger.LogDiagnostic($"Request:\nHTTP {context.Request.Method} {url}\n{requestBody}");
       }
       else
       {
-        Logger.LogDebug($"Request:\nHTTP {context.Request.Method} {context.Request.Path}\n{requestBody}");
+        Logger.LogDebug($"Request:\nHTTP {context.Request.Method} {url}\n{requestBody}");
       }
 
       var originalBody = context.Response.Body;

@@ -2,14 +2,16 @@
 using ViennaNET.Orm.Repositories;
 using ViennaNET.Orm.Seedwork;
 
-namespace ViennaNET.Orm.Tests.Unit
+namespace ViennaNET.Orm.Tests.Unit.DSL
 {
   public class TestCommand : BaseCommand, IEntityKey<int>
   {
     public TestCommand()
     {
-      Parameters = new Dictionary<string, TypeWrapper>();
-      Parameters.Add("param", new TypeWrapper(12L, typeof(long)));
+      Parameters = new Dictionary<string, TypeWrapper>
+      {
+        { "param", new TypeWrapper(12L, typeof(long)) }
+      };
     }
 
     public int Id { get; }

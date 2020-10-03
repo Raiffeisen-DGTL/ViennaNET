@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ViennaNET.Orm.Application;
+using ViennaNET.Orm.Repositories;
 using ViennaNET.Orm.Seedwork;
 
 namespace ViennaNET.Orm
@@ -14,18 +15,10 @@ namespace ViennaNET.Orm
   /// </summary>
   public abstract class ApplicationContext : BoundedContext, IApplicationContext
   {
-    private readonly List<(string, string)> _namedQueries;
-    private readonly List<(Type, string)> _commands;
-    private readonly List<(Type, string)> _customQueries;
-    private readonly List<(Type, string, Assembly)> _integrationEvents;
-
-    protected ApplicationContext()
-    {
-      _namedQueries = new List<(string, string)>();
-      _commands = new List<(Type, string)>();
-      _customQueries = new List<(Type, string)>();
-      _integrationEvents = new List<(Type, string, Assembly)>();
-    }
+    private readonly List<(string, string)> _namedQueries = new List<(string, string)>();
+    private readonly List<(Type, string)> _commands = new List<(Type, string)>();
+    private readonly List<(Type, string)> _customQueries = new List<(Type, string)>();
+    private readonly List<(Type, string, Assembly)> _integrationEvents = new List<(Type, string, Assembly)>();
 
     /// <inheritdoc />
     public IReadOnlyCollection<(string, string)> NamedQueries => _namedQueries.AsReadOnly();
@@ -39,45 +32,90 @@ namespace ViennaNET.Orm
     /// <inheritdoc />
     public IReadOnlyCollection<(Type, string, Assembly)> IntegrationEvents => _integrationEvents.AsReadOnly();
 
-    /// <inheritdoc />
-    public IApplicationContext AddCommand<T>(string nick = null) where T : class
+    /// <summary>
+    /// Позволяет добавить новую команду в контекст
+    /// </summary>
+    /// <typeparam name="T">Тип регистрируемой команды</typeparam>
+    /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
+    protected IApplicationContext AddCommand<T>(string dbNick = null) where T : class, ICommand
     {
-      _commands.Add((typeof(T), nick));
+      _commands.Add((typeof(T), dbNick));
       return this;
     }
 
-    /// <inheritdoc />
-    public IApplicationContext AddNamedQuery<T>(string queryName, string dbNick = null) where T : class
+    /// <summary>
+    /// Регистрирует все команды в сборке
+    /// </summary>
+    /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
+    /// <param name="assembly">Сборка в которой ведётся поиск команд. По умолчанию - <see cref="Assembly.GetCallingAssembly"/>.</param>
+    /// <returns>Себя</returns>
+    /// <remarks>Поиск команд ведётся по реализации от <see cref="ICommand"/></remarks>
+    protected IApplicationContext AddAllCommands(string dbNick = null, Assembly assembly = null)
+    {
+      var myAssembly = assembly ?? Assembly.GetCallingAssembly();
+      var commands = myAssembly
+        .GetTypes()
+        .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(ICommand)))
+        .Select(t => (t, dbNick));
+
+      _commands.AddRange(commands);
+
+      return this;
+    }
+
+    /// <summary>
+    /// Позволяет добавить новый именованный запрос в контекст
+    /// </summary>
+    /// <param name="queryName">Имя регистрируемого запроса</param>
+    /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
+    protected IApplicationContext AddNamedQuery(string queryName, string dbNick = null)
     {
       _namedQueries.Add((queryName, dbNick));
       return this;
     }
 
-    /// <inheritdoc />
-    public IApplicationContext AddCustomQuery<T>(string nick = null) where T : class
+    /// <summary>
+    /// Позволяет добавить новый настраиваемый запрос в контекст
+    /// </summary>
+    /// <typeparam name="T">Тип сущности, возвращаемой запросом</typeparam>
+    /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
+    protected IApplicationContext AddCustomQuery<T>(string dbNick = null) where T : class
     {
-      _customQueries.Add((typeof(T), nick));
+      _customQueries.Add((typeof(T), dbNick));
       return this;
     }
 
-    /// <inheritdoc />
-    /// <exception cref="IntegrationEventMappingRegistrationException">
-    ///   Исключение, возникающее в случае если регистрируемая сущность не
-    ///   реализует необходимый интерфейс
-    /// </exception>
-    public IApplicationContext AddIntegrationEvent<T>(string nick = null, Assembly assembly = null) where T : class
+    /// <summary>
+    /// Позволяет добавить новое событие для публикации в контекст
+    /// </summary>
+    /// <typeparam name="T">Тип регистрируемого события</typeparam>
+    /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
+    /// <param name="assembly">Сборка в которой находится класс события</param>
+    /// <returns></returns>
+    protected IApplicationContext AddIntegrationEvent<T>(string dbNick = null, Assembly assembly = null) where T : class, IIntegrationEvent
     {
-      var eventType = typeof(T);
+      _integrationEvents.Add((typeof(T), dbNick, assembly));
+      return this;
+    }
 
-      var isIEventImplemented = eventType.GetInterfaces()
-                                         .Any(i => i == typeof(IIntegrationEvent));
-      if (!isIEventImplemented)
-      {
-        throw new
-          IntegrationEventMappingRegistrationException($"All integration events should implement IIntegrationEvent interface. The event of type {eventType} does not implement it.");
-      }
 
-      _integrationEvents.Add((typeof(T), nick, assembly));
+    /// <summary>
+    /// Регистрирует все события в сборке
+    /// </summary>
+    /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
+    /// <param name="assembly">Сборка в которой ведётся поиск событий. По умолчанию - <see cref="Assembly.GetCallingAssembly"/>.</param>
+    /// <returns>Себя</returns>
+    /// <remarks>Поиск событий ведётся по реализации классом интерфейса <see cref="IIntegrationEvent"/></remarks>
+    protected IApplicationContext AddAllIntegrationEvents(string dbNick = null, Assembly assembly = null)
+    {
+      var myAssembly = assembly ?? Assembly.GetCallingAssembly();
+      var events = myAssembly
+        .GetTypes()
+        .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Contains(typeof(IIntegrationEvent)))
+        .Select(t => (t, dbNick, assembly));
+
+      _integrationEvents.AddRange(events);
+
       return this;
     }
   }

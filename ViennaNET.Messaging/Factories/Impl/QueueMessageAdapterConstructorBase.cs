@@ -29,7 +29,7 @@ namespace ViennaNET.Messaging.Factories.Impl
     /// <inheritdoc />
     public IMessageAdapter Create(string queueId, bool isDiagnostic)
     {
-      var queueConfiguration = _configuration.GetQueueConfiguration(queueId);
+      var queueConfiguration = _configuration?.GetQueueConfiguration(queueId);
 
       if (queueConfiguration == null)
       {
@@ -42,14 +42,15 @@ namespace ViennaNET.Messaging.Factories.Impl
     /// <inheritdoc />
     public IReadOnlyCollection<IMessageAdapter> CreateAll(bool isDiagnostic)
     {
-      return _configuration.Queues.Select(x => CreateInternal(x, isDiagnostic))
-                           .ToArray();
+      return _configuration == null
+        ? new IMessageAdapter[0]
+        : _configuration.Queues.Select(x => CreateInternal(x, isDiagnostic)).ToArray();
     }
 
     /// <inheritdoc />
     public bool HasQueue(string queueId)
     {
-      return _configuration.GetQueueConfiguration(queueId) != null;
+      return _configuration?.GetQueueConfiguration(queueId) != null;
     }
 
     private IMessageAdapter CreateInternal(TQueueConf queueConfiguration, bool isDiagnostic)

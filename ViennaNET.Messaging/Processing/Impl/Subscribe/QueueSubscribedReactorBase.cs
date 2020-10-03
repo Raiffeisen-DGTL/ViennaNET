@@ -16,8 +16,11 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
     private readonly IHealthCheckingService _healthCheckingService;
 
-    private readonly IPolling _reconnectPolling;
     private readonly bool _serviceHealthDependent;
+    private readonly int _reconnectTimeout;
+    private readonly string _pollingId;
+
+    private Polling _reconnectPolling;
 
     /// <summary>
     ///   Адаптер для взаимодействия с очередью
@@ -48,7 +51,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       _hasDiagnosticErrors = false;
       _serviceHealthDependent = serviceHealthDependent ?? false;
 
-      _reconnectPolling = new Polling(reconnectTimeout, pollingId);
+      _reconnectTimeout = reconnectTimeout;
+      _pollingId = pollingId;
     }
 
     /// <inheritdoc />
@@ -60,12 +64,27 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
         _healthCheckingService.DiagnosticFailedEvent += OnDiagnosticFailed;
       }
 
-      if (!StartProcessingInternal())
+      (bool isFailed, bool needRetry) subscribeResult;
+      while (true)
+      {
+        subscribeResult = StartProcessingInternal();
+        if (subscribeResult.isFailed && subscribeResult.needRetry)
+        {
+          Thread.Sleep(_reconnectTimeout);
+        }
+        else
+        {
+          break;
+        }
+      }
+
+      if (subscribeResult.isFailed)
       {
         return false;
       }
 
-      _reconnectPolling.StartPolling(CheckAndReconnect);
+      _reconnectPolling = new Polling(_reconnectTimeout, CheckAndReconnect, _pollingId);
+      _reconnectPolling.StartPolling();
 
       return true;
     }
@@ -81,7 +100,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
           _healthCheckingService.DiagnosticPassedEvent -= OnDiagnosticPassed;
         }
 
-        _reconnectPolling.StopPolling();
+        _reconnectPolling.Dispose();
+        _reconnectPolling = null;
       }
       finally
       {
@@ -120,23 +140,37 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       }
     }
 
-    private bool StartProcessingInternal()
+    private (bool isFailed, bool needRetry) StartProcessingInternal()
     {
       if (_serviceHealthDependent && _hasDiagnosticErrors)
       {
         Logger.LogDebug("Diagnostic not passed. Skip listening");
-        return false;
+        return (true, true);
       }
 
       if (adapter.IsConnected)
       {
-        return false;
+        Logger.LogWarning($"Adapter with queue id {adapter.Configuration.Id} already connected");
+        return (true, false);
       }
 
-      adapter.Connect();
-      adapter.Subscribe(ProcessMessageAsync);
+      try
+      {
+        adapter.Connect();
+        adapter.Subscribe(ProcessMessageAsync);
+      }
+      catch (TimeoutException ex)
+      {
+        Logger.LogError(ex, $"Cannot connect to queue with id {adapter.Configuration.Id}");
+        return (true, true);
+      }
+      catch(Exception ex)
+      {
+        Logger.LogError(ex, $"Cannot connect to queue with id {adapter.Configuration.Id}");
+        return (true, false);
+      }
 
-      return true;
+      return (false, false);
     }
 
     private void OnDiagnosticFailed()
@@ -152,7 +186,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       Logger.LogDebug("QueueSubscribedReactor: Service diagnostic passed");
     }
 
-    private Task CheckAndReconnect(CancellationToken cancellationToken)
+    private Task<bool> CheckAndReconnect(CancellationToken cancellationToken)
     {
       try
       {
@@ -165,7 +199,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
         Logger.LogError(exception, "QueueSubscribedReactor: CheckAndReconnect failed");
       }
 
-      return Task.CompletedTask;
+      return Task.FromResult(false);
     }
 
     private void Unsubscribe()

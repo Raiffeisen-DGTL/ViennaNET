@@ -3,6 +3,7 @@ using Moq;
 using NHibernate;
 using NHibernate.Type;
 using NUnit.Framework;
+using ViennaNET.Orm.Tests.Unit.DSL;
 
 namespace ViennaNET.Orm.Tests.Unit.Repositories
 {

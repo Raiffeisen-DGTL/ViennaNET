@@ -16,7 +16,6 @@ namespace MediatorService
     static void Main(string[] args)
     {
       CompanyHostBuilder.Create()
-                        .UseDefaultLogging()
                         .UseKestrel()
                         .UseSwagger()
                         .RegisterServices(RegisterServices)
