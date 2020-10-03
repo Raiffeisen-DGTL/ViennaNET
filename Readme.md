@@ -25,19 +25,19 @@
 
 > MSSql:
 > *  [**ViennaNET.Orm.MSSQL**](ViennaNET.Orm.MSSQL) - connection of the MSSql driver
-> *  **ViennaNET.Orm.MSSQL.DefaultConfiguration** - build integration into the project through SimpleInjector
+> *  **ViennaNET.Orm.MSSQL.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 > Oracle:
 > *  [**ViennaNET.Orm.Oracle**](ViennaNET.Orm.Oracle) - connecting the Oracle driver
-> *  **ViennaNET.Orm.Oracle.DefaultConfiguration** - build integration into the project through SimpleInjector
+> *  **ViennaNET.Orm.Oracle.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 > PostgreSQL:
 > *  [**ViennaNET.Orm.PostgreSql**](ViennaNET.Orm.PostgreSql) - connecting the PostgreSql driver
-> *  **ViennaNET.Orm.PostgreSql.DefaultConfiguration** - build integration into the project through SimpleInjector
+> *  **ViennaNET.Orm.PostgreSql.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 > SQLite:
 > *  [**ViennaNET.Orm.SQLite**](ViennaNET.Orm.SQLite) - connecting the SQLite driver
-> *  **ViennaNET.Orm.SQLite.DefaultConfiguration** - build integration into the project through SimpleInjector
+> *  **ViennaNET.Orm.SQLite.DefaultConfiguration** - assembly integration into the project through SimpleInjector
 
 #### Logging
 * **ViennaNET.Logging** - a logging library based on log4net
@@ -49,8 +49,11 @@
 
 #### Messaging
 *  [**ViennaNET.Messaging**](ViennaNET.Messaging) - assembly with classes and interfaces providing a common functionality for working with queues
-*  **ViennaNET.Messaging.DefaultConfiguration** - assembly integration into the project through SimpleInjector
+*  **ViennaNET.Messaging.DefaultConfiguration**(ViennaNET.Messaging.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
+> IBM MQ:
+> *  [**ViennaNET.Messaging.MQSeriesQueue**](ViennaNET.Messaging.MQSeriesQueue) - connection of the MSSql driver
+> *  [**ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration**](ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration) - assembly integration into the project through SimpleInjector
 
 
 #### Redis
