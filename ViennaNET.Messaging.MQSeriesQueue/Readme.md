@@ -1,4 +1,4 @@
-# The assembly providing work with the IBM MQSeries queue
+# The assembly providing work with the IBM MQ Series queue
 ___
 ### Classes
 * **MqSeriesQueueConfiguration** - Advanced configuration for the IBM MQSeries adapter.
