@@ -69,8 +69,8 @@ Add more libraries
 # v0002
 
 ### Release Summary
-The new version of ViennaNET.WebApi. * Was made based on AspNetCore 3, and .NET Core 3.1 is recommended for its use.
-Assemblies with configurators were renamed to ViennaNET.WebApi.Configurators. *, And some of them were merged or split.
+The new version of ViennaNET.WebApi.\* Was made based on AspNetCore 3, and .NET Core 3.1 is recommended for its use.
+Assemblies with configurators were renamed to ViennaNET.WebApi.Configurators.\*, And some of them were merged or split.
 In the new version, the use of composite configurators has become easier, for example, if earlier it was necessary to call several extension methods, now only one public connection method remains in each configurator.
 
 ### Breaking Changes
@@ -79,19 +79,19 @@ In the new version, the use of composite configurators has become easier, for ex
 3. In SecurityKeysContainer, the default values ​​for the publisher and the audience have changed, which means that you need to check the compatibility of these parameters with existing authorization services. It is better in the configuration to explicitly override these fields as in all services.
 
 
-### Migration of AspNetCore applications from ViennaNET.WebApi 1. \ *. \ * (NET Core 2.2) to 2. \ *. \ * (NET Core 3.1)
+### Migration of AspNetCore applications from ViennaNET.WebApi 1.\*.\* (NET Core 2.2) to 2.\*.\* (NET Core 3.1)
 
 #### Case I. Used by DefaultKestrelRunner or DefaultHttpSysRunner
-1. In all assemblies using <TargetFramework> netcoreapp2.2 </TargetFramework>, change to <TargetFramework> netcoreapp3.1 </TargetFramework>.
+1. In all assemblies using <TargetFramework>netcoreapp2.2</TargetFramework>, change to <TargetFramework>netcoreapp3.1</TargetFramework>.
 2. In the main assembly with the service, delete the link to the ViennaNET.WebApi.DefaultConfiguration package for the service on Kestrel or ViennaNET.WebApi.DefaultHttpSysRunner for the service on HttpSys.
-3. Install the latest version of the package (2. *. *) ViennaNET.WebApi.Runners.BaseKestrel or ViennaNET.WebApi.Runners.BaseHttpSys, respectively.
-4. We also update versions of Company libraries to (2. *. *) In all assemblies. Version conflicts with third-party libraries (for example, SimpleInjector) may occur, so they also need to be updated.
+3. Install the latest version of the package (2. \*.\*) ViennaNET.WebApi.Runners.BaseKestrel or ViennaNET.WebApi.Runners.BaseHttpSys, respectively.
+4. We also update versions of Company libraries to (2. \*.\*) In all assemblies. Version conflicts with third-party libraries (for example, SimpleInjector) may occur, so they also need to be updated.
 5. Redoing Program.cs:
-  * Replace DefaultKestrelRunner with BaseKestrelRunner (for DefaultHttpSysRunner - BaseHttpSysRunner)
-  * If you used AddOnStartAction <T> / AddOnStopAction <T> extension methods, then you need to connect the ViennaNET.WebApi.Runners.Extensions package
+  * Replace DefaultKestrelRunner with BaseKestrelRunner (for DefaultHttpSysRunner - BaseHttpSysRunner)
+  * If you used AddOnStartAction<T> / AddOnStopAction<T> extension methods, then you need to connect the ViennaNET.WebApi.Runners.Extensions package
 6. We redo the configuration file:
-   * Remove unnecessary parameters from the webApiConfiguration section: logRequests and swaggerSubmit
-   * If you want to use the dynamic search for SimpleInjector packages, as is happening now, you need to add a section:
+  * Remove unnecessary parameters from the webApiConfiguration section: logRequests and swaggerSubmit
+  * If you want to use the dynamic search for SimpleInjector packages, as is happening now, you need to add a section:
 
 ```
        "simpleInjector": {
@@ -144,7 +144,7 @@ In the new version, the use of composite configurators has become easier, for ex
 
 #### Case II. The service was built manually (without using DefaultKestrelRunner or DefaultHttpSysRunner)
 1) In all assemblies using <TargetFramework>netcoreapp2.2</TargetFramework>, change to <TargetFramework>netcoreapp3.1</TargetFramework>.
-2) Assemblies with configurators were renamed to ViennaNET.WebApi.Configurators. *, As well as some of them were merged or divided, so you need to familiarize yourself with their description and select the ones you need.
+2) Assemblies with configurators were renamed to ViennaNET.WebApi.Configurators.\*, As well as some of them were merged or divided, so you need to familiarize yourself with their description and select the ones you need.
 
    Example:
 
@@ -159,7 +159,7 @@ In the new version, the use of composite configurators has become easier, for ex
                                 .UseJwtAuth();
 ```                                
 
-3) We update versions of Company libraries to (2. *. *) In all assemblies. Version conflicts with third-party libraries (for example, SimpleInjector) may occur, so they need to be synchronized.
+3) We update versions of Company libraries to (2. \*.\*) In all assemblies. Version conflicts with third-party libraries (for example, SimpleInjector) may occur, so they need to be synchronized.
 
 
 # v0001
