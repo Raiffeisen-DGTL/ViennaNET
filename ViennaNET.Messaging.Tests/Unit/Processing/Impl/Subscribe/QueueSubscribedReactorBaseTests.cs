@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using ViennaNET.Diagnostic;
@@ -89,20 +90,20 @@ namespace ViennaNET.Messaging.Tests.Unit.Processing.Impl.Subscribe
       fakeHealthService = new Mock<IHealthCheckingService>();
       var fakeCallContextAccessor = new Mock<IMessagingCallContextAccessor>();
 
-      return new QueueSubscribedReactorWrapper(fakeAdapter.Object, 100, "1", serviceHealthDependent, fakeHealthService.Object,
+      return new QueueSubscribedReactorWrapper(fakeAdapter.Object, 100, serviceHealthDependent, fakeHealthService.Object,
                                                fakeCallContextAccessor.Object);
     }
 
     private class QueueSubscribedReactorWrapper : QueueSubscribedReactorBase
     {
       public QueueSubscribedReactorWrapper(
-        IMessageAdapterWithSubscribing messageAdapter, int reconnectTimeout, string pollingId, bool? serviceHealthDependent,
+        IMessageAdapterWithSubscribing messageAdapter, int reconnectTimeout, bool? serviceHealthDependent,
         IHealthCheckingService healthCheckingService, IMessagingCallContextAccessor messagingCallContextAccessor) : base(messageAdapter,
                                                                                                                          reconnectTimeout,
-                                                                                                                         pollingId,
                                                                                                                          serviceHealthDependent,
                                                                                                                          healthCheckingService,
-                                                                                                                         messagingCallContextAccessor)
+                                                                                                                         messagingCallContextAccessor,
+                                                                                                                         Mock.Of<ILogger>())
       {
       }
 

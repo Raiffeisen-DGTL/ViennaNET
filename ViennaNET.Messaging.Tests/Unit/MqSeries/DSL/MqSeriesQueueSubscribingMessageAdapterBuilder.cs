@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
+using Moq;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.MQSeriesQueue;
 using ViennaNET.Messaging.MQSeriesQueue.Infrastructure;
@@ -33,7 +35,8 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries.DSL
     {
       return new MqSeriesQueueSubscribingMessageAdapter(
         _connectionFactoryProvider ?? Given.ConnectionFactoryProvider.Please(),
-        _configuration ?? new MqSeriesQueueConfiguration { ProcessingType = MessageProcessingType.Subscribe });
+        _configuration ?? new MqSeriesQueueConfiguration { ProcessingType = MessageProcessingType.Subscribe },
+        Mock.Of<ILogger<MqSeriesQueueSubscribingMessageAdapter>>());
     }
   }
 }

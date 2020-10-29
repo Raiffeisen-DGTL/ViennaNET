@@ -7,6 +7,7 @@ using ViennaNET.Diagnostic.Data;
 using ViennaNET.Messaging.Diagnostic;
 using ViennaNET.Messaging.Factories;
 using ViennaNET.Messaging.MQSeriesQueue;
+using ViennaNET.Messaging.Tests.Unit.DSL;
 
 namespace ViennaNET.Messaging.Tests.Unit.Diagnostic
 {
@@ -16,23 +17,22 @@ namespace ViennaNET.Messaging.Tests.Unit.Diagnostic
     private const string MqSeriesId = "MqSeriesId";
     private const string MqSeriesServer = "MqSeriesServer";
 
+    private static MqSeriesQueueConfiguration CreateConfiguration(bool isHealthCheck = true)
+    {
+      return new MqSeriesQueueConfiguration { IsHealthCheck = isHealthCheck, Id = MqSeriesId, Server = MqSeriesServer };
+    }
+
     [Test]
     public async Task Diagnose_CorrectConnection_CorrectResult()
     {
-      var messageAdapter = new Mock<IMessageAdapter>();
-      var messageAdapterConstructor = new Mock<IMessageAdapterConstructor>();
-      messageAdapter.Setup(x => x.Configuration)
-                    .Returns(CreateConnection());
-      messageAdapter.Setup(x => x.Connect());
-      messageAdapter.Setup(x => x.Disconnect());
-      
-      messageAdapterConstructor.Setup(x => x.CreateAll(It.IsAny<bool>()))
-                                .Returns(new[] { messageAdapter.Object });
-
-      var checker = new MessagingConnectionChecker(new[] { messageAdapterConstructor.Object });
+      var checker = Given.MessagingConnectionChecker
+        .WithConstructor(
+          c => c.WithAdapter(
+            a => a.WithQueueConfiguration(CreateConfiguration()),
+            MqSeriesId))
+        .Please();
 
       var result = await checker.Diagnose();
-
       var diagnosticInfo = result.First();
 
       Assert.Multiple(() =>
@@ -49,37 +49,22 @@ namespace ViennaNET.Messaging.Tests.Unit.Diagnostic
     [Test]
     public async Task Diagnose_NoHealthCheckConnections_EmptyResult()
     {
-      var messageAdapter = new Mock<IMessageAdapter>();
-      var messageAdapterConstructor = new Mock<IMessageAdapterConstructor>();
-      messageAdapter.Setup(x => x.Configuration)
-                    .Returns(CreateConnection(false));
-      messageAdapter.Setup(x => x.Connect());
-      messageAdapter.Setup(x => x.Disconnect());
-
-      messageAdapterConstructor.Setup(x => x.CreateAll(It.IsAny<bool>()))
-                                .Returns(new[] { messageAdapter.Object });
-
-      var checker = new MessagingConnectionChecker(new[] { messageAdapterConstructor.Object });
+      var checker = Given.MessagingConnectionChecker
+        .WithConstructor(
+          c => c.WithAdapter(
+            a => a.WithQueueConfiguration(CreateConfiguration(false)),
+            MqSeriesId))
+        .Please();
 
       var result = await checker.Diagnose();
 
       Assert.That(result, Is.Empty);
     }
 
-    private static MqSeriesQueueConfiguration CreateConnection(bool isHealthCheck = true)
-    {
-      return new MqSeriesQueueConfiguration { IsHealthCheck = isHealthCheck, Id = MqSeriesId, Server = MqSeriesServer };
-    }
-
     [Test]
     public async Task Diagnose_NoAdaptersReturned_EmptyResult()
     {
-      var messageAdapterConstructor = new Mock<IMessageAdapterConstructor>();
-
-      messageAdapterConstructor.Setup(x => x.CreateAll(It.IsAny<bool>()))
-                               .Returns(new IMessageAdapter[0]);
-
-      var checker = new MessagingConnectionChecker(new[] { messageAdapterConstructor.Object });
+      var checker = Given.MessagingConnectionChecker.WithConstructor(Given.MessageAdapterConstructor).Please();
 
       var result = await checker.Diagnose();
 
@@ -89,7 +74,7 @@ namespace ViennaNET.Messaging.Tests.Unit.Diagnostic
     [Test]
     public async Task Diagnose_NoConstructors_EmptyResult()
     {
-      var checker = new MessagingConnectionChecker(new IMessageAdapterConstructor[0]);
+      var checker = Given.MessagingConnectionChecker.Please();
 
       var result = await checker.Diagnose();
 
@@ -99,20 +84,15 @@ namespace ViennaNET.Messaging.Tests.Unit.Diagnostic
     [Test]
     public async Task Diagnose_ErrorOnConnect_ErrorResult()
     {
-      var errorConnect = "Error_connect";
+      var errorText = "Error_connect";
 
-      var messageAdapter = new Mock<IMessageAdapter>();
-      var messageAdapterConstructor = new Mock<IMessageAdapterConstructor>();
-      messageAdapter.Setup(x => x.Configuration)
-                    .Returns(CreateConnection());
-      messageAdapter.Setup(x => x.Connect())
-                     .Throws(new Exception(errorConnect));
-      messageAdapter.Setup(x => x.Disconnect());
-
-      messageAdapterConstructor.Setup(x => x.CreateAll(It.IsAny<bool>()))
-                                .Returns(new[] { messageAdapter.Object });
-
-      var checker = new MessagingConnectionChecker(new[] { messageAdapterConstructor.Object });
+      var checker = Given.MessagingConnectionChecker
+        .WithConstructor(
+          c => c.WithAdapter(
+            a => a.WithQueueConfiguration(CreateConfiguration()).Please(
+              m => m.Setup(x => x.Connect()).Throws(new Exception(errorText))),
+            MqSeriesId))
+        .Please();
 
       var result = await checker.Diagnose();
 
@@ -120,7 +100,7 @@ namespace ViennaNET.Messaging.Tests.Unit.Diagnostic
 
       Assert.Multiple(() =>
       {
-        Assert.That(diagnosticInfo.Error.Contains(errorConnect), Is.True);
+        StringAssert.Contains(errorText, diagnosticInfo.Error);
         Assert.That(diagnosticInfo.Status, Is.EqualTo(DiagnosticStatus.QueueError));
         Assert.That(diagnosticInfo.IsSkipResult, Is.False);
         Assert.That(diagnosticInfo.Name, Is.EqualTo(MqSeriesId));
@@ -132,27 +112,22 @@ namespace ViennaNET.Messaging.Tests.Unit.Diagnostic
     [Test]
     public async Task Diagnose_ErrorOnDisconnect_ErrorResult()
     {
-      var errorConnect = "Error_connect";
+      var errorText = "Error_connect";
 
-      var messageAdapter = new Mock<IMessageAdapter>();
-      var messageAdapterConstructor = new Mock<IMessageAdapterConstructor>();
-      messageAdapter.Setup(x => x.Configuration)
-                    .Returns(CreateConnection());
-      messageAdapter.Setup(x => x.Connect());
-      messageAdapter.Setup(x => x.Disconnect()).Throws(new Exception(errorConnect));
-
-      messageAdapterConstructor.Setup(x => x.CreateAll(It.IsAny<bool>()))
-                                .Returns(new[] { messageAdapter.Object });
-
-      var checker = new MessagingConnectionChecker(new[] { messageAdapterConstructor.Object });
+      var checker = Given.MessagingConnectionChecker
+        .WithConstructor(
+          c => c.WithAdapter(
+            a => a.WithQueueConfiguration(CreateConfiguration()).Please(
+              m => m.Setup(x => x.Disconnect()).Throws(new Exception(errorText))),
+            MqSeriesId))
+        .Please();
 
       var result = await checker.Diagnose();
-
       var diagnosticInfo = result.First();
 
       Assert.Multiple(() =>
       {
-        Assert.That(diagnosticInfo.Error.Contains(errorConnect), Is.True);
+        StringAssert.Contains(errorText, diagnosticInfo.Error);
         Assert.That(diagnosticInfo.Status, Is.EqualTo(DiagnosticStatus.QueueError));
         Assert.That(diagnosticInfo.IsSkipResult, Is.False);
         Assert.That(diagnosticInfo.Name, Is.EqualTo(MqSeriesId));
@@ -164,22 +139,20 @@ namespace ViennaNET.Messaging.Tests.Unit.Diagnostic
     [Test]
     public async Task Diagnose_ErrorOnCreateAll_ErrorResult()
     {
-      var errorConnect = "Error_connect";
+      var errorText = "Error_connect";
 
       var messageAdapterConstructor = new Mock<IMessageAdapterConstructor>();
-
-      messageAdapterConstructor.Setup(x => x.CreateAll(It.IsAny<bool>()))
-                               .Throws(new Exception(errorConnect));
-
-      var checker = new MessagingConnectionChecker(new[] { messageAdapterConstructor.Object });
+      messageAdapterConstructor
+        .Setup(x => x.CreateAll())
+        .Throws(new Exception(errorText));
+      var checker = Given.MessagingConnectionChecker.WithConstructor(messageAdapterConstructor.Object).Please();
 
       var result = await checker.Diagnose();
-
       var diagnosticInfo = result.First();
 
       Assert.Multiple(() =>
       {
-        Assert.That(diagnosticInfo.Error.Contains(errorConnect), Is.True);
+        StringAssert.Contains(errorText, diagnosticInfo.Error);
         Assert.That(diagnosticInfo.Status, Is.EqualTo(DiagnosticStatus.ConfigError));
         Assert.That(diagnosticInfo.IsSkipResult, Is.False);
         Assert.That(diagnosticInfo.Name, Is.EqualTo("constructor"));

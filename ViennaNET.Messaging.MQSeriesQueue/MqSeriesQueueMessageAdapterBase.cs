@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using IBM.XMS;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Messages;
@@ -23,6 +23,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     private readonly IMqSeriesQueueConnectionFactoryProvider _connectionFactoryProvider;
 
     protected readonly MqSeriesQueueConfiguration _configuration;
+    private readonly ILogger _logger;
 
     private bool _isDisposed;
     private bool _isConnected; 
@@ -37,10 +38,14 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     /// </summary>
     /// <param name="connectionFactoryProvider">Объект, создающий connection factory</param>
     /// <param name="configuration">Конфигурация подключения</param>
+    /// <param name="logger">Интерфейс логгирования</param>
     protected MqSeriesQueueMessageAdapterBase(
-      IMqSeriesQueueConnectionFactoryProvider connectionFactoryProvider, MqSeriesQueueConfiguration configuration)
+      IMqSeriesQueueConnectionFactoryProvider connectionFactoryProvider, 
+      MqSeriesQueueConfiguration configuration,
+      ILogger logger)
     {
       _configuration = configuration;
+      _logger = logger;
       _connectionFactoryProvider = connectionFactoryProvider;
     }
 
@@ -97,7 +102,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
         }
         catch (Exception ex)
         {
-          Logger.LogError(ex, "Error while connect to the queue. See inner exception for more details");
+          _logger.LogError(ex, "Error while connect to the queue with ID {queueId}", _configuration.Id);
           DisconnectInternal();
           throw;
         }
@@ -146,7 +151,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
         }
         catch (Exception ex)
         {
-          Logger.LogErrorFormat(ex.ToString());
+          _logger.LogError(ex, "Error when disposing, QueueID: {queueId}", _configuration.Id);
         }
       }
 
@@ -163,12 +168,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       ThrowIfNotConnected();
 
       var msg = ReceiveInternal(correlationId, timeout, additionalParameters);
-      if (msg == null)
-      {
-        throw new MessageDidNotReceivedException("Can not receive message because queue is empty");
-      }
-
-      return msg;
+      return msg ?? throw new MessageDidNotReceivedException("Can not receive message because queue is empty");
     }
 
     /// <inheritdoc />
@@ -211,7 +211,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     {
       if (_isDisposed)
       {
-        throw new MessagingException("Adapter already disposed");
+        throw new ObjectDisposedException(nameof(MqSeriesQueueMessageAdapterBase));
       }
     }
 
@@ -399,8 +399,6 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       var result = string.IsNullOrWhiteSpace(correlationIdSelector)
         ? additionalSelector
         : string.Join(" AND ", correlationIdSelector, additionalSelector);
-
-      Logger.LogInfo($"MQ Selector: {result}");
 
       return result;
     }

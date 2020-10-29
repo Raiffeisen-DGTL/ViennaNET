@@ -21,7 +21,7 @@ namespace ViennaNET.Messaging.Factories.Impl
     }
 
     /// <inheritdoc />
-    public IMessageAdapter Create(string queueId, bool isDiagnostic)
+    public IMessageAdapter Create(string queueId)
     {
       IMessageAdapterConstructor constructor;
       try
@@ -39,7 +39,7 @@ namespace ViennaNET.Messaging.Factories.Impl
       }
 
 
-      return constructor.Create(queueId, isDiagnostic);
+      return constructor.Create(queueId);
     }
   }
 }

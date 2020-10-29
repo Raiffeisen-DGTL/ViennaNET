@@ -13,6 +13,7 @@ namespace ViennaNET.Logging
   /// <summary>
   ///   main wrapper class for working with the logger
   /// </summary>
+  [Obsolete("Данная система журналирования устарела и скоро будет удалена. Пожалуйста используйте Microsoft.Extensions.Logging")]
   public static class Logger
   {
     private static string Category

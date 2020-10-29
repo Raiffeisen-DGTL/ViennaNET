@@ -1,24 +1,28 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Diagnostic;
-using ViennaNET.Logging;
 using ViennaNET.Messaging.Context;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Messages;
-using ViennaNET.Utils;
+using ViennaNET.Messaging.Tools;
 
 namespace ViennaNET.Messaging.Processing.Impl.Subscribe
 {
   /// <inheritdoc />
   public abstract class QueueSubscribedReactorBase : IQueueReactor
   {
+    private const int ErrorThresholdCount = 15;
+    private const int DefaultReconnectTimeout = 600;
+    private const int MaxReconnectTimeout = 60000;
+
+    private readonly ILogger _logger;
     private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
     private readonly IHealthCheckingService _healthCheckingService;
 
     private readonly bool _serviceHealthDependent;
     private readonly int _reconnectTimeout;
-    private readonly string _pollingId;
 
     private Polling _reconnectPolling;
 
@@ -31,18 +35,24 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     private bool _hasDiagnosticErrors;
 
     private bool _isDisposed;
+    private IDisposable _loggerContext;
 
     /// <summary>
     ///   Базовый класс для реактора, работающего на основе шаблона "Наблюдатель"
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     protected QueueSubscribedReactorBase(
-      IMessageAdapterWithSubscribing messageAdapter, int reconnectTimeout, string pollingId, bool? serviceHealthDependent,
-      IHealthCheckingService healthCheckingService, IMessagingCallContextAccessor messagingCallContextAccessor)
+      IMessageAdapterWithSubscribing messageAdapter,
+      int reconnectTimeout,
+      bool? serviceHealthDependent,
+      IHealthCheckingService healthCheckingService,
+      IMessagingCallContextAccessor messagingCallContextAccessor,
+      ILogger logger)
     {
-      adapter = messageAdapter.ThrowIfNull(nameof(messageAdapter));
-      _messagingCallContextAccessor = messagingCallContextAccessor.ThrowIfNull(nameof(messagingCallContextAccessor));
-      _healthCheckingService = healthCheckingService.ThrowIfNull(nameof(serviceHealthDependent));
+      _logger = logger;
+      adapter = messageAdapter;
+      _messagingCallContextAccessor = messagingCallContextAccessor;
+      _healthCheckingService = healthCheckingService;
       if (reconnectTimeout <= 0)
       {
         throw new ArgumentOutOfRangeException(nameof(reconnectTimeout));
@@ -52,7 +62,6 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       _serviceHealthDependent = serviceHealthDependent ?? false;
 
       _reconnectTimeout = reconnectTimeout;
-      _pollingId = pollingId;
     }
 
     /// <inheritdoc />
@@ -83,7 +92,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
         return false;
       }
 
-      _reconnectPolling = new Polling(_reconnectTimeout, CheckAndReconnect, _pollingId);
+      _reconnectPolling = new Polling(_reconnectTimeout, CheckAndReconnect, _logger);
       _reconnectPolling.StartPolling();
 
       return true;
@@ -132,7 +141,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       }
       catch (Exception e)
       {
-        Logger.LogError(e, "Error while dispose");
+        _logger.LogError(e, "Error while dispose");
       }
       finally
       {
@@ -144,13 +153,13 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     {
       if (_serviceHealthDependent && _hasDiagnosticErrors)
       {
-        Logger.LogDebug("Diagnostic not passed. Skip listening");
+        _logger.LogDebug("Diagnostic not passed. Skip listening");
         return (true, true);
       }
 
       if (adapter.IsConnected)
       {
-        Logger.LogWarning($"Adapter with queue id {adapter.Configuration.Id} already connected");
+        _logger.LogWarning("Adapter with queue id {queueId} already connected", adapter.Configuration.Id);
         return (true, false);
       }
 
@@ -161,12 +170,12 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       }
       catch (TimeoutException ex)
       {
-        Logger.LogError(ex, $"Cannot connect to queue with id {adapter.Configuration.Id}");
+        _logger.LogError(ex, "Cannot connect to queue with id {queueId}", adapter.Configuration.Id);
         return (true, true);
       }
       catch(Exception ex)
       {
-        Logger.LogError(ex, $"Cannot connect to queue with id {adapter.Configuration.Id}");
+        _logger.LogError(ex, "Cannot connect to queue with id {queueId}", adapter.Configuration.Id);
         return (true, false);
       }
 
@@ -177,29 +186,40 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     {
       _hasDiagnosticErrors = true;
       Unsubscribe();
-      Logger.LogDebug("QueueSubscribedReactor: Service diagnostic failed, stop listening");
+      _logger.LogDebug("QueueSubscribedReactor: Service diagnostic failed, stop listening");
     }
 
     private void OnDiagnosticPassed()
     {
       _hasDiagnosticErrors = false;
-      Logger.LogDebug("QueueSubscribedReactor: Service diagnostic passed");
+      _logger.LogDebug("QueueSubscribedReactor: Service diagnostic passed");
     }
 
-    private Task<bool> CheckAndReconnect(CancellationToken cancellationToken)
+    private async Task<bool> CheckAndReconnect(CancellationToken cancellationToken)
     {
+      if (adapter.IsConnected)
+      {
+        return false;
+      }
+
+      Interlocked.Increment(ref _errorCount);
+      await Task.Delay(CalculateTimeout(), cancellationToken).ConfigureAwait(false);
+
       try
       {
-        Logger.LogDebug($"'{nameof(CheckAndReconnect)}' invocation started");
         StartProcessingInternal();
-        Logger.LogDebug($"'{nameof(CheckAndReconnect)}' invocation finished");
       }
       catch (Exception exception)
       {
-        Logger.LogError(exception, "QueueSubscribedReactor: CheckAndReconnect failed");
+        _logger.LogError(exception, "Failed reconnecting");
       }
 
-      return Task.FromResult(false);
+      return false;
+    }
+
+    private int CalculateTimeout()
+    {
+      return InternalTools.CalculateTimeout(_errorCount, ErrorThresholdCount, DefaultReconnectTimeout, MaxReconnectTimeout);
     }
 
     private void Unsubscribe()
@@ -212,8 +232,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     {
       var context = MessagingContext.Create(message);
 
-      Logger.RequestId = context.RequestId;
-      Logger.User = context.UserId;
+      _loggerContext =
+        _logger.BeginScope("RequestID: {requestId}, UserID: {userId}", context.RequestId, context.UserId);
 
       _messagingCallContextAccessor.SetContext(context);
     }
@@ -221,6 +241,9 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     private void CleanCallContext()
     {
       _messagingCallContextAccessor.CleanContext();
+      
+      _loggerContext.Dispose();
+      _loggerContext = null;
     }
 
     /// <summary>
@@ -241,7 +264,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     {
       try
       {
-        Logger.LogDebug($"Message has been received by subscribing {Environment.NewLine} {message}");
+        _logger.LogDebug("Message has been received by subscribing " + Environment.NewLine + " {message}", message);
         SetCallContextFromMessage(message);
 
         var processed = await GetProcessedMessageAsync(message);
@@ -252,7 +275,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
 
         if (!processed)
         {
-          Logger.LogError($"The message did not processed. Message body: {message.LogBody()}");
+          _logger.LogError("The message did not processed. Message body: {messageBody}", message.LogBody());
         }
 
         Interlocked.Exchange(ref _errorCount, 0);
@@ -263,11 +286,11 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       }
       catch (SystemException exSystem)
       {
-        Logger.LogError(exSystem, "Process message failed: commit message");
+        _logger.LogError(exSystem, "Process message failed: commit message");
       }
       catch (Exception e)
       {
-        Logger.LogError(e, "Error while executing process handler");
+        _logger.LogError(e, "Error while executing process handler");
       }
       finally
       {

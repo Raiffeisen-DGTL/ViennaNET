@@ -1,3 +1,9 @@
+# v0010 (29.10.2020)
+
+### Release Summary
+1. Change Messaging
+
+
 # v0009 (4.10.2020)
 
 ### Release Summary

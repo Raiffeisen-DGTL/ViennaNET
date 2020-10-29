@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Confluent.Kafka;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Extensions;
@@ -13,13 +14,14 @@ namespace ViennaNET.Messaging.KafkaQueue
   /// <summary>
   ///   Предоставляет функционал по работе с сообщениями Kafka
   /// </summary>
-  public class KafkaQueueMessageAdapter : IMessageAdapter
+  internal class KafkaQueueMessageAdapter : IMessageAdapter
   {
+    private readonly IKafkaConnectionFactory _connectionFactory;
+    private readonly ILogger<KafkaQueueMessageAdapter> _logger;
     private readonly KafkaQueueConfiguration _configuration;
-    private readonly object _connectionLock;
-    private readonly bool _isDiagnostic;
-    private readonly bool _isDisposed;
+    private readonly object _connectionLock = new object();
 
+    private bool _isDisposed;
     private IConsumer<Ignore, byte[]> _consumer;
     private IProducer<Null, byte[]> _producer;
 
@@ -27,14 +29,14 @@ namespace ViennaNET.Messaging.KafkaQueue
     ///   Инициализирует экземпляр переменной типа <see cref="QueueConfigurationBase" />
     ///   и признаком необходимости проводить диагностику
     /// </summary>
-    /// <param name="queueConfiguration"></param>
-    /// <param name="isDiagnostic"></param>
-    public KafkaQueueMessageAdapter(KafkaQueueConfiguration queueConfiguration, bool isDiagnostic)
+    /// <param name="queueConfiguration">Конфигурация подключения</param>
+    /// <param name="connectionFactory">Фабрика для создания подключения к оередям</param>
+    /// <param name="logger">Интерфейс логгирования</param>
+    public KafkaQueueMessageAdapter(KafkaQueueConfiguration queueConfiguration, IKafkaConnectionFactory connectionFactory, ILogger<KafkaQueueMessageAdapter> logger)
     {
+      _connectionFactory = connectionFactory;
+      _logger = logger;
       _configuration = queueConfiguration.ThrowIfNull(nameof(queueConfiguration));
-      _connectionLock = new object();
-      _isDisposed = false;
-      _isDiagnostic = isDiagnostic;
     }
 
     /// <inheritdoc />
@@ -49,19 +51,12 @@ namespace ViennaNET.Messaging.KafkaQueue
     /// </summary>
     public void Connect()
     {
-      if (_isDiagnostic)
-      {
-        Logger.LogDiagnostic($"Trying to connect to queue with id: {_configuration.Id}");
-      }
-      else
-      {
-        Logger.LogDebug($"Trying to connect to queue with id: {_configuration.Id}");
-      }
+      _logger.LogDebug("Trying to connect to queue with id: {queueId}", _configuration.Id);
 
       CheckDisposed();
       if (IsConnected)
       {
-        Logger.LogDebug($"Already connected to queue with id: {_configuration.Id}");
+        _logger.LogDebug("Already connected to queue with id: {queueId}", _configuration.Id);
         return;
       }
 
@@ -71,51 +66,19 @@ namespace ViennaNET.Messaging.KafkaQueue
         {
           if (_configuration.IsConsumer)
           {
-            _consumer = new ConsumerBuilder<Ignore, byte[]>(new ConsumerConfig
-              {
-                GroupId = _configuration.GroupId,
-                BootstrapServers = $"{_configuration.Server}",
-                AutoOffsetReset = _configuration.AutoOffsetReset,
-                SaslKerberosKeytab = _configuration.KeyTab,
-                SaslKerberosPrincipal = _configuration.User,
-                SaslKerberosServiceName = _configuration.ServiceName,
-                SecurityProtocol = _configuration.Protocol,
-                SaslMechanism = _configuration.Mechanism,
-                Debug = _configuration.Debug
-              }).SetLogHandler(ConsumerLogHandler)
-                .SetErrorHandler(ConsumerErrorHandler)
-                .Build();
-
+            _consumer = _connectionFactory.CreateConsumer(_configuration, ConsumerLogHandler, ConsumerErrorHandler);
             _consumer.Subscribe(_configuration.QueueName);
           }
           else
           {
-            _producer = new ProducerBuilder<Null, byte[]>(new ProducerConfig
-              {
-                BootstrapServers = $"{_configuration.Server}",
-                SaslKerberosKeytab = _configuration.KeyTab,
-                SaslKerberosPrincipal = _configuration.User,
-                SaslKerberosServiceName = _configuration.ServiceName,
-                SecurityProtocol = _configuration.Protocol,
-                SaslMechanism = _configuration.Mechanism,
-                Debug = _configuration.Debug
-              }).SetLogHandler(ProducerLogHandler)
-                .SetErrorHandler(ProducerErrorHandler)
-                .Build();
+            _producer = _connectionFactory.CreateProducer(_configuration, ProducerLogHandler, ProducerErrorHandler);
           }
 
-          if (_isDiagnostic)
-          {
-            Logger.LogDiagnostic($"Trying to connect to queue with id: {_configuration.Id}");
-          }
-          else
-          {
-            Logger.LogDebug($"Done to connection to queue with id: {_configuration.Id}");
-          }
+          _logger.LogDebug("Done to connection to queue with id: {queueId}", _configuration.Id);
         }
         catch (Exception e)
         {
-          Logger.LogError(e, $"Fail to connection to queue with id: {_configuration.Id}");
+          _logger.LogError(e, "Fail to connection to queue with id: {queueId}", _configuration.Id);
           Disconnect();
           throw;
         }
@@ -131,7 +94,9 @@ namespace ViennaNET.Messaging.KafkaQueue
       }
 
       _consumer?.Dispose();
+      _consumer = null;
       _producer?.Dispose();
+      _producer = null;
     }
 
     /// <inheritdoc />
@@ -141,19 +106,19 @@ namespace ViennaNET.Messaging.KafkaQueue
     /// <returns>Отправленное сообщение с заполнеными датой отправки и идентификатором сообщения</returns>
     public BaseMessage Send(BaseMessage message)
     {
-      Logger.LogDebug($"Try to send message to queue with id: {_configuration.Id}");
+      _logger.LogDebug("Try to send message to queue with id: {queueId}", _configuration.Id);
       message.ThrowIfNull(nameof(message));
       CheckDisposed();
       CheckAndReconnect();
       try
       {
         _producer.Produce(_configuration.QueueName, Prepare(message));
-        Logger.LogDebug($"Done to send message to queue with id: {_configuration.Id}");
+        _logger.LogDebug("Done to send message to queue with id: {queueId}", _configuration.Id);
         return message;
       }
       catch (Exception ex)
       {
-        Logger.LogDebug("Kafka PUT failure:");
+        _logger.LogError(ex, "Kafka PUT failure on queue with ID: {queueId}", _configuration.Id);
         throw new MessagingException(ex, "Messaging error while sending message. See inner exception for more details");
       }
     }
@@ -162,7 +127,26 @@ namespace ViennaNET.Messaging.KafkaQueue
     public BaseMessage Receive(
       string correlationId = null, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
     {
-      Logger.LogDebug($"Try to receive message from queue with id: {_configuration.Id}");
+      var hasMessage = TryReceive(out var message, correlationId, timeout, additionalParameters);
+      return hasMessage ? message : throw new MessageDidNotReceivedException("Can not receive message because queue is empty");
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+      Disconnect();
+      _isDisposed = true;
+      GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc />
+    public bool TryReceive(
+      out BaseMessage message, string correlationId = null, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
+    {
+      message = null;
+      _logger.LogDebug("Try to receive message from queue with id: {queueId}", _configuration.Id);
+
       CheckDisposed();
       CheckAndReconnect();
 
@@ -171,11 +155,10 @@ namespace ViennaNET.Messaging.KafkaQueue
         var dataResult = _consumer.Consume();
         if (dataResult == null)
         {
-          Logger.LogDebugFormat("No messages available");
-          throw new MessageDidNotReceivedException("Can not receive message because queue is empty");
+          return false;
         }
 
-        var message = new BytesMessage
+        message = new BytesMessage
         {
           Body = dataResult.Message.Value,
           ReceiveDate = DateTime.Now,
@@ -189,35 +172,11 @@ namespace ViennaNET.Messaging.KafkaQueue
         }
 
         LogMessageInternal(message, false);
-        return message;
-      }
-      catch (Exception ex)
-      {
-        Logger.LogError("Kafka GET failure:", ex.Message);
-        throw new MessagingException(ex, "Error while sending message. See inner exception for more details");
-      }
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
-      Disconnect();
-    }
-
-    /// <inheritdoc />
-    public bool TryReceive(
-      out BaseMessage message, string correlationId = null, TimeSpan? timeout = null,
-      params (string Name, string Value)[] additionalParameters)
-    {
-      Logger.LogDebug($"Try to receive message from queue with id: {_configuration.Id}");
-      try
-      {
-        message = Receive(correlationId);
-        return message != null;
+        return true;
       }
       catch (Exception exception)
       {
-        Logger.LogError(exception, "Receive message failure:");
+        _logger.LogError(exception, "Receive message failure on queue with ID: {queueId}", _configuration.Id);
         message = null;
         return false;
       }
@@ -229,49 +188,79 @@ namespace ViennaNET.Messaging.KafkaQueue
       return processingType == MessageProcessingType.ThreadStrategy;
     }
 
+    [ExcludeFromCodeCoverage]
     private void ProducerErrorHandler(IProducer<Null, byte[]> producer, Error error)
     {
-      Logger.LogError($"Producer log for queue {_configuration.Id}. Code: {error.Code}, isBrokerError: {error.IsBrokerError}, "
-                      + $"isError: {error.IsError}, isFatal: {error.IsFatal}, isLocalError: {error.IsLocalError}, reason: {error.Reason}");
+      _logger.LogError(
+        "Producer log for queue {queueId}. Code: {errorCode}, isBrokerError: {isBrokerError}, isError: {isError}, " + 
+        "isFatal: {isFatal}, isLocalError: {isLocalError}, reason: {errorReason}", 
+        _configuration.Id,
+        error.Code,
+        error.IsBrokerError,
+        error.IsError,
+        error.IsFatal,
+        error.IsLocalError,
+        error.Reason);
     }
 
+    [ExcludeFromCodeCoverage]
     private void ProducerLogHandler(IProducer<Null, byte[]> producer, LogMessage log)
     {
-      Logger.LogDebug($"Producer log for queue {_configuration.Id}. Level: {log.Level}, name: {log.Name}, "
-                      + $"message: {log.Message}, facility: {log.Facility}");
+      _logger.LogDebug(
+        "Producer log for queue {queueId}. Level: {logLevel}, name: {logName}, message: {message}, facility: {facility}",
+        _configuration.Id,
+        log.Level,
+        log.Name,
+        log.Message,
+        log.Facility);
     }
 
+    [ExcludeFromCodeCoverage]
     private void ConsumerErrorHandler(IConsumer<Ignore, byte[]> producer, Error error)
     {
-      Logger.LogError($"Consumer log for queue {_configuration.Id}. Code: {error.Code}, isBrokerError: {error.IsBrokerError}, "
-                      + $"isError: {error.IsError}, isFatal: {error.IsFatal}, isLocalError: {error.IsLocalError}, reason: {error.Reason}");
+      _logger.LogError(
+        "Consumer log for queue {queueId}. Code: {errorCode}, isBrokerError: {isBrokerError}, isError: {isError}, " +
+        "isFatal: {isFatal}, isLocalError: {isLocalError}, reason: {errorReason}",
+        _configuration.Id,
+        error.Code,
+        error.IsBrokerError,
+        error.IsError,
+        error.IsFatal,
+        error.IsLocalError,
+        error.Reason);
     }
 
+    [ExcludeFromCodeCoverage]
     private void ConsumerLogHandler(IConsumer<Ignore, byte[]> consumer, LogMessage log)
     {
-      Logger.LogDebug($"Consumer log for queue {_configuration.Id}. Level: {log.Level}, name: {log.Name}, "
-                      + $"message: {log.Message}, facility: {log.Facility}");
+      _logger.LogDebug(
+        "Consumer log for queue {queueId}. Level: {logLevel}, name: {logName}, message: {message}, facility: {facility}",
+        _configuration.Id,
+        log.Level,
+        log.Name,
+        log.Message,
+        log.Facility);
     }
 
     private void CheckDisposed()
     {
       if (_isDisposed)
       {
-        throw new ObjectDisposedException("Adapter is already disposed");
+        throw new ObjectDisposedException(nameof(KafkaQueueMessageAdapter));
       }
     }
 
     private void CheckAndReconnect()
     {
       var isConnected = IsConnected;
-      Logger.LogDebug($"KafkaQueueMessageAdapter: CheckAndReconnect - IsConnected: {isConnected}");
+      _logger.LogDebug("IsConnected: {isConnected}, queue with ID: {queueId}", isConnected, _configuration.Id);
       if (!isConnected)
       {
         Connect();
       }
     }
 
-    private static Message<Null, byte[]> Prepare(BaseMessage message)
+    private Message<Null, byte[]> Prepare(BaseMessage message)
     {
       if (string.IsNullOrWhiteSpace(message.MessageId))
       {
@@ -301,11 +290,12 @@ namespace ViennaNET.Messaging.KafkaQueue
       };
     }
 
-    private static void LogMessageInternal(BaseMessage message, bool isSend)
+    private void LogMessageInternal(BaseMessage message, bool isSend)
     {
-      Logger.LogDebug((isSend
-                        ? "Message has been sent"
-                        : "Message has been received") + Environment.NewLine + message);
+      _logger.LogDebug(
+        $"Message has been {(isSend ? "sent to" : "received from")} queue with ID:{{queueId}}{Environment.NewLine}{{message}}",
+        _configuration.Id,
+        message);
     }
   }
 }

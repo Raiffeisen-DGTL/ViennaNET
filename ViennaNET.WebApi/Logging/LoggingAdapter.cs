@@ -29,11 +29,17 @@ namespace ViennaNET.WebApi.Logging
         case LogLevel.Information:
           Logger.LogInfo(message);
           break;
+        case LogLevel.Error when exception is null:
+          Logger.LogError(message);
+          break;
         case LogLevel.Error:
-          Logger.LogError(exception.ThrowIfNull(nameof(exception)), message);
+          Logger.LogError(exception, message);
+          break;
+        case LogLevel.Critical when exception is null:
+          Logger.LogError(message);
           break;
         case LogLevel.Critical:
-          Logger.LogError(exception.ThrowIfNull(nameof(exception)), message);
+          Logger.LogError(exception, message);
           break;
         case LogLevel.Warning:
           Logger.LogWarning(message);
@@ -58,11 +64,17 @@ namespace ViennaNET.WebApi.Logging
         case LogLevel.Information:
           _categoryLogger.LogInfo(message);
           break;
+        case LogLevel.Error when exception is null:
+          _categoryLogger.LogError(message);
+          break;
         case LogLevel.Error:
-          _categoryLogger.LogErrorFormat(exception.ThrowIfNull(nameof(exception)), message);
+          _categoryLogger.LogError(exception, message);
+          break;
+        case LogLevel.Critical when exception is null:
+          _categoryLogger.LogError(message);
           break;
         case LogLevel.Critical:
-          _categoryLogger.LogErrorFormat(exception.ThrowIfNull(nameof(exception)), message);
+          _categoryLogger.LogError(exception, message);
           break;
         case LogLevel.Warning:
           _categoryLogger.LogWarning(message);

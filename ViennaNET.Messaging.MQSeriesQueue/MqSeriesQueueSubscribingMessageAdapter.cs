@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using IBM.XMS;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.MQSeriesQueue.Infrastructure;
@@ -17,8 +18,10 @@ namespace ViennaNET.Messaging.MQSeriesQueue
   {
     /// <inheritdoc />
     internal MqSeriesQueueSubscribingMessageAdapter(
-      IMqSeriesQueueConnectionFactoryProvider connectionFactoryProvider, MqSeriesQueueConfiguration configuration) 
-      : base(connectionFactoryProvider, configuration)
+      IMqSeriesQueueConnectionFactoryProvider connectionFactoryProvider,
+      MqSeriesQueueConfiguration configuration,
+      ILogger<MqSeriesQueueSubscribingMessageAdapter> logger) 
+      : base(connectionFactoryProvider, configuration, logger)
     {
 
     }

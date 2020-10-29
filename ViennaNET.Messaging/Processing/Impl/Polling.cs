@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
+using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.Processing.Impl
 {
@@ -11,38 +12,48 @@ namespace ViennaNET.Messaging.Processing.Impl
   public sealed class Polling : IDisposable
   {
     private readonly int _timeoutPollingQueue;
-    private readonly string _pollingId;
     private readonly Func<CancellationToken, Task<bool>> _processAction;
+    private readonly ILogger _logger;
 
     private readonly object _stateLock = new object();
 
     private CancellationTokenSource _cancellationTokenSource;
     private Task _task;
+    private bool _isDisposed;
 
     /// <summary>
     /// Инициализирует экземпляр значением интервала опроса и идентификатором потока
     /// </summary>
     /// <param name="timeoutPollingQueue">Интервал опроса, мс</param>
     /// <param name="processAction"><see cref="Func{TResult}"/>, осуществляющий непосредственную работу с очередью. Возвращаемое значение определяет, было ли прочитано сообщение из очереди.</param>
-    /// <param name="pollingId">Идентификатор потока для опроса</param>
+    /// <param name="logger">Интерфейс логгирования</param>
     /// <remarks>В зависимости от возвращаемого значения processAction процесс ждёт заданные интервал (если сообщение не было прчитано) или сразу пытается читать следующее (если было).</remarks>
-    public Polling(int timeoutPollingQueue, Func<CancellationToken, Task<bool>> processAction, string pollingId = null)
+    public Polling(int timeoutPollingQueue, Func<CancellationToken, Task<bool>> processAction, ILogger logger)
     {
       _timeoutPollingQueue = timeoutPollingQueue;
-      _pollingId = pollingId;
-      _processAction = processAction ?? throw new ArgumentNullException(nameof(processAction));
+      _processAction = processAction.ThrowIfNull(nameof(processAction));
+      _logger = logger.ThrowIfNull(nameof(logger));
     }
 
     /// <summary>
     /// Статус запуска
     /// </summary>
-    public bool IsStarted => _task != null;
+    public bool IsStarted
+    {
+      get
+      {
+        CheckDisposed();
+        return _task != null;
+      }
+    }
 
     /// <summary>
     /// Запуск процесса прослушивания очередей
     /// </summary>
     public void StartPolling()
     {
+      CheckDisposed();
+
       if (IsStarted)
       {
         return;
@@ -50,11 +61,6 @@ namespace ViennaNET.Messaging.Processing.Impl
 
       lock (_stateLock)
       {
-        if (!string.IsNullOrWhiteSpace(_pollingId))
-        {
-          Logger.RequestId = _pollingId;
-        }
-
         _cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = _cancellationTokenSource.Token;
 
@@ -78,13 +84,21 @@ namespace ViennaNET.Messaging.Processing.Impl
           }
           catch (Exception e)
           {
-            Logger.LogError(e, "Error while executing polling");
+            _logger.LogError(e, "Error while executing polling");
           }
         }
       }
       catch (TaskCanceledException)
       {
         // Everything's under control, just end task
+      }
+    }
+
+    private void CheckDisposed()
+    {
+      if (_isDisposed)
+      {
+        throw new ObjectDisposedException(nameof(Polling));
       }
     }
 
@@ -123,6 +137,8 @@ namespace ViennaNET.Messaging.Processing.Impl
     public void Dispose()
     {
       Dispose(true);
+      _isDisposed = true;
+      GC.SuppressFinalize(this);
     }
 
     /// <inheritdoc />

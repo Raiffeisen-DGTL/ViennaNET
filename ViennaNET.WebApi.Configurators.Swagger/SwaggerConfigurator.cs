@@ -89,6 +89,8 @@ namespace ViennaNET.WebApi.Configurators.Swagger
         {
           c.IncludeXmlComments(xmlFile);
         }
+
+        c.CustomSchemaIds(x => x.FullName);
       });
     }
   }

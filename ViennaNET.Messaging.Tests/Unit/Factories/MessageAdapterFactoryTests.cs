@@ -1,54 +1,125 @@
-﻿using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
-using Moq;
+﻿using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using ViennaNET.Messaging.Exceptions;
-using ViennaNET.Messaging.Factories;
 using ViennaNET.Messaging.Factories.Impl;
 using ViennaNET.Messaging.KafkaQueue;
 using ViennaNET.Messaging.MQSeriesQueue;
 using ViennaNET.Messaging.RabbitMQQueue;
+using ViennaNET.Messaging.Tests.Unit.DSL;
 
 namespace ViennaNET.Messaging.Tests.Unit.Factories
 {
   [TestFixture(Category = "Unit", TestOf = typeof(MessageAdapterFactory))]
   public class MessageAdapterFactoryTests
   {
+    private const string MqSeriesQueueId = "ReValue";
+    private const string RabbitQueueId = "Rabbit";
+    private const string KafkaQueueId = "testKafkaQueue";
+    private const string DuplicateQueueId = "T2";
+
     private IConfigurationRoot _configuration;
 
     [OneTimeSetUp]
     public void Setup()
     {
-      _configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true)
-                                                 .Build();
+      _configuration = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", false)
+        .Build();
     }
 
     [Test]
-    public void CreateTest()
+    public void Create_MqSeries_Success()
     {
-      var fakeAdvancedBusFactory = new Mock<IAdvancedBusFactory>();
-      var adapterConstructors = new List<IMessageAdapterConstructor>
-      {
-        new MqSeriesQueueMessageAdapterConstructor(_configuration), new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, _configuration), new KafkaQueueMessageAdapterConstructor(_configuration)
-      };
-      var messageAdapterFactory = new MessageAdapterFactory(adapterConstructors);
-      Assert.Multiple(() =>
-      {
-        Assert.That(messageAdapterFactory.Create("ReValue", false), Is.Not.Null);
-        Assert.That(messageAdapterFactory.Create("ReValue", false) is MqSeriesQueueMessageAdapterBase, Is.True);
-        Assert.That(messageAdapterFactory.Create("Rabbit", false), Is.Not.Null);
-        Assert.That(messageAdapterFactory.Create("Rabbit", false) is RabbitMqQueueMessageAdapter, Is.True);
-        Assert.That(messageAdapterFactory.Create("testKafkaQueue", false), Is.Not.Null);
-        Assert.That(messageAdapterFactory.Create("testKafkaQueue", false) is KafkaQueueMessageAdapter, Is.True);
-        Assert.Throws<MessagingConfigurationException>(() => messageAdapterFactory.Create("SomeOther", false));
-        Assert.Throws<MessagingConfigurationException>(() => messageAdapterFactory.Create("T2", false));
+      var factory = Given
+        .MessageAdapterFactory
+        .WithMqSeries(_configuration)
+        .WithKafka(_configuration)
+        .WithRabbit(_configuration)
+        .Please();
 
-        adapterConstructors.Add(new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, _configuration));
-        Assert.Throws<MessagingConfigurationException>(() => messageAdapterFactory.Create("T1", false));
+      var adapter = factory.Create(MqSeriesQueueId);
 
-        adapterConstructors.Clear();
-        Assert.Throws<MessagingConfigurationException>(() => messageAdapterFactory.Create("T1", false));
-      });
+      Assert.IsInstanceOf<MqSeriesQueueMessageAdapterBase>(adapter);
+    }  
+    
+    [Test]
+    public void Create_Rabbit_Success()
+    {
+      var factory = Given
+        .MessageAdapterFactory
+        .WithMqSeries(_configuration)
+        .WithKafka(_configuration)
+        .WithRabbit(_configuration)
+        .Please();
+
+      var adapter = factory.Create(RabbitQueueId);
+
+      Assert.IsInstanceOf<RabbitMqQueueMessageAdapter>(adapter);
+    } 
+    
+    [Test]
+    public void Create_Kafka_Success()
+    {
+      var factory = Given
+        .MessageAdapterFactory
+        .WithMqSeries(_configuration)
+        .WithKafka(_configuration)
+        .WithRabbit(_configuration)
+        .Please();
+
+      var adapter = factory.Create(KafkaQueueId);
+
+      Assert.IsInstanceOf<KafkaQueueMessageAdapter>(adapter);
+    }
+
+    [Test]
+    public void Create_NonExistingId_Exception()
+    {
+      var factory = Given
+        .MessageAdapterFactory
+        .WithMqSeries(_configuration)
+        .WithKafka(_configuration)
+        .WithRabbit(_configuration)
+        .Please();
+
+      Assert.Throws<MessagingConfigurationException>(() => factory.Create("SomeOther"));
+    }
+
+    [Test]
+    public void Create_DuplicateId_Exception()
+    {
+      var factory = Given
+        .MessageAdapterFactory
+        .WithMqSeries(_configuration)
+        .WithKafka(_configuration)
+        .WithRabbit(_configuration)
+        .Please();
+
+      Assert.Throws<MessagingConfigurationException>(() => factory.Create(DuplicateQueueId));
+    }
+
+    [Test]
+    public void Create_DuplicateConstructor_Exception()
+    {
+      var factory = Given
+        .MessageAdapterFactory
+        .WithMqSeries(_configuration)
+        .WithKafka(_configuration)
+        .WithRabbit(_configuration)
+        .WithRabbit(_configuration)
+        .Please();
+
+      Assert.Throws<MessagingConfigurationException>(() => factory.Create(RabbitQueueId));
+    }
+
+    [Test]
+    public void Create_NoConstructors_Exception()
+    {
+      var factory = Given
+        .MessageAdapterFactory
+        .Please();
+
+      Assert.Throws<MessagingConfigurationException>(() => factory.Create(KafkaQueueId));
     }
   }
 }

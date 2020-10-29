@@ -1,59 +1,87 @@
+using System;
 using Moq;
 using NUnit.Framework;
-using ViennaNET.CallContext;
-using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Messages;
+using ViennaNET.Messaging.MQSeriesQueue;
 using ViennaNET.Messaging.Sending.Impl;
+using ViennaNET.Messaging.Tests.Unit.DSL;
 
 namespace ViennaNET.Messaging.Tests.Unit
 {
   [TestFixture(Category = "Unit", TestOf = typeof(MessageSender))]
-  public class MessageSenderTests
+  internal class MessageSenderTests
   {
-    private Mock<IMessageAdapter> _adapter;
-    private Mock<ICallContextFactory> _callContextFactory;
-    private Mock<QueueConfigurationBase> _queueConfiguration;
-    private MessagingConfiguration _messagingConfig;
-
-    [OneTimeSetUp]
-    public void Setup()
-    {
-      _messagingConfig = new MessagingConfiguration();
-      _adapter = new Mock<IMessageAdapter>();
-      _callContextFactory = new Mock<ICallContextFactory>();
-      _callContextFactory.Setup(x => x.Create())
-                         .Returns(new EmptyCallContext());
-
-      _queueConfiguration = new Mock<QueueConfigurationBase>();
-    }
-
     [Test]
-    public void DisposeTest()
+    public void Dispose_Call_ShouldDisposeAdapter()
     {
-      var messageSender = new MessageSender(_adapter.Object, _callContextFactory.Object, "ReApplication");
+      Mock<IMessageAdapter> adapterMock = null;
+      var adapter = Given.MessageAdapter
+        .Please(m => adapterMock = m);
+
+      var messageSender = new MessageSender(adapter, Given.CallContextFactory, "ReApplication");
       messageSender.Dispose();
-      _adapter.Verify(x => x.Dispose(), Times.AtLeastOnce);
+
+      adapterMock.Verify(x => x.Dispose());
     }
 
     [Test]
-    public void SendMessageTest()
+    public void Send_WithMessage_ShouldCallSendOnAdapter()
     {
-      var messageId = "ReMessageId";
+      Mock<IMessageAdapter> adapterMock = null;
+      var adapter = Given.MessageAdapter
+        .Please(m => adapterMock = m);
+      var message = new TextMessage {Body = "message body"};
 
-      _messagingConfig.ApplicationName = "ReApplication";
-      _adapter.Setup(x => x.Send(It.IsAny<BaseMessage>()))
-              .Returns(new TextMessage { MessageId = messageId });
-      _adapter.Setup(x => x.Configuration)
-              .Returns(_queueConfiguration.Object);
+      var messageSender = new MessageSender(adapter, Given.CallContextFactory, "ReApplication");
+      messageSender.SendMessage(message);
 
-      var messageSender = new MessageSender(_adapter.Object, _callContextFactory.Object, "ReApplication");
-      var result = messageSender.SendMessage(new TextMessage());
+      adapterMock.Verify(x => x.Send(message));
+    }
 
-      Assert.Multiple(() =>
-      {
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.EqualTo(messageId));
-      });
+    [Test]
+    public void Send_WithMessage_MessageShouldHaveProperties()
+    {
+      Mock<IMessageAdapter> adapterMock = null;
+      var adapter = Given.MessageAdapter
+        .Please(m => adapterMock = m);
+      var message = new TextMessage { Body = "message body" };
+
+      var messageSender = new MessageSender(adapter, Given.CallContextFactory, "ReApplication");
+      messageSender.SendMessage(message);
+
+      adapterMock.Verify(x => x.Send(It.Is<BaseMessage>(m => m.Properties.Count > 0)));
+    }
+
+    [Test]
+    public void Send_TransactedAdapter_ShouldCommit()
+    {
+      Mock<IMessageAdapterWithTransactions> adapterMock = null;
+      var adapter = Given.MessageAdapter
+        .Please<IMessageAdapterWithTransactions>(m => adapterMock = m);
+      var message = new TextMessage { Body = "message body" };
+
+      var messageSender = new MessageSender(adapter, Given.CallContextFactory, "ReApplication");
+      messageSender.SendMessage(message);
+
+      adapterMock.Verify(x => x.CommitIfTransacted(message));
+    }
+
+    [Test]
+    public void Send_HasConfiguration_ShouldFillMessageParameters()
+    {
+      var config = new MqSeriesQueueConfiguration {ReplyQueue = "replyQueue", Lifetime = TimeSpan.FromHours(1)};
+      Mock<IMessageAdapterWithTransactions> adapterMock = null;
+      var adapter = Given.MessageAdapter
+        .WithQueueConfiguration(config)
+        .Please<IMessageAdapterWithTransactions>(m => adapterMock = m);
+      var message = new TextMessage { Body = "message body" };
+
+      var messageSender = new MessageSender(adapter, Given.CallContextFactory, "ReApplication");
+      messageSender.SendMessage(message);
+
+      adapterMock.Verify(
+        x => x.Send(
+          It.Is<BaseMessage>(m => m.LifeTime == config.Lifetime && m.ReplyQueue == config.ReplyQueue)));
     }
   }
 }

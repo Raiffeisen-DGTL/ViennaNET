@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Xml.Linq;
-using ViennaNET.Logging;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Extensions;
 using ViennaNET.Messaging.Messages;
@@ -85,7 +84,7 @@ namespace ViennaNET.Messaging.Tests.Integration
         }
         catch (MessagingException ex)
         {
-          Logger.LogError(ex, string.Empty);
+          Assert.Fail(ex.ToString());
         }
         finally
         {

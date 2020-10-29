@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Diagnostic;
-using ViennaNET.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Context;
 using ViennaNET.Messaging.Exceptions;
@@ -17,11 +17,13 @@ namespace ViennaNET.Messaging.Processing.Impl
   /// <inheritdoc cref="IQueueReactorFactory" />
   public class QueueReactorFactory : IQueueReactorFactory
   {
+    private readonly ILogger _logger;
     private readonly IEnumerable<IProcessorAsync> _asyncProcessors;
     private readonly IHealthCheckingService _healthCheckingService;
     private readonly IMessageAdapterFactory _messageAdapterFactory;
     private readonly IEnumerable<IProcessor> _processors;
     private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
+    private readonly ILoggerFactory _loggerFactory;
     private readonly Dictionary<Type, string> _registrations = new Dictionary<Type, string>();
 
     /// <summary>
@@ -29,22 +31,29 @@ namespace ViennaNET.Messaging.Processing.Impl
     ///   <see cref="IHealthCheckingService" />,
     ///   коллекции элементов <see cref="IProcessor" /> и <see cref="IProcessorAsync" />
     /// </summary>
-    /// <param name="messageAdapterFactory"></param>
-    /// <param name="messageProcessors"></param>
-    /// <param name="asyncMessageProcessors"></param>
-    /// <param name="healthCheckingService"></param>
+    /// <param name="messageAdapterFactory">Адаптер обмена сообщениями</param>
+    /// <param name="messageProcessors">Процессоры для обработки сообщения</param>
+    /// <param name="asyncMessageProcessors">Асинхронные процессоры для обработки сообщения</param>
+    /// <param name="healthCheckingService">Ссылка на службу диагностики</param>
+    /// <param name="messagingCallContextAccessor">Ссылка на объект для доступа к контексту вызова</param>
+    /// <param name="loggerFactory">Фабрика логгирования</param>
     public QueueReactorFactory(
-      IMessageAdapterFactory messageAdapterFactory, IEnumerable<IProcessor> messageProcessors,
-      IEnumerable<IProcessorAsync> asyncMessageProcessors, IHealthCheckingService healthCheckingService,
-      IMessagingCallContextAccessor messagingCallContextAccessor)
+      IMessageAdapterFactory messageAdapterFactory, 
+      IEnumerable<IProcessor> messageProcessors,
+      IEnumerable<IProcessorAsync> asyncMessageProcessors, 
+      IHealthCheckingService healthCheckingService,
+      IMessagingCallContextAccessor messagingCallContextAccessor,
+      ILoggerFactory loggerFactory)
     {
-      _messageAdapterFactory = messageAdapterFactory.ThrowIfNull(nameof(messageAdapterFactory));
-      _processors = messageProcessors.ThrowIfNull(nameof(messageProcessors));
-      _asyncProcessors = asyncMessageProcessors.ThrowIfNull(nameof(asyncMessageProcessors));
-      _healthCheckingService = healthCheckingService.ThrowIfNull(nameof(healthCheckingService));
-      _messagingCallContextAccessor = messagingCallContextAccessor.ThrowIfNull(nameof(messagingCallContextAccessor));
+      _logger = loggerFactory.CreateLogger<QueueReactorFactory>();
+      _messageAdapterFactory = messageAdapterFactory;
+      _processors = messageProcessors;
+      _asyncProcessors = asyncMessageProcessors;
+      _healthCheckingService = healthCheckingService;
+      _messagingCallContextAccessor = messagingCallContextAccessor;
+      _loggerFactory = loggerFactory;
 
-      LogProcessors(_processors.ToList(), _asyncProcessors.ToList());
+      LogProcessors();
     }
 
     /// <inheritdoc />
@@ -70,7 +79,7 @@ namespace ViennaNET.Messaging.Processing.Impl
 
       queueId.ThrowIfNullOrEmpty(nameof(queueId));
 
-      Logger.LogDebug($"Try to register message processor with type: {type} for queue: {queueId}");
+      _logger.LogDebug("Try to register message processor with type: {type} for queue: {queueId}", type, queueId);
       if (_registrations.ContainsKey(type))
       {
         throw new
@@ -78,14 +87,14 @@ namespace ViennaNET.Messaging.Processing.Impl
       }
 
       _registrations.Add(type, queueId);
-      Logger.LogDebug($"Processor with type: {type} for queue: {queueId} has been registered");
+      _logger.LogDebug("Processor with type: {type} for queue: {queueId} has been registered", type, queueId);
       return this;
     }
 
     /// <inheritdoc />
     public IQueueReactor CreateQueueReactor(string queueId)
     {
-      var adapter = _messageAdapterFactory.Create(queueId, false);
+      var adapter = _messageAdapterFactory.Create(queueId);
       GetAllProcessors(queueId, out var processors, out var asyncProcessors);
 
       var queueConfiguration = adapter.Configuration;
@@ -101,52 +110,77 @@ namespace ViennaNET.Messaging.Processing.Impl
       switch (adapter)
       {
         case IMessageAdapterWithTransactions transacted:
-          return new QueueTransactedPollingReactor(transacted, messageProcessors, messageAsyncProcessors,
-                                                   queueConfiguration.IntervalPollingQueue, queueConfiguration.PollingId,
-                                                   queueConfiguration.ServiceHealthDependent, _healthCheckingService, _messagingCallContextAccessor);
+          return new QueueTransactedPollingReactor(
+            transacted,
+            messageProcessors,
+            messageAsyncProcessors,
+            queueConfiguration.IntervalPollingQueue,
+            queueConfiguration.ServiceHealthDependent, 
+            _healthCheckingService,
+            _messagingCallContextAccessor,
+            _loggerFactory.CreateLogger<QueueTransactedPollingReactor>());
         case IMessageAdapterWithSubscribing subscribing:
           switch (queueConfiguration.ProcessingType)
           {
             case MessageProcessingType.Subscribe:
-              return new QueueSubscribedReactor(subscribing, messageProcessors, messageAsyncProcessors,
-                                                queueConfiguration.IntervalPollingQueue, queueConfiguration.PollingId,
-                                                queueConfiguration.ServiceHealthDependent, _healthCheckingService, _messagingCallContextAccessor);
+              return new QueueSubscribedReactor(
+                subscribing,
+                messageProcessors,
+                messageAsyncProcessors,
+                queueConfiguration.IntervalPollingQueue,
+                queueConfiguration.ServiceHealthDependent, 
+                _healthCheckingService, 
+                _messagingCallContextAccessor,
+                _loggerFactory.CreateLogger<QueueSubscribedReactor>());
             case MessageProcessingType.SubscribeAndReply:
               var replyProcessors = processors.OfType<IRepliableMessageProcessor>();
               var replyAsyncProcessors = asyncProcessors.OfType<IRepliableMessageProcessorAsync>();
-              return new QueueSubscribeAndReplyReactor(subscribing, replyProcessors, replyAsyncProcessors,
-                                                       queueConfiguration.IntervalPollingQueue, queueConfiguration.PollingId,
-                                                       queueConfiguration.ServiceHealthDependent, _healthCheckingService, _messagingCallContextAccessor);
+              return new QueueSubscribeAndReplyReactor(
+                subscribing,
+                replyProcessors,
+                replyAsyncProcessors,
+                queueConfiguration.IntervalPollingQueue, 
+                queueConfiguration.ServiceHealthDependent,
+                _healthCheckingService,
+                _messagingCallContextAccessor,
+                _loggerFactory.CreateLogger<QueueSubscribeAndReplyReactor>());
             default:
               throw new
-                MessagingException($"There are found no QueueReactors with type '{nameof(queueConfiguration.ProcessingType)}' for queue with name '{queueId}'.");
+                MessagingException($"There are found no QueueReactors with type '{queueConfiguration.ProcessingType}' for queue with name '{queueId}'.");
           }
         default:
-          return new QueuePollingReactor(adapter, messageProcessors, messageAsyncProcessors, queueConfiguration.IntervalPollingQueue,
-                                         queueConfiguration.PollingId, queueConfiguration.ServiceHealthDependent, _healthCheckingService, _messagingCallContextAccessor);
+          return new QueuePollingReactor(
+            adapter, 
+            messageProcessors,
+            messageAsyncProcessors,
+            queueConfiguration.IntervalPollingQueue,
+            queueConfiguration.ServiceHealthDependent, 
+            _healthCheckingService, 
+            _messagingCallContextAccessor,
+            _loggerFactory.CreateLogger<QueuePollingReactor>());
       }
     }
 
-    private static void LogProcessors(IReadOnlyCollection<IProcessor> processors, IReadOnlyCollection<IProcessorAsync> asyncProcessors)
+    private void LogProcessors()
     {
-      if (!processors.Any() && !asyncProcessors.Any())
+      if (!_processors.Any() && !_asyncProcessors.Any())
       {
         return;
       }
 
       var builder = new StringBuilder();
       builder.AppendLine("Processors have been registered in QueueReactorFactory:");
-      foreach (var processor in processors)
+      foreach (var processor in _processors)
       {
         builder.AppendLine($"- Sync processor {processor.GetType()}");
       }
 
-      foreach (var asyncProcessor in asyncProcessors)
+      foreach (var asyncProcessor in _asyncProcessors)
       {
         builder.AppendLine($"- Async processor {asyncProcessor.GetType()}");
       }
 
-      Logger.LogDebug(builder.ToString());
+      _logger.LogDebug(builder.ToString());
     }
 
     private void GetAllProcessors(

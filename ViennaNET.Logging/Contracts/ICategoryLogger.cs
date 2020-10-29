@@ -86,6 +86,14 @@ namespace ViennaNET.Logging.Contracts
     void LogErrorFormat(Exception exception, string message, params object[] formatParams);
 
     /// <summary>
+    /// log message with error log level formatted string to log. 
+    /// This function also appending exception.ToString at the end of the message
+    /// </summary>
+    /// <param name="exception">exception to log</param>
+    /// <param name="message">formatted message to log</param>
+    void LogError(Exception exception, string message);
+
+    /// <summary>
     /// flush information into the log
     /// </summary>
     void Flush();

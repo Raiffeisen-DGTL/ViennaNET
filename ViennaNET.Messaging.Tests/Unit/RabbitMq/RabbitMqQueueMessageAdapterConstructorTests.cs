@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.RabbitMQQueue;
+using ViennaNET.Messaging.Tests.Unit.DSL;
 
 namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
 {
@@ -19,17 +20,20 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     [OneTimeSetUp]
     public void RabbitMqQueueMessageAdapterConstructorSetup()
     {
-      var fakeAdvancedBusFactory = new Mock<IAdvancedBusFactory>();
-      var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true)
-                                                 .Build();
+      var configuration = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", false)
+        .Build();
 
-      _constructor = new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, configuration);
+      _constructor = new RabbitMqQueueMessageAdapterConstructor(
+        Mock.Of<IAdvancedBusFactory>(),
+        configuration, 
+        Given.FakeLoggerFactory);
     }
 
     [Test]
     public void Create_HasQueueInConfig_ReturnsAdapter()
     {
-      var adapter = _constructor.Create(QueueId, false);
+      var adapter = _constructor.Create(QueueId);
       
       Assert.Multiple(() =>
       {
@@ -42,13 +46,13 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     [Test]
     public void Create_HasNoQueueInConfig_Exception()
     {
-      Assert.Throws<MessagingConfigurationException>(() => _constructor.Create("", false), "There are no configuration with id '' in configuration file");
+      Assert.Throws<MessagingConfigurationException>(() => _constructor.Create(string.Empty), "There are no configuration with id '' in configuration file");
     }
 
     [Test]
     public void Create_HasQueueInConfigWithoutServer_Exception()
     {
-      Assert.Throws<ArgumentNullException>(() => _constructor.Create(QueueWithoutServerId, false), "Value cannot be null. (Parameter 'Server')");
+      Assert.Throws<ArgumentNullException>(() => _constructor.Create(QueueWithoutServerId), "Value cannot be null. (Parameter 'Server')");
     }
 
     [Test]
@@ -58,9 +62,9 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
       var configuration = new ConfigurationBuilder().AddJsonFile("appsettingsAll.json", true)
                                                     .Build();
 
-      var constructor = new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, configuration);
+      var constructor = new RabbitMqQueueMessageAdapterConstructor(fakeAdvancedBusFactory.Object, configuration, Given.FakeLoggerFactory);
 
-      var adapters = constructor.CreateAll(false);
+      var adapters = constructor.CreateAll();
 
       Assert.Multiple(() =>
       {
@@ -76,7 +80,7 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     [Test]
     public void CreateAll_HasNoServerQueueInConfig_Exception()
     {
-      Assert.Throws<ArgumentNullException>(() => _constructor.CreateAll(false), "Value cannot be null. (Parameter 'Server')");
+      Assert.Throws<ArgumentNullException>(() => _constructor.CreateAll(), "Value cannot be null. (Parameter 'Server')");
     }
 
     [Test]

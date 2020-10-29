@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
+using Moq;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.MQSeriesQueue;
 using ViennaNET.Messaging.MQSeriesQueue.Infrastructure;
@@ -40,7 +42,8 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries.DSL
     {
       return new MqSeriesQueueTransactedMessageAdapter(
         _connectionFactoryProvider ?? Given.ConnectionFactoryProvider.Please(),
-        _configuration ?? new MqSeriesQueueConfiguration { ProcessingType = MessageProcessingType.ThreadStrategy, TransactionEnabled = _transacted });
+        _configuration ?? new MqSeriesQueueConfiguration { ProcessingType = MessageProcessingType.ThreadStrategy, TransactionEnabled = _transacted },
+        Mock.Of<ILogger<MqSeriesQueueTransactedMessageAdapter>>());
     }
   }
 }

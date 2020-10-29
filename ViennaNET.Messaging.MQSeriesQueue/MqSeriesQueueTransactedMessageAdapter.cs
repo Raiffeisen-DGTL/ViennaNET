@@ -1,4 +1,5 @@
 ﻿using IBM.XMS;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Messages;
@@ -14,8 +15,10 @@ namespace ViennaNET.Messaging.MQSeriesQueue
   {
     /// <inheritdoc />
     public MqSeriesQueueTransactedMessageAdapter(
-      IMqSeriesQueueConnectionFactoryProvider connectionFactoryProvider, MqSeriesQueueConfiguration configuration) 
-      : base(connectionFactoryProvider, configuration)
+      IMqSeriesQueueConnectionFactoryProvider connectionFactoryProvider,
+      MqSeriesQueueConfiguration configuration,
+      ILogger<MqSeriesQueueTransactedMessageAdapter> logger) 
+      : base(connectionFactoryProvider, configuration, logger)
     {
       
     }

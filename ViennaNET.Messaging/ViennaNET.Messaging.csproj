@@ -19,13 +19,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
+    <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
     <ProjectReference Include="..\ViennaNET.Diagnostic\ViennaNET.Diagnostic.csproj" />
-    <ProjectReference Include="..\ViennaNET.Logging\ViennaNET.Logging.csproj" />
     <ProjectReference Include="..\ViennaNET.Utils\ViennaNET.Utils.csproj" />
   </ItemGroup>
 

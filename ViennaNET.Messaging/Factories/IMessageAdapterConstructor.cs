@@ -16,15 +16,13 @@ namespace ViennaNET.Messaging.Factories
     ///   Создание адаптера обмена сообщениями
     /// </summary>
     /// <param name="queueId">Имя очереди</param>
-    /// <param name="isDiagnostic">Признак диагоностики</param>
     /// <returns>Адаптер обмена сообщениями</returns>
-    IMessageAdapter Create(string queueId, bool isDiagnostic);
+    IMessageAdapter Create(string queueId);
 
     /// <summary>
     ///   Создание всех адаптеров обмена сообщениями данного типа
     /// </summary>
-    /// <param name="isDiagnostic">Признак диагностики</param>
     /// <returns>Коллекция адаптеров обмена сообщениями</returns>
-    IReadOnlyCollection<IMessageAdapter> CreateAll(bool isDiagnostic);
+    IReadOnlyCollection<IMessageAdapter> CreateAll();
   }
 }

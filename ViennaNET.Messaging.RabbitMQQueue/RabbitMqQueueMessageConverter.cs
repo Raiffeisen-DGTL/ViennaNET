@@ -108,7 +108,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       return message;
     }
 
-    private enum ContentType
+    internal enum ContentType
     {
       Bytes,
       Text

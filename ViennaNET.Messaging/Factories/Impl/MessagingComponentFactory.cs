@@ -32,6 +32,7 @@ namespace ViennaNET.Messaging.Factories.Impl
     /// <param name="adapterFactory">Фабрика адаптеров для очередей</param>
     /// <param name="serializers">Коллекция сериализаторов</param>
     /// <param name="deserializers">Коллекция десериализаторов</param>
+    /// <param name="callContextFactory">Интерфейс для извлечения актуального контекста вызова</param>
     public MessagingComponentFactory(
       IConfiguration configuration, IMessageAdapterFactory adapterFactory, IReadOnlyCollection<IMessageSerializer> serializers,
       IReadOnlyCollection<IMessageDeserializer> deserializers, ICallContextFactory callContextFactory)
@@ -48,7 +49,7 @@ namespace ViennaNET.Messaging.Factories.Impl
     /// <inheritdoc />
     public IMessageSender CreateMessageSender(string queueId)
     {
-      var adapter = _adapterFactory.Create(queueId.ThrowIfNullOrEmpty(nameof(queueId)), false);
+      var adapter = _adapterFactory.Create(queueId.ThrowIfNullOrEmpty(nameof(queueId)));
 
       return new MessageSender(adapter, _callContextFactory, _connectionOptions.ApplicationName);
     }
@@ -58,7 +59,7 @@ namespace ViennaNET.Messaging.Factories.Impl
     {
       queueId.ThrowIfNullOrEmpty(nameof(queueId));
 
-      var adapter = _adapterFactory.Create(queueId, false);
+      var adapter = _adapterFactory.Create(queueId);
       var deserializer = GetMessageDeserializer<TMessage>(queueId);
 
       return new MessageReceiver<TMessage>(adapter, deserializer);
@@ -69,7 +70,7 @@ namespace ViennaNET.Messaging.Factories.Impl
     {
       queueId.ThrowIfNullOrEmpty(nameof(queueId));
 
-      var adapter = _adapterFactory.Create(queueId, false);
+      var adapter = _adapterFactory.Create(queueId);
       var deserializer = GetMessageDeserializer<TMessage>(queueId);
 
       return new TransactedMessageReceiver<TMessage>((IMessageAdapterWithTransactions)adapter, deserializer);
@@ -79,7 +80,7 @@ namespace ViennaNET.Messaging.Factories.Impl
     public ISerializedMessageSender<TMessage> CreateMessageSender<TMessage>(string queueId)
     {
       queueId.ThrowIfNullOrEmpty(nameof(queueId));
-      var adapter = _adapterFactory.Create(queueId, false);
+      var adapter = _adapterFactory.Create(queueId);
       var serializer = GetMessageSerializer<TMessage>(queueId);
 
       return new SerializedMessageSender<TMessage>(serializer, adapter, _callContextFactory, _connectionOptions.ApplicationName);
@@ -89,7 +90,7 @@ namespace ViennaNET.Messaging.Factories.Impl
     public ISerializedMessageRpcSender<TMessage, TResponse> CreateMessageRpcSender<TMessage, TResponse>(string queueId)
     {
       queueId.ThrowIfNullOrEmpty(nameof(queueId));
-      var adapter = _adapterFactory.Create(queueId, false);
+      var adapter = _adapterFactory.Create(queueId);
 
       var serializer = GetMessageSerializer<TMessage>(queueId);
       var deserializer = GetMessageDeserializer<TResponse>(queueId);

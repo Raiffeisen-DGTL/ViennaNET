@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Diagnostic;
 using ViennaNET.Messaging.Context;
 using ViennaNET.Messaging.Messages;
-using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.Processing.Impl.Subscribe
 {
@@ -16,15 +16,22 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
 
     /// <inheritdoc />
     public QueueSubscribeAndReplyReactor(
-      IMessageAdapterWithSubscribing messageAdapter, IEnumerable<IRepliableMessageProcessor> messageProcessors,
-      IEnumerable<IRepliableMessageProcessorAsync> asyncMessageProcessor, int reconnectTimeout, string pollingId,
-      bool? serviceHealthDependent, IHealthCheckingService healthCheckingService,
-      IMessagingCallContextAccessor messagingCallContextAccessor) : base(messageAdapter, reconnectTimeout, pollingId,
-                                                                        serviceHealthDependent, healthCheckingService,
-                                                                        messagingCallContextAccessor)
+      IMessageAdapterWithSubscribing messageAdapter,
+      IEnumerable<IRepliableMessageProcessor> messageProcessors,
+      IEnumerable<IRepliableMessageProcessorAsync> asyncMessageProcessor, 
+      int reconnectTimeout, 
+      bool? serviceHealthDependent,
+      IHealthCheckingService healthCheckingService,
+      IMessagingCallContextAccessor messagingCallContextAccessor,
+      ILogger<QueueSubscribeAndReplyReactor> logger) : base(messageAdapter,
+                                                            reconnectTimeout,
+                                                            serviceHealthDependent, 
+                                                            healthCheckingService,
+                                                            messagingCallContextAccessor,
+                                                            logger)
     {
-      _messageProcessors = messageProcessors.ThrowIfNull(nameof(messageProcessors));
-      _asyncMessageProcessors = asyncMessageProcessor.ThrowIfNull(nameof(asyncMessageProcessor));
+      _messageProcessors = messageProcessors;
+      _asyncMessageProcessors = asyncMessageProcessor;
     }
 
     /// <inheritdoc />

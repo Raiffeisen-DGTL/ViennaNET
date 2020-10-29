@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using ViennaNET.Diagnostic;
 using ViennaNET.Messaging.Context;
 using ViennaNET.Messaging.Processing.Impl.Poll;
@@ -21,9 +22,9 @@ namespace ViennaNET.Messaging.Tests.Unit.DSL
         new IMessageProcessorAsync[0],
         100,
         null,
-        null,
         healthCheckingService.Object,
-        messagingCca.Object);
+        messagingCca.Object,
+        Mock.Of<ILogger<QueuePollingReactor>>());
     }
   }
 }

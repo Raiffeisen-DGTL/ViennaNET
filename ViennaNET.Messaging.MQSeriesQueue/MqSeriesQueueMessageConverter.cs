@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using IBM.XMS;
-using ViennaNET.Logging;
 using ViennaNET.Messaging.Messages;
 
 namespace ViennaNET.Messaging.MQSeriesQueue
@@ -78,8 +77,6 @@ namespace ViennaNET.Messaging.MQSeriesQueue
                                    .Append(prop)
                                    .Append(";\n");
       }
-
-      Logger.LogDebugFormat("Message Properties: \n" + messageProps);
 
       return message;
     }

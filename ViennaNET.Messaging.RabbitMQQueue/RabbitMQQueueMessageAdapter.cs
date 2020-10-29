@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Topology;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client.Exceptions;
-using ViennaNET.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Extensions;
@@ -18,16 +18,16 @@ namespace ViennaNET.Messaging.RabbitMQQueue
   /// </summary>
   public class RabbitMqQueueMessageAdapter : IMessageAdapterWithSubscribing
   {
-    private const ushort defaultRequestedHeartbeat = 10;
+    private readonly ILogger<RabbitMqQueueMessageAdapter> _logger;
+    private const ushort DefaultRequestedHeartbeat = 10;
     private const int DefaultReplyTimeout = 30;
     private const string ReplyExchangeName = "replyExchange";
     private const int TempQueueLifetimeAdditionMs = 10000;
 
     private readonly RabbitMqQueueConfiguration _configuration;
-    private readonly object _connectionLock;
-    private readonly bool _isDiagnostic;
-    private readonly bool _isDisposed;
+    private readonly object _connectionLock = new object();
 
+    private bool _isDisposed;
     private IAdvancedBus _advancedBus;
     private IDisposable _consumer;
     private IExchange _exchange;
@@ -42,14 +42,15 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     /// </summary>
     /// <param name="advancedBusFactory">Фабрика для создания <see cref="IAdvancedBus" /></param>
     /// <param name="configuration">Конфигурация очереди</param>
-    /// <param name="isDiagnostic">Признак проведения диагностики</param>
-    public RabbitMqQueueMessageAdapter(IAdvancedBusFactory advancedBusFactory, RabbitMqQueueConfiguration configuration, bool isDiagnostic)
+    /// <param name="logger">Интерфейс логгирования</param>
+    public RabbitMqQueueMessageAdapter(
+      IAdvancedBusFactory advancedBusFactory, 
+      RabbitMqQueueConfiguration configuration, 
+      ILogger<RabbitMqQueueMessageAdapter> logger)
     {
-      _advancedBusFactory = advancedBusFactory.ThrowIfNull(nameof(advancedBusFactory));
-      _configuration = configuration.ThrowIfNull(nameof(configuration));
-      _connectionLock = new object();
-      _isDisposed = false;
-      _isDiagnostic = isDiagnostic;
+      _logger = logger;
+      _advancedBusFactory = advancedBusFactory;
+      _configuration = configuration;
     }
 
     /// <inheritdoc />
@@ -64,19 +65,12 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     /// </summary>
     public void Connect()
     {
-      if (_isDiagnostic)
-      {
-        Logger.LogDiagnostic($"Trying to connect to queue with id: {_configuration.Id}");
-      }
-      else
-      {
-        Logger.LogDebug($"Trying to connect to queue with id: {_configuration.Id}");
-      }
+      _logger.LogDebug("Trying to connect to queue with id: {queueId}", _configuration.Id);
 
       CheckDisposed();
       if (IsConnected)
       {
-        Logger.LogDebug($"Already connected to queue with id: {_configuration.Id}");
+        _logger.LogDebug("Already connected to queue with id: {queueId}", _configuration.Id);
         return;
       }
 
@@ -85,7 +79,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
         try
         {
           _advancedBus = _advancedBusFactory.Create(_configuration.Server, _configuration.Port, _configuration.VirtualHost ?? "/",
-                                                    _configuration.User, _configuration.Password, defaultRequestedHeartbeat, x => {});
+                                                    _configuration.User, _configuration.Password, DefaultRequestedHeartbeat, x => {});
 
           var isQueueNameSpecified = !string.IsNullOrWhiteSpace(_configuration.QueueName);
           var isExchangeNameSpecified = !string.IsNullOrWhiteSpace(_configuration.ExchangeName);
@@ -108,18 +102,11 @@ namespace ViennaNET.Messaging.RabbitMQQueue
             InitializeBinds();
           }
 
-          if (_isDiagnostic)
-          {
-            Logger.LogDiagnostic($"Trying to connect to queue with id: {_configuration.Id}");
-          }
-          else
-          {
-            Logger.LogDebug($"Established connection to queue with id: {_configuration.Id}");
-          }
+          _logger.LogDebug("Established connection to queue with id: {queueId}", _configuration.Id);
         }
         catch (Exception e)
         {
-          Logger.LogError(e, $"Fail to connection to queue with id: {_configuration.Id}");
+          _logger.LogError(e, "Fail to connection to queue with id: {queueId}", _configuration.Id);
           Disconnect();
           throw;
         }
@@ -158,18 +145,18 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       CheckDisposed();
       CheckAndReconnect();
 
-      Logger.LogDebug($"Try to subscribe to queue with id: {_configuration.Id} with handler: {handler}");
+      _logger.LogDebug("Try to subscribe to queue with id: {queueId}", _configuration.Id);
       _consumer =
         _advancedBus.Consume(_queue, (body, messageProperties, info) => handler?.Invoke(body.ConvertToBaseMessage(messageProperties)));
-      Logger.LogDebug($"Done to subscribe to queue with id: {_configuration.Id} with handler: {handler}");
+      _logger.LogDebug("Done to subscribe to queue with id: {queueId}", _configuration.Id);
     }
 
     /// <inheritdoc />
     public void Unsubscribe()
     {
-      Logger.LogDebug($"Try to unsubscribe to queue with id: {_configuration.Id}");
+      _logger.LogDebug("Try to unsubscribe to queue with id: {queueId}", _configuration.Id);
       _consumer?.Dispose();
-      Logger.LogDebug($"Done to unsubscribe to queue with id: {_configuration.Id}");
+      _logger.LogDebug("Done to unsubscribe to queue with id: {queueId}", _configuration.Id);
     }
 
     /// <inheritdoc />
@@ -179,7 +166,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     /// <returns>Отправленное сообщение с заполнеными датой отправки и идентификатором сообщения</returns>
     public BaseMessage Send(BaseMessage message)
     {
-      Logger.LogDebug($"Try to send message to queue with id: {_configuration.Id}");
+      _logger.LogDebug("Try to send message to queue with id: {queueId}", _configuration.Id);
       message.ThrowIfNull(nameof(message));
       CheckDisposed();
       CheckAndReconnect();
@@ -187,13 +174,13 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       {
         var body = message.GetMessageBodyAsBytes();
         _advancedBus.Publish(_exchange, _configuration.Id, false, message.ConvertToProperties(_configuration), body);
-        Logger.LogDebug($"Done to send message to queue with id: {_configuration.Id}");
+        _logger.LogDebug("Done to send message to queue with id: {queueId}", _configuration.Id);
         LogMessageInternal(message, true);
         return message;
       }
       catch (Exception ex)
       {
-        Logger.LogDebug("RabbitMQ PUT failure:");
+        _logger.LogError(ex, "RabbitMQ PUT failure on queue with ID: {queueId}", _configuration.Id);
         throw new MessagingException(ex, "Messaging error while sending message. See inner exception for more details");
       }
     }
@@ -202,7 +189,28 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     public BaseMessage Receive(
       string correlationId = null, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
     {
-      Logger.LogDebug($"Try to receive message from queue with id: {_configuration.Id}");
+      var hasMessage = TryReceive(out var message, correlationId, timeout, additionalParameters);
+      return hasMessage
+        ? message
+        : throw new MessageDidNotReceivedException("Can not receive message because queue is empty");
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+      Disconnect();
+      _isDisposed = true;
+      GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc />
+    public bool TryReceive(
+      out BaseMessage message, string correlationId = null, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
+    {
+      message = null;
+      _logger.LogDebug("Try to receive message from queue with id: {queueId}", _configuration.Id);
+
       CheckDisposed();
       CheckAndReconnect();
 
@@ -211,42 +219,17 @@ namespace ViennaNET.Messaging.RabbitMQQueue
         var dataResult = _advancedBus.Get(_queue);
         if (dataResult == null)
         {
-          Logger.LogDebugFormat("No messages available");
-          return null;
+          return false;
         }
 
-        var message = dataResult.Body.ConvertToBaseMessage(dataResult.Properties);
+        message = dataResult.Body.ConvertToBaseMessage(dataResult.Properties);
 
         LogMessageInternal(message, false);
-        return message;
-      }
-      catch (Exception ex)
-      {
-        Logger.LogError("RabbitMQ GET failure:", ex.Message);
-        throw new MessagingException(ex, "Error while sending message. See inner exception for more details");
-      }
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
-      Disconnect();
-    }
-
-    /// <inheritdoc />
-    public bool TryReceive(
-      out BaseMessage message, string correlationId = null, TimeSpan? timeout = null,
-      params (string Name, string Value)[] additionalParameters)
-    {
-      Logger.LogDebug($"Try to receive message from queue with id: {_configuration.Id}");
-      try
-      {
-        message = Receive(correlationId);
-        return message != null;
+        return true;
       }
       catch (Exception exception)
       {
-        Logger.LogError(exception, "Receive message failure:");
+        _logger.LogError(exception, "Receive message failure on queue with ID: {queueId}", _configuration.Id);
         message = null;
         return false;
       }
@@ -261,7 +244,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     /// <inheritdoc />
     public async Task<BaseMessage> RequestAndWaitResponse(BaseMessage message)
     {
-      Logger.LogDebug($"Try to send message to queue with id: {_configuration.Id} and wait response");
+      _logger.LogDebug("Try to send message to queue with id: {queueId} and wait response", _configuration.Id);
       message.ThrowIfNull(nameof(message));
       CheckDisposed();
       CheckAndReconnect();
@@ -311,7 +294,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     /// <inheritdoc />
     public BaseMessage Reply(BaseMessage message)
     {
-      Logger.LogDebug($"Try to send reply message to queue with id: {_configuration.Id}");
+      _logger.LogDebug("Try to send reply message to queue with id: {queueId}", _configuration.Id);
       message.ThrowIfNull(nameof(message));
       CheckDisposed();
       CheckAndReconnect();
@@ -323,18 +306,18 @@ namespace ViennaNET.Messaging.RabbitMQQueue
         _advancedBus.Bind(replyExchange, queue, message.ReplyQueue);
         var body = message.GetMessageBodyAsBytes();
         _advancedBus.Publish(replyExchange, message.ReplyQueue, false, message.ConvertToProperties(_configuration), body);
-        Logger.LogDebug($"Done to send reply message to queue with id: {message.ReplyQueue}");
+        _logger.LogDebug("Done sending reply message to queue with id: {queueId}", message.ReplyQueue);
         LogMessageInternal(message, true);
         return message;
       }
       catch (OperationInterruptedException e)
       {
-        Logger.LogDebug("RabbitMQ PUT reply failure by OperationInterruptedException:");
+        _logger.LogError(e,"RabbitMQ PUT reply failure by OperationInterruptedException on queue with ID: {queueId}", _configuration.Id);
         throw new ReplyException(e, "Messaging error while sending reply message. See inner exception for more details");
       }
       catch (Exception ex)
       {
-        Logger.LogDebug("RabbitMQ PUT reply failure");
+        _logger.LogError(ex,"RabbitMQ PUT reply failure on queue with ID: {queueId}", _configuration.Id);
         throw new MessagingException(ex, "Messaging error while sending reply message. See inner exception for more details");
       }
     }
@@ -343,25 +326,26 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     {
       if (_isDisposed)
       {
-        throw new ObjectDisposedException("Adapter is already disposed");
+        throw new ObjectDisposedException(nameof(RabbitMqQueueMessageAdapter));
       }
     }
 
     private void CheckAndReconnect()
     {
       var isConnected = IsConnected;
-      Logger.LogDebug($"RabbitMqQueueMessageAdapter: CheckAndReconnect - IsConnected: {isConnected}");
+      _logger.LogDebug("IsConnected: {isConnected}, queue with ID: {queueId}", isConnected, _configuration.Id);
       if (!isConnected)
       {
         Connect();
       }
     }
 
-    private static void LogMessageInternal(BaseMessage message, bool isSend)
+    private void LogMessageInternal(BaseMessage message, bool isSend)
     {
-      Logger.LogDebug((isSend
-                        ? "Message has been sent"
-                        : "Message has been received") + Environment.NewLine + message.LogBody());
+      _logger.LogDebug(
+        $"Message has been {(isSend ? "sent to" : "received from")} queue with ID:{{queueId}}{Environment.NewLine}{{message}}",
+        _configuration.Id,
+        message);
     }
   }
 }

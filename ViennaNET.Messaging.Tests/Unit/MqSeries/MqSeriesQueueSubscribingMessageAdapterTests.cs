@@ -54,7 +54,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     };
 
     [Test]
-    [TestCaseSource("ReceiveTestCaseSource")]
+    [TestCaseSource(nameof(ReceiveTestCaseSource))]
     public void ReceiveTest(TimeSpan? timeout)
     {
       var adapter = Given
@@ -76,7 +76,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
       var adapter = Given.SubscribingMessageAdapter.Please();
 
       var ex = Assert.Throws<MessagingException>(() => adapter.Receive());
-      Assert.IsTrue(ex.Message.Contains("Connection is not open"));
+      StringAssert.Contains("Connection is not open", ex.Message);
     } 
     
     [Test]
@@ -85,8 +85,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
       var adapter = Given.SubscribingMessageAdapter.Please();
 
       adapter.Dispose();
-      var ex = Assert.Throws<MessagingException>(() => adapter.Receive());
-      Assert.IsTrue(ex.Message.Contains("Adapter already disposed"));
+      Assert.Throws<ObjectDisposedException>(() => adapter.Receive());
     }
 
     [Test]

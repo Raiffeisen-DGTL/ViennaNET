@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.MQSeriesQueue;
+using ViennaNET.Messaging.Tests.Unit.DSL;
 
 namespace ViennaNET.Messaging.Tests.Unit.MqSeries
 {
@@ -22,16 +23,17 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     [OneTimeSetUp]
     public void MqSeriesQueueMessageAdapterConstructorSetup()
     {
-      var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", true)
-                                                 .Build();
+      var configuration = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", true)
+        .Build();
 
-      _constructor = new MqSeriesQueueMessageAdapterConstructor(configuration);
+      _constructor = new MqSeriesQueueMessageAdapterConstructor(configuration, Given.FakeLoggerFactory);
     }
 
     [Test]
     public void Create_HasQueueInConfig_ReturnsAdapter()
     {
-      var adapter = _constructor.Create(QueueId, false);
+      var adapter = _constructor.Create(QueueId);
       
       Assert.Multiple(() =>
       {
@@ -44,7 +46,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     [Test]
     public void Create_ThreadedNoTrans_ReturnsTransactedAdapter()
     {
-      var adapter = _constructor.Create(ThreadQueueId, false);
+      var adapter = _constructor.Create(ThreadQueueId);
 
       Assert.That(adapter, Is.InstanceOf<MqSeriesQueueTransactedMessageAdapter>());
     }
@@ -52,7 +54,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     [Test]
     public void Create_ThreadedWithTrans_ReturnsTransactedAdapter()
     {
-      var adapter = _constructor.Create(TransactedQueueId, false);
+      var adapter = _constructor.Create(TransactedQueueId);
 
       Assert.That(adapter, Is.InstanceOf<MqSeriesQueueTransactedMessageAdapter>());
     }
@@ -60,7 +62,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     [Test]
     public void Create_Subscribing_ReturnsSubscribingAdapter()
     {
-      var adapter = _constructor.Create(SubscribingQueueId, false);
+      var adapter = _constructor.Create(SubscribingQueueId);
 
       Assert.That(adapter, Is.InstanceOf<MqSeriesQueueSubscribingMessageAdapter>());
     }
@@ -68,7 +70,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     [Test]
     public void Create_NoQueueStringAndUseQueueStringIsFalse_ReturnsAdapter()
     {
-      var adapter = _constructor.Create(NoQueueStringNotUsingQueueId, false);
+      var adapter = _constructor.Create(NoQueueStringNotUsingQueueId);
 
       Assert.Multiple(() =>
       {
@@ -81,7 +83,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     [Test]
     public void Create_HasNoQueueInConfig_Exception()
     {
-      Assert.Throws<MessagingConfigurationException>(() => _constructor.Create("", false), "There are no configuration with id '' in configuration file");
+      Assert.Throws<MessagingConfigurationException>(() => _constructor.Create(string.Empty), "There are no configuration with id '' in configuration file");
     }
 
 
@@ -93,7 +95,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     [TestCase("NoQueueStringUsing", "QueueString")]
     public void Create_HasQueueInConfigWithoutParameter_Exception(string queueId, string paramName)
     {
-      Assert.Throws<ArgumentNullException>(() => _constructor.Create(queueId, false), $"Value cannot be null. (Parameter '{paramName}')");
+      Assert.Throws<ArgumentNullException>(() => _constructor.Create(queueId), $"Value cannot be null. (Parameter '{paramName}')");
     }
 
     [Test]
@@ -102,9 +104,9 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
       var configuration = new ConfigurationBuilder().AddJsonFile("appsettingsAll.json", true)
                                                     .Build();
 
-      var constructor = new MqSeriesQueueMessageAdapterConstructor(configuration);
+      var constructor = new MqSeriesQueueMessageAdapterConstructor(configuration, Given.FakeLoggerFactory);
 
-      var adapters = constructor.CreateAll(false);
+      var adapters = constructor.CreateAll();
 
       Assert.Multiple(() =>
       {
@@ -120,7 +122,7 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     [Test]
     public void CreateAll_HasNoClientIdQueueInConfig_Exception()
     {
-      Assert.Throws<ArgumentNullException>(() => _constructor.CreateAll(false), "Value cannot be null. (Parameter 'ClientId')");
+      Assert.Throws<ArgumentNullException>(() => _constructor.CreateAll(), "Value cannot be null. (Parameter 'ClientId')");
     }
 
     [Test]

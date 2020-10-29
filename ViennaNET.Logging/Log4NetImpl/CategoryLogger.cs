@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using ViennaNET.Logging.Contracts;
 
 namespace ViennaNET.Logging.Log4NetImpl
@@ -6,6 +7,7 @@ namespace ViennaNET.Logging.Log4NetImpl
   /// <summary>
   /// An implementation of category logger
   /// </summary>
+  [ExcludeFromCodeCoverage]
   public class CategoryLogger : ICategoryLogger
   {
     private readonly string _category;
@@ -137,6 +139,23 @@ namespace ViennaNET.Logging.Log4NetImpl
           exception.ToString()
           )
         );
+    }
+
+    /// <summary>
+    /// log message with error log level formatted string to log. 
+    /// This function also appending exception.ToString at the end of the message
+    /// </summary>
+    /// <param name="exception">exception to log</param>
+    /// <param name="message">formatted message to log</param>
+    public void LogError(Exception exception, string message)
+    {
+      Log(LogLevel.Error,
+        string.Concat(
+          message,
+          Environment.NewLine,
+          exception.ToString()
+        )
+      );
     }
 
     /// <summary>

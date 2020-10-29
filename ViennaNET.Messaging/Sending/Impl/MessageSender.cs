@@ -22,6 +22,7 @@ namespace ViennaNET.Messaging.Sending.Impl
     /// Инициализирует отправителя сообщений с определенным адаптером очереди <see cref="IMessageAdapter"/>
     /// </summary>
     /// <param name="adapter">Адаптер сообщений <see cref="IMessageAdapter"/></param>
+    /// <param name="callContextFactory">Провайдер контекста вызова</param>
     /// <param name="applicationName">Имя приложения</param>
     public MessageSender(IMessageAdapter adapter, ICallContextFactory callContextFactory, string applicationName)
     {
@@ -53,6 +54,12 @@ namespace ViennaNET.Messaging.Sending.Impl
       }
 
       var sendedMessage = _adapter.Send(message);
+
+      if (_adapter is IMessageAdapterWithTransactions transactedAdapter)
+      {
+        transactedAdapter.CommitIfTransacted(sendedMessage);
+      }
+
       return sendedMessage.MessageId;
     }
 
@@ -111,6 +118,10 @@ namespace ViennaNET.Messaging.Sending.Impl
       _adapter?.Dispose();
     }
 
+    /// <summary>
+    /// Обогащает свойства сообщения данными из контекста вызова: пользователь, домаен и т.п.
+    /// </summary>
+    /// <param name="message">Сообщение, свойства которого нужно обогатить</param>
     protected void FillPropertiesFromCallContext(BaseMessage message)
     {
       var context = _callContextFactory.Create();
@@ -122,6 +133,10 @@ namespace ViennaNET.Messaging.Sending.Impl
       message.Properties.Add(MessagingContextHeaders.AuthorizeInfo, context.AuthorizeInfo);
     }
 
+    /// <summary>
+    /// Настраивает параметры сообщения в соответствии с конфигурацией
+    /// </summary>
+    /// <param name="message">Сообщение, параметры которого нужно настроить</param>
     protected void FillPropertiesFromQueueConfiguration(BaseMessage message)
     {
       var queueConfiguration = _adapter.Configuration;
@@ -147,6 +162,11 @@ namespace ViennaNET.Messaging.Sending.Impl
       }
     }
 
+    /// <summary>
+    /// Заполняет свойства сообщения
+    /// </summary>
+    /// <param name="mes">Сообщение, свойства которого нужно заполнить</param>
+    /// <param name="properties">Значения параметров</param>
     protected void FillAdditionalProperties(BaseMessage mes, IReadOnlyDictionary<string, object> properties = null)
     {
       if (properties?.Any() != true)

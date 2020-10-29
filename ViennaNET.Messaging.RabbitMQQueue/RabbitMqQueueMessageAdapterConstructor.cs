@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Factories.Impl;
 using ViennaNET.Utils;
 
@@ -8,19 +9,27 @@ namespace ViennaNET.Messaging.RabbitMQQueue
   public class RabbitMqQueueMessageAdapterConstructor : QueueMessageAdapterConstructorBase<RabbitMqConfiguration,
     RabbitMqQueueConfiguration>
   {
+    private readonly ILoggerFactory _loggerFactory;
     private readonly IAdvancedBusFactory _advancedBusFactory;
 
     /// <inheritdoc />
-    public RabbitMqQueueMessageAdapterConstructor(IAdvancedBusFactory advancedBusFactory, IConfiguration configuration) :
+    public RabbitMqQueueMessageAdapterConstructor(
+      IAdvancedBusFactory advancedBusFactory, 
+      IConfiguration configuration,
+      ILoggerFactory loggerFactory) :
       base(configuration, "rabbitmq")
     {
+      _loggerFactory = loggerFactory;
       _advancedBusFactory = advancedBusFactory.ThrowIfNull(nameof(advancedBusFactory));
     }
 
     /// <inheritdoc />
-    protected override IMessageAdapter CreateAdapter(RabbitMqQueueConfiguration queueConfiguration, bool isDiagnostic)
+    protected override IMessageAdapter CreateAdapter(RabbitMqQueueConfiguration queueConfiguration)
     {
-      return new RabbitMqQueueMessageAdapter(_advancedBusFactory, queueConfiguration, isDiagnostic);
+      return new RabbitMqQueueMessageAdapter(
+        _advancedBusFactory, 
+        queueConfiguration,
+        _loggerFactory.CreateLogger<RabbitMqQueueMessageAdapter>());
     }
 
     /// <inheritdoc />

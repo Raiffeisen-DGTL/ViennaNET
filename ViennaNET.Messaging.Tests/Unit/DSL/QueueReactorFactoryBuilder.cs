@@ -48,7 +48,7 @@ namespace ViennaNET.Messaging.Tests.Unit.DSL
     {
       var messageAdapterFactory = new Mock<IMessageAdapterFactory>();
       messageAdapterFactory
-        .Setup(x => x.Create(It.IsAny<string>(), It.IsAny<bool>()))
+        .Setup(x => x.Create(It.IsAny<string>()))
         .Returns(_messageAdapter ?? Given.MessageAdapter.Please());
 
       var healthCheckingService = new Mock<IHealthCheckingService>();
@@ -60,7 +60,8 @@ namespace ViennaNET.Messaging.Tests.Unit.DSL
         _messageProcessors.Select(d => d.messageProcessor), 
         _messageProcessorsAsync.Select(d => d.messageProcessor),
         healthCheckingService.Object,
-        fakeContextAccessor.Object
+        fakeContextAccessor.Object,
+        Given.FakeLoggerFactory
         );
 
       foreach (var processorData in _messageProcessors.Where(d => !string.IsNullOrEmpty(d.queueName)))
