@@ -1,5 +1,6 @@
 /.vs/
 bin/*
+Bin/
 obj/
 
 !bin/*/clidriver/bin/*
@@ -21,3 +22,5 @@ bin
 NuGet.Config
 
 */TestResult/*
+
+.idea

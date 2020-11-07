@@ -64,7 +64,7 @@ namespace ViennaNET.Excel.Impl
       }
       finally
       {
-        fileContent.Seek(0, SeekOrigin.Begin);
+        fileContent?.Seek(0, SeekOrigin.Begin);
       }
 
       return false;

@@ -100,7 +100,7 @@ namespace ViennaNET.Logging.Log4NetImpl
     /// Used by the internal logger to record the Type of the
     /// log message.
     /// </remarks>
-    private readonly static Type declaringType = typeof(CustomRollingFileAppender);
+    private static readonly Type declaringType = typeof(CustomRollingFileAppender);
 
 
     /// <summary>
@@ -111,6 +111,8 @@ namespace ViennaNET.Logging.Log4NetImpl
     #endregion
 
     #region Private Instance Fields
+
+    private readonly object _lockTarget = new object();
 
     /// <summary>
     /// This object supplies the current date/time.  Allows test code to plug in
@@ -596,7 +598,7 @@ namespace ViennaNET.Logging.Log4NetImpl
     /// </remarks>
     protected override void OpenFile(string fileName, bool append)
     {
-      lock (this)
+      lock (_lockTarget)
       {
         fileName = GetNextOutputFileName(fileName);
 
