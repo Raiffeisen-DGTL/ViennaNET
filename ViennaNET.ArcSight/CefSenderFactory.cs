@@ -1,6 +1,6 @@
-﻿using ViennaNET.ArcSight.Configuration;
+﻿using Microsoft.Extensions.Logging;
+using ViennaNET.ArcSight.Configuration;
 using ViennaNET.ArcSight.Exceptions;
-using ViennaNET.Logging;
 using SyslogNet.Client.Transport;
 
 namespace ViennaNET.ArcSight
@@ -8,10 +8,21 @@ namespace ViennaNET.ArcSight
   /// <inheritdoc />
   public class CefSenderFactory : ICefSenderFactory
   {
+    private readonly ILogger _logger;
+
+    /// <summary>
+    /// Contructor
+    /// </summary>
+    /// <param name="logger">A logger interface</param>
+    public CefSenderFactory(ILogger<CefSenderFactory> logger)
+    {
+      _logger = logger;
+    }
+
     /// <inheritdoc />
     public ICefSender CreateSender(ArcSightSection cefConfig)
     {
-      Logger.LogDebug("Call CreateSender...");
+      _logger.LogDebug("Call CreateSender...");
       ISyslogMessageSender syslogSender;
       switch (cefConfig.Protocol)
       {
@@ -28,7 +39,7 @@ namespace ViennaNET.ArcSight
           throw new ArcSightConfigurationException($"The syslog protocol {cefConfig.Protocol} has not supported");
       }
 
-      Logger.LogDebug("Call CreateSender done.");
+      _logger.LogDebug("Call CreateSender done.");
       return new CefSender(syslogSender);
     }
   }
