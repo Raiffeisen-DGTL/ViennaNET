@@ -1,6 +1,6 @@
 name: Build&Test
 
-on: [push, pull_request, pull_request_review, workflow_dispatch]
+on: [push, pull_request, pull_request_target, workflow_dispatch]
 
 jobs:
   build:
