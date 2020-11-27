@@ -1653,5 +1653,4 @@ namespace ViennaNET.Logging.Log4NetImpl
 
     #endregion DateTime
   }
-
 }

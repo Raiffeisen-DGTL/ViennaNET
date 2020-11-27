@@ -47,7 +47,7 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm
         identity = WindowsIdentity.GetCurrent();
       }
 
-      var name = string.IsNullOrWhiteSpace(callContext.UserId)
+      var name = !string.IsNullOrWhiteSpace(callContext.UserId)
         ? callContext.UserId
         : identity.Name;
 

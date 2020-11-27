@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using ViennaNET.WebApi.Abstractions;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,7 @@ namespace ViennaNET.WebApi.Configurators.Diagnostic
     internal static void RegisterServices(IServiceCollection services, object container, IConfiguration configuration)
     {
       var typedContainer = (Container)container;
+      typedContainer.Collection.Register<IDiagnosticImplementor>(new Type[0]);
       services.AddSingleton<IDiagnosticImplementor, EmptyDiagnosticImplementor>();
 
       services.AddSingleton<IHealthCheckingService>(p =>

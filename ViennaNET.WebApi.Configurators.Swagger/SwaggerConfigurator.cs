@@ -51,10 +51,13 @@ namespace ViennaNET.WebApi.Configurators.Swagger
         return;
       }
 
+      var parentSiteName = string.IsNullOrWhiteSpace(swaggerConfiguration.ParentSiteName)
+        ? string.Empty
+        : $"/{swaggerConfiguration.ParentSiteName}";
       app.UseSwagger();
       app.UseSwaggerUI(c =>
       {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service API V1");
+        c.SwaggerEndpoint($"{parentSiteName}/swagger/v1/swagger.json", "Service API V1");
         swaggerUiConfig?.Invoke(c, configuration);
       });
     }

@@ -1,6 +1,7 @@
 name: Publish packages
 
-on: 
+on:
+  workflow_dispatch:
   repository_dispatch:
   release:
     types:
@@ -21,12 +22,14 @@ jobs:
     - name: Fetch all history for all tags and branches
       run: git fetch --prune --unshallow
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.2
+      uses: gittools/actions/gitversion/setup@v0.9.7
       with:
-          versionSpec: '5.2.x'
+          versionSpec: '5.5.x'
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: Use GitVersion
       id: gitversion # step id used as reference for output values
-      uses: gittools/actions/gitversion/execute@v0.9.2
+      uses: gittools/actions/gitversion/execute@v0.9.7
     - name: Build
       run: dotnet publish -c Release -p:Version=${{ steps.gitversion.outputs.majorMinorPatch }}.${{ steps.gitversion.outputs.commitsSinceVersionSource }} --self-contained false
     - name: Test

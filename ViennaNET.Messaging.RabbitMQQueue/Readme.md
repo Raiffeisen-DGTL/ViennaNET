@@ -5,6 +5,7 @@ ___
 * **RabbitMqQueueMessageAdapter** - Provides direct interaction with RabbitMQ queues.
 * **RabbitMqQueueMessageAdapterConstructor** - Creates instances of _RabbitMqQueueMessageAdapter_.
 
+### Configuration
  Section in the configuration file:
 
 ```javascript
@@ -12,9 +13,10 @@ ___
           "queues": [
             {
               "id": "<queue identifier>", // as a rule, the name of the queue is indicated
+              "server": "<queue server host>",
+              "port": "<queue server port>",
+              "intervalPollingQueue": 
               "processingtype": "<processing type to listen on the queue>", // one of the values of MessageProcessingType
-              "server": "<queue server>",
-              "port": "<queue connection port>",
               "queuename": "<queue name>",
               "user": "<login to connect to the queue>",
               "password": "password to connect to the queue",
@@ -26,12 +28,22 @@ ___
               // the parameters below apply only to the RabbitMQ queue
               "exchangeType": "<type of exchange point>",
               "exchangeName": "<exchange point name>",
-              "replyTimeout": "<timeout of operations in TimeSpan format>"
+              "replyTimeout": "<timeout of operations in TimeSpan format>",
+              "virtualHost": "<RabbitMQ virtual host>",
+              "routings": [] // RabbitMQ routing keys
             }
           ]
         }
 ```
 
+> Required fields
+> * id
+> * server
+> * exchangeName
+> * intervalPollingQueue
+> * user
+> * password
+>
 > RabbitMQ configuration features
 > * processingtype - can take the value Subscribe or SubscribeAndReply to create a subscriber that reads messages as they arrive (by event), or for the same subscriber, but with the ability to send a response message, respectively
 > * exchangeType - can take one of the values ​​direct | topic | fanout | headers, if not specified, then by default fanout

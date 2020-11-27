@@ -11,6 +11,11 @@
     public bool? UseSwagger { get; set; }
 
     /// <summary>
+    /// Имя родительского сервиса. Используется для IIS когда сервис устанавливается как вложенный сайт.
+    /// </summary>
+    public string ParentSiteName { get; set; }
+
+    /// <summary>
     /// Название секции в конфигурационном файле
     /// </summary>
     public const string SectionName = "swagger";
