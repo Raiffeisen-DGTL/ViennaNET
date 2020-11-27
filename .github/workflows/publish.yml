@@ -1,6 +1,7 @@
 name: Publish packages
 
-on: 
+on:
+  workflow_dispatch:
   repository_dispatch:
   release:
     types:
