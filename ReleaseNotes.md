@@ -1,3 +1,9 @@
+# v0011 (27.11.2020)
+
+### Release Summary
+1. Various small bugfixes in Excel, Messaging and WebApi
+
+
 # v0010 (29.10.2020)
 
 ### Release Summary

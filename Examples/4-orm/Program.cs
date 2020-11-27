@@ -4,8 +4,8 @@ using ViennaNET.WebApi.Configurators.Kestrel;
 using ViennaNET.WebApi.Configurators.Swagger;
 using ViennaNET.WebApi.Configurators.SimpleInjector;
 using ViennaNET.WebApi.Configurators.CallContext;
-using ViennaNET.WebApi.Configurators.Security.Jwt;
 using ViennaNET.WebApi.Configurators.Common;
+using ViennaNET.WebApi.Configurators.Diagnostic;
 
 namespace OrmService
 {
@@ -19,7 +19,7 @@ namespace OrmService
                   .UseSwagger()
                   .UseCallContext()
                   .UseSimpleInjector()
-                  .UseJwtAuth()
+                  .UseDiagnosing()
                   .BuildWebHost(args)
                   .Run();
     }

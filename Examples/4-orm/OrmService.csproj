@@ -12,8 +12,8 @@
     <ProjectReference Include="..\..\ViennaNET.SimpleInjector.Extensions\ViennaNET.SimpleInjector.Extensions.csproj" />
     <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.CallContext\ViennaNET.WebApi.Configurators.CallContext.csproj" />
     <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Common\ViennaNET.WebApi.Configurators.Common.csproj" />
+    <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Diagnostic\ViennaNET.WebApi.Configurators.Diagnostic.csproj" />
     <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Kestrel\ViennaNET.WebApi.Configurators.Kestrel.csproj" />
-    <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Security.Jwt\ViennaNET.WebApi.Configurators.Security.Jwt.csproj" />
     <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.SimpleInjector\ViennaNET.WebApi.Configurators.SimpleInjector.csproj" />
     <ProjectReference Include="..\..\ViennaNET.WebApi.Configurators.Swagger\ViennaNET.WebApi.Configurators.Swagger.csproj" />
     <ProjectReference Include="..\..\ViennaNET.WebApi\ViennaNET.WebApi.csproj" />

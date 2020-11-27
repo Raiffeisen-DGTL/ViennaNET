@@ -203,6 +203,12 @@ namespace ViennaNET.Excel.Impl
         {
           cell.SetCellValue(Convert.ToString(value));
         }
+        else if (type.GetInterfaces().Contains(typeof(IHyperlink)))
+        {
+          var link = (IHyperlink)value;
+          cell.SetCellValue(Convert.ToString(link.Label ?? link.Address));
+          cell.Hyperlink = link;
+        }
         else
         {
           throw new InvalidOperationException($"Unsupported type '{type}'");

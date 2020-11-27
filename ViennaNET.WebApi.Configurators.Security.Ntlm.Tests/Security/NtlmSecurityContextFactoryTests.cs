@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Net.Http;
 using System.Security.Principal;
-using ViennaNET.WebApi.Abstractions;
 using ViennaNET.WebApi.Net;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -22,6 +21,8 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm.Tests.Security
       var fakeHttpClientFactory = new Mock<IHttpClientFactory>();
       var fakeLoopbackIpFilter = new Mock<ILoopbackIpFilter>();
       var fakeCallContextFactory = new Mock<ICallContextFactory>();
+      var callContext = new Mock<ICallContext>();
+      fakeCallContextFactory.Setup(f => f.Create()).Returns(callContext.Object);
 
       // act
       var factory = new NtlmSecurityContextFactory(fakeHttpContext.Object, 
@@ -39,29 +40,20 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm.Tests.Security
     }
 
     [Test]
-    public void Create_RequestHeadersExists_TakeDataFromHeaders()
+    public void Create_CallContextExists_TakeDataFromCallContext()
     {
       // arrange
       var fakeHttpClientFactory = new Mock<IHttpClientFactory>();
-      var fakeRequest = new Mock<HttpRequest>();
-      var fakeHeaders = new HeaderDictionary
-      {
-        { CompanyHttpHeaders.UserId, "hamster" },
-        { CompanyHttpHeaders.RequestHeaderCallerIp, "some IP" }
-      };
-      fakeRequest.Setup(x => x.Headers)
-                 .Returns(fakeHeaders);
-      var fakeContext = new Mock<HttpContext>();
-      fakeContext.Setup(x => x.Request)
-                 .Returns(fakeRequest.Object);
       var fakeLoopbackIpFilter = new Mock<ILoopbackIpFilter>();
       fakeLoopbackIpFilter.Setup(x => x.FilterIp(It.IsAny<string>()))
                           .Returns((string s) => s);
 
       var fakeHttpContextAccessor = new Mock<IHttpContextAccessor>();
-      fakeHttpContextAccessor.Setup(x => x.HttpContext)
-                             .Returns(fakeContext.Object);
       var fakeCallContextFactory = new Mock<ICallContextFactory>();
+      var callContext = new Mock<ICallContext>();
+      callContext.Setup(c => c.UserId).Returns("hamster");
+      callContext.Setup(c => c.RequestCallerIp).Returns("some IP");
+      fakeCallContextFactory.Setup(f => f.Create()).Returns(callContext.Object);
 
       // act
       var factory = new NtlmSecurityContextFactory(fakeHttpContextAccessor.Object, 

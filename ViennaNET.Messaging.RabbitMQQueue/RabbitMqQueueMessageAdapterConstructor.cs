@@ -37,6 +37,10 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     {
       configuration.Id.ThrowIfNullOrWhiteSpace(nameof(configuration.Id));
       configuration.Server.ThrowIfNullOrWhiteSpace(nameof(configuration.Server));
+      configuration.ExchangeName.ThrowIfNullOrWhiteSpace(nameof(configuration.ExchangeName));
+      configuration.IntervalPollingQueue.ThrowIf(value => value <= 0, nameof(configuration.IntervalPollingQueue));
+      configuration.User.ThrowIfNullOrWhiteSpace(nameof(configuration.User));
+      configuration.Password.ThrowIfNullOrWhiteSpace(nameof(configuration.Password));
     }
   }
 }

@@ -117,7 +117,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
           _healthCheckingService.DiagnosticPassedEvent -= OnDiagnosticPassed;
         }
 
-        _subscribePolling.Dispose();
+        _subscribePolling?.Dispose();
         _subscribePolling = null;
       }
       finally
