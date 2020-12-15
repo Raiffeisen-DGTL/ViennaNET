@@ -153,6 +153,10 @@ namespace ViennaNET.ArcSight
 
     private readonly ISyslogMessageSerializer _syslogMessageSerializer;
 
+    /// <summary>
+    /// Contructor
+    /// </summary>
+    /// <param name="syslogMessageSerializer">ISyslogMessageSerializer interface</param>
     public CefMessageSerializer(ISyslogMessageSerializer syslogMessageSerializer)
     {
       _syslogMessageSerializer = syslogMessageSerializer;

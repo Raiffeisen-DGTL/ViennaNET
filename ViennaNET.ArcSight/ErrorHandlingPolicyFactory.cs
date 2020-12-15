@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using Polly;
 
 namespace ViennaNET.ArcSight
@@ -8,7 +8,18 @@ namespace ViennaNET.ArcSight
   /// <inheritdoc />
   public class ErrorHandlingPoliciesFactory : IErrorHandlingPoliciesFactory
   {
+    private readonly ILogger<ErrorHandlingPoliciesFactory> _logger;
     private const int retryInterval = 250;
+
+    /// <summary>
+    /// Contructor
+    /// </summary>
+    /// <param name="logger">A logger interface</param>
+    public ErrorHandlingPoliciesFactory(ILogger<ErrorHandlingPoliciesFactory> logger)
+    {
+      _logger = logger;
+    }
+
     private const int retryCount = 3;
 
     /// <inheritdoc />
@@ -20,7 +31,7 @@ namespace ViennaNET.ArcSight
                    .Or<Exception>(InnerExceptionIsApplicable)
                    .WaitAndRetry(retryCount, retrySleep => TimeSpan.FromMilliseconds(retryInterval), (ex, time) =>
                    {
-                     Logger.LogErrorFormat(ex, "Communication or Timeout exception. Retry: {0}", ++countOfRetries);
+                     _logger.LogError(ex, $"Communication or Timeout exception. Retry: {++countOfRetries}");
                    });
     }
 

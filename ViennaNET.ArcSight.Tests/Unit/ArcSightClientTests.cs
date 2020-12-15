@@ -2,6 +2,7 @@
 using ViennaNET.ArcSight.Configuration;
 using ViennaNET.ArcSight.Exceptions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
 using Polly;
@@ -36,7 +37,7 @@ namespace ViennaNET.ArcSight.Tests.Unit
     {
       var configurationRoot = new ConfigurationBuilder().AddJsonFile(configRoot, optional: true)
                                                         .Build();
-      return new ArcSightClient(configurationRoot, _errorHandlingFactoryMock.Object, _cefSenderFactoryMock.Object);
+      return new ArcSightClient(configurationRoot, _errorHandlingFactoryMock.Object, _cefSenderFactoryMock.Object, new NullLogger<ArcSightClient>());
     }
 
     [Test]

@@ -2,9 +2,9 @@
 using System.IO;
 using ViennaNET.ArcSight.Configuration;
 using ViennaNET.ArcSight.Exceptions;
-using ViennaNET.Logging;
 using ViennaNET.Utils;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Polly;
 using SyslogNet.Client.Serialization;
 
@@ -13,6 +13,7 @@ namespace ViennaNET.ArcSight
   /// <inheritdoc />
   public class ArcSightClient : IArcSightClient
   {
+    private readonly ILogger _logger;
     private readonly ArcSightSection _cefConfig;
     private readonly ISyncPolicy _policy;
     private readonly CefMessageSerializer _serializer;
@@ -25,15 +26,18 @@ namespace ViennaNET.ArcSight
     /// <param name="configuration">Ссылка на интерфейс, предоставляющий доступ к конфигурации</param>
     /// <param name="policiesFactory">Ссылка на интерфейс фабрики по созданию политик вызовов</param>
     /// <param name="cefSenderFactory">Ссылка на интерфейс фабрики по созданию классов для доступа к каналу отправки</param>
-    public ArcSightClient(IConfiguration configuration, IErrorHandlingPoliciesFactory policiesFactory, ICefSenderFactory cefSenderFactory)
+    /// <param name="logger">Logger interface</param>
+    public ArcSightClient(IConfiguration configuration, IErrorHandlingPoliciesFactory policiesFactory,
+      ICefSenderFactory cefSenderFactory, ILogger<ArcSightClient> logger)
     {
+      _logger = logger;
       _cefConfig = configuration.ThrowIfNull(nameof(configuration))
-                                .GetSection("arcSight")
-                                .Get<ArcSightSection>()
-                                .ThrowIfNull(new InvalidOperationException("Can not find CEF configuration"));
+        .GetSection("arcSight")
+        .Get<ArcSightSection>()
+        .ThrowIfNull(new InvalidOperationException("Can not find CEF configuration"));
 
       _policy = policiesFactory.ThrowIfNull(nameof(policiesFactory))
-                               .CreateStdCommunicationPolicy();
+        .CreateStdCommunicationPolicy();
 
       _cefSenderFactory = cefSenderFactory.ThrowIfNull(nameof(cefSenderFactory));
 
@@ -46,7 +50,7 @@ namespace ViennaNET.ArcSight
       var syslogMessage = _serializer.Serialize(message);
       var stream = new MemoryStream(_serializer.Serialize(syslogMessage));
       var syslogMessageStr = new StreamReader(stream).ReadToEnd();
-      Logger.LogInfoFormat("Send syslog message: {0}", syslogMessageStr);
+      _logger.LogInformation($"Send syslog message: {syslogMessageStr}");
       _policy.Execute(() => SendInternal(message));
     }
 
@@ -65,13 +69,13 @@ namespace ViennaNET.ArcSight
 
     private void SendInternal(CefMessage message)
     {
-      Logger.LogDebug("Call SendInternal...");
+      _logger.LogDebug("Call SendInternal...");
       using (var sender = _cefSenderFactory.CreateSender(_cefConfig))
       {
         sender.Send(message, _serializer);
       }
 
-      Logger.LogDebug("Call SendInternal done.");
+      _logger.LogDebug("Call SendInternal done.");
     }
   }
 }
