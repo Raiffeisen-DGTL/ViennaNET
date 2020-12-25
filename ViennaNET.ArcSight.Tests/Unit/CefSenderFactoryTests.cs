@@ -1,4 +1,5 @@
-﻿using ViennaNET.ArcSight.Configuration;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using ViennaNET.ArcSight.Configuration;
 using ViennaNET.ArcSight.Exceptions;
 using NUnit.Framework;
 
@@ -11,7 +12,7 @@ namespace ViennaNET.ArcSight.Tests.Unit
 
     public CefSenderFactoryTests()
     {
-      _cefSenderFactory = new CefSenderFactory();
+      _cefSenderFactory = new CefSenderFactory(new NullLogger<CefSenderFactory>());
     }
 
     [Test]
