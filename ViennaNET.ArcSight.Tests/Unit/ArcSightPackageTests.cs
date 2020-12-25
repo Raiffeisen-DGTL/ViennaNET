@@ -1,5 +1,7 @@
 ﻿using ViennaNET.ArcSight.DefaultConfiguration;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using SimpleInjector;
 
@@ -24,6 +26,7 @@ namespace ViennaNET.ArcSight.Tests.Unit
         var configuration = new ConfigurationBuilder().AddJsonFile("TestConfiguration/arcSight.json", optional: true)
                                                           .Build();
         _container.RegisterInstance<IConfiguration>(configuration);
+        _container.RegisterSingleton(typeof(ILogger<>), typeof(NullLogger<>));
         _container.RegisterPackages(new [] { typeof(ArcSightPackage).Assembly });
         _container.Verify();
 
