@@ -7,12 +7,12 @@ namespace ViennaNET.Utils.Tests
   {
     private class FromTestClass
     {
-      public string FromField { get; set; }
+      public string? FromField { get; set; }
     }
 
     private class ToTestClass
     {
-      public string ToField { get; set; }
+      public string? ToField { get; set; }
     }
 
     [Test]
@@ -22,7 +22,7 @@ namespace ViennaNET.Utils.Tests
 
       Assert.AreEqual(ResultState.Success, actual.State);
       Assert.IsNull(actual.InvalidMessage);
-      Assert.AreEqual("Test!", actual.Result.FromField);
+      Assert.AreEqual("Test!", actual.Result?.FromField);
     }
 
     [Test]
