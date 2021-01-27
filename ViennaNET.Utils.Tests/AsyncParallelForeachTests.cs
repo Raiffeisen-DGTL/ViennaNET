@@ -53,9 +53,9 @@ namespace ViennaNET.Utils.Tests
       return await Task.Run(() => _accounts.FirstOrDefault(a => a.Cba == source));
     }
 
-    private async Task Highload(string source)
+    private Task Highload(string source)
     {
-      await Task.Run(() => Math.Pow(int.Parse(source), 2));
+      return Task.Run(() => Math.Pow(int.Parse(source), 2));
     }
   }
 }

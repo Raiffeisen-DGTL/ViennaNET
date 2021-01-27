@@ -24,16 +24,16 @@ namespace ViennaNET.Utils.Tests
       var structValue = 1;
       int? structNull = null;
 
-      Assert.AreEqual(objValue, objValue.ThrowIf(a => false, "error message"));
-      Assert.AreEqual(objValue, objValue.ThrowIf(a => false, new Exception("error message")));
-      Assert.AreEqual(objValue, objValue.ThrowIf(a => false, a => new Exception($"error message: {a}")));
+      Assert.AreEqual(objValue, objValue.ThrowIf(_ => false, "error message"));
+      Assert.AreEqual(objValue, objValue.ThrowIf(_ => false, new Exception("error message")));
+      Assert.AreEqual(objValue, objValue.ThrowIf(_ => false, a => new Exception($"error message: {a}")));
 
-      Assert.AreEqual(objNull, objNull.ThrowIf(a => false, "error message"));
-      Assert.AreEqual(objNull, objNull.ThrowIf(a => false, new Exception("error message")));
-      Assert.AreEqual(objNull, objNull.ThrowIf(a => false, a => new Exception($"error message: {a}")));
+      Assert.AreEqual(objNull, objNull.ThrowIf(_ => false, "error message"));
+      Assert.AreEqual(objNull, objNull.ThrowIf(_ => false, new Exception("error message")));
+      Assert.AreEqual(objNull, objNull.ThrowIf(_ => false, a => new Exception($"error message: {a}")));
 
-      Assert.AreEqual(structValue, structValue.ThrowIf(a => false, "error message"));
-      Assert.AreEqual(structNull, structNull.ThrowIf(a => false, "error message"));
+      Assert.AreEqual(structValue, structValue.ThrowIf(_ => false, "error message"));
+      Assert.AreEqual(structNull, structNull.ThrowIf(_ => false, "error message"));
     }
 
     [Test]
@@ -46,26 +46,26 @@ namespace ViennaNET.Utils.Tests
 
       Assert.Throws<Exception>(() =>
       {
-        var _ = objValue.ThrowIf(a => true, "error message");
+        var _ = objValue.ThrowIf(_ => true, "error message");
       });
       Assert.Throws<Exception>(() =>
       {
-        var _ = objValue.ThrowIf(a => true, new Exception("error message"));
+        var _ = objValue.ThrowIf(_ => true, new Exception("error message"));
       });
       Assert.Throws<Exception>(() =>
       {
-        var _ = objValue.ThrowIf(a => true, a => new Exception($"error message: {a}"));
+        var _ = objValue.ThrowIf(_ => true, a => new Exception($"error message: {a}"));
       });
 
-      Assert.AreEqual(objNull, objNull.ThrowIf(a => true, "error message"));
-      Assert.AreEqual(objNull, objNull.ThrowIf(a => true, new Exception("error message")));
-      Assert.AreEqual(objNull, objNull.ThrowIf(a => true, a => new Exception($"error message: {a}")));
+      Assert.AreEqual(objNull, objNull.ThrowIf(_ => true, "error message"));
+      Assert.AreEqual(objNull, objNull.ThrowIf(_ => true, new Exception("error message")));
+      Assert.AreEqual(objNull, objNull.ThrowIf(_ => true, a => new Exception($"error message: {a}")));
 
       Assert.Throws<Exception>(() =>
       {
-        var _ = structValue.ThrowIf(a => true, "error message");
+        var _ = structValue.ThrowIf(_ => true, "error message");
       });
-      Assert.AreEqual(structNull, structNull.ThrowIf(a => false, "error message"));
+      Assert.AreEqual(structNull, structNull.ThrowIf(_ => false, "error message"));
     }
 
     [Test]
@@ -74,11 +74,11 @@ namespace ViennaNET.Utils.Tests
       object? objNull = null;
       int? structNull = null;
 
-      Assert.IsNull(objNull.ThrowIf(a => true, "error message"));
-      Assert.IsNull(objNull.ThrowIf(a => true, new Exception("error message")));
-      Assert.IsNull(objNull.ThrowIf(a => true, a => new Exception($"error message: {a}")));
+      Assert.IsNull(objNull.ThrowIf(_ => true, "error message"));
+      Assert.IsNull(objNull.ThrowIf(_ => true, new Exception("error message")));
+      Assert.IsNull(objNull.ThrowIf(_ => true, a => new Exception($"error message: {a}")));
 
-      Assert.IsNull(structNull.ThrowIf(a => false, "error message"));
+      Assert.IsNull(structNull.ThrowIf(_ => false, "error message"));
     }
 
     [Test]
@@ -87,11 +87,11 @@ namespace ViennaNET.Utils.Tests
       var objValue = new {a = 1};
       object? objNull = null;
 
-      Assert.AreEqual(objValue, objValue.ThrowIfNot(a => true, new Exception("error message")));
-      Assert.AreEqual(objValue, objValue.ThrowIfNot(a => true, a => new Exception($"error message: {a}")));
+      Assert.AreEqual(objValue, objValue.ThrowIfNot(_ => true, new Exception("error message")));
+      Assert.AreEqual(objValue, objValue.ThrowIfNot(_ => true, a => new Exception($"error message: {a}")));
 
-      Assert.AreEqual(objNull, objNull.ThrowIfNot(a => true, new Exception("error message")));
-      Assert.AreEqual(objNull, objNull.ThrowIfNot(a => true, a => new Exception($"error message: {a}")));
+      Assert.AreEqual(objNull, objNull.ThrowIfNot(_ => true, new Exception("error message")));
+      Assert.AreEqual(objNull, objNull.ThrowIfNot(_ => true, a => new Exception($"error message: {a}")));
     }
 
     [Test]
@@ -101,11 +101,11 @@ namespace ViennaNET.Utils.Tests
 
       Assert.Throws<Exception>(() =>
       {
-        var _ = objValue.ThrowIfNot(a => false, new Exception("error message"));
+        var _ = objValue.ThrowIfNot(_ => false, new Exception("error message"));
       });
       Assert.Throws<Exception>(() =>
       {
-        var _ = objValue.ThrowIfNot(a => false, a => new Exception($"error message: {a}"));
+        var _ = objValue.ThrowIfNot(_ => false, a => new Exception($"error message: {a}"));
       });
     }
 
@@ -114,8 +114,8 @@ namespace ViennaNET.Utils.Tests
     {
       object? objNull = null;
 
-      Assert.IsNull(objNull.ThrowIfNot(a => false, new Exception("error message")));
-      Assert.IsNull(objNull.ThrowIfNot(a => false, a => new Exception($"error message: {a}")));
+      Assert.IsNull(objNull.ThrowIfNot(_ => false, new Exception("error message")));
+      Assert.IsNull(objNull.ThrowIfNot(_ => false, a => new Exception($"error message: {a}")));
     }
 
     [Test]
@@ -170,9 +170,12 @@ namespace ViennaNET.Utils.Tests
       var result = obj.Do(o => called = true);
       var resultStruct = objStruct.Do(o => called = true);
 
-      Assert.That(called, Is.False);
-      Assert.That(result, Is.Null);
-      Assert.That(resultStruct, Is.Null);
+      Assert.Multiple(() =>
+      {
+        Assert.That(called, Is.False);
+        Assert.That(result, Is.Null);
+        Assert.That(resultStruct, Is.Null);
+      });
     }
 
     [Test]
@@ -187,8 +190,11 @@ namespace ViennaNET.Utils.Tests
         Assert.That(o, Is.SameAs(obj));
         called = true;
       });
-      Assert.That(result, Is.SameAs(obj));
-      Assert.That(called, Is.True);
+      Assert.Multiple(() =>
+      {
+        Assert.That(result, Is.SameAs(obj));
+        Assert.That(called, Is.True);
+      });
 
       called = false;
       var resultStruct = objStruct.Do(o =>
@@ -196,8 +202,11 @@ namespace ViennaNET.Utils.Tests
         Assert.That(o, Is.EqualTo(objStruct));
         called = true;
       });
-      Assert.That(resultStruct, Is.EqualTo(objStruct));
-      Assert.That(called, Is.True);
+      Assert.Multiple(() =>
+      {
+        Assert.That(resultStruct, Is.EqualTo(objStruct));
+        Assert.That(called, Is.True);
+      });
     }
 
     [Test]
@@ -230,10 +239,10 @@ namespace ViennaNET.Utils.Tests
       int? valueNull = null;
       int? value = 123;
 
-      Assert.IsNull(valueNull.If(f => false));
-      Assert.IsNull(value.If(f => false));
+      Assert.IsNull(valueNull.If(_ => false));
+      Assert.IsNull(value.If(_ => false));
 
-      Assert.That(value.If(f => true), Is.EqualTo(value));
+      Assert.That(value.If(_ => true), Is.EqualTo(value));
     }
 
     [Test]
@@ -242,8 +251,8 @@ namespace ViennaNET.Utils.Tests
       int? valueNull = null;
       int? value = 123;
 
-      Assert.IsNull(valueNull.IfNot(f => true));
-      Assert.IsNull(value.IfNot(f => true));
+      Assert.IsNull(valueNull.IfNot(_ => true));
+      Assert.IsNull(value.IfNot(_ => true));
 
       Assert.That(value.IfNot(f => false), Is.EqualTo(value));
     }

@@ -11,15 +11,14 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Генерирует исключение в случае если выполняется указанное условие
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <typeparam name="TException">Тип исключения</typeparam>
     /// <param name="obj">Ссылка на объект</param>
     /// <param name="predicate">Ссылка на функцию, вычисляющую условие</param>
     /// <param name="exception">Ссылка на исключение</param>
     /// <returns>Ссылку на объект</returns>
-    public static TInput? ThrowIf<TInput, TException>(this TInput? obj, Predicate<TInput> predicate,
-      TException exception)
-      where TInput : class where TException : Exception
+    public static T? ThrowIf<T, TException>(this T? obj, Predicate<T> predicate, TException exception)
+      where T : class where TException : Exception
     {
       if (obj == null)
       {
@@ -37,14 +36,13 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Генерирует исключение в случае если выполняется указанное условие
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="target">Ссылка на объект</param>
     /// <param name="predicate">Ссылка на функцию, вычисляющую условие</param>
     /// <param name="message">Сообщение об ошибке</param>
     /// <param name="args">Параметры сообщения для форматирования</param>
     /// <returns>Ссылку на объект</returns>
-    public static TInput ThrowIf<TInput>(this TInput target, Predicate<TInput> predicate, string message,
-      params object[] args)
+    public static T ThrowIf<T>(this T target, Predicate<T> predicate, string message, params object[] args)
     {
       if (target == null)
       {
@@ -62,15 +60,14 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Генерирует исключение в случае если выполняется указанное условие
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <typeparam name="TException">Тип исключения</typeparam>
     /// <param name="obj">Ссылка на объект</param>
     /// <param name="predicate">Ссылка на функцию, вычисляющую условие</param>
-    /// <param name="throwExc">Ссылка на функцию, вызывающая исключение</param>
+    /// <param name="exceptionFactory">Ссылка на функцию, которая создаст исключение</param>
     /// <returns>Ссылку на объект</returns>
-    public static TInput? ThrowIf<TInput, TException>(this TInput? obj, Predicate<TInput> predicate,
-      Func<TInput, TException> throwExc)
-      where TInput : class where TException : Exception
+    public static T? ThrowIf<T, TException>(this T? obj, Predicate<T> predicate, Func<T, TException> exceptionFactory)
+      where T : class where TException : Exception
     {
       if (obj == null)
       {
@@ -79,7 +76,7 @@ namespace ViennaNET.Utils
 
       if (predicate(obj))
       {
-        throw throwExc(obj);
+        throw exceptionFactory(obj);
       }
 
       return obj;
@@ -88,15 +85,14 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Генерирует исключение в случае если не выполняется указанное условие
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <typeparam name="TException">Тип исключения</typeparam>
     /// <param name="obj">Ссылка на объект</param>
     /// <param name="predicate">Ссылка на функцию, вычисляющую условие</param>
     /// <param name="exception">Ссылка на исключение</param>
     /// <returns>Ссылку на объект</returns>
-    public static TInput? ThrowIfNot<TInput, TException>(this TInput? obj, Predicate<TInput> predicate,
-      TException exception)
-      where TInput : class where TException : Exception
+    public static T? ThrowIfNot<T, TException>(this T? obj, Predicate<T> predicate, TException exception)
+      where T : class where TException : Exception
     {
       if (obj == null)
       {
@@ -114,15 +110,15 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Генерирует исключение в случае если не выполняется указанное условие
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <typeparam name="TException">Тип исключения</typeparam>
     /// <param name="obj">Ссылка на объект</param>
     /// <param name="predicate">Ссылка на функцию, вычисляющую условие</param>
-    /// <param name="throwExc">Ссылка на функцию, вызывающая исключение</param>
+    /// <param name="exceptionFactory">Ссылка на функцию, которая создаст исключение</param>
     /// <returns>Ссылку на объект</returns>
-    public static TInput? ThrowIfNot<TInput, TException>(this TInput? obj, Predicate<TInput> predicate,
-      Func<TInput, TException> throwExc)
-      where TInput : class where TException : Exception
+    public static T? ThrowIfNot<T, TException>(this T? obj, Predicate<T> predicate,
+      Func<T, TException> exceptionFactory)
+      where T : class where TException : Exception
     {
       if (obj == null)
       {
@@ -131,7 +127,7 @@ namespace ViennaNET.Utils
 
       if (!predicate(obj))
       {
-        throw throwExc(obj);
+        throw exceptionFactory(obj);
       }
 
       return obj;
@@ -161,11 +157,11 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Выполняет действие, если ссылка на объект не пуста
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="obj">Ссылка на объект</param>
     /// <param name="action">Действие для выполнения</param>
     /// <returns>Ссылка на объект</returns>
-    public static TInput? Do<TInput>(this TInput? obj, Action<TInput> action) where TInput : class
+    public static T? Do<T>(this T? obj, Action<T> action) where T : class
     {
       if (obj == null)
       {
@@ -179,11 +175,11 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Выполняет действие, если nullable-структура имеет значение
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="obj">Nullable-структура</param>
     /// <param name="action">Действие для выполнения</param>
     /// <returns>Nullable-структура</returns>
-    public static TInput? Do<TInput>(this TInput? obj, Action<TInput> action) where TInput : struct
+    public static T? Do<T>(this T? obj, Action<T> action) where T : struct
     {
       if (obj == null)
       {
@@ -197,11 +193,11 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Возвращает объект, если результат выполнения функции true
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="obj">Ссылка на объект</param>
     /// <param name="evaluator">Ссылка на функцию для расчета</param>
     /// <returns>Ссылка на объект</returns>
-    public static TInput? If<TInput>(this TInput? obj, Func<TInput, bool> evaluator) where TInput : class
+    public static T? If<T>(this T? obj, Func<T, bool> evaluator) where T : class
     {
       if (obj == null)
       {
@@ -216,18 +212,18 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Возвращает объект, если результат выполнения функции false
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="obj">Ссылка на объект</param>
-    /// <param name="evaluator">Ссылка на функцию для расчета</param>
+    /// <param name="predicate">Ссылка на функцию для расчета</param>
     /// <returns>Ссылка на объект</returns>
-    public static TInput? IfNot<TInput>(this TInput? obj, Func<TInput, bool> evaluator) where TInput : class
+    public static T? IfNot<T>(this T? obj, Func<T, bool> predicate) where T : class
     {
       if (obj == null)
       {
         return null;
       }
 
-      return evaluator(obj)
+      return predicate(obj)
         ? null
         : obj;
     }
@@ -235,18 +231,18 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Возвращает структуру, если результат выполнения функции true
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="obj">Nullable-структура</param>
-    /// <param name="evaluator">Ссылка на функцию для расчета</param>
+    /// <param name="predicate">Ссылка на функцию для расчета</param>
     /// <returns>Nullable-структура</returns>
-    public static TInput? If<TInput>(this TInput? obj, Func<TInput, bool> evaluator) where TInput : struct
+    public static T? If<T>(this T? obj, Func<T, bool> predicate) where T : struct
     {
       if (obj == null)
       {
         return null;
       }
 
-      return evaluator(obj.Value)
+      return predicate(obj.Value)
         ? obj
         : null;
     }
@@ -254,18 +250,18 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Возвращает структуру, если результат выполнения функции false
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="obj">Nullable-структура</param>
-    /// <param name="evaluator">Ссылка на функцию для расчета</param>
+    /// <param name="predicate">Ссылка на функцию для расчета</param>
     /// <returns>Nullable-структура</returns>
-    public static TInput? IfNot<TInput>(this TInput? obj, Func<TInput, bool> evaluator) where TInput : struct
+    public static T? IfNot<T>(this T? obj, Func<T, bool> predicate) where T : struct
     {
       if (obj == null)
       {
         return null;
       }
 
-      return evaluator(obj.Value)
+      return predicate(obj.Value)
         ? null
         : obj;
     }
@@ -307,10 +303,10 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Проверяет, что ссылка на объект не null
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="obj">Ссылка на объект</param>
     /// <returns>true если не null, иначе false</returns>
-    public static bool ReturnSuccess<TInput>(this TInput? obj) where TInput : class
+    public static bool ReturnSuccess<T>(this T? obj) where T : class
     {
       return obj != null;
     }
@@ -318,15 +314,15 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Выполняет действие, если объект null
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="obj">Ссылка на объект</param>
-    /// <param name="evaluator">Функция для выполнения</param>
+    /// <param name="actionIfNull">Функция для выполнения действия, если объект null</param>
     /// <returns>Ссылка на объект</returns>
-    public static TInput? IfNull<TInput>(this TInput? obj, Action evaluator) where TInput : class
+    public static T? IfNull<T>(this T? obj, Action actionIfNull) where T : class
     {
       if (obj == null)
       {
-        evaluator();
+        actionIfNull();
       }
 
       return obj;
@@ -335,16 +331,16 @@ namespace ViennaNET.Utils
     /// <summary>
     ///   Генерирует <see cref="ArgumentNullException" /> в случае если ссылка на объект равна null
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="param">Ссылка на объект</param>
     /// <param name="paramName">Имя параметра</param>
     /// <returns>Ссылка на объект</returns>
     [AssertionMethod]
     [NotNull]
-    public static TInput ThrowIfNull<TInput>(
+    public static T ThrowIfNull<T>(
       [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
-      this TInput? param, [InvokerParameterName] string? paramName = null)
-      where TInput : class
+      this T? param, [InvokerParameterName] string? paramName = null)
+      where T : class
     {
       if (param == null)
       {
@@ -430,13 +426,13 @@ namespace ViennaNET.Utils
     }
 
     /// <summary>
-    ///   Генерирует <see cref="ArgumentNullException" /> в случае если ссылка на объект равна null
+    ///   Выбрасывает переданное исключение, если ссылка на объект равна null
     /// </summary>
-    /// <typeparam name="TInput">Тип объекта</typeparam>
+    /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="param">Ссылка на объект</param>
     /// <param name="exception">Ссылка на исключение</param>
     /// <returns>Ссылка на объект</returns>
-    public static TInput ThrowIfNull<TInput>(this TInput? param, Exception exception) where TInput : class
+    public static T ThrowIfNull<T>(this T? param, Exception exception) where T : class
     {
       if (param == null)
       {
