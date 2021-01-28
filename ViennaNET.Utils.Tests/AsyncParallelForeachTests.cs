@@ -3,30 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using ViennaNET.Utils;
 
-namespace Company.Utils.Tests
+namespace ViennaNET.Utils.Tests
 {
-  [TestFixture(Category = "Unit", TestOf = (typeof(AsyncParallelForeach)))]
+  [TestFixture(Category = "Unit", TestOf = typeof(AsyncParallelForeach))]
   public class AsyncParallelForeachTests
   {
-    private class Account
-    {
-      public int id { get; set; }
-      public string cba { get; set; }
-    }
-
-    private List<Account> accounts;
-
     [OneTimeSetUp]
     public void SetUp()
     {
-      accounts = new List<Account>(10000);
-      for (int i = 0; i <= 10000; i++)
+      for (var i = 0; i <= 10000; i++)
       {
-        accounts.Add(new Account { id = i, cba = i.ToString() });
+        _accounts.Add(new Account {Id = i, Cba = i.ToString()});
       }
     }
+
+    private class Account
+    {
+      public int Id { get; set; }
+      public string? Cba { get; set; }
+    }
+
+    private readonly List<Account> _accounts = new List<Account>(10000);
 
     [Test]
     public async Task ParallelForeachSelectTest()
@@ -35,10 +33,10 @@ namespace Company.Utils.Tests
 
       var result = await AsyncParallelForeach.SelectAsync(source, GetAccount, 4);
 
-      var orderedResult = result.OrderBy(acc => acc.id).ToArray();
-      for (int i = 0; i < orderedResult.Length; i++)
+      var orderedResult = result.OrderBy(acc => acc?.Id).ToArray();
+      for (var i = 0; i < orderedResult.Length; i++)
       {
-        Assert.That(orderedResult[i].id, Is.EqualTo(i));
+        Assert.That(orderedResult[i]?.Id, Is.EqualTo(i));
       }
     }
 
@@ -50,14 +48,14 @@ namespace Company.Utils.Tests
       Assert.DoesNotThrow(() => AsyncParallelForeach.ForEachAsync(source, Highload, 4));
     }
 
-    private async Task<Account> GetAccount(string source)
+    private async Task<Account?> GetAccount(string source)
     {
-      return await Task.Run(() => accounts.Where(a => a.cba == source).FirstOrDefault());
+      return await Task.Run(() => _accounts.FirstOrDefault(a => a.Cba == source));
     }
 
-    private async Task Highload(string source)
+    private Task Highload(string source)
     {
-      await Task.Run(() => Math.Pow(int.Parse(source),2));
+      return Task.Run(() => Math.Pow(int.Parse(source), 2));
     }
   }
 }
