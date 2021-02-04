@@ -40,5 +40,7 @@ namespace ViennaNET.Redis.Configuration
           ? ExpirationMax
           : value;
     }
+
+    public bool ClearOnStartup { get; set; } = true;
   }
 }

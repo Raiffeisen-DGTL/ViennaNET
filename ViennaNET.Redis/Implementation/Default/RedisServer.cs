@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Utils;
 using StackExchange.Redis;
 
@@ -13,10 +13,12 @@ namespace ViennaNET.Redis.Implementation.Default
   {
     private readonly string _prefixKey;
     private readonly IServer _server;
+    private readonly ILogger _logger;
 
-    public RedisServer(IServer server, string prefixKey)
+    public RedisServer(IServer server, ILogger<RedisServer> logger, string prefixKey)
     {
       _server = server.ThrowIfNull(nameof(server));
+      _logger = logger.ThrowIfNull(nameof(logger));
       _prefixKey = prefixKey;
     }
 
@@ -30,9 +32,9 @@ namespace ViennaNET.Redis.Implementation.Default
 
     public bool IsSlave => _server.IsSlave;
 
-    private static void LogDebug(string action, string arguments)
+    private void LogDebug(string action, string arguments)
     {
-      Logger.LogDebug($"Action Redis: {action}. Arguments: {arguments}.");
+      _logger.LogDebug("Action Redis: {action}. Arguments: {arguments}.", action, arguments);
     }
 
     public IEnumerable<string> Keys(

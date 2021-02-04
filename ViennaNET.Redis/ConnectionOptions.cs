@@ -21,15 +21,17 @@ namespace ViennaNET.Redis
     /// <param name="expirationMinValue">Минимальное значение времени между переподключениями к Redis в случае ошибки</param>
     /// <param name="expirationMaxValue">Максимальное значение времени между переподключениями к Redis в случае ошибки</param>
     /// <param name="keyLifetimes">Коллекция TTL ключей</param>
+    /// <param name="clearOnStartup">Очищать ключи при создании подключения</param>
     public ConnectionOptions(
       ConfigurationOptions configurationOptions, string key, int expirationMinValue, int expirationMaxValue,
-      IDictionary<string, TimeSpan> keyLifetimes)
+      IDictionary<string, TimeSpan> keyLifetimes, bool clearOnStartup)
     {
       _configurationOptions = configurationOptions;
       Key = key;
       _expirationMinValue = expirationMinValue;
       _expirationMaxValue = expirationMaxValue;
       KeyLifetimes = keyLifetimes;
+      ClearOnStartup = clearOnStartup;
     }
 
     /// <summary>
@@ -41,6 +43,11 @@ namespace ViennaNET.Redis
     /// Коллекция TTL ключей
     /// </summary>
     public IDictionary<string, TimeSpan> KeyLifetimes { get; }
+
+    /// <summary>
+    /// Флаг очищения старых ключей при запуске приложения
+    /// </summary>
+    public bool ClearOnStartup { get; }
 
     /// <summary>
     /// Получает политику переподключения к БД и дозаполняет опции конфигурации 

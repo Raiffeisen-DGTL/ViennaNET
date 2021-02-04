@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Redis.Implementation.Silent;
 using Moq;
 using NUnit.Framework;
@@ -17,7 +18,7 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Silent
     [OneTimeSetUp]
     public void SilentRedisDatabaseTestsSetUp()
     {
-      _silentRedisDatabaseNull = new SilentRedisDatabase(null);
+      _silentRedisDatabaseNull = new SilentRedisDatabase(null, null);
 
       var exceptionMock = new Mock<IRedisDatabase>();
       exceptionMock.Setup(x => x.StringGet(It.IsAny<string>(), It.IsAny<CommandFlags>()))
@@ -26,7 +27,7 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Silent
                                            It.IsAny<When>(), It.IsAny<CommandFlags>()))
                    .Throws(new RedisException());
 
-      _silentRedisDatabaseMock = new SilentRedisDatabase(exceptionMock.Object);
+      _silentRedisDatabaseMock = new SilentRedisDatabase(exceptionMock.Object, new NullLogger<SilentRedisDatabase>());
     }
 
     [Test]

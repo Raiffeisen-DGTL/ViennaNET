@@ -295,7 +295,7 @@ namespace ViennaNET.Messaging.KafkaQueue
       _logger.LogDebug(
         $"Message has been {(isSend ? "sent to" : "received from")} queue with ID:{{queueId}}{Environment.NewLine}{{message}}",
         _configuration.Id,
-        message);
+        message?.LogBody());
     }
   }
 }

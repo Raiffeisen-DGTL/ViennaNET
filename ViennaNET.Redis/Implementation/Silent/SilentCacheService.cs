@@ -1,17 +1,30 @@
-﻿using ViennaNET.Logging;
-using System;
+﻿using System;
+using Microsoft.Extensions.Logging;
 
 namespace ViennaNET.Redis.Implementation.Silent
 {
+  /// <inheritdoc cref="ISilentCacheService"/> />
   public class SilentCacheService : CacheServiceBase, ISilentCacheService
   {
-    public SilentCacheService(IRedisDatabaseProvider redisDatabaseProvider) : base(redisDatabaseProvider) { }
+    private readonly ILogger _logger;
 
-    private static void LogError(Exception e)
+    /// <summary>
+    /// Создаёт экземпляр класса
+    /// </summary>
+    /// <param name="redisDatabaseProvider">Провайдер БД</param>
+    /// <param name="logger">Интерфейс логгирования</param>
+    public SilentCacheService(IRedisDatabaseProvider redisDatabaseProvider, ILogger<SilentCacheService> logger) : base(
+      redisDatabaseProvider)
     {
-      Logger.LogErrorFormat(e, "Action Redis has been failed.");
+      _logger = logger;
     }
 
+    private void LogError(Exception e)
+    {
+      _logger.LogError(e, "Action Redis has been failed.");
+    }
+
+    /// <inheritdoc />
     public bool TryGetObject<T>(string name, out T obj, params object[] keyIdentifier) where T : class
     {
       try
@@ -37,6 +50,7 @@ namespace ViennaNET.Redis.Implementation.Silent
       }
     }
 
+    /// <inheritdoc />
     public void SetObject<T>(string name, string lifetime, T obj, params object[] keyIdentifier) where T : class
     {
       try
@@ -51,6 +65,7 @@ namespace ViennaNET.Redis.Implementation.Silent
       }
     }
 
+    /// <inheritdoc />
     public void SetObject<T>(string name, TimeSpan? expiry, T obj, params object[] keyIdentifier) where T : class
     {
       try

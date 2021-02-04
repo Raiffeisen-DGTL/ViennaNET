@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using ViennaNET.CallContext;
+using ViennaNET.Logging;
 
 namespace ViennaNET.Messaging.Context
 {
@@ -18,6 +19,9 @@ namespace ViennaNET.Messaging.Context
       if (callContext != null)
       {
         messagingContextCurrent.Value = new CallContextHolder { Context = callContext };
+
+        Logger.RequestId = callContext.RequestId;
+        Logger.User = callContext.UserId;
       }
     }
 
@@ -27,6 +31,9 @@ namespace ViennaNET.Messaging.Context
       if (holder != null)
       {
         holder.Context = null;
+
+        Logger.ClearRequestId();
+        Logger.ClearUser();
       }
     }
 

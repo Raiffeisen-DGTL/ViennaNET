@@ -26,7 +26,8 @@ namespace ViennaNET.Redis
       var redisConfiguration = _configuration.GetSection("redis").Get<RedisConfiguration>();
       return new ConnectionOptions(ConfigurationOptions.Parse(redisConfiguration.Connection), redisConfiguration.Key,
                                    redisConfiguration.ExpirationMinValue, redisConfiguration.ExpirationMaxValue,
-                                   redisConfiguration.KeyLifetimes.ToDictionary(x => x.Name, x => x.Time));
+                                   redisConfiguration.KeyLifetimes.ToDictionary(x => x.Name, x => x.Time),
+                                   redisConfiguration.ClearOnStartup);
     }
   }
 }

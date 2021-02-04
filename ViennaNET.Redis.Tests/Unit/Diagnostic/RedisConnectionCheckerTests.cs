@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Diagnostic.Data;
 using ViennaNET.Redis;
 using ViennaNET.Redis.Diagnostic;
@@ -40,7 +41,7 @@ namespace ViennaNET.Cache.Redis.Tests.Unit.Diagnostic
       var provider = new Mock<IRedisDatabaseProvider>();
       provider.Setup(x => x.GetDatabase(It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<object>()))
               .Throws(new InvalidOperationException(error));
-      var checker = new RedisConnectionChecker(provider.Object);
+      var checker = new RedisConnectionChecker(provider.Object, new NullLogger<RedisConnectionChecker>());
 
       var result = checker.Diagnose()
                           .GetAwaiter()
@@ -104,7 +105,7 @@ namespace ViennaNET.Cache.Redis.Tests.Unit.Diagnostic
       var provider = new Mock<IRedisDatabaseProvider>();
       provider.Setup(x => x.GetDatabase(It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<object>()))
               .Returns(database.Object);
-      var checker = new RedisConnectionChecker(provider.Object);
+      var checker = new RedisConnectionChecker(provider.Object, new NullLogger<RedisConnectionChecker>());
       return checker;
     }
 
@@ -112,7 +113,7 @@ namespace ViennaNET.Cache.Redis.Tests.Unit.Diagnostic
     public void Key_CorrectlyFilled()
     {
       var provider = new Mock<IRedisDatabaseProvider>();
-      var checker = new RedisConnectionChecker(provider.Object);
+      var checker = new RedisConnectionChecker(provider.Object, new NullLogger<RedisConnectionChecker>());
 
       Assert.That(checker.Key, Is.EqualTo(redisKey));
     }

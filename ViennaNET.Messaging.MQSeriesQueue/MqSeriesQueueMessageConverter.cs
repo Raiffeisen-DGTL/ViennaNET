@@ -18,7 +18,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       mes.JMSCorrelationID = string.IsNullOrWhiteSpace(message.CorrelationId)
         ? mes.JMSMessageID
         : message.CorrelationId;
-      mes.JMSExpiration = (int)message.LifeTime.TotalSeconds * 10;
+      mes.JMSExpiration = (long)message.LifeTime.TotalMilliseconds;
 
       if (!string.IsNullOrWhiteSpace(message.ReplyQueue))
       {

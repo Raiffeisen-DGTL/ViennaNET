@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Redis.Implementation.Default;
 using Moq;
 using Newtonsoft.Json;
@@ -61,7 +62,7 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Default
                   .Returns(Task.FromResult((long)0));
       _databaseMock = databaseMock;
 
-      _redisDatabase = new RedisDatabase(false, _databaseMock.Object, new Dictionary<string, TimeSpan> { { "default", TimeSpan.Zero } },
+      _redisDatabase = new RedisDatabase(false, _databaseMock.Object,new NullLogger<RedisDatabase>(), new Dictionary<string, TimeSpan> { { "default", TimeSpan.Zero } },
                                          "somePrefix");
     }
 
@@ -299,6 +300,14 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Default
       _redisDatabase.StringSet("key", "value");
 
       _databaseMock.Verify(x => x.StringSet("somePrefixkey", "value", null, When.Always, CommandFlags.None), Times.Once);
+    }
+
+    [Test]
+    public void StringSet_WithDiagnostic_RedisDatabase_DatabaseMethodCalledCorrectly()
+    {
+      _redisDatabase.StringSet("key", "value_for_diag", isDiagnostic: true);
+
+      _databaseMock.Verify(x => x.StringSet("somePrefixkey", "value_for_diag", null, When.Always, CommandFlags.None), Times.Once);
     }
 
     [Test]

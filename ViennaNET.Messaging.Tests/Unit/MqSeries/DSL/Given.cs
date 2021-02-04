@@ -37,5 +37,11 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries.DSL
     public static MqSeriesQueueSubscribingMessageAdapterBuilder SubscribingMessageAdapter => new MqSeriesQueueSubscribingMessageAdapterBuilder();
 
     public static MqSeriesQueueTransactedMessageAdapterBuilder TransactedMessageAdapter => new MqSeriesQueueTransactedMessageAdapterBuilder();
+
+    public static BytesMessageBuilder BytesMessage => new BytesMessageBuilder();
+
+    public static TextMessageBuilder TextMessage => new TextMessageBuilder();
+
+    public static SessionBuilder Session => new SessionBuilder();
   }
 }

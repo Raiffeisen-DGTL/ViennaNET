@@ -23,7 +23,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     private readonly IMqSeriesQueueConnectionFactoryProvider _connectionFactoryProvider;
 
     protected readonly MqSeriesQueueConfiguration _configuration;
-    private readonly ILogger _logger;
+    protected readonly ILogger _logger;
 
     private bool _isDisposed;
     private bool _isConnected; 
@@ -71,9 +71,12 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     /// <inheritdoc />
     public void Connect()
     {
+      _logger.LogDebug("Trying to connect to queue with id: {queueId}", _configuration.Id);
+
       ThrowIfDisposed();
       if (_isConnected)
       {
+        _logger.LogDebug("Already connected to queue with id: {queueId}", _configuration.Id);
         return;
       }
 
@@ -94,6 +97,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
             : connectionFactory.CreateConnection(_configuration.User, _configuration.Password);
 
           _connection.ClientID = _configuration.ClientId;
+
+          _logger.LogDebug("Established connection to queue with id: {queueId}", _configuration.Id);
         }
         catch (XMSException ex)
         {
@@ -102,7 +107,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
         }
         catch (Exception ex)
         {
-          _logger.LogError(ex, "Error while connect to the queue with ID {queueId}", _configuration.Id);
+          _logger.LogError(ex, "Error while connect to the queue with id: {queueId}", _configuration.Id);
           DisconnectInternal();
           throw;
         }
@@ -204,10 +209,71 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     public abstract bool SupportProcessingType(MessageProcessingType processingType);
 
     /// <summary>
-    /// Кидает исключение, если адаптер уже задиспозен
+    /// Возвращает (и при необходимости создаёт) <see cref="ISession"/>
     /// </summary>
-    /// <exception cref="MessagingException" />
-    protected void ThrowIfDisposed()
+    /// <returns><see cref="ISession"/></returns>
+    protected ISession GetSession()
+    {
+      if (_session == null)
+      {
+        _session = CreateSession();
+      }
+
+      return _session;
+    }
+
+    /// <summary>
+    /// В классах-наследниках создаёт <see cref="ISession"/> с подходящими настройками
+    /// </summary>
+    /// <returns><see cref="ISession"/></returns>
+    protected abstract ISession CreateSession();
+
+    /// <summary>
+    /// Возвращает <see cref="IConnection"/>
+    /// </summary>
+    /// <returns><see cref="IConnection"/></returns>
+    /// <exception cref="MessagingException"/>
+    protected IConnection GetConnection()
+    {
+      ThrowIfNotConnected();
+      return _connection;
+    }
+
+    /// <summary>
+    /// Возвращает (и при необходимости создаёт) <see cref="IMessageConsumer"/>
+    /// </summary>
+    /// <param name="correlationId"></param>
+    /// <param name="additionalParameters"></param>
+    /// <returns><see cref="IMessageConsumer"/></returns>
+    protected IMessageConsumer GetConsumer(string correlationId = "", params (string Name, string Value)[] additionalParameters)
+    {
+      if (!string.IsNullOrWhiteSpace(correlationId))
+      {
+        var specialConsumer = CreateConsumer(correlationId, additionalParameters);
+        GetConnection().Start();
+        return specialConsumer;
+      }
+
+      if (_consumer != null)
+      {
+        return _consumer;
+      }
+
+      lock (_consumerLock)
+      {
+        if (_consumer != null)
+        {
+          return _consumer;
+        }
+
+        _consumer = CreateConsumer(correlationId, additionalParameters);
+        GetConnection().Start();
+      }
+
+      return _consumer;
+    }
+
+    private void ThrowIfDisposed()
     {
       if (_isDisposed)
       {
@@ -215,11 +281,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
     }
 
-    /// <summary>
-    /// Кидает исключение, если адаптер не подключен
-    /// </summary>
-    /// <exception cref="MessagingException" />
-    protected void ThrowIfNotConnected()
+    private void ThrowIfNotConnected()
     {
       if (!_isConnected || _connection == null)
       {
@@ -266,6 +328,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     {
       try
       {
+        _logger.LogDebug("Try to receive message from queue with id: {queueId}", _configuration.Id);
+
         IMessage receivedMessage;
         var consumer = GetConsumer(correlationId, additionalParameters);
 
@@ -283,7 +347,11 @@ namespace ViennaNET.Messaging.MQSeriesQueue
           receivedMessage = consumer.Receive();
         }
 
-        return receivedMessage?.ConvertToBaseMessage();
+        var resultMessage = receivedMessage?.ConvertToBaseMessage();
+
+        LogMessageInternal(resultMessage, false);
+
+        return resultMessage;
       }
       catch (XMSException ex)
       {
@@ -295,16 +363,24 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     {
       try
       {
+        _logger.LogDebug("Try to send message to queue with id: {queueId}", _configuration.Id);
+
         var mes = message.ConvertToMqMessage(GetSession());
 
         EnsureProducer();
-        _producer.Send(mes);
+
+        var deliveryMode = mes.JMSDeliveryMode == DeliveryMode.DELIVERY_MODE_NONE
+          ? _producer.DeliveryMode
+          : mes.JMSDeliveryMode;
+        _producer.Send(mes, deliveryMode, mes.JMSPriority, mes.JMSExpiration);
 
         message.MessageId = mes.JMSMessageID;
         message.CorrelationId = mes.JMSCorrelationID;
         message.ApplicationTitle = !string.IsNullOrWhiteSpace(message.ApplicationTitle)
           ? message.ApplicationTitle
           : string.Empty;
+
+        LogMessageInternal(message, true);
 
         return message;
       }
@@ -314,39 +390,9 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
       catch (Exception ex)
       {
+        _logger.LogError(ex, "MQ PUT failure on queue with ID: {queueId}", _configuration.Id);
         throw new MessagingException(ex, "Error while sending message. See inner exception for more details");
       }
-    }
-
-    /// <summary>
-    /// Возвращает (и при необходимости создаёт) <see cref="ISession"/>
-    /// </summary>
-    /// <returns><see cref="ISession"/></returns>
-    protected ISession GetSession()
-    {
-      if (_session == null)
-      {
-        _session = CreateSession();
-      }
-
-      return _session;
-    }
-
-    /// <summary>
-    /// В классах-наследниках создаёт <see cref="ISession"/> с подходящими настройками
-    /// </summary>
-    /// <returns><see cref="ISession"/></returns>
-    protected abstract ISession CreateSession();
-
-    /// <summary>
-    /// Возвращает <see cref="IConnection"/>
-    /// </summary>
-    /// <returns><see cref="IConnection"/></returns>
-    /// <exception cref="MessagingException"/>
-    protected IConnection GetConnection()
-    {
-      ThrowIfNotConnected();
-      return _connection;
     }
 
     private void EnsureDestination()
@@ -403,40 +449,6 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       return result;
     }
 
-    /// <summary>
-    /// Возвращает (и при необходимости создаёт) <see cref="IMessageConsumer"/>
-    /// </summary>
-    /// <param name="correlationId"></param>
-    /// <param name="additionalParameters"></param>
-    /// <returns><see cref="IMessageConsumer"/></returns>
-    protected IMessageConsumer GetConsumer(string correlationId = "", params (string Name, string Value)[] additionalParameters)
-    {
-      if (!string.IsNullOrWhiteSpace(correlationId))
-      {
-        var specialConsumer = CreateConsumer(correlationId, additionalParameters);
-        GetConnection().Start();
-        return specialConsumer;
-      }
-
-      if (_consumer != null)
-      {
-        return _consumer;
-      }
-
-      lock (_consumerLock)
-      {
-        if (_consumer != null)
-        {
-          return _consumer;
-        }
-
-        _consumer = CreateConsumer(correlationId, additionalParameters);
-        GetConnection().Start();
-      }
-
-      return _consumer;
-    }
-
     private IMessageConsumer CreateConsumer(string correlationId, (string Name, string Value)[] additionalParameters)
     {
       var session = GetSession();
@@ -447,6 +459,14 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       return string.IsNullOrEmpty(selector)
         ? session.CreateConsumer(_destination)
         : session.CreateConsumer(_destination, selector);
+    }
+
+    private void LogMessageInternal(BaseMessage message, bool isSend)
+    {
+      _logger.LogDebug(
+        $"Message has been {(isSend ? "sent to" : "received from")} queue with ID:{{queueId}}{Environment.NewLine}{{message}}",
+        _configuration.Id,
+        message?.LogBody());
     }
 
     private void EnsureProducer()

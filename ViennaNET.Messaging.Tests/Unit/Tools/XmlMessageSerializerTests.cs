@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using NUnit.Framework;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.Tools;
@@ -14,9 +15,21 @@ namespace ViennaNET.Messaging.Tests.Unit.Tools
     [Test]
     public void Deserialize_BytesMessage_Exception()
     {
-      var serializer = new XmlMessageSerializer<TextMessage>();
+      var serializer = new XmlMessageSerializer<BytesMessage>();
+      var message = new TextMessage() { Body = MessageText };
 
-      Assert.Throws<InvalidCastException>(() => serializer.Deserialize(new BytesMessage()));
+      Assert.Throws<InvalidOperationException>(() => serializer.Deserialize(message));
+    }
+    
+    [Test]
+    public void Deserialize_BytesMessage_CastResult()
+    {
+      var serializer = new XmlMessageSerializer<TextMessage>();
+      var message = new BytesMessage() { Body = Encoding.UTF8.GetBytes(MessageText) };
+
+      var result = serializer.Deserialize(message);
+
+      Assert.That(result.Body == "testMessage");
     }
 
     [Test]

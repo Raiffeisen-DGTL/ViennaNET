@@ -34,6 +34,16 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries.DSL
         producer
           .Setup(x => x.Send(It.IsAny<IMessage>()))
           .Callback<IMessage>(_sender);
+        producer
+          .Setup(x => x.Send(It.IsAny<IMessage>(), It.IsAny<DeliveryMode>(), It.IsAny<int>(), It.IsAny<long>()))
+          .Callback<IMessage, DeliveryMode, int, long>(
+            (msg, deliveryMode, priority, timeToLive) =>
+            {
+              _sender(msg);
+              msg.JMSDeliveryMode = deliveryMode;
+              msg.JMSPriority = priority;
+              msg.JMSExpiration = msg.JMSTimestamp + timeToLive;
+            });
       }
 
       var consumer = new Mock<IMessageConsumer>();
@@ -57,6 +67,9 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries.DSL
         .Returns(new Mock<IDestination>().Object);
       session
         .Setup(x => x.CreateConsumer(It.IsAny<IDestination>()))
+        .Returns(consumer.Object);
+      session
+        .Setup(x => x.CreateConsumer(It.IsAny<IDestination>(), It.IsAny<string>()))
         .Returns(consumer.Object);
       session
         .Setup(x => x.CreateProducer(It.IsAny<IDestination>()))

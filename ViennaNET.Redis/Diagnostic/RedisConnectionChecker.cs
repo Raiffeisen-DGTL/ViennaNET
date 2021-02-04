@@ -1,11 +1,11 @@
 ﻿using ViennaNET.Diagnostic;
 using ViennaNET.Diagnostic.Data;
-using ViennaNET.Logging;
 using ViennaNET.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ViennaNET.Redis.Diagnostic
 {
@@ -18,14 +18,17 @@ namespace ViennaNET.Redis.Diagnostic
     private const string localhost = "localhost";
 
     private readonly IRedisDatabaseProvider _provider;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Инициализирует экземпляр ссылкой на <see cref="IRedisDatabaseProvider" />
     /// </summary>
     /// <param name="provider">Ссылка на интерфейс, представляющий провайдер БД Redis</param>
-    public RedisConnectionChecker(IRedisDatabaseProvider provider)
+    /// <param name="logger">Логгер</param>
+    public RedisConnectionChecker(IRedisDatabaseProvider provider, ILogger<RedisConnectionChecker> logger)
     {
       _provider = provider.ThrowIfNull(nameof(provider));
+      _logger = logger.ThrowIfNull(nameof(logger));
     }
 
     /// <summary>
@@ -42,7 +45,7 @@ namespace ViennaNET.Redis.Diagnostic
         var result = database.StringSet(temporaryKey, redisKey, isDiagnostic:true);
         if (!result)
         {
-          Logger.LogDiagnostic("Diagnostic of redis provider has been failed, cannot set value to redis");
+          _logger.LogTrace("Diagnostic of redis provider has been failed, cannot set value to redis");
           return Task.FromResult(new[]
           {
             new DiagnosticInfo(redisKey, localhost, DiagnosticStatus.DbConnectionError, string.Empty,
@@ -52,19 +55,19 @@ namespace ViennaNET.Redis.Diagnostic
         var deleteRes = database.KeyDelete(temporaryKey, isDiagnostic: true);
         if (!deleteRes)
         {
-          Logger.LogDiagnostic("Diagnostic of redis provider has been failed, cannot delete value from redis");
+          _logger.LogTrace("Diagnostic of redis provider has been failed, cannot delete value from redis");
           return Task.FromResult(new[]
           {
             new DiagnosticInfo(redisKey, localhost, DiagnosticStatus.DbConnectionError, string.Empty,
                                "Cannot delete value from redis database", true)
           }.AsEnumerable());
         }
-        Logger.LogDiagnostic("Redis provider has been diagnosed successfully");
+        _logger.LogTrace("Redis provider has been diagnosed successfully");
         return Task.FromResult(new[] { new DiagnosticInfo(redisKey, localhost, isSkipResult: true) }.AsEnumerable());
       }
       catch (Exception e)
       {
-        Logger.LogDiagnostic($"Diagnostic of redis provider has been failed with error: {e}");
+        _logger.LogTrace($"Diagnostic of redis provider has been failed with error: {e}");
         return Task.FromResult(new[]
         {
           new DiagnosticInfo(redisKey, localhost, DiagnosticStatus.DbConnectionError, string.Empty, e.ToString(),true)
