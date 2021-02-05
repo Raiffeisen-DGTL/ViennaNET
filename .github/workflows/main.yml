@@ -15,7 +15,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Set default Java
-      run: update-java-alternatives --set JAVA_HOME_11_X64
+      run: update-java-alternatives --set $(JAVA_HOME_8_X64)
     - name: SonarScanner install
       run: dotnet tool install --global dotnet-sonarscanner
     - name: SonarScanner run
