@@ -15,7 +15,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Set default Java
-      run: update-java-alternatives --set adoptopenjdk-11-hotspot-amd64
+      run: sudo update-java-alternatives --set adoptopenjdk-11-hotspot-amd64
     - name: SonarScanner install
       run: dotnet tool install --global dotnet-sonarscanner
     - name: SonarScanner run
