@@ -14,6 +14,8 @@ jobs:
         dotnet-version: 3.1.101
     - name: Checkout
       uses: actions/checkout@v2
+    - name: test
+      run: env
     - name: SonarScanner install
       run: dotnet tool install --global dotnet-sonarscanner
     - name: SonarScanner run
