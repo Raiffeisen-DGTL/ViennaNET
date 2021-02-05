@@ -14,6 +14,8 @@ jobs:
         dotnet-version: 3.1.101
     - name: Checkout
       uses: actions/checkout@v2
+    - name: test
+      run: env
     - name: SonarScanner install
       run: dotnet tool install --global dotnet-sonarscanner
     - name: SonarScanner run
@@ -23,6 +25,8 @@ jobs:
     - name: Test
       run: dotnet test --no-build --filter "TestCategory=Unit" --logger "nunit;LogFilePath=TestResult/TestResult-{assembly}.xml" /p:CollectCoverage=true /p:CoverletOutputFormat=\"opencover\" /p:CoverletOutput=TestResult/
     - name: Sonar End
-      run: dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
+      run: |
+        export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-11-hotspot-amd64
+        dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
