@@ -14,8 +14,6 @@ jobs:
         dotnet-version: 3.1.101
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Set default Java
-      run: sudo update-java-alternatives --set adoptopenjdk-11-hotspot-amd64
     - name: SonarScanner install
       run: dotnet tool install --global dotnet-sonarscanner
     - name: SonarScanner run
@@ -25,6 +23,8 @@ jobs:
     - name: Test
       run: dotnet test --no-build --filter "TestCategory=Unit" --logger "nunit;LogFilePath=TestResult/TestResult-{assembly}.xml" /p:CollectCoverage=true /p:CoverletOutputFormat=\"opencover\" /p:CoverletOutput=TestResult/
     - name: Sonar End
-      run: dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
+      run: |
+        echo "##vso[task.setvariable variable=JAVA_HOME]$(JAVA_HOME_11_X64)"
+        dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
