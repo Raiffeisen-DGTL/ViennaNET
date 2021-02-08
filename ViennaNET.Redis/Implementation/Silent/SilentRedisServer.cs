@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using ViennaNET.Logging;
 using StackExchange.Redis;
+using Microsoft.Extensions.Logging;
 
 namespace ViennaNET.Redis.Implementation.Silent
 {
   internal class SilentRedisServer : ISilentRedisServer
   {
     private readonly IRedisServer _redisServer;
+    private readonly ILogger _logger;
 
-    public SilentRedisServer(IRedisServer redisServer)
+    public SilentRedisServer(IRedisServer redisServer, ILogger<SilentRedisServer> logger)
     {
       _redisServer = redisServer;
+      _logger = logger;
     }
 
     public bool? IsConnected
@@ -280,9 +282,9 @@ namespace ViennaNET.Redis.Implementation.Silent
       }
     }
 
-    private static void LogError(Exception e)
+    private void LogError(Exception e)
     {
-      Logger.LogErrorFormat(e, "Action Redis has been failed.");
+      _logger.LogError(e, "Action Redis has been failed.");
     }
   }
 }

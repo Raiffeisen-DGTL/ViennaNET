@@ -9,7 +9,7 @@ namespace ViennaNET.Redis.Tests.Unit
     [Test]
     public void GetConfigurationOptions_CorrectlyFilled()
     {
-      var configuration = new ConnectionOptions(new ConfigurationOptions(), "9050", 5000, 10000, null);
+      var configuration = new ConnectionOptions(new ConfigurationOptions(), "9050", 5000, 10000, null, true);
 
       var options = configuration.GetConfigurationOptions();
 

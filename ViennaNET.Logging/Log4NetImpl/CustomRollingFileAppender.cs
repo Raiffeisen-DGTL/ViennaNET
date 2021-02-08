@@ -111,8 +111,8 @@ namespace ViennaNET.Logging.Log4NetImpl
     #endregion
 
     #region Private Instance Fields
-
-    private readonly object _lockTarget = new object();
+	
+	private readonly object _lockTarget = new object();
 
     /// <summary>
     /// This object supplies the current date/time.  Allows test code to plug in

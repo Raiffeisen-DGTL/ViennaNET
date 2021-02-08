@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Redis.Implementation.Silent;
 using Moq;
 using NUnit.Framework;
@@ -26,7 +27,7 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Silent
       redisDatabaseProvider.Setup(x => x.GetDatabase(It.IsAny<bool>(), It.IsAny<int>(), It.IsAny<object>()))
                            .Returns(_redis.Object);
 
-      _cacheService = new SilentCacheService(redisDatabaseProvider.Object);
+      _cacheService = new SilentCacheService(redisDatabaseProvider.Object, new NullLogger<SilentCacheService>());
     }
 
     [Test]

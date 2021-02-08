@@ -9,6 +9,8 @@ namespace ViennaNET.Messaging.Messages
   [Serializable]
   public class TextMessage : BaseMessage
   {
+    private const int MaxLogLength = 100000;
+    
     /// <summary>
     ///   Данные сообщения
     /// </summary>
@@ -23,7 +25,7 @@ namespace ViennaNET.Messaging.Messages
     /// <inheritdoc />
     public override string LogBody()
     {
-      return Body;
+      return Body?.Substring(0, Math.Min(Body.Length, MaxLogLength));
     }
 
     /// <inheritdoc cref="BaseMessage" />

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Redis.Utils;
 using ViennaNET.Utils;
 using StackExchange.Redis;
@@ -14,12 +14,15 @@ namespace ViennaNET.Redis.Implementation.Default
   {
     private readonly IDatabase _database;
     private readonly IDictionary<string, TimeSpan> _keyLifetimes;
+    private readonly ILogger _logger;
     private readonly string _prefixKey;
     private readonly bool _useCompression;
 
-    public RedisDatabase(bool useCompression, IDatabase database, IDictionary<string, TimeSpan> keyLifetimes, string prefixKey)
+    public RedisDatabase(bool useCompression, IDatabase database, ILogger<RedisDatabase> logger,
+      IDictionary<string, TimeSpan> keyLifetimes, string prefixKey)
     {
       _database = database.ThrowIfNull(nameof(database));
+      _logger = logger.ThrowIfNull(nameof(logger));
       _prefixKey = prefixKey;
       _keyLifetimes = keyLifetimes;
       _useCompression = useCompression;
@@ -237,14 +240,14 @@ namespace ViennaNET.Redis.Implementation.Default
       return await _database.KeyDeleteAsync(keys.Select(k => (RedisKey)GetKeyName(k)).ToArray(), flags);
     }
 
-    private static void LogDebug(string action, string arguments)
+    private void LogDebug(string action, string arguments)
     {
-      Logger.LogDebug($"Action Redis: {action}. Arguments: {arguments}.");
+      _logger.LogDebug("Action Redis: {action}. Arguments: {arguments}.", action, arguments);
     }
 
-    private static void LogDiagnostic(string action, string arguments)
+    private void LogDiagnostic(string action, string arguments)
     {
-      Logger.LogDiagnostic($"Action Redis: {action}. Arguments: {arguments}.");
+      _logger.LogTrace("Action Redis: {action}. Arguments: {arguments}.", action, arguments);
     }
 
     private string GetDecompressedString(string data)

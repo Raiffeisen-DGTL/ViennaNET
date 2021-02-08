@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Utils;
 using StackExchange.Redis;
 
 namespace ViennaNET.Redis.Implementation.Default
 {
   /// <inheritdoc />
+  [ExcludeFromCodeCoverage]
   public class RedisDatabaseProvider : IRedisDatabaseProvider
   {
     private readonly ConnectionOptions _connectionOptions;
+    private readonly ILogger _logger;
+    private readonly ILoggerFactory _loggerFactory;
     private readonly object _locker = new object();
     private readonly string _prefixKey;
 
@@ -21,11 +25,16 @@ namespace ViennaNET.Redis.Implementation.Default
     /// Инициализирует экземпляр ссылкой на <see cref="IConnectionConfiguration" />
     /// </summary>
     /// <param name="configuration">Провайдер конфигурации</param>
-    public RedisDatabaseProvider([NotNull] IConnectionConfiguration configuration)
+    /// <param name="logger">Логгер</param>
+    /// <param name="loggerFactory">Фабрика логгеров</param>
+    public RedisDatabaseProvider([NotNull] IConnectionConfiguration configuration,
+      ILogger<RedisDatabaseProvider> logger, ILoggerFactory loggerFactory)
     {
+      _logger = logger.ThrowIfNull(nameof(logger));
+      _loggerFactory = loggerFactory.ThrowIfNull(nameof(loggerFactory));
       _connectionOptions = configuration.ThrowIfNull(nameof(configuration))
-                                        .GetConnectionConfigurationOptions()
-                                        .ThrowIfNull(nameof(_connectionOptions));
+        .GetConnectionConfigurationOptions()
+        .ThrowIfNull(nameof(_connectionOptions));
 
       _prefixKey = string.IsNullOrEmpty(_connectionOptions.Key)
         ? string.Empty
@@ -37,7 +46,8 @@ namespace ViennaNET.Redis.Implementation.Default
     {
       var db = GetDatabaseInternal(database, asyncState);
 
-      return new RedisDatabase(useCompression, db, _connectionOptions.KeyLifetimes, _prefixKey);
+      return new RedisDatabase(useCompression, db, _loggerFactory.CreateLogger<RedisDatabase>(),
+        _connectionOptions.KeyLifetimes, _prefixKey);
     }
 
     /// <inheritdoc />
@@ -59,16 +69,19 @@ namespace ViennaNET.Redis.Implementation.Default
       var connection = ConnectionMultiplexer.Connect(_connectionOptions.GetConfigurationOptions()
                                                      ?? throw new InvalidOperationException("Redis connection is not found"));
       connection.ConnectionFailed += (s, e) =>
-        Logger.LogErrorFormat(e.Exception,
-                              $"Connection to Redis has been failed. ConnectionType = {e.ConnectionType}. "
-                              + $"EndPoint = {e.EndPoint}. FailureType = {e.FailureType}");
+        _logger.LogError(e.Exception,
+                              "Connection to Redis has been failed. ConnectionType = {connectionType}. "
+                              + "EndPoint = {endPoint}. FailureType = {failureType}", e.ConnectionType, e.EndPoint, e.FailureType);
       connection.ConnectionRestored += (s, e) =>
-        Logger.LogDebug($"Connection to Redis has been restored. ConnectionType = {e.ConnectionType}. "
-                        + $"EndPoint = {e.EndPoint}. FailureType = {e.FailureType}");
+        _logger.LogDebug("Connection to Redis has been restored. ConnectionType = {connectionType}. "
+                        + "EndPoint = {endPoint}. FailureType = {failureType}", e.ConnectionType, e.EndPoint, e.FailureType);
       connection.ErrorMessage += (s, e) =>
-        Logger.LogErrorFormat(e.Message, $"Error has been received. Message = {e.Message}. EndPoint = {e.EndPoint}.");
+        _logger.LogError(e.Message, "Error has been received. Message = {message}. EndPoint = {endPoint}.", e.Message, e.EndPoint);
 
-      ClearServiceKeys(connection);
+      if (_connectionOptions.ClearOnStartup)
+      {
+        ClearServiceKeys(connection);
+      }
 
       return connection;
     }
@@ -94,7 +107,7 @@ namespace ViennaNET.Redis.Implementation.Default
     private IRedisServer GetServerInternal(EndPoint endPoint, object asyncState)
     {
       return new RedisServer(GetConnection()
-                               .GetServer(endPoint, asyncState), _prefixKey);
+                               .GetServer(endPoint, asyncState), _loggerFactory.CreateLogger<RedisServer>(), _prefixKey);
     }
 
     private void ClearServiceKeys(IConnectionMultiplexer connection)

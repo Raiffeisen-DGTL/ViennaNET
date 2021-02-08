@@ -1,4 +1,5 @@
-﻿using ViennaNET.Redis.Implementation.Silent;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using ViennaNET.Redis.Implementation.Silent;
 using NUnit.Framework;
 
 namespace ViennaNET.Redis.Tests.Unit.Implementation.Silent
@@ -11,7 +12,7 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Silent
     [OneTimeSetUp]
     public void SilentRedisDatabaseProviderTestsSetUp()
     {
-      _silentRedisDatabaseProviderMock = new SilentRedisDatabaseProvider(null);
+      _silentRedisDatabaseProviderMock = new SilentRedisDatabaseProvider(null,null, new NullLogger<SilentRedisDatabaseProvider>());
     }
 
     [Test]

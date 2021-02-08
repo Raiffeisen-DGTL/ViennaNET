@@ -43,7 +43,7 @@ namespace ViennaNET.WebApi.Configurators.CallContext
 
     private static string GetRequestId(HttpContext context)
     {
-      return context.Request.Headers.Keys.Contains(CompanyHttpHeaders.RequestId)
+      return context.Request.Headers.ContainsKey(CompanyHttpHeaders.RequestId)
         ? context.Request.Headers[CompanyHttpHeaders.RequestId]
                  .ToString()
         : Guid.NewGuid()

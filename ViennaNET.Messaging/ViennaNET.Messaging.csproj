@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
     <ProjectReference Include="..\ViennaNET.Diagnostic\ViennaNET.Diagnostic.csproj" />
+    <ProjectReference Include="..\ViennaNET.Logging\ViennaNET.Logging.csproj" />
     <ProjectReference Include="..\ViennaNET.Utils\ViennaNET.Utils.csproj" />
   </ItemGroup>
 

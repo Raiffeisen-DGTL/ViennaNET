@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace ViennaNET.Redis.Implementation.Silent
 {
@@ -10,14 +10,21 @@ namespace ViennaNET.Redis.Implementation.Silent
   public class SilentRedisDatabaseProvider : ISilentRedisDatabaseProvider
   {
     private readonly IRedisDatabaseProvider _redisDatabaseProvider;
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Инициализирует экземпляр ссылкой на <see cref="IConnectionConfiguration" />
     /// </summary>
     /// <param name="redisDatabaseProvider">Провайдер конфигурации</param>
-    public SilentRedisDatabaseProvider(IRedisDatabaseProvider redisDatabaseProvider)
+    /// <param name="loggerFactory">Фабрика логгеров</param>
+    /// <param name="logger">Логгер</param>
+    public SilentRedisDatabaseProvider(IRedisDatabaseProvider redisDatabaseProvider, ILoggerFactory loggerFactory,
+      ILogger<SilentRedisDatabaseProvider> logger)
     {
       _redisDatabaseProvider = redisDatabaseProvider;
+      _loggerFactory = loggerFactory;
+      _logger = logger;
     }
 
     /// <inheritdoc />
@@ -26,12 +33,12 @@ namespace ViennaNET.Redis.Implementation.Silent
       try
       {
         var db = _redisDatabaseProvider.GetDatabase(useCompression, database, asyncState);
-        return new SilentRedisDatabase(db);
+        return new SilentRedisDatabase(db, _loggerFactory.CreateLogger<SilentRedisDatabase>());
       }
       catch (Exception e)
       {
-        Logger.LogErrorFormat(e, "Taking of the Redis database has been failed.");
-        return new SilentRedisDatabase(null);
+        _logger.LogError(e, "Taking of the Redis database has been failed.");
+        return new SilentRedisDatabase(null, null);
       }
     }
 
@@ -41,12 +48,12 @@ namespace ViennaNET.Redis.Implementation.Silent
       try
       {
         var server = _redisDatabaseProvider.GetServer(endPoint, asyncState);
-        return new SilentRedisServer(server);
+        return new SilentRedisServer(server, _loggerFactory.CreateLogger<SilentRedisServer>());
       }
       catch (Exception e)
       {
-        Logger.LogErrorFormat(e, "Taking of the Redis server has been failed.");
-        return new SilentRedisServer(null);
+        _logger.LogError(e, "Taking of the Redis server has been failed.");
+        return new SilentRedisServer(null, null);
       }
     }
 
@@ -56,11 +63,11 @@ namespace ViennaNET.Redis.Implementation.Silent
       try
       {
         var servers = _redisDatabaseProvider.GetAllServers(asyncState) ?? Enumerable.Empty<IRedisServer>();
-        return servers.Select(x => new SilentRedisServer(x));
+        return servers.Select(x => new SilentRedisServer(x, _loggerFactory.CreateLogger<SilentRedisServer>()));
       }
       catch (Exception e)
       {
-        Logger.LogErrorFormat(e, "Taking of all Redis servers has been failed.");
+        _logger.LogError(e, "Taking of all Redis servers has been failed.");
         return Enumerable.Empty<ISilentRedisServer>();
       }
     }

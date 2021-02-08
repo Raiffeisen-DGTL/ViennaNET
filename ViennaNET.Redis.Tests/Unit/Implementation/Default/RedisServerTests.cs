@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Redis.Implementation.Default;
 using Moq;
 using NUnit.Framework;
@@ -54,7 +55,7 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Default
         .Setup(x => x.Keys(It.IsAny<int>(), It.IsAny<RedisValue>(), It.IsAny<int>(), It.IsAny<CommandFlags>()))
         .Returns(new List<RedisKey> { "somePrefixkey1", "somePrefixkey2" });
 
-      _redisServer = new RedisServer(_serverMock.Object, "somePrefix");
+      _redisServer = new RedisServer(_serverMock.Object, new NullLogger<RedisServer>(), "somePrefix");
     }
 
     [Test]

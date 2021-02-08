@@ -8,7 +8,6 @@ using ViennaNET.Diagnostic;
 using ViennaNET.Messaging.Context;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.Tools;
-using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.Processing.Impl.Poll
 {

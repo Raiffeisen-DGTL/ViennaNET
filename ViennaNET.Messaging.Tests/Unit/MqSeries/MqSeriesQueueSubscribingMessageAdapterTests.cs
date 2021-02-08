@@ -71,6 +71,25 @@ namespace ViennaNET.Messaging.Tests.Unit.MqSeries
     }
 
     [Test]
+    public void ReceiveWithSelectorTest()
+    {
+      const string testCorrelationId = "1";
+      const string testMessageId = "2";
+      var adapter = Given
+        .SubscribingMessageAdapter
+        .ConfigureConnectionFactoryProvider(b => b.WithMessageProducer(Given.MessageProducer(testCorrelationId, testMessageId)).Please())
+        .WithConfiguration(new MqSeriesQueueConfiguration() {Selector = $"JMSMessageID = {testMessageId}" })
+        .Please();
+
+      adapter.Connect();
+      var msg = adapter.Receive(testCorrelationId, TimeSpan.MinValue);
+
+      Assert.IsNotNull(msg);
+      Assert.AreEqual(testCorrelationId, msg.MessageId);
+      Assert.AreEqual(testMessageId, msg.CorrelationId);
+    }
+
+    [Test]
     public void ReceiveNotConnectedTest()
     {
       var adapter = Given.SubscribingMessageAdapter.Please();

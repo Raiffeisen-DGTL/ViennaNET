@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IBMXMSDotnetClient" Version="9.1.5" />
+    <PackageReference Include="IBMXMSDotnetClient" Version="9.2.1" />
   </ItemGroup>
 
   <ItemGroup>

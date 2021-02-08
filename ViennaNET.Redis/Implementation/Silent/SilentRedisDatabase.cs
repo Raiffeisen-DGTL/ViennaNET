@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
 namespace ViennaNET.Redis.Implementation.Silent
@@ -9,10 +9,12 @@ namespace ViennaNET.Redis.Implementation.Silent
   internal class SilentRedisDatabase : IRedisDatabase
   {
     private readonly IRedisDatabase _redisDatabase;
+    private readonly ILogger _logger;
 
-    public SilentRedisDatabase(IRedisDatabase redisDatabase)
+    public SilentRedisDatabase(IRedisDatabase redisDatabase, ILogger<SilentRedisDatabase> logger)
     {
       _redisDatabase = redisDatabase;
+      _logger = logger;
     }
 
     public T ObjectGet<T>(string key, CommandFlags flags = default) where T : class
@@ -355,9 +357,9 @@ namespace ViennaNET.Redis.Implementation.Silent
       }
     }
 
-    private static void LogError(Exception e)
+    private void LogError(Exception e)
     {
-      Logger.LogErrorFormat(e, "Action Redis has been failed.");
+      _logger.LogError(e, "Action Redis has been failed.");
     }
   }
 }

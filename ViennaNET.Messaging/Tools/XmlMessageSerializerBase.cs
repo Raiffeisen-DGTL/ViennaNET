@@ -20,15 +20,17 @@ namespace ViennaNET.Messaging.Tools
     /// </summary>
     protected IList<Stream> xsd = new List<Stream>();
 
-    private const string _contentType = "application/xml";
-
     /// <inheritdoc />
     public T Deserialize(BaseMessage message)
     {
-      var textMessage = (TextMessage)message;
-      ValidateXml(textMessage.Body);
+      var messageBody = message switch
+      {
+        BytesMessage bytesMessage => Encoding.UTF8.GetString(bytesMessage.Body),
+        _ => ((TextMessage)message).Body
+      };
+      ValidateXml(messageBody);
       var serializer = new XmlSerializer(typeof(T));
-      var reader = new StringReader(textMessage.Body);
+      var reader = new StringReader(messageBody);
       return (T)serializer.Deserialize(reader);
     }
 
@@ -41,7 +43,7 @@ namespace ViennaNET.Messaging.Tools
       var xml = writer.ToString();
       ValidateXml(xml);
       result.Body = xml;
-      result.ContentType = _contentType;
+      result.ContentType = "application/xml";
       return result;
     }
 

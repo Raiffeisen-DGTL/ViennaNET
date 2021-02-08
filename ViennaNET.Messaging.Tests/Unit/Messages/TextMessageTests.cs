@@ -47,15 +47,23 @@ namespace ViennaNET.Messaging.Tests.Unit.Messages
 
       var result = message.LogBody();
 
-      Assert.That(result == body);
+      Assert.That(result, Is.EqualTo(body));
+    }
+
+    [Test]
+    public void LogBody_LongMessageBody_WasTruncated()
+    {
+      var source = new string('a', 10000000);
+      var message = CreateTextMessage(source);
+
+      var result = message.LogBody();
+
+      Assert.That(result, Has.Length.EqualTo(100000));
     }
 
     [Test]
     public void ToString_MessageHasBeenFilled_CorrectlySerializedWithoutProperties()
     {
-      var xml = new StreamReader(GetType()
-                                 .Assembly.GetManifestResourceStream("ViennaNET.Messaging.Tests.Unit.Messages.TextMessage.xml")
-                                 ?? new MemoryStream()).ReadToEnd();
       var message = CreateTextMessage("testMessage");
 
       var result = message.ToString();
