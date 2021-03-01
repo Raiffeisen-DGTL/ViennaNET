@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="2.1.2" />
-    <PackageReference Include="NHibernate" Version="5.2.7" />
+    <PackageReference Include="NHibernate" Version="5.3.5" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.7.0" />
   </ItemGroup>
 

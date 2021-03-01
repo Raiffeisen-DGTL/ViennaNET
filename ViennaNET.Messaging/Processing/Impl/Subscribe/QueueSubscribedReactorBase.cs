@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using ViennaNET.CallContext;
 using ViennaNET.Diagnostic;
 using ViennaNET.Messaging.Context;
 using ViennaNET.Messaging.Exceptions;
@@ -35,7 +36,6 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     private bool _hasDiagnosticErrors;
 
     private bool _isDisposed;
-    private IDisposable _loggerContext;
 
     /// <summary>
     ///   Базовый класс для реактора, работающего на основе шаблона "Наблюдатель"
@@ -228,23 +228,29 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       adapter.Disconnect();
     }
 
-    private void SetCallContextFromMessage(BaseMessage message)
+    private MessagingContext SetCallContextFromMessage(BaseMessage message)
     {
       var context = MessagingContext.Create(message);
 
-      _loggerContext =
-        _logger.BeginScope("RequestID: {requestId}, UserID: {userId}", context.RequestId, context.UserId);
-
       _messagingCallContextAccessor.SetContext(context);
+
+      return context;
     }
 
     private void CleanCallContext()
     {
-      _messagingCallContextAccessor.CleanContext();
-      
-      _loggerContext.Dispose();
-      _loggerContext = null;
+      try
+      {
+        _messagingCallContextAccessor.CleanContext();
+      }
+      catch (Exception exception)
+      {
+        _logger.LogError(exception, "Error while cleaning call context");
+      }
     }
+    
+    private IDisposable GetLoggerContextFromCallContext(ICallContext context) =>
+      _logger.BeginScope("RequestID: {requestId}, UserID: {userId}", context.RequestId, context.UserId);
 
     /// <summary>
     ///   Результат выполнения сообщения обработчиком
@@ -265,7 +271,9 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       try
       {
         _logger.LogDebug("Message has been received by subscribing " + Environment.NewLine + " {message}", message);
-        SetCallContextFromMessage(message);
+
+        var context = SetCallContextFromMessage(message);
+        using var _ = GetLoggerContextFromCallContext(context);
 
         var processed = await GetProcessedMessageAsync(message);
         if (!processed)

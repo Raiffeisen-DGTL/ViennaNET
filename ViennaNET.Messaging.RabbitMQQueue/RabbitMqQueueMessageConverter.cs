@@ -85,9 +85,13 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       message.MessageId = messageProperties.MessageId;
       message.CorrelationId = messageProperties.CorrelationId;
       message.ReplyQueue = messageProperties.ReplyTo;
-      message.LifeTime = TimeSpan.Parse(messageProperties.Expiration);
       message.SendDateTime = DateTime.FromFileTimeUtc(messageProperties.Timestamp);
       message.ReceiveDate = DateTime.Now;
+
+      if (TimeSpan.TryParse(messageProperties.Expiration, out var lifetime))
+      {
+        message.LifeTime = lifetime;
+      }
 
       foreach (var header in messageProperties.Headers)
       {

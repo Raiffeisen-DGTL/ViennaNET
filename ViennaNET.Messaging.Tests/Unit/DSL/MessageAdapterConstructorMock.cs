@@ -14,15 +14,10 @@ namespace ViennaNET.Messaging.Tests.Unit.DSL
       return this;
     }
 
-    public MessageAdapterConstructorMock WithAdapter(Func<MessageAdapterBuilder, MessageAdapterBuilder> builder,
-      string queueId)
-    {
-      _adapters.Add(queueId, builder(new MessageAdapterBuilder()).Please());
-      return this;
-    }  
+    public MessageAdapterConstructorMock WithAdapter(Func<MessageAdapterBuilder, MessageAdapterBuilder> builder, string queueId)
+      => WithAdapter(b => builder(b).Please(), queueId);
     
-    public MessageAdapterConstructorMock WithAdapter(Func<MessageAdapterBuilder, IMessageAdapter> builder,
-      string queueId)
+    public MessageAdapterConstructorMock WithAdapter(Func<MessageAdapterBuilder, IMessageAdapter> builder, string queueId)
     {
       _adapters.Add(queueId, builder(new MessageAdapterBuilder()));
       return this;

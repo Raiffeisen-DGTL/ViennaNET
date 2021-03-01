@@ -116,10 +116,10 @@ namespace ViennaNET.Orm.Factories
     /// </remarks>
     private ISessionFactoryProvider FindMapping(Type type, Assembly assembly = null)
     {
-      assembly = assembly ?? type.Assembly;
+      assembly ??= type.Assembly;
 
       var fluentMappings = assembly.GetTypes()
-                                   .Where(x => x.IsSubclassOf(typeof(ClassMap<>).MakeGenericType(type)))
+                                   .Where(x => x.IsSubclassOf(typeof(ClasslikeMapBase<>).MakeGenericType(type)))
                                    .ToList();
 
       if (fluentMappings.Count > 1)

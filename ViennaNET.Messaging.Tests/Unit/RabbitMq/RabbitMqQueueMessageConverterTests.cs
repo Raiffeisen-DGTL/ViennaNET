@@ -49,24 +49,13 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
 
       Assert.Multiple(() =>
       {
-        Assert.That(message.MessageId == MessageId);
-        Assert.That(message.CorrelationId == CorrelationId);
+        Assert.That(message.MessageId, Is.EqualTo(MessageId));
+        Assert.That(message.CorrelationId, Is.EqualTo(CorrelationId));
         Assert.That(message.Properties, Is.Empty);
-        Assert.That(message.ReplyQueue == ReplyQueue);
-        Assert.That(message.LifeTime == TimeSpan.Parse(messageProperties.Expiration));
-        Assert.That(message.SendDateTime == new DateTime(2014, 10, 9));
+        Assert.That(message.ReplyQueue, Is.EqualTo(ReplyQueue));
+        Assert.That(message.LifeTime, Is.EqualTo(TimeSpan.Parse(messageProperties.Expiration)));
+        Assert.That(message.SendDateTime, Is.EqualTo(new DateTime(2014, 10, 9)));
       });
-    }
-
-    [Test]
-    public void ConvertToBaseMessage_MessagePropertiesWithBytesContent_BytesMessage()
-    {
-      var body = new byte[0];
-      var messageProperties = new MessageProperties { ContentType = BytesContentType, Expiration = Expiration };
-
-      var message = body.ConvertToBaseMessage(messageProperties);
-
-      Assert.That(message is BytesMessage);
     }
 
     [Test]
@@ -90,25 +79,28 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     }
 
     [Test]
-    public void ConvertToBaseMessage_MessagePropertiesWithTextContent_TextMessage()
+    [TestCase(BytesContentType, typeof(BytesMessage))]
+    [TestCase(TextContentType, typeof(TextMessage))]
+    [TestCase("Unknown", typeof(TextMessage))]
+    public void ConvertToBaseMessage_MessagePropertiesWithContentType_CorrectMessageType(string contentType, Type expectedType)
     {
       var body = new byte[0];
-      var messageProperties = new MessageProperties { ContentType = TextContentType, Expiration = Expiration };
+      var messageProperties = new MessageProperties { ContentType = contentType };
 
       var message = body.ConvertToBaseMessage(messageProperties);
 
-      Assert.That(message is TextMessage);
+      Assert.That(message, Is.InstanceOf(expectedType));
     }
 
     [Test]
-    public void ConvertToBaseMessage_MessagePropertiesWithUnknownContent_TextMessage()
+    public void ConvertToBaseMessage_MessagePropertiesWithoutExpiration_LifetimeNotFilled()
     {
       var body = new byte[0];
-      var messageProperties = new MessageProperties { ContentType = "Unknown", Expiration = Expiration };
+      var messageProperties = new MessageProperties { ContentType = TextContentType };
 
       var message = body.ConvertToBaseMessage(messageProperties);
 
-      Assert.That(message is TextMessage);
+      Assert.That(message.LifeTime, Is.EqualTo(default(TimeSpan)));
     }
 
     [Test]
@@ -119,7 +111,7 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
 
       var properties = message.ConvertToProperties(queueConfiguration);
 
-      Assert.That(properties.ContentType == BytesContentType);
+      Assert.That(properties.ContentType, Is.EqualTo(BytesContentType));
     }
 
     [Test]
@@ -130,7 +122,7 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
 
       var properties = message.ConvertToProperties(queueConfiguration);
 
-      Assert.That(properties.Expiration == Expiration);
+      Assert.That(properties.Expiration, Is.EqualTo(Expiration));
     }
 
     [Test]
@@ -141,21 +133,18 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
 
       var properties = message.ConvertToProperties(queueConfiguration);
 
-      Assert.That(properties.Expiration == "100");
+      Assert.That(properties.Expiration, Is.EqualTo("100"));
     }
 
     [Test]
     public void ConvertToProperties_MessageWithLifetime_MessageLifetimeReturned()
     {
       var queueConfiguration = new RabbitMqQueueConfiguration { Id = QueueId };
-      var message = new TextMessage()
-      {
-        LifeTime = TimeSpan.FromMilliseconds(100)
-      };
+      var message = new TextMessage() { LifeTime = TimeSpan.FromMilliseconds(100) };
 
       var properties = message.ConvertToProperties(queueConfiguration);
 
-      Assert.That(properties.Expiration == "100");
+      Assert.That(properties.Expiration, Is.EqualTo("100"));
     }
 
     [Test]
@@ -169,12 +158,12 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
 
       Assert.Multiple(() =>
       {
-        Assert.That(properties.MessageId == MessageId);
-        Assert.That(properties.CorrelationId == CorrelationId);
-        Assert.That(properties.Headers == message.Properties);
-        Assert.That(properties.DeliveryMode == 2);
-        Assert.That(properties.ReplyTo == ReplyQueue);
-        Assert.That(properties.Expiration == ((int)queueConfiguration.Lifetime.Value.TotalMilliseconds).ToString());
+        Assert.That(properties.MessageId, Is.EqualTo(MessageId));
+        Assert.That(properties.CorrelationId, Is.EqualTo(CorrelationId));
+        Assert.That(properties.Headers, Is.EqualTo(message.Properties));
+        Assert.That(properties.DeliveryMode, Is.EqualTo(2));
+        Assert.That(properties.ReplyTo, Is.EqualTo(ReplyQueue));
+        Assert.That(properties.Expiration, Is.EqualTo(((int)queueConfiguration.Lifetime.Value.TotalMilliseconds).ToString()));
       });
     }
 
@@ -193,12 +182,12 @@ namespace ViennaNET.Messaging.Tests.Unit.RabbitMq
     public void ConvertToProperties_TextMessage_TypeIsCorrect()
     {
       var queueConfiguration = new RabbitMqQueueConfiguration { Id = QueueId, Lifetime = TimeSpan.Zero };
-      var contentType = "application/xml";
+      const string contentType = "application/xml";
       var message = new TextMessage { ContentType = contentType };
 
       var properties = message.ConvertToProperties(queueConfiguration);
 
-      Assert.That(properties.ContentType == contentType);
+      Assert.That(properties.ContentType, Is.EqualTo(contentType));
     }
 
     [Test]

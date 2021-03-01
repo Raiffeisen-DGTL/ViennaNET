@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -33,23 +33,18 @@ namespace ViennaNET.Messaging.Tests.Unit.Reactor
     }
 
     [Test]
-    public void StartProcessing_HasMessage_ProcessorCalled()
+    public void StartProcessing_WhenSendMessage_ProcessorCalled()
     {
       var message = new TextMessage();
       var processorMock = new Mock<IMessageProcessor>();
+      var messageAdapter = Given.MessageAdapter.Please<IMessageAdapterWithSubscribing>();
       var reactor = Given.QueueSubscribedReactor
-        .WithMessageAdapter(
-          b => b.Please<IMessageAdapterWithSubscribing>(
-            m =>
-            {
-              m
-                .Setup(x => x.Subscribe(It.IsAny<Func<BaseMessage, Task>>()))
-                .Callback<Func<BaseMessage, Task>>(cb => cb(message).GetAwaiter().GetResult());
-            }))
-        .WithMessageProcessor(processorMock.Object)
-        .Please();
+                         .WithMessageAdapter(messageAdapter)
+                         .WithMessageProcessor(processorMock.Object)
+                         .Please();
 
       reactor.StartProcessing();
+      messageAdapter.Send(message);
 
       processorMock.Verify(x => x.Process(message));
     }
