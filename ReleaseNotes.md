@@ -1,3 +1,6 @@
+# v0013 (01.03.2021)
+1. Minor changes in ViennaNET.Messaging, ViennaNET.Messaging.RabbitMQQueue, ViennaNET.Orm
+
 # v0012 (04.02.2021)
 1. Minor changes in ViennaNET.Messaging, ViennaNET.Messaging.MQSeriesQueue, ViennaNET.Orm, ViennaNET.Redis, ViennaNET.WebApi
 2. Refactor logging
