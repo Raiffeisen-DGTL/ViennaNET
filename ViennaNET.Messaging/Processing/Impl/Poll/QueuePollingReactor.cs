@@ -30,7 +30,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       IMessageAdapter messageAdapter,
       IEnumerable<IMessageProcessor> messageProcessors,
       IEnumerable<IMessageProcessorAsync> asyncMessageProcessors,
-      int subscribeInterval, 
+      int subscribeInterval,
       bool? serviceHealthDependent,
       IHealthCheckingService healthCheckingService,
       IMessagingCallContextAccessor messagingCallContextAccessor,

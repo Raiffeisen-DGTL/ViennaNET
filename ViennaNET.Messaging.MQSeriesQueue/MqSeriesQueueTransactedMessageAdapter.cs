@@ -11,16 +11,17 @@ namespace ViennaNET.Messaging.MQSeriesQueue
   ///   Адаптер с поддержкой транзакций, реализующий взаимодействие с очередью IBM MQ
   /// </summary>
   /// <remarks>Работает только в режиме поллинга</remarks>
-  internal sealed class MqSeriesQueueTransactedMessageAdapter : MqSeriesQueueMessageAdapterBase, IMessageAdapterWithTransactions
+  internal sealed class MqSeriesQueueTransactedMessageAdapter : MqSeriesQueueMessageAdapterBase, 
+    IMessageAdapterWithTransactions
   {
     /// <inheritdoc />
     public MqSeriesQueueTransactedMessageAdapter(
       IMqSeriesQueueConnectionFactoryProvider connectionFactoryProvider,
       MqSeriesQueueConfiguration configuration,
-      ILogger<MqSeriesQueueTransactedMessageAdapter> logger) 
+      ILogger<MqSeriesQueueTransactedMessageAdapter> logger)
       : base(connectionFactoryProvider, configuration, logger)
     {
-      
+
     }
 
     /// <inheritdoc />

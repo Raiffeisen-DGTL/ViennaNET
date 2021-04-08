@@ -5,7 +5,7 @@ namespace ViennaNET.Messaging.Processing
   /// <summary>
   /// Предоставляет функционал для прослушки очередей
   /// </summary>
-  public interface IQueueReactor: IDisposable
+  public interface IQueueReactor : IDisposable
   {
     /// <summary>
     /// Количество ошибок

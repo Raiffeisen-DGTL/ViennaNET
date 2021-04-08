@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using ViennaNET.Orm.Repositories;
 using ViennaNET.Orm.Seedwork;
 
 namespace ViennaNET.Orm.Application

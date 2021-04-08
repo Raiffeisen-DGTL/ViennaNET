@@ -14,7 +14,8 @@ namespace ViennaNET.Messaging.Tools
     private JsonSerializerOptions options =>
       new JsonSerializerOptions
       {
-        Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic), IgnoreNullValues = true
+        Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+        IgnoreNullValues = true
       };
 
     private const string _contentType = "application/json";

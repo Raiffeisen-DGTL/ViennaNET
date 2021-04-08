@@ -16,9 +16,9 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
 
     /// <inheritdoc />
     public QueueSubscribedReactor(
-      IMessageAdapterWithSubscribing messageAdapter, 
+      IMessageAdapterWithSubscribing messageAdapter,
       IEnumerable<IMessageProcessor> messageProcessors,
-      IEnumerable<IMessageProcessorAsync> asyncMessageProcessor, 
+      IEnumerable<IMessageProcessorAsync> asyncMessageProcessor,
       int reconnectTimeout,
       bool? serviceHealthDependent,
       IHealthCheckingService healthCheckingService,

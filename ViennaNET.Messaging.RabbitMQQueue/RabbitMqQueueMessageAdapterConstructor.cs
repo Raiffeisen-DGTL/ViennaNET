@@ -14,7 +14,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
 
     /// <inheritdoc />
     public RabbitMqQueueMessageAdapterConstructor(
-      IAdvancedBusFactory advancedBusFactory, 
+      IAdvancedBusFactory advancedBusFactory,
       IConfiguration configuration,
       ILoggerFactory loggerFactory) :
       base(configuration, "rabbitmq")
@@ -27,7 +27,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
     protected override IMessageAdapter CreateAdapter(RabbitMqQueueConfiguration queueConfiguration)
     {
       return new RabbitMqQueueMessageAdapter(
-        _advancedBusFactory, 
+        _advancedBusFactory,
         queueConfiguration,
         _loggerFactory.CreateLogger<RabbitMqQueueMessageAdapter>());
     }

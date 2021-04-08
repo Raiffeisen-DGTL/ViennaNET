@@ -1,5 +1,5 @@
 ﻿using NHibernate.Cfg;
-using BaseDialect = NHibernate.Dialect.PostgreSQLDialect;
+using BaseDialect = NHibernate.Dialect.PostgreSQL83Dialect;
 
 namespace ViennaNET.Orm.PostgreSql
 {

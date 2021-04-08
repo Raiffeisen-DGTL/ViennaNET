@@ -17,15 +17,13 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     private const int ErrorThresholdCount = 15;
     private const int DefaultReconnectTimeout = 600;
     private const int MaxReconnectTimeout = 60000;
+    private readonly IHealthCheckingService _healthCheckingService;
 
     private readonly ILogger _logger;
     private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
-    private readonly IHealthCheckingService _healthCheckingService;
-
-    private readonly bool _serviceHealthDependent;
     private readonly int _reconnectTimeout;
 
-    private Polling _reconnectPolling;
+    private readonly bool _serviceHealthDependent;
 
     /// <summary>
     ///   Адаптер для взаимодействия с очередью
@@ -36,6 +34,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     private bool _hasDiagnosticErrors;
 
     private bool _isDisposed;
+
+    private Polling _reconnectPolling;
 
     /// <summary>
     ///   Базовый класс для реактора, работающего на основе шаблона "Наблюдатель"
@@ -173,7 +173,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
         _logger.LogError(ex, "Cannot connect to queue with id {queueId}", adapter.Configuration.Id);
         return (true, true);
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         _logger.LogError(ex, "Cannot connect to queue with id {queueId}", adapter.Configuration.Id);
         return (true, false);
@@ -219,7 +219,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
 
     private int CalculateTimeout()
     {
-      return InternalTools.CalculateTimeout(_errorCount, ErrorThresholdCount, DefaultReconnectTimeout, MaxReconnectTimeout);
+      return InternalTools.CalculateTimeout(_errorCount, ErrorThresholdCount, DefaultReconnectTimeout,
+        MaxReconnectTimeout);
     }
 
     private void Unsubscribe()
@@ -248,7 +249,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
         _logger.LogError(exception, "Error while cleaning call context");
       }
     }
-    
+
     private IDisposable GetLoggerContextFromCallContext(ICallContext context) =>
       _logger.BeginScope("RequestID: {requestId}, UserID: {userId}", context.RequestId, context.UserId);
 
@@ -270,7 +271,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     {
       try
       {
-        _logger.LogDebug("Message has been received by subscribing " + Environment.NewLine + " {message}", message);
+        _logger.LogDebug("Message has been received by subscribing " + Environment.NewLine + " {message}",
+          message.LogBody());
 
         var context = SetCallContextFromMessage(message);
         using var _ = GetLoggerContextFromCallContext(context);

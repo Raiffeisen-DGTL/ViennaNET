@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Configuration;
@@ -108,11 +107,15 @@ namespace ViennaNET.Messaging.KafkaQueue
     {
       _logger.LogDebug("Try to send message to queue with id: {queueId}", _configuration.Id);
       message.ThrowIfNull(nameof(message));
+      LogMessageInternal(message, true);
+
       CheckDisposed();
       CheckAndReconnect();
+
       try
       {
-        _producer.Produce(_configuration.QueueName, Prepare(message));
+        var kafkaMessage = message.ConvertToKafkaMessage();
+        _producer.Produce(_configuration.QueueName, kafkaMessage);
         _logger.LogDebug("Done to send message to queue with id: {queueId}", _configuration.Id);
         return message;
       }
@@ -152,34 +155,35 @@ namespace ViennaNET.Messaging.KafkaQueue
 
       try
       {
-        var dataResult = _consumer.Consume();
-        if (dataResult == null)
+        ConsumeResult<Ignore, byte[]> dataResult;
+        var waitTimeout = TimeoutHelper.GetTimeout(timeout);
+        if (waitTimeout > 0L)
         {
-          return false;
+          dataResult = _consumer.Consume(TimeSpan.FromMilliseconds(waitTimeout));
+        }
+        else if (waitTimeout == TimeoutHelper.NoWaitTimeout)
+        {
+          dataResult = _consumer.Consume(TimeSpan.Zero);
+        }
+        else
+        {
+          dataResult = _consumer.Consume();
         }
 
-        message = new BytesMessage
+        if (dataResult != null)
         {
-          Body = dataResult.Message.Value,
-          ReceiveDate = DateTime.Now,
-          SendDateTime = dataResult.Message.Timestamp.UtcDateTime,
-          ReplyQueue = dataResult.Topic
-        };
-
-        foreach (var header in dataResult.Headers)
-        {
-          message.Properties.Add(header.Key, Encoding.UTF8.GetString(header.GetValueBytes()));
+          message = dataResult.ConvertToBaseMessage();
+          LogMessageInternal(message, false);
+          return true;
         }
-
-        LogMessageInternal(message, false);
-        return true;
       }
       catch (Exception exception)
       {
         _logger.LogError(exception, "Receive message failure on queue with ID: {queueId}", _configuration.Id);
         message = null;
-        return false;
       }
+
+      return false;
     }
 
     /// <inheritdoc />
@@ -258,36 +262,6 @@ namespace ViennaNET.Messaging.KafkaQueue
       {
         Connect();
       }
-    }
-
-    private Message<Null, byte[]> Prepare(BaseMessage message)
-    {
-      if (string.IsNullOrWhiteSpace(message.MessageId))
-      {
-        message.MessageId = Guid.NewGuid()
-                                .ToString()
-                                .ToUpper();
-      }
-
-      message.SendDateTime = DateTime.Now;
-
-      var headers = new Headers();
-      foreach (var property in message.Properties)
-      {
-        if (!(property.Value is string str))
-        {
-          throw new
-            MessagingException($"The value of property {property.Key} is not a string. Kafka adapter support only string properties");
-        }
-
-        headers.Add(property.Key, Encoding.UTF8.GetBytes(str));
-      }
-
-      LogMessageInternal(message, true);
-      return new Message<Null, byte[]>
-      {
-        Timestamp = new Timestamp(message.SendDateTime.GetValueOrDefault()), Headers = headers, Value = message.GetMessageBodyAsBytes()
-      };
     }
 
     private void LogMessageInternal(BaseMessage message, bool isSend)

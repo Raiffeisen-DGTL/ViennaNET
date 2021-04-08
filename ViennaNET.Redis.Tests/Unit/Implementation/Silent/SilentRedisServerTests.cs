@@ -21,41 +21,49 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Silent
 
       var exceptionMock = new Mock<IRedisServer>();
       exceptionMock.Setup(x => x.ConfigGet(It.IsAny<string>(), It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.LastSave(It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.LastSaveAsync(It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.Time(It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.TimeAsync(It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.Info(It.IsAny<string>(), It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.InfoAsync(It.IsAny<string>(), It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.ConfigGetAsync(It.IsAny<string>(), It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.ConfigSet(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.ConfigSetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.Save(It.IsAny<SaveType>(), It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.SaveAsync(It.IsAny<SaveType>(), It.IsAny<CommandFlags>()))
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.EndPoint)
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.IsConnected)
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.ServerType)
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.Version)
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.IsSlave)
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
       exceptionMock.Setup(x => x.EndPoint)
-                   .Throws(new RedisException());
+        .Throws(new RedisException());
+      exceptionMock.Setup(x => x.FlushAllDatabases(It.IsAny<CommandFlags>()))
+        .Throws(new RedisException());
+      exceptionMock.Setup(x => x.FlushDatabase(It.IsAny<int>(), It.IsAny<CommandFlags>()))
+        .Throws(new RedisException());
+      exceptionMock.Setup(x => x.FlushAllDatabasesAsync(It.IsAny<CommandFlags>()))
+        .Throws(new RedisException());
+      exceptionMock.Setup(x => x.FlushDatabaseAsync(It.IsAny<int>(), It.IsAny<CommandFlags>()))
+        .Throws(new RedisException());
 
       _silentRedisServerMock = new SilentRedisServer(exceptionMock.Object, new NullLogger<SilentRedisServer>());
     }
@@ -346,6 +354,62 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Silent
       var result = _silentRedisServerNull.Version;
 
       Assert.That(result, Is.Null);
+    }
+    
+    [Test]
+    public void FlushDatabase_RedisServer_ServerMethodCorrect()
+    {
+      _silentRedisServerMock.FlushDatabase(1);
+       Assert.Pass();
+    }
+    
+    [Test]
+    public void FlushDatabase_RedisServerNull_ServerMethodCorrect()
+    {
+      _silentRedisServerNull.FlushDatabase(1);
+      Assert.Pass();
+    }
+    
+    [Test]
+    public void FlushDatabaseAsync_RedisServer_ServerMethodCorrect()
+    {
+      _silentRedisServerMock.FlushDatabaseAsync(2);
+      Assert.Pass();
+    }
+    
+    [Test]
+    public void FlushDatabaseAsync_RedisServerNull_ServerMethodCorrect()
+    {
+      _silentRedisServerNull.FlushDatabaseAsync(2);
+      Assert.Pass();
+    }
+    
+    [Test]
+    public void FlushAllDatabases_RedisServer_ServerMethodCorrect()
+    {
+      _silentRedisServerMock.FlushAllDatabases();
+      Assert.Pass();
+    }
+    
+    [Test]
+    public void FlushAllDatabases_RedisServerNull_ServerMethodCorrect()
+    {
+      _silentRedisServerNull.FlushAllDatabases();
+      Assert.Pass();
+    }
+    
+    [Test]
+    public void FlushAllDatabasesAsync_RedisServer_ServerMethodCorrect()
+    {
+      _silentRedisServerMock.FlushAllDatabasesAsync();
+      Assert.Pass();
+    }
+    
+    [Test]
+    public void FlushAllDatabasesAsync_RedisServerNull_ServerMethodCorrect()
+    {
+      _silentRedisServerNull.FlushAllDatabasesAsync();
+      Assert.Pass();
     }
   }
 }

@@ -44,10 +44,10 @@ namespace ViennaNET.Redis
     /// https://redis.io/commands/keys,
     /// https://redis.io/commands/scan
     /// </remarks>
-    /// <param name="pattern"></param>
-    /// <param name="database"></param>
-    /// <param name="pageSize"></param>
-    /// <param name="flags"></param>
+    /// <param name="pattern">Паттерн для имен ключей</param>
+    /// <param name="database">Номер БД</param>
+    /// <param name="pageSize">Размер страницы</param>
+    /// <param name="flags">Флаги выполнения</param>
     IEnumerable<string> Keys(
       string pattern, int database = 0, int pageSize = 10, CommandFlags flags = CommandFlags.None);
 
@@ -60,8 +60,8 @@ namespace ViennaNET.Redis
     /// https://redis.io/commands/save,
     /// https://redis.io/topics/persistence
     /// </remarks>
-    /// <param name="saveType"></param>
-    /// <param name="flags"></param>
+    /// <param name="saveType">Тип операции сохранения</param>
+    /// <param name="flags">Флаги выполнения</param>
     void Save(SaveType saveType = SaveType.BackgroundSave, CommandFlags flags = CommandFlags.None);
 
     /// <summary>
@@ -73,16 +73,16 @@ namespace ViennaNET.Redis
     /// https://redis.io/commands/save,
     /// https://redis.io/topics/persistence
     /// </remarks>
-    /// <param name="saveType"></param>
-    /// <param name="flags"></param>
+    /// <param name="saveType">Тип операции сохранения</param>
+    /// <param name="flags">Флаги выполнения</param>
     Task SaveAsync(SaveType saveType = SaveType.BackgroundSave, CommandFlags flags = CommandFlags.None);
 
     /// <summary>
     /// Получение всех параметров конфигурации, соответствующих указанному шаблону.
     /// </summary>
     /// <remarks>https://redis.io/commands/config-get</remarks>
-    /// <param name="pattern"></param>
-    /// <param name="flags"></param>
+    /// <param name="pattern">Паттерн для имен ключей</param>
+    /// <param name="flags">Флаги выполнения</param>
     /// <returns>Все подходящие параметры конфигурации.</returns>
     KeyValuePair<string, string>[] ConfigGet(string pattern = default, CommandFlags flags = CommandFlags.None);
 
@@ -90,8 +90,8 @@ namespace ViennaNET.Redis
     /// Получение всех параметров конфигурации, соответствующих указанному шаблону.
     /// </summary>
     /// <remarks>https://redis.io/commands/config-get</remarks>
-    /// <param name="pattern"></param>
-    /// <param name="flags"></param>
+    /// <param name="pattern">Паттерн для имен ключей</param>
+    /// <param name="flags">Флаги выполнения</param>
     /// <returns>Все подходящие параметры конфигурации.</returns>
     Task<KeyValuePair<string, string>[]> ConfigGetAsync(string pattern = default, CommandFlags flags = CommandFlags.None);
 
@@ -99,55 +99,55 @@ namespace ViennaNET.Redis
     /// Команда используется для перенастройки сервера во время выполнения без необходимости перезапуска Redis.
     /// </summary>
     /// <remarks>https://redis.io/commands/config-set</remarks>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
-    /// <param name="flags"></param>
+    /// <param name="key">Имя ключа</param>
+    /// <param name="value">Значение ключа</param>
+    /// <param name="flags">Флаги выполнения</param>
     void ConfigSet(string key, string value, CommandFlags flags = CommandFlags.None);
 
     /// <summary>
     /// Команда используется для перенастройки сервера во время выполнения без необходимости перезапуска Redis.
     /// </summary>
     /// <remarks>https://redis.io/commands/config-set</remarks>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
-    /// <param name="flags"></param>
+    /// <param name="key">Имя ключа</param>
+    /// <param name="value">Значение ключа</param>
+    /// <param name="flags">Флаги выполнения</param>
     Task ConfigSetAsync(string key, string value, CommandFlags flags = CommandFlags.None);
 
     /// <summary>
     /// Команда возвращает информацию и статистику о сервере в формате, который легко парсится и читается.
     /// </summary>
     /// <remarks>https://redis.io/commands/info</remarks>
-    /// <param name="section"></param>
-    /// <param name="flags"></param>
+    /// <param name="section">Информационная секция</param>
+    /// <param name="flags">Флаги выполнения</param>
     IGrouping<string, KeyValuePair<string, string>>[] Info(string section, CommandFlags flags = CommandFlags.None);
 
     /// <summary>
     /// Команда возвращает информацию и статистику о сервере в формате, который легко парсится и читается.
     /// </summary>
     /// <remarks>https://redis.io/commands/info</remarks>
-    /// <param name="section"></param>
-    /// <param name="flags"></param>
+    /// <param name="section">Информационная секция</param>
+    /// <param name="flags">Флаги выполнения</param>
     Task<IGrouping<string, KeyValuePair<string, string>>[]> InfoAsync(string section, CommandFlags flags = CommandFlags.None);
 
     /// <summary>
     /// Возвращает время последнего успешного сохранения в базу данных.
     /// </summary>
     /// <remarks>https://redis.io/commands/lastsave</remarks>
-    /// <param name="flags"></param>
+    /// <param name="flags">Флаги выполнения</param>
     DateTime? LastSave(CommandFlags flags = CommandFlags.None);
 
     /// <summary>
     /// Возвращает время последнего успешного сохранения в базу данных.
     /// </summary>
     /// <remarks>https://redis.io/commands/lastsave</remarks>
-    /// <param name="flags"></param>
+    /// <param name="flags">Флаги выполнения</param>
     Task<DateTime?> LastSaveAsync(CommandFlags flags = CommandFlags.None);
 
     /// <summary>
     /// Возвращает текущее время сервера.
     /// </summary>
     /// <remarks>https://redis.io/commands/time</remarks>
-    /// <param name="flags"></param>
+    /// <param name="flags">Флаги выполнения</param>
     /// <returns>Текущее время сервера.</returns>
     DateTime? Time(CommandFlags flags = CommandFlags.None);
 
@@ -155,8 +155,38 @@ namespace ViennaNET.Redis
     /// Возвращает текущее время сервера.
     /// </summary>
     /// <remarks>https://redis.io/commands/time</remarks>
-    /// <param name="flags"></param>
+    /// <param name="flags">Флаги выполнения</param>
     /// <returns>Текущее время сервера.</returns>
     Task<DateTime?> TimeAsync(CommandFlags flags = CommandFlags.None);
+    
+    /// <summary>
+    /// Удалить все данные/ключи из всех баз данных Redis
+    /// </summary>
+    /// <remarks>https://redis.io/commands/flushall</remarks>
+    /// <param name="flags">Флаги выполнения</param>
+    void FlushAllDatabases(CommandFlags flags = CommandFlags.None);
+    
+    /// <summary>
+    /// Удалить все данные/ключи из всех баз данных Redis
+    /// </summary>
+    /// <remarks>https://redis.io/commands/flushall</remarks>
+    /// <param name="flags">Флаги выполнения</param>
+    Task FlushAllDatabasesAsync(CommandFlags flags = CommandFlags.None);
+    
+    /// <summary>
+    /// Удалить все данные/ключи из базы данных Redis
+    /// </summary>
+    /// <remarks>https://redis.io/commands/flushdb</remarks>
+    /// <param name="database">Номер БД</param>
+    /// <param name="flags">Флаги выполнения</param>
+    void FlushDatabase(int database = 0, CommandFlags flags = CommandFlags.None);
+
+    /// <summary>
+    /// Удалить все данные/ключи из базы данных Redis
+    /// </summary>
+    /// <remarks>https://redis.io/commands/flushdb</remarks>
+    /// <param name="database">Номер БД</param>
+    /// <param name="flags">Флаги выполнения</param>
+    Task FlushDatabaseAsync(int database = 0, CommandFlags flags = CommandFlags.None);
   }
 }

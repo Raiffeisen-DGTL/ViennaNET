@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViennaNET.Orm.Application;
-using ViennaNET.Orm.Repositories;
 using ViennaNET.Orm.Seedwork;
 
 namespace ViennaNET.TestUtils.Orm
 {
   /// <summary>
-  ///   Билдер для стаба IEntityFactoryService.
-  ///   Предлагается использовать таким образом:
+  ///   IEntityFactoryService stub builder.
+  ///   Supposed to use like this:
   ///   var entityFactoryServiceStub = EntityFactoryServiceStubBuilder.Create().
-  ///   .With(EntityRepositoryStub.Create(new [] { adminUser, ruapus9User }))
-  ///   .With(EntityRepositoryStub.Create(new Session[] {}))
-  ///   .Build();
+  ///     .With(EntityRepositoryStub.Create(new [] { adminUser, guestUser }))
+  ///     .With(EntityRepositoryStub.Create(new Session[] {}))
+  ///     .Build();
   /// </summary>
   public class EntityFactoryServiceStubBuilder
   {
@@ -27,20 +25,21 @@ namespace ViennaNET.TestUtils.Orm
     }
 
     /// <summary>
-    ///   Статический метод для создания билдера
+    ///   Factory method to create EntityFactoryServiceStubBuilder instance
     /// </summary>
-    /// <returns>Экземпляр EntityFactoryServiceStubBuilder</returns>
+    /// <returns>new EntityFactoryServiceStubBuilder instance</returns>
     public static EntityFactoryServiceStubBuilder Create()
     {
       return new EntityFactoryServiceStubBuilder();
     }
 
     /// <summary>
-    ///   Добавить репозиторий
+    ///   Add IEntityRepository to EntityFactoryService
+    ///   You may create your own IEntityRepository mock or use our EntityRepositoryStub class
     /// </summary>
-    /// <param name="repository">Репозиторий</param>
-    /// <typeparam name="T">Тип ключа в репозитории</typeparam>
-    /// <returns>Возвращает this для chaining</returns>
+    /// <param name="repository">repository to add to EntityFactoryService</param>
+    /// <typeparam name="T">Repository Key type</typeparam>
+    /// <returns>Returns this builder to enable method chaining</returns>
     public EntityFactoryServiceStubBuilder WithRepository<T>(IEntityRepository<T> repository) where T : class
     {
       _stub.AddRepository(repository);
@@ -49,9 +48,37 @@ namespace ViennaNET.TestUtils.Orm
     }
 
     /// <summary>
-    ///   Создать IEntityFactoryService
+    ///   Add ICustomQueryExecutor to EntityFactoryService
+    ///   You may create your own ICustomQueryExecutor mock or use our CustomQueryExecutorStub class
     /// </summary>
-    /// <returns>Экземпляр IEntityFactoryService</returns>
+    /// <param name="customQueryExecutor">ICustomQueryExecutor instance</param>
+    /// <typeparam name="T">Query result type</typeparam>
+    /// <returns>Returns this builder to enable method chaining</returns>
+    public EntityFactoryServiceStubBuilder WithCustomQueryExecutor<T>(ICustomQueryExecutor<T> customQueryExecutor) where T : class
+    {
+      _stub.AddCustomQueryExecutor(customQueryExecutor);
+
+      return this;
+    }
+
+    /// <summary>
+    ///   Add ICommandExecutor to EntityFactoryService
+    ///   You may create your own ICommandExecutor mock or use our CommandExecutorStub class
+    /// </summary>
+    /// <param name="commandExecutor">ICommandExecutor instance</param>
+    /// <typeparam name="T">Command type</typeparam>
+    /// <returns>Returns this builder to enable method chaining</returns>
+    public EntityFactoryServiceStubBuilder WithCommandExecutor<T>(ICommandExecutor<T> commandExecutor) where T : class, ICommand
+    {
+      _stub.AddCommandExecutor(commandExecutor);
+
+      return this;
+    }
+
+    /// <summary>
+    ///   Create IEntityFactoryService stub
+    /// </summary>
+    /// <returns>IEntityFactoryService stub instance</returns>
     public IEntityFactoryService Build()
     {
       return _stub;
@@ -60,6 +87,8 @@ namespace ViennaNET.TestUtils.Orm
     private class EntityFactoryServiceStub : IEntityFactoryService
     {
       private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
+      private readonly Dictionary<Type, object> _customQueryExecutors = new Dictionary<Type, object>();
+      private readonly Dictionary<Type, object> _commandExecutors = new Dictionary<Type, object>();
 
       public IEntityRepository<T> Create<T>() where T : class
       {
@@ -90,17 +119,27 @@ namespace ViennaNET.TestUtils.Orm
 
       public ICommandExecutor<T> CreateCommandExecutor<T>() where T : class, ICommand
       {
-        throw new NotImplementedException();
+        return (ICommandExecutor<T>)_commandExecutors[typeof(T)];
       }
 
       public ICustomQueryExecutor<T> CreateCustomQueryExecutor<T>() where T : class
       {
-        throw new NotImplementedException();
+        return (ICustomQueryExecutor<T>)_customQueryExecutors[typeof(T)];
       }
 
       public void AddRepository<T>(IEntityRepository<T> repository) where T : class
       {
         _repositories[typeof(T)] = repository;
+      }
+
+      public void AddCustomQueryExecutor<T>(ICustomQueryExecutor<T> customQueryExecutor) where T : class
+      {
+        _customQueryExecutors[typeof(T)] = customQueryExecutor;
+      }
+
+      public void AddCommandExecutor<T>(ICommandExecutor<T> commandExecutor) where T : class, ICommand
+      {
+        _commandExecutors[typeof(T)] = commandExecutor;
       }
 
       private class ScopedSession : IDisposable

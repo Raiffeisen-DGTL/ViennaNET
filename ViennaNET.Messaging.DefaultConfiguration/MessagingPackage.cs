@@ -1,16 +1,16 @@
-﻿using ViennaNET.Diagnostic;
-using ViennaNET.Messaging.Processing;
-using ViennaNET.Messaging.Processing.Impl;
-using ViennaNET.Messaging.Tools;
-using SimpleInjector;
+﻿using SimpleInjector;
 using SimpleInjector.Packaging;
+using ViennaNET.CallContext;
+using ViennaNET.Diagnostic;
 using ViennaNET.Messaging.Context;
 using ViennaNET.Messaging.Diagnostic;
 using ViennaNET.Messaging.Factories;
 using ViennaNET.Messaging.Factories.Impl;
+using ViennaNET.Messaging.Processing;
+using ViennaNET.Messaging.Processing.Impl;
 using ViennaNET.Messaging.Resources;
 using ViennaNET.Messaging.Resources.Impl;
-using ViennaNET.CallContext;
+using ViennaNET.Messaging.Tools;
 
 namespace ViennaNET.Messaging.DefaultConfiguration
 {

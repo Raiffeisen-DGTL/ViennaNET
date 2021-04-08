@@ -20,15 +20,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Unit\Messages\BytesMessage.xml" />
-    <None Remove="Unit\Messages\TextMessage.xml" />
-    <None Remove="XmlTestData.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Unit\Extensions\XmlTestData.xml" />
-    <EmbeddedResource Include="Unit\Messages\TextMessage.xml" />
-    <EmbeddedResource Include="Unit\Messages\BytesMessage.xml" />
+    <EmbeddedResource Include="Extensions\XmlTestData.xml" />
+    <EmbeddedResource Include="Messages\TextMessage.xml" />
+    <EmbeddedResource Include="Messages\BytesMessage.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.Messaging.ActiveMQQueue\ViennaNET.Messaging.ActiveMQQueue.csproj" />
     <ProjectReference Include="..\ViennaNET.Messaging.KafkaQueue\ViennaNET.Messaging.KafkaQueue.csproj" />
     <ProjectReference Include="..\ViennaNET.Messaging.MQSeriesQueue\ViennaNET.Messaging.MQSeriesQueue.csproj" />
     <ProjectReference Include="..\ViennaNET.Messaging.RabbitMQQueue\ViennaNET.Messaging.RabbitMQQueue.csproj" />
@@ -55,15 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="app1.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="app3.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettingsAll.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

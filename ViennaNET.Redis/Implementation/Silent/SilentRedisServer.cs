@@ -282,6 +282,62 @@ namespace ViennaNET.Redis.Implementation.Silent
       }
     }
 
+    public void FlushAllDatabases(CommandFlags flags = CommandFlags.None)
+    {
+      try
+      {
+        _redisServer?.FlushAllDatabases(flags);
+      }
+      catch (Exception e)
+      {
+        LogError(e);
+      }
+    }
+
+    public async Task FlushAllDatabasesAsync(CommandFlags flags = CommandFlags.None)
+    {
+      try
+      {
+        if (_redisServer != null)
+        {
+          await _redisServer.FlushAllDatabasesAsync(flags)
+            .ConfigureAwait(false);
+        }
+      }
+      catch (Exception e)
+      {
+        LogError(e);
+      }
+    }
+
+    public void FlushDatabase(int database = 0, CommandFlags flags = CommandFlags.None)
+    {
+      try
+      {
+        _redisServer?.FlushDatabase(database, flags);
+      }
+      catch (Exception e)
+      {
+        LogError(e);
+      }
+    }
+
+    public async Task FlushDatabaseAsync(int database = 0, CommandFlags flags = CommandFlags.None)
+    {
+      try
+      {
+        if (_redisServer != null)
+        {
+          await _redisServer.FlushDatabaseAsync(database, flags)
+            .ConfigureAwait(false);
+        }
+      }
+      catch (Exception e)
+      {
+        LogError(e);
+      }
+    }
+
     private void LogError(Exception e)
     {
       _logger.LogError(e, "Action Redis has been failed.");

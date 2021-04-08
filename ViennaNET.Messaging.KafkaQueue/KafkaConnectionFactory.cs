@@ -34,7 +34,7 @@ namespace ViennaNET.Messaging.KafkaQueue
       {
         builder.SetErrorHandler(errorHandler);
       }
-        
+
       return builder.Build();
     }
 

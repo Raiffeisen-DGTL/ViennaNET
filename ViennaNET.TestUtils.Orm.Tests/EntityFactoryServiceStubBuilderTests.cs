@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using ViennaNET.Orm.Application;
 using ViennaNET.Orm.Seedwork;
 
 namespace ViennaNET.TestUtils.Orm.Tests
@@ -14,8 +15,8 @@ namespace ViennaNET.TestUtils.Orm.Tests
     public void Builder_WhenSomeRepositoriesAdded_ShouldCorrectlyReturnThem()
     {
       // Arrange
-      var customersRepository = new Mock<IEntityRepository<CustomerEntity>>().Object;
-      var cardsRepository = new Mock<IEntityRepository<CardEntity>>().Object;
+      var customersRepository = Mock.Of<IEntityRepository<CustomerEntity>>();
+      var cardsRepository = Mock.Of<IEntityRepository<CardEntity>>();
 
       // Act
       var efs = EntityFactoryServiceStubBuilder.Create()
@@ -29,6 +30,48 @@ namespace ViennaNET.TestUtils.Orm.Tests
 
       var cardsRepositoryResolved = efs.Create<CardEntity>();
       Assert.That(cardsRepositoryResolved, Is.EqualTo(cardsRepository));
+    }
+
+    [Test]
+    public void Builder_WhenSomeCustomQueryExecutorsAdded_ShouldCorrectlyReturnThem()
+    {
+      // Arrange
+      var cardsCustomQueryExecutor = Mock.Of<ICustomQueryExecutor<CardEntity>>();
+      var customerCustomQueryExecutor = Mock.Of<ICustomQueryExecutor<CustomerEntity>>();
+
+      // Act
+      var efs = EntityFactoryServiceStubBuilder.Create()
+        .WithCustomQueryExecutor(cardsCustomQueryExecutor)
+        .WithCustomQueryExecutor(customerCustomQueryExecutor)
+        .Build();
+
+      // Assert
+      var cardsCustomQueryExecutorResolved = efs.CreateCustomQueryExecutor<CardEntity>();
+      Assert.That(cardsCustomQueryExecutorResolved, Is.EqualTo(cardsCustomQueryExecutor));
+
+      var customerCustomQueryExecutorResolved = efs.CreateCustomQueryExecutor<CustomerEntity>();
+      Assert.That(customerCustomQueryExecutorResolved, Is.EqualTo(customerCustomQueryExecutor));
+    }
+
+    [Test]
+    public void Builder_WhenSomeCommandExecutorsAdded_ShouldCorrectlyReturnThem()
+    {
+      // Arrange
+      var expireCardCommandExecutor = Mock.Of<ICommandExecutor<ExpireCardCommand>>();
+      var setEmptyLimitCardCommandExecutor = Mock.Of<ICommandExecutor<SetEmptyLimitCardCommand>>();
+
+      // Act
+      var efs = EntityFactoryServiceStubBuilder.Create()
+        .WithCommandExecutor(expireCardCommandExecutor)
+        .WithCommandExecutor(setEmptyLimitCardCommandExecutor)
+        .Build();
+
+      // Assert
+      var expireCardCommandExecutorResolved = efs.CreateCommandExecutor<ExpireCardCommand>();
+      Assert.That(expireCardCommandExecutorResolved, Is.EqualTo(expireCardCommandExecutor));
+
+      var setEmptyLimitCardCommandExecutorResolved = efs.CreateCommandExecutor<SetEmptyLimitCardCommand>();
+      Assert.That(setEmptyLimitCardCommandExecutorResolved, Is.EqualTo(setEmptyLimitCardCommandExecutor));
     }
 
     [Test]

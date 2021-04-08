@@ -18,14 +18,14 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
     public QueueSubscribeAndReplyReactor(
       IMessageAdapterWithSubscribing messageAdapter,
       IEnumerable<IRepliableMessageProcessor> messageProcessors,
-      IEnumerable<IRepliableMessageProcessorAsync> asyncMessageProcessor, 
-      int reconnectTimeout, 
+      IEnumerable<IRepliableMessageProcessorAsync> asyncMessageProcessor,
+      int reconnectTimeout,
       bool? serviceHealthDependent,
       IHealthCheckingService healthCheckingService,
       IMessagingCallContextAccessor messagingCallContextAccessor,
       ILogger<QueueSubscribeAndReplyReactor> logger) : base(messageAdapter,
                                                             reconnectTimeout,
-                                                            serviceHealthDependent, 
+                                                            serviceHealthDependent,
                                                             healthCheckingService,
                                                             messagingCallContextAccessor,
                                                             logger)

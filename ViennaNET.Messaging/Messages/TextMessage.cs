@@ -10,7 +10,7 @@ namespace ViennaNET.Messaging.Messages
   public class TextMessage : BaseMessage
   {
     private const int MaxLogLength = 100000;
-    
+
     /// <summary>
     ///   Данные сообщения
     /// </summary>
@@ -20,7 +20,7 @@ namespace ViennaNET.Messaging.Messages
     /// <summary>
     ///   Mime тип содержимого сообщения
     /// </summary>
-    public string ContentType { get; set; } 
+    public string ContentType { get; set; }
 
     /// <inheritdoc />
     public override string LogBody()

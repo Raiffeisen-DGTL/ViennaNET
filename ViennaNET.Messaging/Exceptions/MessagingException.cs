@@ -17,7 +17,7 @@ namespace ViennaNET.Messaging.Exceptions
     /// <inheritdoc />
     public MessagingException(string message) : base(message)
     {
-      
+
     }
 
     /// <inheritdoc />

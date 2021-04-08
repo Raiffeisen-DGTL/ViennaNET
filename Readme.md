@@ -22,6 +22,10 @@
 *  [**ViennaNET.Messaging**](ViennaNET.Messaging) - classes and interfaces providing a common functionality for working with queues
 *  [**ViennaNET.Messaging.DefaultConfiguration**](ViennaNET.Messaging.DefaultConfiguration) - integration through SimpleInjector
 
+> ActiveMQ:
+> *  [**ViennaNET.Messaging.ActiveMQQueue**](ViennaNET.Messaging.ActiveMQQueue) - work with the ActiveMQ queue
+> *  [**ViennaNET.Messaging.ActiveMQQueue.DefaultConfiguration**](ViennaNET.Messaging.ActiveMQQueue.DefaultConfiguration) - integration through SimpleInjector
+
 > IBM MQ:
 > *  [**ViennaNET.Messaging.MQSeriesQueue**](ViennaNET.Messaging.MQSeriesQueue) - work with the IBM MQ Series queue
 > *  [**ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration**](ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration) - integration through SimpleInjector

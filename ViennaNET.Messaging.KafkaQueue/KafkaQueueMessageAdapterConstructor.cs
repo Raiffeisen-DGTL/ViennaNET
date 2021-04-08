@@ -6,13 +6,15 @@ using ViennaNET.Utils;
 namespace ViennaNET.Messaging.KafkaQueue
 {
   /// <inheritdoc />
-  public class KafkaQueueMessageAdapterConstructor : QueueMessageAdapterConstructorBase<KafkaConfiguration, KafkaQueueConfiguration>
+  public class
+    KafkaQueueMessageAdapterConstructor 
+    : QueueMessageAdapterConstructorBase<KafkaConfiguration, KafkaQueueConfiguration>
   {
-    private readonly ILoggerFactory _loggerFactory;
     private readonly IKafkaConnectionFactory _connectionFactory = new KafkaConnectionFactory();
+    private readonly ILoggerFactory _loggerFactory;
 
     /// <inheritdoc />
-    public KafkaQueueMessageAdapterConstructor(IConfiguration configuration, ILoggerFactory loggerFactory) 
+    public KafkaQueueMessageAdapterConstructor(IConfiguration configuration, ILoggerFactory loggerFactory)
       : base(configuration, "kafka")
     {
       _loggerFactory = loggerFactory;

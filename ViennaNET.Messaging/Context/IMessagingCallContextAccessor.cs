@@ -2,7 +2,7 @@
 
 namespace ViennaNET.Messaging.Context
 {
-  public interface IMessagingCallContextAccessor: ICallContextAccessor
+  public interface IMessagingCallContextAccessor : ICallContextAccessor
   {
   }
 }

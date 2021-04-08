@@ -1,3 +1,7 @@
+# v0014 (08.04.2021)
+1. Add ViennaNET.Messaging.ActiveMQ, split ViennaNET.Messaging.Tests
+2. Extension ViennaNET.Redis, ViennaNET.Utils.Orm
+
 # v0013 (01.03.2021)
 1. Minor changes in ViennaNET.Messaging, ViennaNET.Messaging.RabbitMQQueue, ViennaNET.Orm
 

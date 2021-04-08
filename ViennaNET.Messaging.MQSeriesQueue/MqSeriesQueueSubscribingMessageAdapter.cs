@@ -14,13 +14,14 @@ namespace ViennaNET.Messaging.MQSeriesQueue
   ///   Адаптер, реализующий взаимодействие с очередью IBM MQ в режиме подписки
   /// </summary>
   /// <remarks>Не поддерживает транзакции</remarks>
-  internal sealed class MqSeriesQueueSubscribingMessageAdapter : MqSeriesQueueMessageAdapterBase, IMessageAdapterWithSubscribing
+  internal sealed class MqSeriesQueueSubscribingMessageAdapter : MqSeriesQueueMessageAdapterBase, 
+    IMessageAdapterWithSubscribing
   {
     /// <inheritdoc />
     internal MqSeriesQueueSubscribingMessageAdapter(
       IMqSeriesQueueConnectionFactoryProvider connectionFactoryProvider,
       MqSeriesQueueConfiguration configuration,
-      ILogger<MqSeriesQueueSubscribingMessageAdapter> logger) 
+      ILogger<MqSeriesQueueSubscribingMessageAdapter> logger)
       : base(connectionFactoryProvider, configuration, logger)
     {
 

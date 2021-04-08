@@ -125,6 +125,32 @@ namespace ViennaNET.Redis.Implementation.Default
       return await result;
     }
 
+    public void FlushAllDatabases(CommandFlags flags = CommandFlags.None)
+    {
+      _server.FlushAllDatabases(flags);
+      LogDebug("FlushAllDatabases", $"Flags = {flags}");
+    }
+
+    public async Task FlushAllDatabasesAsync(CommandFlags flags = CommandFlags.None)
+    {
+      var result = _server.FlushAllDatabasesAsync(flags);
+      LogDebug("FlushAllDatabasesAsync", $"Flags = {flags}");
+      await result.ConfigureAwait(false);
+    }
+
+    public void FlushDatabase(int database = 0, CommandFlags flags = CommandFlags.None)
+    {
+      _server.FlushDatabase(database, flags);
+      LogDebug("FlushAllDatabasesAsync", $"Database = {database}; Flags = {flags}");
+    }
+
+    public async Task FlushDatabaseAsync(int database = 0, CommandFlags flags = CommandFlags.None)
+    {
+      var result = _server.FlushDatabaseAsync(database, flags);
+      LogDebug("FlushAllDatabasesAsync", $"Database = {database}; Flags = {flags}");
+      await result.ConfigureAwait(false);
+    }
+
     private static int GetValueLength(string value)
     {
       return value?.Length ?? 0;

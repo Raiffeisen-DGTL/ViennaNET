@@ -51,6 +51,13 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Default
       _serverMock.Setup(x => x.IsSlave)
                  .Returns(true);
 
+      _serverMock.Setup(x => x.FlushAllDatabases(It.IsAny<CommandFlags>()));
+      _serverMock.Setup(x => x.FlushDatabase(It.IsAny<int>(), It.IsAny<CommandFlags>()));
+      _serverMock.Setup(x => x.FlushAllDatabasesAsync(It.IsAny<CommandFlags>()))
+        .Returns(Task.FromResult<object>(null));
+      _serverMock.Setup(x => x.FlushDatabaseAsync(It.IsAny<int>(), It.IsAny<CommandFlags>()))
+        .Returns(Task.FromResult<object>(null));
+      
       _serverMock
         .Setup(x => x.Keys(It.IsAny<int>(), It.IsAny<RedisValue>(), It.IsAny<int>(), It.IsAny<CommandFlags>()))
         .Returns(new List<RedisKey> { "somePrefixkey1", "somePrefixkey2" });
@@ -222,6 +229,34 @@ namespace ViennaNET.Redis.Tests.Unit.Implementation.Default
 
       Assert.That(result, Is.EqualTo(new Version(1, 0, 2345, 21344)));
       _serverMock.Verify(x => x.Version);
+    }
+
+    [Test]
+    public void FlushDatabase_RedisServer_ServerMethodCorrect()
+    {
+      Assert.DoesNotThrow(() => _redisServer.FlushDatabase(1));
+      _serverMock.Verify(x=> x.FlushDatabase(1, CommandFlags.None), Times.Once);
+    }
+    
+    [Test]
+    public void FlushDatabaseAsync_RedisServer_ServerMethodCorrect()
+    {
+      Assert.DoesNotThrowAsync(() => _redisServer.FlushDatabaseAsync(2));
+      _serverMock.Verify(x=> x.FlushDatabaseAsync(2, CommandFlags.None), Times.Once);
+    }
+    
+    [Test]
+    public void FlushAllDatabases_RedisServer_ServerMethodCorrect()
+    {
+      Assert.DoesNotThrow(() => _redisServer.FlushAllDatabases());
+      _serverMock.Verify(x=> x.FlushAllDatabases(CommandFlags.None), Times.Once);
+    }
+    
+    [Test]
+    public void FlushAllDatabasesAsync_RedisServer_ServerMethodCorrect()
+    {
+      Assert.DoesNotThrow(() => _redisServer.FlushAllDatabasesAsync());
+      _serverMock.Verify(x=> x.FlushAllDatabasesAsync(CommandFlags.None), Times.Once);
     }
   }
 }

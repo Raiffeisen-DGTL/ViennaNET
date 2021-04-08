@@ -17,13 +17,13 @@ namespace ViennaNET.Messaging.Processing.Impl
   /// <inheritdoc cref="IQueueReactorFactory" />
   public class QueueReactorFactory : IQueueReactorFactory
   {
-    private readonly ILogger _logger;
     private readonly IEnumerable<IProcessorAsync> _asyncProcessors;
     private readonly IHealthCheckingService _healthCheckingService;
-    private readonly IMessageAdapterFactory _messageAdapterFactory;
-    private readonly IEnumerable<IProcessor> _processors;
-    private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
+    private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
+    private readonly IMessageAdapterFactory _messageAdapterFactory;
+    private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
+    private readonly IEnumerable<IProcessor> _processors;
     private readonly Dictionary<Type, string> _registrations = new Dictionary<Type, string>();
 
     /// <summary>
@@ -38,9 +38,9 @@ namespace ViennaNET.Messaging.Processing.Impl
     /// <param name="messagingCallContextAccessor">Ссылка на объект для доступа к контексту вызова</param>
     /// <param name="loggerFactory">Фабрика логгирования</param>
     public QueueReactorFactory(
-      IMessageAdapterFactory messageAdapterFactory, 
+      IMessageAdapterFactory messageAdapterFactory,
       IEnumerable<IProcessor> messageProcessors,
-      IEnumerable<IProcessorAsync> asyncMessageProcessors, 
+      IEnumerable<IProcessorAsync> asyncMessageProcessors,
       IHealthCheckingService healthCheckingService,
       IMessagingCallContextAccessor messagingCallContextAccessor,
       ILoggerFactory loggerFactory)
@@ -83,7 +83,8 @@ namespace ViennaNET.Messaging.Processing.Impl
       if (_registrations.ContainsKey(type))
       {
         throw new
-          MessageProcessorAlreadyRegisterException($"The message processor {type.Name} is already registered in the queue factory");
+          MessageProcessorAlreadyRegisterException(
+            $"The message processor {type.Name} is already registered in the queue factory");
       }
 
       _registrations.Add(type, queueId);
@@ -102,7 +103,8 @@ namespace ViennaNET.Messaging.Processing.Impl
       if (!adapter.SupportProcessingType(queueConfiguration.ProcessingType))
       {
         throw new
-          MessagingException($"Processing type: '{queueConfiguration.ProcessingType}' not available for queue: '{queueId}'");
+          MessagingException(
+            $"Processing type: '{queueConfiguration.ProcessingType}' not available for queue: '{queueId}'");
       }
 
       var messageProcessors = processors.OfType<IMessageProcessor>();
@@ -115,7 +117,7 @@ namespace ViennaNET.Messaging.Processing.Impl
             messageProcessors,
             messageAsyncProcessors,
             queueConfiguration.IntervalPollingQueue,
-            queueConfiguration.ServiceHealthDependent, 
+            queueConfiguration.ServiceHealthDependent,
             _healthCheckingService,
             _messagingCallContextAccessor,
             _loggerFactory.CreateLogger<QueueTransactedPollingReactor>());
@@ -128,8 +130,8 @@ namespace ViennaNET.Messaging.Processing.Impl
                 messageProcessors,
                 messageAsyncProcessors,
                 queueConfiguration.IntervalPollingQueue,
-                queueConfiguration.ServiceHealthDependent, 
-                _healthCheckingService, 
+                queueConfiguration.ServiceHealthDependent,
+                _healthCheckingService,
                 _messagingCallContextAccessor,
                 _loggerFactory.CreateLogger<QueueSubscribedReactor>());
             case MessageProcessingType.SubscribeAndReply:
@@ -139,23 +141,24 @@ namespace ViennaNET.Messaging.Processing.Impl
                 subscribing,
                 replyProcessors,
                 replyAsyncProcessors,
-                queueConfiguration.IntervalPollingQueue, 
+                queueConfiguration.IntervalPollingQueue,
                 queueConfiguration.ServiceHealthDependent,
                 _healthCheckingService,
                 _messagingCallContextAccessor,
                 _loggerFactory.CreateLogger<QueueSubscribeAndReplyReactor>());
             default:
               throw new
-                MessagingException($"There are found no QueueReactors with type '{queueConfiguration.ProcessingType}' for queue with name '{queueId}'.");
+                MessagingException(
+                  $"There are found no QueueReactors with type '{queueConfiguration.ProcessingType}' for queue with name '{queueId}'.");
           }
         default:
           return new QueuePollingReactor(
-            adapter, 
+            adapter,
             messageProcessors,
             messageAsyncProcessors,
             queueConfiguration.IntervalPollingQueue,
-            queueConfiguration.ServiceHealthDependent, 
-            _healthCheckingService, 
+            queueConfiguration.ServiceHealthDependent,
+            _healthCheckingService,
             _messagingCallContextAccessor,
             _loggerFactory.CreateLogger<QueuePollingReactor>());
       }
@@ -184,7 +187,8 @@ namespace ViennaNET.Messaging.Processing.Impl
     }
 
     private void GetAllProcessors(
-      string queueId, out IReadOnlyCollection<IProcessor> processors, out IReadOnlyCollection<IProcessorAsync> asyncProcessors)
+      string queueId, out IReadOnlyCollection<IProcessor> processors,
+      out IReadOnlyCollection<IProcessorAsync> asyncProcessors)
     {
       ValidateProcessorRegistrations();
 
@@ -209,6 +213,7 @@ namespace ViennaNET.Messaging.Processing.Impl
           unregistered.AddLast(type.Name);
         }
       }
+
       foreach (var processor in _asyncProcessors)
       {
         var type = processor.GetType();
@@ -221,13 +226,15 @@ namespace ViennaNET.Messaging.Processing.Impl
       if (unregistered.Count > 0)
       {
         var allUnregisteredString = string.Join(", ", unregistered);
-        throw new MessagingException($"The message processors {allUnregisteredString} are not registered in the queue factory");
+        throw new MessagingException(
+          $"The message processors {allUnregisteredString} are not registered in the queue factory");
       }
     }
 
     private bool ConfiguredWithQueueName(object messageProcessor, string queueId)
     {
-      return _registrations.TryGetValue(messageProcessor.GetType(), out var processorQueue) && processorQueue == queueId;
+      return _registrations.TryGetValue(messageProcessor.GetType(), out var processorQueue) &&
+             processorQueue == queueId;
     }
   }
 }

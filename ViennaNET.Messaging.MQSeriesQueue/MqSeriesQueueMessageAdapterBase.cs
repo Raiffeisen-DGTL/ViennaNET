@@ -5,6 +5,7 @@ using IBM.XMS;
 using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Exceptions;
+using ViennaNET.Messaging.Extensions;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.MQSeriesQueue.Infrastructure;
 using ViennaNET.Utils;
@@ -126,7 +127,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
       catch (XMSException ex)
       {
-        throw new MessagingException(ex, "Error while disconnect from the queue. See inner exception for more details");
+        throw new MessagingException(ex, 
+          "Error while disconnect from the queue. See inner exception for more details");
       }
     }
 
@@ -177,8 +179,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     }
 
     /// <inheritdoc />
-    public bool TryReceive(
-      out BaseMessage message, string correlationId = null, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+    public bool TryReceive(out BaseMessage message, string correlationId = null, TimeSpan? timeout = null, 
+      params (string Name, string Value)[] additionalParameters)
     {
       ThrowIfDisposed();
       ThrowIfNotConnected();
@@ -245,7 +247,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     /// <param name="correlationId"></param>
     /// <param name="additionalParameters"></param>
     /// <returns><see cref="IMessageConsumer"/></returns>
-    protected IMessageConsumer GetConsumer(string correlationId = "", params (string Name, string Value)[] additionalParameters)
+    protected IMessageConsumer GetConsumer(string correlationId = "", 
+      params (string Name, string Value)[] additionalParameters)
     {
       if (!string.IsNullOrWhiteSpace(correlationId))
       {
@@ -386,7 +389,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
       catch (XMSException ex)
       {
-        throw new MessagingException(ex, "Messaging error while sending message. See inner exception for more details");
+        throw new MessagingException(ex, 
+          "Messaging error while sending message. See inner exception for more details");
       }
       catch (Exception ex)
       {
@@ -431,7 +435,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       return combinedSelector;
     }
 
-    private string AddSelectorFromConfig(string correlationIdSelector, IEnumerable<(string Name, string Value)> additionalParameters)
+    private string AddSelectorFromConfig(string correlationIdSelector, 
+      IEnumerable<(string Name, string Value)> additionalParameters)
     {
       if (string.IsNullOrWhiteSpace(_configuration.Selector))
       {
@@ -439,8 +444,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
 
       var additionalSelector = additionalParameters.Aggregate(_configuration.Selector,
-                                                              (current, param) =>
-                                                                current.Replace($":{param.Name}", $"\'{param.Value}\'"));
+          (current, param) => current.Replace($":{param.Name}", $"\'{param.Value}\'"));
 
       var result = string.IsNullOrWhiteSpace(correlationIdSelector)
         ? additionalSelector
@@ -463,8 +467,10 @@ namespace ViennaNET.Messaging.MQSeriesQueue
 
     private void LogMessageInternal(BaseMessage message, bool isSend)
     {
+      var prefix = isSend ? "sent to" : "received from";
+
       _logger.LogDebug(
-        $"Message has been {(isSend ? "sent to" : "received from")} queue with ID:{{queueId}}{Environment.NewLine}{{message}}",
+        $"Message has been {prefix} queue with ID:{{queueId}}{Environment.NewLine}{{message}}",
         _configuration.Id,
         message?.LogBody());
     }

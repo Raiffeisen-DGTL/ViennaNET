@@ -28,12 +28,12 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
     /// <param name="logger">Интерфейс логгирования</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public QueueTransactedPollingReactor(
-      IMessageAdapterWithTransactions messageAdapter, 
+      IMessageAdapterWithTransactions messageAdapter,
       IEnumerable<IMessageProcessor> messageProcessors,
-      IEnumerable<IMessageProcessorAsync> asyncMessageProcessors, 
-      int subscribeInterval, 
+      IEnumerable<IMessageProcessorAsync> asyncMessageProcessors,
+      int subscribeInterval,
       bool? serviceHealthDependent,
-      IHealthCheckingService healthCheckingService, 
+      IHealthCheckingService healthCheckingService,
       IMessagingCallContextAccessor messagingCallContextAccessor,
       ILogger<QueueTransactedPollingReactor> logger) : base(messageAdapter,
                                                             messageProcessors,
