@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\ViennaNET.Orm.DB2.Win.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\ViennaNET.Orm.DB2.Win.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.Orm\ViennaNET.Orm.csproj" />
+    <ProjectReference Include="..\ViennaNET.Protection\ViennaNET.Protection.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IBM.Data.DB2.Core" Version="3.1.0.400" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(PkgIBM_Data_DB2_Core)\build\clidriver\**" Pack="true" PackagePath="build\clidriver" PackageCopyToOutput="false" />
+    <Content Include="$(PkgIBM_Data_DB2_Core)\build\*.targets" Pack="true" PackagePath="build\$(TargetName).targets" PackageCopyToOutput="false" />
+  </ItemGroup>
+
+</Project>
