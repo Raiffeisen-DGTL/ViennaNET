@@ -106,7 +106,7 @@ In the new version, the use of composite configurators has become easier, for ex
 ### Migration of AspNetCore applications from ViennaNET.WebApi 1.\*.\* (NET Core 2.2) to 2.\*.\* (NET Core 3.1)
 
 #### Case I. Used by DefaultKestrelRunner or DefaultHttpSysRunner
-1. In all assemblies using <TargetFramework>netcoreapp2.2</TargetFramework>, change to <TargetFramework>netcoreapp3.1</TargetFramework>.
+1. In all assemblies using <TargetFramework>netcoreapp2.2</TargetFramework>, change to <TargetFramework>net5.0</TargetFramework>.
 2. In the main assembly with the service, delete the link to the ViennaNET.WebApi.DefaultConfiguration package for the service on Kestrel or ViennaNET.WebApi.DefaultHttpSysRunner for the service on HttpSys.
 3. Install the latest version of the package (2. \*.\*) ViennaNET.WebApi.Runners.BaseKestrel or ViennaNET.WebApi.Runners.BaseHttpSys, respectively.
 4. We also update versions of Company libraries to (2. \*.\*) In all assemblies. Version conflicts with third-party libraries (for example, SimpleInjector) may occur, so they also need to be updated.
@@ -167,7 +167,7 @@ In the new version, the use of composite configurators has become easier, for ex
 ```
 
 #### Case II. The service was built manually (without using DefaultKestrelRunner or DefaultHttpSysRunner)
-1) In all assemblies using <TargetFramework>netcoreapp2.2</TargetFramework>, change to <TargetFramework>netcoreapp3.1</TargetFramework>.
+1) In all assemblies using <TargetFramework>netcoreapp2.2</TargetFramework>, change to <TargetFramework>net5.0</TargetFramework>.
 2) Assemblies with configurators were renamed to ViennaNET.WebApi.Configurators.\*, As well as some of them were merged or divided, so you need to familiarize yourself with their description and select the ones you need.
 
    Example:

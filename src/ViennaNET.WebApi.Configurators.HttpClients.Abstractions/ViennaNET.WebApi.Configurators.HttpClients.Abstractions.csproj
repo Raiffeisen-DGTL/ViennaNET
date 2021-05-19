@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
+    <ProjectReference Include="..\ViennaNET.Diagnostic\ViennaNET.Diagnostic.csproj" />
+    <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <ProjectReference Include="..\ViennaNET.HttpClient\ViennaNET.HttpClient.csproj" />
+    <ProjectReference Include="..\ViennaNET.Logging\ViennaNET.Logging.csproj" />
+    <ProjectReference Include="..\ViennaNET.Utils\ViennaNET.Utils.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\ViennaNET.WebApi.Configurators.HttpClients.Abstractions.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\ViennaNET.WebApi.Configurators.HttpClients.Abstractions.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

@@ -21,6 +21,6 @@ bin
 
 NuGet.Config
 
-*/TestResult/*
+**/TestResult/**/*.*
 
 .idea

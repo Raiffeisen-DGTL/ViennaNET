@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\ViennaNET.Mediator.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\ViennaNET.Mediator.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector.Packaging" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.Mediator.Pipelines\ViennaNET.Mediator.Pipelines.csproj" />
+    <ProjectReference Include="..\ViennaNET.Mediator.Seedwork\ViennaNET.Mediator.Seedwork.csproj" />
+    <ProjectReference Include="..\ViennaNET.Mediator\ViennaNET.Mediator.csproj" />
+  </ItemGroup>
+
+</Project>

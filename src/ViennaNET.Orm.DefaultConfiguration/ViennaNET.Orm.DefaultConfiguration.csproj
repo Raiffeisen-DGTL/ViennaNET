@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\ViennaNET.Orm.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\ViennaNET.Orm.DefaultConfiguration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector.Packaging" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ViennaNET.Mediator.DefaultConfiguration\ViennaNET.Mediator.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\ViennaNET.Orm\ViennaNET.Orm.csproj" />
+    <ProjectReference Include="..\ViennaNET.Security\ViennaNET.Security.csproj" />
+    <ProjectReference Include="..\ViennaNET.Utils\ViennaNET.Utils.csproj" />
+  </ItemGroup>
+
+</Project>
