@@ -36,14 +36,14 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware.Tests
               var logger = (ILogger<SetLoggingScopeMiddleware>)
                 app.ApplicationServices.GetService(typeof(ILogger<SetLoggingScopeMiddleware>));
 
-              app.Use((context, func) =>
-                 {
-                   var activity = new Activity("Test").Start();
-                   logger.LogInformation("test");
-                   return func();
-                 })
-                 .UseMiddleware<Middleware.SetLoggingScopeMiddleware>()
-                 .Use((context, func) => Task.CompletedTask);
+            app.Use((context, func) =>
+               {
+                 var activity = new Activity("Test").Start();
+                 logger.LogInformation("test");
+                 return func();
+               })
+               .UseMiddleware<Middleware.SetLoggingScopeMiddleware>()
+               .Run(func => Task.CompletedTask);
             });
         });
     }
