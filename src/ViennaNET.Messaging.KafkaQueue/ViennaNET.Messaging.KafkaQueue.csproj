@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Apache.Avro" Version="1.10.2" />
-    <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
+    <PackageReference Include="Apache.Avro" Version="1.11.0" />
+    <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
   </ItemGroup>
 
   <ItemGroup>
