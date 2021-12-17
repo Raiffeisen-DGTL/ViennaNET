@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Apache.Avro" Version="1.10.2" />
-    <PackageReference Include="Confluent.Kafka" Version="1.6.3" />
+    <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
   </ItemGroup>
 
   <ItemGroup>
