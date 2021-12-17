@@ -216,8 +216,10 @@ namespace ViennaNET.Messaging.RabbitMQQueue
 
       try
       {
-        var dataResult = _advancedBus.Get(_queue);
-        if (dataResult == null)
+        // PullingConsumer has been introduced as a replacement for IAdvancedBus.IBasicGetResult Get(IQueue queue): auto ack or manual ack are supported as well as batch acks.
+        var pullingConsumer = _advancedBus.CreatePullingConsumer(_queue);
+        var dataResult = pullingConsumer.PullAsync().GetAwaiter().GetResult();
+        if (!dataResult.IsAvailable)
         {
           return false;
         }
@@ -260,9 +262,14 @@ namespace ViennaNET.Messaging.RabbitMQQueue
         lock (_connectionLock)
         {
           var replyExchange = _advancedBus.ExchangeDeclare(ReplyExchangeName, ExchangeType.Direct);
-          var replyQueue = _advancedBus.QueueDeclare(replyQueueName, durable: false, autoDelete: true,
-                                                     expires: (_configuration.ReplyTimeout ?? DefaultReplyTimeout) * 1000
-                                                              + TempQueueLifetimeAdditionMs);
+
+          var replyQueue = _advancedBus.QueueDeclare(replyQueueName, conf =>
+          {
+            conf.AsDurable(false);
+            conf.AsAutoDelete(false);
+            conf.WithExpires(TimeSpan.FromMilliseconds((_configuration.ReplyTimeout ?? DefaultReplyTimeout) * 1000
+                                                              + TempQueueLifetimeAdditionMs));
+          });
           _advancedBus.Bind(replyExchange, replyQueue, replyQueueName);
           _advancedBus.Consume(replyQueue, (body, messageProperties, info) => Task.Factory.StartNew(() =>
           {
@@ -302,7 +309,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       try
       {
         var replyExchange = _advancedBus.ExchangeDeclare(ReplyExchangeName, ExchangeType.Direct);
-        var queue = _advancedBus.QueueDeclare(message.ReplyQueue, true);
+        var queue = _advancedBus.QueueDeclare(message.ReplyQueue); // TODO: here passive queue was declared
         _advancedBus.Bind(replyExchange, queue, message.ReplyQueue);
         var body = message.GetMessageBodyAsBytes();
         _advancedBus.Publish(replyExchange, message.ReplyQueue, false, message.ConvertToProperties(_configuration), body);

@@ -24,7 +24,7 @@ namespace ViennaNET.Messaging.RabbitMQQueue
       string hostName, ushort hostPort, string virtualHost, string username, string password, ushort requestedHeartbeat,
       Action<IServiceRegister> registerServices)
     {
-      return RabbitHutch.CreateBus(hostName, hostPort, virtualHost, username, password, requestedHeartbeat, registerServices)
+      return RabbitHutch.CreateBus(hostName, hostPort, virtualHost, username, password, new TimeSpan(requestedHeartbeat), registerServices)
 .Advanced;
     }
   }
