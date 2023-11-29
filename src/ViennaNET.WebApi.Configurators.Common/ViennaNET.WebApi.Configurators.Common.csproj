@@ -1,26 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net6.0</TargetFramework>
+    
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net6.0\ViennaNET.WebApi.Configurators.Common.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\net6.0\ViennaNET.WebApi.Configurators.Common.xml</DocumentationFile>
+  </PropertyGroup>
+  
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.WebApi.Configurators.Common.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\ViennaNET.WebApi.Configurators.Common.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Net\ViennaNET.WebApi.Net.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Net\ViennaNET.WebApi.Net.csproj" />
   </ItemGroup>
 
 </Project>

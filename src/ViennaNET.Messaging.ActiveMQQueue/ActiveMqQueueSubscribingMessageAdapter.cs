@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Apache.NMS;
 using Microsoft.Extensions.Logging;
-using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Utils;
 
@@ -17,7 +16,8 @@ namespace ViennaNET.Messaging.ActiveMQQueue
   {
     private const int DefaultReplyTimeout = 30;
 
-    private readonly List<MessageListener> _listeners = new List<MessageListener>();
+    private readonly ActiveMqQueueConfiguration _configuration;
+    private readonly List<MessageListener> _listeners = new();
 
     /// <summary>
     ///   Конструктор адаптера
@@ -30,20 +30,7 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       ILogger logger)
       : base(connectionFactory, queueConfiguration, logger)
     {
-    }
-
-    /// <inheritdoc />
-    public override bool SupportProcessingType(MessageProcessingType processingType)
-    {
-      return base.SupportProcessingType(processingType) ||
-             processingType == MessageProcessingType.Subscribe ||
-             processingType == MessageProcessingType.SubscribeAndReply;
-    }
-
-    /// <inheritdoc />
-    protected override ISession CreateSession(IConnection connection)
-    {
-      return connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
+      _configuration = queueConfiguration;
     }
 
     /// <inheritdoc />
@@ -73,16 +60,22 @@ namespace ViennaNET.Messaging.ActiveMQQueue
     /// <inheritdoc />
     public async Task<BaseMessage> RequestAndWaitResponse(BaseMessage message)
     {
-      var replyQueueName = Configuration.ReplyQueue;
+      var replyQueueName = _configuration.ReplyQueue;
       message.ReplyQueue = replyQueueName;
-      message.LifeTime = Configuration.Lifetime ?? TimeSpan.FromSeconds(DefaultReplyTimeout);
+      message.LifeTime = _configuration.Lifetime ?? TimeSpan.FromSeconds(DefaultReplyTimeout);
 
       Send(message);
 
-      var destination = Session.GetQueue(Configuration.ReplyQueue);
-      var consumer = Session.CreateConsumer(destination, $"JMSCorrelationID = '{message.CorrelationId}'", false);
+      var destination = Session.GetQueue(_configuration.ReplyQueue);
+      var consumer = Session.CreateConsumer(
+        destination,
+        $"JMSCorrelationID = '{message.CorrelationId}'",
+        false);
 
-      var result = await Task.Factory.StartNew(() => consumer.Receive(message.LifeTime)).ConfigureAwait(false);
+      var result = await Task
+        .Factory
+        .StartNew(() => consumer.Receive(message.LifeTime))
+        .ConfigureAwait(false);
 
       if (result == null)
       {
@@ -99,13 +92,13 @@ namespace ViennaNET.Messaging.ActiveMQQueue
     /// <inheritdoc />
     public BaseMessage Reply(BaseMessage message)
     {
-      var replyQueueName = Configuration.ReplyQueue;
+      var replyQueueName = _configuration.ReplyQueue;
 
       message.ReplyQueue = replyQueueName;
-      message.LifeTime = Configuration.Lifetime ?? TimeSpan.FromSeconds(DefaultReplyTimeout);
+      message.LifeTime = _configuration.Lifetime ?? TimeSpan.FromSeconds(DefaultReplyTimeout);
 
-      var destination = Session.GetQueue(Configuration.ReplyQueue);
-      var producer = Session.CreateProducer(destination);
+      var destination = Session.GetQueue(_configuration.ReplyQueue);
+      using var producer = Session.CreateProducer(destination);
 
       LogMessageInternal(message, true);
 
@@ -117,6 +110,12 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       message.CorrelationId = requestMessage.NMSCorrelationID;
 
       return message;
+    }
+
+    /// <inheritdoc />
+    protected override ISession CreateSession(IConnection connection)
+    {
+      return connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
     }
   }
 }

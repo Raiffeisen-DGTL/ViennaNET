@@ -3,16 +3,15 @@
 namespace ViennaNET.Messaging.ActiveMQQueue
 {
   /// <summary>
-  /// Фабрика подключений к очереди
+  ///   Фабрика подключений к очереди
   /// </summary>
   public interface IActiveMqConnectionFactory
   {
     /// <summary>
-    /// Получить фабрику подключений к очереди
+    ///   Получить фабрику подключений к очереди
     /// </summary>
-    /// <param name="server">Сервер</param>
-    /// <param name="port">Порт подключения</param>
+    /// <param name="configuration">Настройки подключения</param>
     /// <returns></returns>
-    IConnectionFactory GetConnectionFactory(string server, int port);
+    IConnectionFactory GetConnectionFactory(ActiveMqQueueConfiguration configuration);
   }
 }

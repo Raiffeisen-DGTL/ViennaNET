@@ -9,7 +9,7 @@ using ViennaNET.Utils;
 namespace ViennaNET.WebApi.Configurators.HttpClients.Jwt.Handlers
 {
   /// <summary>
-  /// Обработчик Http-запросов, пробрасывающий заголовок Authorization из входящего запроса в исходящий
+  ///   Обработчик Http-запросов, пробрасывающий заголовок Authorization из входящего запроса в исходящий
   /// </summary>
   public class RequestAuthorizationHeaderHandler : DelegatingHandler
   {
@@ -23,9 +23,9 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Jwt.Handlers
     private static void SetHeaderParameter(
       HttpRequestMessage request, string headerId, ICallContext callContext, Func<ICallContext, string> getParameter)
     {
-      if (request.Headers.Contains(headerId))
+      if(request.Headers.Contains(headerId) && request.Headers.GetValues(headerId).Any(v=> v != null))
       {
-        request.Headers.Remove(headerId);
+          return;
       }
 
       var parameter = getParameter(callContext);
@@ -35,7 +35,8 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Jwt.Handlers
       }
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+      CancellationToken cancellationToken)
     {
       var context = _callContextFactory.Create();
 

@@ -10,15 +10,15 @@ using ViennaNET.WebApi.Abstractions;
 namespace ViennaNET.WebApi.Configurators.Diagnostic
 {
   /// <summary>
-  /// Регистрирует контроллер с диагностикой сервисов
+  ///   Регистрирует контроллер с диагностикой сервисов
   /// </summary>
   [ExcludeFromCodeCoverage]
   public static class CompanyDiagnosticConfigurator
   {
-    public static IViennaHostBuilder UseDiagnosing(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseDiagnosing(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.AddMvcBuilderConfiguration(ConfigureMvcBuilder)
-                               .RegisterServices(RegisterServices);
+        .RegisterServices(RegisterServices);
     }
 
     internal static void ConfigureMvcBuilder(IMvcCoreBuilder builder, IConfiguration configuration)

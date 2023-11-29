@@ -1,28 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-
+    <TargetFramework>net6.0</TargetFramework>
+    
   </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net6.0\ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration.xml</DocumentationFile>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration.xml</DocumentationFile>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\net6.0\ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration.xml</DocumentationFile>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration.xml</DocumentationFile>
-  </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="SimpleInjector.Packaging" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.Messaging.DefaultConfiguration\ViennaNET.Messaging.DefaultConfiguration.csproj" />
-    <ProjectReference Include="..\ViennaNET.Messaging.RabbitMQQueue\ViennaNET.Messaging.RabbitMQQueue.csproj" />
-    <ProjectReference Include="..\ViennaNET.Messaging\ViennaNET.Messaging.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Messaging.DefaultConfiguration\ViennaNET.Messaging.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Messaging.RabbitMQQueue\ViennaNET.Messaging.RabbitMQQueue.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Messaging\ViennaNET.Messaging.csproj" />
   </ItemGroup>
 
 </Project>

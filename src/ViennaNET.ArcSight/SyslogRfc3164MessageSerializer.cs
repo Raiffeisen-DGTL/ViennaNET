@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.IO;
 using System.Text;
 using SyslogNet.Client;
 using SyslogNet.Client.Serialization;
@@ -17,9 +16,12 @@ namespace ViennaNET.ArcSight
       if (message.DateTimeOffset.HasValue)
       {
         var dt = message.DateTimeOffset.Value;
-        var day = dt.Day < 10
-          ? " " + dt.Day
-          : dt.Day.ToString(); // Yes, this is stupid but it's in the spec
+        var day = dt.Day.ToString();
+        if (day.Length == 1)
+        {
+            day = string.Concat(' ', day);
+        }
+
         timestamp = string.Concat(dt.ToString("MMM ", CultureInfo.InvariantCulture), day, dt.ToString(" HH:mm:ss"));
       }
 

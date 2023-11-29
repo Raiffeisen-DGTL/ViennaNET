@@ -9,11 +9,13 @@ using ViennaNET.Mediator.Seedwork;
 
 namespace ViennaNET.Mediator.Pipeline
 {
+  [Obsolete(
+      "Данный пакет устарел и будет удален в ноябре 2023. Пожалуйста используйте ViennaNET.Extensions.Mediator")]
   public class PreProcessorService : IPreProcessorService
   {
-    private readonly object _preProcessorsSync;
     private readonly SortedList<int, PreProcessors> _preProcessorsOrdered;
     private readonly ConcurrentQueue<PreProcessors> _preProcessorsQueue;
+    private readonly object _preProcessorsSync;
     private readonly ConcurrentBag<Type> _preProcessorsTypes;
 
     public PreProcessorService()
@@ -24,36 +26,8 @@ namespace ViennaNET.Mediator.Pipeline
       _preProcessorsTypes = new ConcurrentBag<Type>();
     }
 
-    private void RefreshPreProcessorsQueue()
-    {
-      while (!_preProcessorsQueue.IsEmpty)
-      {
-        _preProcessorsQueue.TryDequeue(out _);
-      }
-      lock (_preProcessorsSync)
-      {
-        foreach (var preProcessor in _preProcessorsOrdered)
-        {
-          _preProcessorsQueue.Enqueue(preProcessor.Value);
-        }
-      }
-    }
-
-    private PreProcessors GetPreProcessors(int order)
-    {
-      PreProcessors processors;
-      lock (_preProcessorsSync)
-      {
-        if (!_preProcessorsOrdered.TryGetValue(order, out processors))
-        {
-          processors = new PreProcessors();
-          _preProcessorsOrdered.Add(order, processors);
-        }
-      }
-      return processors;
-    }
-
-    public void RegisterMessagePreProcessor<TMessage, TPipelineProcessor>(TPipelineProcessor registerPreProcessor, int order)
+    public void RegisterMessagePreProcessor<TMessage, TPipelineProcessor>(TPipelineProcessor registerPreProcessor,
+      int order)
       where TMessage : class, IMessage
       where TPipelineProcessor : IMessagePreProcessor<TMessage>
     {
@@ -64,8 +38,11 @@ namespace ViennaNET.Mediator.Pipeline
 
       if (_preProcessorsTypes.Contains(registerPreProcessor.GetType()))
       {
-        throw new ArgumentException($"The pre-processor {typeof(TPipelineProcessor)} for message {typeof(TMessage).FullName} is already registered.", nameof(registerPreProcessor));
+        throw new ArgumentException(
+          $"The pre-processor {typeof(TPipelineProcessor)} for message {typeof(TMessage).FullName} is already registered.",
+          nameof(registerPreProcessor));
       }
+
       _preProcessorsTypes.Add(registerPreProcessor.GetType());
 
       var processors = GetPreProcessors(order);
@@ -86,8 +63,10 @@ namespace ViennaNET.Mediator.Pipeline
 
       if (_preProcessorsTypes.Contains(registerPreProcessor.GetType()))
       {
-        throw new ArgumentException($"The broadcast pre-processor {typeof(TPipelineProcessor)} is already registered.", nameof(registerPreProcessor));
+        throw new ArgumentException($"The broadcast pre-processor {typeof(TPipelineProcessor)} is already registered.",
+          nameof(registerPreProcessor));
       }
+
       _preProcessorsTypes.Add(registerPreProcessor.GetType());
 
       var processors = GetPreProcessors(order);
@@ -98,7 +77,8 @@ namespace ViennaNET.Mediator.Pipeline
       RefreshPreProcessorsQueue();
     }
 
-    public async Task ExecuteAllPreProcessorsAsync<TMessage>(TMessage message, CancellationToken cancellationToken) where TMessage : class, IMessage
+    public async Task ExecuteAllPreProcessorsAsync<TMessage>(TMessage message, CancellationToken cancellationToken)
+      where TMessage : class, IMessage
     {
       foreach (var preProcessors in _preProcessorsQueue)
       {
@@ -106,10 +86,12 @@ namespace ViennaNET.Mediator.Pipeline
         {
           await ((IBroadcastPreProcessor)broadcastPreProcessor).ProcessAsync(message, cancellationToken);
         }
+
         if (!preProcessors.MessagePreProcessors.TryGetValue(message.GetType(), out var processors))
         {
           continue;
         }
+
         foreach (var processor in processors)
         {
           await ((IMessagePreProcessor<TMessage>)processor).ProcessAsync(message, cancellationToken);
@@ -125,15 +107,48 @@ namespace ViennaNET.Mediator.Pipeline
         {
           ((IBroadcastPreProcessor)broadcastPreProcessor).Process(message);
         }
+
         if (!preProcessors.MessagePreProcessors.TryGetValue(message.GetType(), out var processors))
         {
           continue;
         }
+
         foreach (var processor in processors)
         {
           ((IMessagePreProcessor<TMessage>)processor).Process(message);
         }
       }
+    }
+
+    private void RefreshPreProcessorsQueue()
+    {
+      while (!_preProcessorsQueue.IsEmpty)
+      {
+        _preProcessorsQueue.TryDequeue(out _);
+      }
+
+      lock (_preProcessorsSync)
+      {
+        foreach (var preProcessor in _preProcessorsOrdered)
+        {
+          _preProcessorsQueue.Enqueue(preProcessor.Value);
+        }
+      }
+    }
+
+    private PreProcessors GetPreProcessors(int order)
+    {
+      PreProcessors processors;
+      lock (_preProcessorsSync)
+      {
+        if (!_preProcessorsOrdered.TryGetValue(order, out processors))
+        {
+          processors = new PreProcessors();
+          _preProcessorsOrdered.Add(order, processors);
+        }
+      }
+
+      return processors;
     }
   }
 }

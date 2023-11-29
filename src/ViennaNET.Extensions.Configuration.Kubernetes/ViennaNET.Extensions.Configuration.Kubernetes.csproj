@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Description>
+            Предоставляет API поставщика конфигурации на основе ресурсов K8S.
+            Позволяет добавить, в качестве источника ConfigMap или Secret
+            Содержащий данные в формате Json или Key/Value.
+        </Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="KubernetesClient" Version="9.0.38"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1"/>
+    </ItemGroup>
+
+</Project>

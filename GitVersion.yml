@@ -1,0 +1,4 @@
+mode: MainLine
+major-version-bump-message: "^(platform|frm)(!:|:.*\\n\\n((.+\\n)+\\n)?UP VERSION:\\s.+)"
+minor-version-bump-message: "^(((feat)(\\([\\w\\s-]*\\))?:)|((docs|feat|fix|refactor|revert|style)(\\([\\w\\s-]*\\))?(!:|:.*\\n\\n((.+\\n)+\\n)?BREAKING CHANGE:\\s.+)))"
+patch-version-bump-message: "^(docs|fix|refactor|revert|style)(\\([\\w\\s-]*\\))?:"

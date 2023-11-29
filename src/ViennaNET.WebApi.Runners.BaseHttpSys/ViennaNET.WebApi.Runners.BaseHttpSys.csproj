@@ -1,34 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net6.0</TargetFramework>
+    
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net6.0\ViennaNET.WebApi.Runners.BaseHttpSys.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\net6.0\ViennaNET.WebApi.Runners.BaseHttpSys.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.CallContext\ViennaNET.WebApi.Configurators.CallContext.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.Diagnostic\ViennaNET.WebApi.Configurators.Diagnostic.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.HttpClients.Ntlm\ViennaNET.WebApi.Configurators.HttpClients.Ntlm.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.HttpSys\ViennaNET.WebApi.Configurators.HttpSys.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.Security.Ntlm\ViennaNET.WebApi.Configurators.Security.Ntlm.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.SimpleInjector\ViennaNET.WebApi.Configurators.SimpleInjector.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.Swagger\ViennaNET.WebApi.Configurators.Swagger.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.Common\ViennaNET.WebApi.Configurators.Common.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi\ViennaNET.WebApi.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.CallContext\ViennaNET.WebApi.Configurators.CallContext.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Diagnostic\ViennaNET.WebApi.Configurators.Diagnostic.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.HttpClients.Ntlm\ViennaNET.WebApi.Configurators.HttpClients.Ntlm.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.HttpSys\ViennaNET.WebApi.Configurators.HttpSys.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Security.Ntlm\ViennaNET.WebApi.Configurators.Security.Ntlm.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.SimpleInjector\ViennaNET.WebApi.Configurators.SimpleInjector.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Swagger\ViennaNET.WebApi.Configurators.Swagger.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi.Configurators.Common\ViennaNET.WebApi.Configurators.Common.csproj" />
-    <ProjectReference Include="..\ViennaNET.WebApi\ViennaNET.WebApi.csproj" />
-  </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.WebApi.Runners.BaseHttpSys.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\ViennaNET.WebApi.Runners.BaseHttpSys.xml</DocumentationFile>
-  </PropertyGroup>
-
+  
 </Project>

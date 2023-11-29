@@ -1,6 +1,5 @@
 ﻿using IBM.XMS;
 using Microsoft.Extensions.Logging;
-using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Messages;
 using ViennaNET.Messaging.MQSeriesQueue.Infrastructure;
@@ -11,7 +10,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
   ///   Адаптер с поддержкой транзакций, реализующий взаимодействие с очередью IBM MQ
   /// </summary>
   /// <remarks>Работает только в режиме поллинга</remarks>
-  internal sealed class MqSeriesQueueTransactedMessageAdapter : MqSeriesQueueMessageAdapterBase,
+  internal sealed class MqSeriesQueueTransactedMessageAdapter : MqSeriesQueueMessageAdapter,
     IMessageAdapterWithTransactions
   {
     /// <inheritdoc />
@@ -21,7 +20,6 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       ILogger<MqSeriesQueueTransactedMessageAdapter> logger)
       : base(connectionFactoryProvider, configuration, logger)
     {
-
     }
 
     /// <inheritdoc />
@@ -36,7 +34,9 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
       catch (XMSException ex)
       {
-        throw new MessagingException(ex, "Error while commit message. See inner exception for more details");
+        throw new MessagingException(
+          ex,
+          $"Error commiting message in queue {_configuration.Id}. See inner exception");
       }
     }
 
@@ -52,14 +52,10 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       }
       catch (XMSException ex)
       {
-        throw new MessagingException(ex, "Error while rollback message. See inner exception for more details");
+        throw new MessagingException(
+          ex,
+          $"Error rolling back message in queue {_configuration.Id}. See inner exception");
       }
-    }
-
-    /// <inheritdoc />
-    public override bool SupportProcessingType(MessageProcessingType processingType)
-    {
-      return processingType == MessageProcessingType.ThreadStrategy;
     }
 
     /// <inheritdoc />

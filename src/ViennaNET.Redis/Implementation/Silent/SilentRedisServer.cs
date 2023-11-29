@@ -10,8 +10,8 @@ namespace ViennaNET.Redis.Implementation.Silent
 {
   internal class SilentRedisServer : ISilentRedisServer
   {
-    private readonly IRedisServer _redisServer;
     private readonly ILogger _logger;
+    private readonly IRedisServer _redisServer;
 
     public SilentRedisServer(IRedisServer redisServer, ILogger<SilentRedisServer> logger)
     {
@@ -50,6 +50,7 @@ namespace ViennaNET.Redis.Implementation.Silent
         }
       }
     }
+
     public ServerType? ServerType
     {
       get
@@ -65,6 +66,7 @@ namespace ViennaNET.Redis.Implementation.Silent
         }
       }
     }
+
     public Version Version
     {
       get
@@ -80,6 +82,7 @@ namespace ViennaNET.Redis.Implementation.Silent
         }
       }
     }
+
     public bool? IsSlave
     {
       get
@@ -129,7 +132,7 @@ namespace ViennaNET.Redis.Implementation.Silent
         if (_redisServer != null)
         {
           await _redisServer.SaveAsync(saveType, flags)
-                            .ConfigureAwait(false);
+            .ConfigureAwait(false);
         }
       }
       catch (Exception e)
@@ -151,14 +154,15 @@ namespace ViennaNET.Redis.Implementation.Silent
       }
     }
 
-    public async Task<KeyValuePair<string, string>[]> ConfigGetAsync(string pattern = default, CommandFlags flags = CommandFlags.None)
+    public async Task<KeyValuePair<string, string>[]> ConfigGetAsync(string pattern = default,
+      CommandFlags flags = CommandFlags.None)
     {
       try
       {
         return _redisServer == null
           ? null
           : await _redisServer.ConfigGetAsync(pattern, flags)
-                              .ConfigureAwait(false);
+            .ConfigureAwait(false);
       }
       catch (Exception e)
       {
@@ -186,7 +190,7 @@ namespace ViennaNET.Redis.Implementation.Silent
         if (_redisServer != null)
         {
           await _redisServer.ConfigSetAsync(key, value)
-                            .ConfigureAwait(false);
+            .ConfigureAwait(false);
         }
       }
       catch (Exception e)
@@ -195,7 +199,8 @@ namespace ViennaNET.Redis.Implementation.Silent
       }
     }
 
-    public IGrouping<string, KeyValuePair<string, string>>[] Info(string section, CommandFlags flags = CommandFlags.None)
+    public IGrouping<string, KeyValuePair<string, string>>[] Info(string section,
+      CommandFlags flags = CommandFlags.None)
     {
       try
       {
@@ -208,14 +213,15 @@ namespace ViennaNET.Redis.Implementation.Silent
       }
     }
 
-    public async Task<IGrouping<string, KeyValuePair<string, string>>[]> InfoAsync(string section, CommandFlags flags = CommandFlags.None)
+    public async Task<IGrouping<string, KeyValuePair<string, string>>[]> InfoAsync(string section,
+      CommandFlags flags = CommandFlags.None)
     {
       try
       {
         return _redisServer == null
           ? null
           : await _redisServer.InfoAsync(section, flags)
-                              .ConfigureAwait(false);
+            .ConfigureAwait(false);
       }
       catch (Exception e)
       {
@@ -242,9 +248,9 @@ namespace ViennaNET.Redis.Implementation.Silent
       try
       {
         return _redisServer == null
-          ? null
+          ? (DateTime?)null
           : await _redisServer.LastSaveAsync(flags)
-                              .ConfigureAwait(false);
+            .ConfigureAwait(false);
       }
       catch (Exception e)
       {
@@ -271,9 +277,9 @@ namespace ViennaNET.Redis.Implementation.Silent
       try
       {
         return _redisServer == null
-          ? null
+          ? (DateTime?)null
           : await _redisServer.TimeAsync(flags)
-                              .ConfigureAwait(false);
+            .ConfigureAwait(false);
       }
       catch (Exception e)
       {

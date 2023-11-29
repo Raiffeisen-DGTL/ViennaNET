@@ -11,21 +11,21 @@ using ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth;
 namespace ViennaNET.WebApi.Runners.BaseKestrel
 {
   /// <summary>
-  /// Класс для создания и конфигурирования базового сервиса на Kestrel с JWT-аутентификацией
+  ///   Класс для создания и конфигурирования базового сервиса на Kestrel с JWT-аутентификацией
   /// </summary>
   public static class BaseKestrelRunner
   {
-    public static IViennaHostBuilder Configure()
+    public static ICompanyHostBuilder Configure()
     {
-      return ViennaHostBuilder.Create()
-                               .UseKestrel()
-                               .UseJwtAuth()
-                               .UseCallContext()
-                               .UseCommonModules()
-                               .UseSimpleInjector()
-                               .UseSwaggerWithJwtAuth()
-                               .UseDiagnosing()
-                               .UseJwtHttpClients();
+      return CompanyHostBuilder.Create()
+        .UseKestrel()
+        .UseJwtAuth()
+        .UseCallContext()
+        .UseCommonModules()
+        .UseSimpleInjector()
+        .UseSwaggerWithJwtAuth()
+        .UseDiagnosing()
+        .UseJwtHttpClients();
     }
   }
 }

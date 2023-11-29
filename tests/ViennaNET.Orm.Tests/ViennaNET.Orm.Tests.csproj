@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="LocalDatabaseTests\test.db">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="TestConfiguration\localDatabaseTests.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="TestConfiguration\orm.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="TestConfiguration\ormNodbSection.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.Mediator.DefaultConfiguration\ViennaNET.Mediator.DefaultConfiguration.csproj"/>
+        <ProjectReference Include="..\..\src\ViennaNET.Orm.DefaultConfiguration\ViennaNET.Orm.DefaultConfiguration.csproj"/>
+        <ProjectReference Include="..\..\src\ViennaNET.Orm.SQLite.DefaultConfiguration\ViennaNET.Orm.SQLite.DefaultConfiguration.csproj"/>
+    </ItemGroup>
+
+</Project>

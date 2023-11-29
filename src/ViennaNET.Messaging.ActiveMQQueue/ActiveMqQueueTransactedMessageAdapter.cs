@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.Messages;
-using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.ActiveMQQueue
 {
@@ -24,7 +23,7 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       ILogger logger)
       : base(connectionFactory, queueConfiguration, logger)
     {
-      _queueConfiguration = queueConfiguration.ThrowIfNull(nameof(queueConfiguration));
+      _queueConfiguration = queueConfiguration;
     }
 
     /// <inheritdoc />
@@ -39,7 +38,9 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       }
       catch (NMSException ex)
       {
-        throw new MessagingException(ex, "Error while commit message. See inner exception for more details");
+        throw new MessagingException(
+          ex,
+          $"Error committing message for queue {_queueConfiguration.Id}. See inner exception");
       }
     }
 
@@ -55,7 +56,9 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       }
       catch (NMSException ex)
       {
-        throw new MessagingException(ex, "Error while rollback message. See inner exception for more details");
+        throw new MessagingException(
+          ex,
+          $"Error rolling back message for queue {_queueConfiguration.Id}. See inner exception");
       }
     }
 

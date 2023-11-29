@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.ArcSight.DefaultConfiguration\ViennaNET.ArcSight.DefaultConfiguration.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="TestConfiguration\arcSight.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="TestConfiguration\arcSightIncorrectProtocol.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="TestConfiguration\arcSightIncorrectSyslogVersion.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

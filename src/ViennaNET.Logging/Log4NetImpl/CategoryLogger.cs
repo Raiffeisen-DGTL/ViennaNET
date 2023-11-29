@@ -5,107 +5,105 @@ using ViennaNET.Logging.Contracts;
 namespace ViennaNET.Logging.Log4NetImpl
 {
   /// <summary>
-  /// An implementation of category logger
+  ///   An implementation of category logger
   /// </summary>
   [ExcludeFromCodeCoverage]
   public class CategoryLogger : ICategoryLogger
   {
-    private readonly string _category;
-
     internal CategoryLogger(string category)
     {
-      _category = category;
+      Category = category;
     }
 
     /// <summary>
-    /// log message.
+    ///   log message.
     /// </summary>
     /// <param name="level">logging level</param>
     /// <param name="message">message to log</param>
     public void Log(LogLevel level, string message)
     {
-      Logger.Log(_category, level, message);
+      Logger.Log(Category, level, message);
     }
 
     /// <summary>
-    /// log message with debugging log level.
+    ///   log message with debugging log level.
     /// </summary>
     /// <param name="message">message to log</param>
     public void LogDebug(string message)
     {
-      Logger.Log(_category, LogLevel.Debug, message);
+      Logger.Log(Category, LogLevel.Debug, message);
     }
 
     /// <summary>
-    /// log message with information log level.
+    ///   log message with information log level.
     /// </summary>
     /// <param name="message">message to log</param>
     public void LogInfo(string message)
     {
-      Logger.Log(_category, LogLevel.Info, message);
+      Logger.Log(Category, LogLevel.Info, message);
     }
 
     /// <summary>
-    /// log message with warning log level.
+    ///   log message with warning log level.
     /// </summary>
     /// <param name="message">message to log</param>
     public void LogWarning(string message)
     {
-      Logger.Log(_category, LogLevel.Warning, message);
+      Logger.Log(Category, LogLevel.Warning, message);
     }
 
     /// <summary>
-    /// log message with error log level.
+    ///   log message with error log level.
     /// </summary>
     /// <param name="message">message to log</param>
     public void LogError(string message)
     {
-      Logger.Log(_category, LogLevel.Error, message);
+      Logger.Log(Category, LogLevel.Error, message);
     }
 
     /// <summary>
-    /// log message with debugging log level and formatted string to log.
+    ///   log message with debugging log level and formatted string to log.
     /// </summary>
     /// <param name="message">formatted message to log</param>
     /// <param name="formatParams">parameters to format the message</param>
     public void LogDebugFormat(string message, params object[] formatParams)
     {
-      Logger.Log(_category, LogLevel.Debug, string.Format(message, formatParams));
+      Logger.Log(Category, LogLevel.Debug, string.Format(message, formatParams));
     }
 
     /// <summary>
-    /// log message with information log level and formatted string to log.
+    ///   log message with information log level and formatted string to log.
     /// </summary>
     /// <param name="message">formatted message to log</param>
     /// <param name="formatParams">parameters to format the message</param>
     public void LogInfoFormat(string message, params object[] formatParams)
     {
-      Logger.Log(_category, LogLevel.Info, string.Format(message, formatParams));
+      Logger.Log(Category, LogLevel.Info, string.Format(message, formatParams));
     }
 
     /// <summary>
-    /// log message with warning log level and formatted string to log.
+    ///   log message with warning log level and formatted string to log.
     /// </summary>
     /// <param name="message">formatted message to log</param>
     /// <param name="formatParams">parameters to format the message</param>
     public void LogWarningFormat(string message, params object[] formatParams)
     {
-      Logger.Log(_category, LogLevel.Warning, string.Format(message, formatParams));
+      Logger.Log(Category, LogLevel.Warning, string.Format(message, formatParams));
     }
 
     /// <summary>
-    /// log message with error log level and formatted string to log
+    ///   log message with error log level and formatted string to log
     /// </summary>
     /// <param name="message">formatted message to log</param>
     /// <param name="formatParams">parameters to format the message</param>
     public void LogErrorFormat(string message, params object[] formatParams)
     {
-      Logger.Log(_category, LogLevel.Error, string.Format(message, formatParams));
+      Logger.Log(Category, LogLevel.Error, string.Format(message, formatParams));
     }
 
     /// <summary>
-    /// log message with warning log level formatted string to log. 
-    /// This function also appending exception.ToString at the end of the message
+    ///   log message with warning log level formatted string to log.
+    ///   This function also appending exception.ToString at the end of the message
     /// </summary>
     /// <param name="exception">exception to log</param>
     /// <param name="message">formatted message to log</param>
@@ -113,7 +111,7 @@ namespace ViennaNET.Logging.Log4NetImpl
     public void LogWarningFormat(Exception exception, string message, params object[] formatParams)
     {
       Logger.Log(
-        _category,
+        Category,
         LogLevel.Warning,
         string.Concat(
           string.Format(message, formatParams),
@@ -124,8 +122,8 @@ namespace ViennaNET.Logging.Log4NetImpl
     }
 
     /// <summary>
-    /// log message with error log level formatted string to log. 
-    /// This function also appending exception.ToString at the end of the message
+    ///   log message with error log level formatted string to log.
+    ///   This function also appending exception.ToString at the end of the message
     /// </summary>
     /// <param name="exception">exception to log</param>
     /// <param name="message">formatted message to log</param>
@@ -137,13 +135,13 @@ namespace ViennaNET.Logging.Log4NetImpl
           string.Format(message, formatParams),
           Environment.NewLine,
           exception.ToString()
-          )
-        );
+        )
+      );
     }
 
     /// <summary>
-    /// log message with error log level formatted string to log. 
-    /// This function also appending exception.ToString at the end of the message
+    ///   log message with error log level formatted string to log.
+    ///   This function also appending exception.ToString at the end of the message
     /// </summary>
     /// <param name="exception">exception to log</param>
     /// <param name="message">formatted message to log</param>
@@ -159,13 +157,13 @@ namespace ViennaNET.Logging.Log4NetImpl
     }
 
     /// <summary>
-    /// flush information into the log
+    ///   flush information into the log
     /// </summary>
     public void Flush()
     {
       Logger.Flush();
     }
 
-    public string Category => _category;
+    public string Category { get; }
   }
 }

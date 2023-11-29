@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.87
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi", "src\ViennaNET.WebApi\ViennaNET.WebApi.csproj", "{E059AAC7-6397-4F69-9E80-B3B283CF73E3}"
 EndProject
@@ -16,8 +16,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FD28736-0084-40C3-B16D-FEFF8175F06D}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		CONTRIBUTING.md = CONTRIBUTING.md
+		Directory.Build.props = Directory.Build.props
+		LICENSE.txt = LICENSE.txt
+		NuGet.Config = NuGet.Config
 		README.md = README.md
-		ReleaseNotes.md = ReleaseNotes.md
+		RELEASE_NOTES.md = RELEASE_NOTES.md
+		SECURITY.md = SECURITY.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm", "src\ViennaNET.Orm\ViennaNET.Orm.csproj", "{E4A43284-A654-440C-AB37-5D9E7DC1B5E6}"
@@ -62,15 +67,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Specifications", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Security.Jwt", "src\ViennaNET.Security.Jwt\ViennaNET.Security.Jwt.csproj", "{EAB54927-220F-4A72-8CF9-6B603A7DDF90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Redis.Tests", "src\ViennaNET.Redis.Tests\ViennaNET.Redis.Tests.csproj", "{759FEDB1-C8C1-4F14-87F4-0E7876B820F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Redis.Tests", "tests\ViennaNET.Redis.Tests\ViennaNET.Redis.Tests.csproj", "{759FEDB1-C8C1-4F14-87F4-0E7876B820F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Mediator.Tests", "src\ViennaNET.Mediator.Tests\ViennaNET.Mediator.Tests.csproj", "{4E764DEC-98EC-4BB5-AE02-F61E17F08D54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Mediator.Tests", "tests\ViennaNET.Mediator.Tests\ViennaNET.Mediator.Tests.csproj", "{4E764DEC-98EC-4BB5-AE02-F61E17F08D54}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.ArcSight.Tests", "src\ViennaNET.ArcSight.Tests\ViennaNET.ArcSight.Tests.csproj", "{B531DE6C-43E0-4AEF-A055-880BD8F8872F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.ArcSight.Tests", "tests\ViennaNET.ArcSight.Tests\ViennaNET.ArcSight.Tests.csproj", "{B531DE6C-43E0-4AEF-A055-880BD8F8872F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.Tests", "src\ViennaNET.Orm.Tests\ViennaNET.Orm.Tests.csproj", "{50F1B835-64FA-485C-AFB5-C9912F1DC464}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.Tests", "tests\ViennaNET.Orm.Tests\ViennaNET.Orm.Tests.csproj", "{50F1B835-64FA-485C-AFB5-C9912F1DC464}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Validation.Tests", "src\ViennaNET.Validation.Tests\ViennaNET.Validation.Tests.csproj", "{23670D63-EC9B-461B-A995-2CC8484E2DFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Validation.Tests", "tests\ViennaNET.Validation.Tests\ViennaNET.Validation.Tests.csproj", "{23670D63-EC9B-461B-A995-2CC8484E2DFD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Validation", "Validation", "{D9E0F80C-4A48-46D1-A625-BC20E6B18A5B}"
 EndProject
@@ -82,7 +87,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.MQSeriesQueue", "src\ViennaNET.Messaging.MQSeriesQueue\ViennaNET.Messaging.MQSeriesQueue.csproj", "{F737ADD4-F1AD-42EA-9995-88BF6587CA17}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.Tests", "src\ViennaNET.Messaging.Tests\ViennaNET.Messaging.Tests.csproj", "{EDA82C9B-399E-4131-AEF4-6CDA3E3C813B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.Tests", "tests\ViennaNET.Messaging.Tests\ViennaNET.Messaging.Tests.csproj", "{EDA82C9B-399E-4131-AEF4-6CDA3E3C813B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.RabbitMQQueue", "src\ViennaNET.Messaging.RabbitMQQueue\ViennaNET.Messaging.RabbitMQQueue.csproj", "{4D732CCA-AF2D-4D3B-8CCD-6AF74E7B5609}"
 EndProject
@@ -92,11 +97,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.MQSerie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.DefaultConfiguration", "src\ViennaNET.Messaging.DefaultConfiguration\ViennaNET.Messaging.DefaultConfiguration.csproj", "{769F09F8-3A19-433F-8C45-21A042FEB7B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Specifications.Tests", "src\ViennaNET.Specifications.Tests\ViennaNET.Specifications.Tests.csproj", "{7538F30D-1BC6-4F83-984F-2D87A4BF5134}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Specifications.Tests", "tests\ViennaNET.Specifications.Tests\ViennaNET.Specifications.Tests.csproj", "{7538F30D-1BC6-4F83-984F-2D87A4BF5134}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Protection", "src\ViennaNET.Protection\ViennaNET.Protection.csproj", "{89AD9EF0-2D98-499B-804A-6BCE1A27ED74}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Protection.Tests", "src\ViennaNET.Protection.Tests\ViennaNET.Protection.Tests.csproj", "{61684F00-794D-4FBA-8F57-D077246D3A3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Protection.Tests", "tests\ViennaNET.Protection.Tests\ViennaNET.Protection.Tests.csproj", "{61684F00-794D-4FBA-8F57-D077246D3A3B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.DB2.Lnx", "src\ViennaNET.Orm.DB2.Lnx\ViennaNET.Orm.DB2.Lnx.csproj", "{B7010915-9DCC-4643-926F-3BE3D36F7324}"
 EndProject
@@ -118,9 +123,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.Oracle", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.Oracle.DefaultConfiguration", "src\ViennaNET.Orm.Oracle.DefaultConfiguration\ViennaNET.Orm.Oracle.DefaultConfiguration.csproj", "{7028552F-C098-4721-856F-7692B3C067B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Utils.Tests", "src\ViennaNET.Utils.Tests\ViennaNET.Utils.Tests.csproj", "{7E77B926-5B31-4EE8-80F3-E132193E5848}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Utils.Tests", "tests\ViennaNET.Utils.Tests\ViennaNET.Utils.Tests.csproj", "{7E77B926-5B31-4EE8-80F3-E132193E5848}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.HttpClient.Tests", "src\ViennaNET.HttpClient.Tests\ViennaNET.HttpClient.Tests.csproj", "{F5417385-5DC4-4B6C-AF88-A63A6BCD0C6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.HttpClient.Tests", "tests\ViennaNET.HttpClient.Tests\ViennaNET.HttpClient.Tests.csproj", "{F5417385-5DC4-4B6C-AF88-A63A6BCD0C6F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventStore", "EventStore", "{A29FB72D-4F87-41CC-ADBD-0980CE339172}"
 EndProject
@@ -128,7 +133,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.EventSourcing", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.EventSourcing.DefaultConfiguration", "src\ViennaNET.EventSourcing.DefaultConfiguration\ViennaNET.EventSourcing.DefaultConfiguration.csproj", "{68A9AD49-6B2A-48C8-A297-579ECE561765}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.EventSourcing.Tests", "src\ViennaNET.EventSourcing.Tests\ViennaNET.EventSourcing.Tests.csproj", "{B8505A60-63BE-4ED0-8407-061D20E32488}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.EventSourcing.Tests", "tests\ViennaNET.EventSourcing.Tests\ViennaNET.EventSourcing.Tests.csproj", "{B8505A60-63BE-4ED0-8407-061D20E32488}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgreSql", "PostgreSql", "{27563B82-9BD5-4866-BE5D-9CCD70D53491}"
 EndProject
@@ -138,7 +143,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.PostgreSql.De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Word", "src\ViennaNET.Word\ViennaNET.Word.csproj", "{1F489491-62A3-4FFD-BF06-920A6961A0C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Word.Tests", "src\ViennaNET.Word.Tests\ViennaNET.Word.Tests.csproj", "{4D02D7C7-FBB1-41A9-830D-8C49570CB448}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Word.Tests", "tests\ViennaNET.Word.Tests\ViennaNET.Word.Tests.csproj", "{4D02D7C7-FBB1-41A9-830D-8C49570CB448}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Office", "Office", "{DFA165E1-7CAA-4191-BAEF-53288E315918}"
 EndProject
@@ -146,7 +151,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Excel", "src\Vien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.TestUtils.Orm", "src\ViennaNET.TestUtils.Orm\ViennaNET.TestUtils.Orm.csproj", "{E64E2B70-897E-4D82-9162-D8B08998FFB1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.TestUtils.Orm.Tests", "src\ViennaNET.TestUtils.Orm.Tests\ViennaNET.TestUtils.Orm.Tests.csproj", "{62EECF6C-4CF2-44CD-85AB-C60AE3BCEF04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.TestUtils.Orm.Tests", "tests\ViennaNET.TestUtils.Orm.Tests\ViennaNET.TestUtils.Orm.Tests.csproj", "{62EECF6C-4CF2-44CD-85AB-C60AE3BCEF04}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.FileUtils", "src\ViennaNET.FileUtils\ViennaNET.FileUtils.csproj", "{9B4A7479-3441-4692-8CA9-D5FF6902EC04}"
 EndProject
@@ -180,17 +185,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.Abstractions", "src\ViennaNET.WebApi.Configurators.HttpClients.Abstractions\ViennaNET.WebApi.Configurators.HttpClients.Abstractions.csproj", "{FBAA5E6E-4F89-4E1D-B768-CE2FB171F06C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Tests", "src\ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Tests\ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Tests.csproj", "{349DF8DC-44A3-47F5-B0D2-4A150DA0034A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Tests", "tests\ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Tests\ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Tests.csproj", "{349DF8DC-44A3-47F5-B0D2-4A150DA0034A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.Security.Jwt.Tests", "src\ViennaNET.WebApi.Configurators.Security.Jwt.Tests\ViennaNET.WebApi.Configurators.Security.Jwt.Tests.csproj", "{6C32861C-59C0-477F-AF89-830293B718C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.Security.Jwt.Tests", "tests\ViennaNET.WebApi.Configurators.Security.Jwt.Tests\ViennaNET.WebApi.Configurators.Security.Jwt.Tests.csproj", "{6C32861C-59C0-477F-AF89-830293B718C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.Security.Ntlm.Tests", "src\ViennaNET.WebApi.Configurators.Security.Ntlm.Tests\ViennaNET.WebApi.Configurators.Security.Ntlm.Tests.csproj", "{DD2D9E1E-573F-4435-97D3-3E9C2CCEB9DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.Security.Ntlm.Tests", "tests\ViennaNET.WebApi.Configurators.Security.Ntlm.Tests\ViennaNET.WebApi.Configurators.Security.Ntlm.Tests.csproj", "{DD2D9E1E-573F-4435-97D3-3E9C2CCEB9DF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Runners.BaseKestrel", "src\ViennaNET.WebApi.Runners.BaseKestrel\ViennaNET.WebApi.Runners.BaseKestrel.csproj", "{1F63E713-4DBA-4460-B073-602C6E71DA3D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Runners.BaseHttpSys", "src\ViennaNET.WebApi.Runners.BaseHttpSys\ViennaNET.WebApi.Runners.BaseHttpSys.csproj", "{5F029BFC-23C6-4986-A7AF-80ACC8600F87}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Net.Tests", "src\ViennaNET.WebApi.Net.Tests\ViennaNET.WebApi.Net.Tests.csproj", "{7B273ABF-2A52-45AD-A4E9-391A0CD37B38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Net.Tests", "tests\ViennaNET.WebApi.Net.Tests\ViennaNET.WebApi.Net.Tests.csproj", "{7B273ABF-2A52-45AD-A4E9-391A0CD37B38}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Runners.Extensions", "src\ViennaNET.WebApi.Runners.Extensions\ViennaNET.WebApi.Runners.Extensions.csproj", "{3B834FCA-8F44-4A0F-B981-354F925530D4}"
 EndProject
@@ -200,7 +205,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.SimpleInjector.Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Sagas", "src\ViennaNET.Sagas\ViennaNET.Sagas.csproj", "{CF39161A-331E-461B-9FDF-F7712FA54DFF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Sagas.Tests", "src\ViennaNET.Sagas.Tests\ViennaNET.Sagas.Tests.csproj", "{FE0F1783-2904-4930-8AA5-FBFA0A7C54D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Sagas.Tests", "tests\ViennaNET.Sagas.Tests\ViennaNET.Sagas.Tests.csproj", "{FE0F1783-2904-4930-8AA5-FBFA0A7C54D2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.KafkaQueue", "src\ViennaNET.Messaging.KafkaQueue\ViennaNET.Messaging.KafkaQueue.csproj", "{0E696D40-B09C-4EE0-A049-D2650D90F65C}"
 EndProject
@@ -210,9 +215,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.CallContext", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.CallContext", "src\ViennaNET.WebApi.Configurators.CallContext\ViennaNET.WebApi.Configurators.CallContext.csproj", "{963CC185-ECDF-452E-9EDF-3E46F7E97412}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.CallContext.Tests", "src\ViennaNET.CallContext.Tests\ViennaNET.CallContext.Tests.csproj", "{1CC7A3F7-6A19-45D7-89DE-8EA22C861A39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.CallContext.Tests", "tests\ViennaNET.CallContext.Tests\ViennaNET.CallContext.Tests.csproj", "{1CC7A3F7-6A19-45D7-89DE-8EA22C861A39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.CallContext.Tests", "src\ViennaNET.WebApi.Configurators.CallContext.Tests\ViennaNET.WebApi.Configurators.CallContext.Tests.csproj", "{910F42FB-F2B1-445E-AADC-CA775309B05C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.CallContext.Tests", "tests\ViennaNET.WebApi.Configurators.CallContext.Tests\ViennaNET.WebApi.Configurators.CallContext.Tests.csproj", "{910F42FB-F2B1-445E-AADC-CA775309B05C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLite", "SQLite", "{01FBB894-5BF2-44D1-BBEE-98552DEFD069}"
 EndProject
@@ -224,47 +229,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestUtils", "TestUtils", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication", "src\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.csproj", "{C49511A4-4572-4C41-9D59-CCD623210FC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests", "src\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests.csproj", "{BB3616B2-EF83-4F6B-A973-9BF9EB9B6DCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests", "tests\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests\ViennaNET.WebApi.Configurators.HttpClients.NoAuthentication.Tests.csproj", "{BB3616B2-EF83-4F6B-A973-9BF9EB9B6DCD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.Basic", "src\ViennaNET.WebApi.Configurators.HttpClients.Basic\ViennaNET.WebApi.Configurators.HttpClients.Basic.csproj", "{52CA7F52-219B-47C9-A34B-6D71E308D051}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests", "src\ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests\ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests.csproj", "{81EF48BF-BDB1-4381-BE91-30C2C72411B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests", "tests\ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests\ViennaNET.WebApi.Configurators.HttpClients.Basic.Tests.csproj", "{81EF48BF-BDB1-4381-BE91-30C2C72411B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.Common.Tests", "src\ViennaNET.WebApi.Configurators.Common.Tests\ViennaNET.WebApi.Configurators.Common.Tests.csproj", "{4F2F35A6-5233-4B85-84CB-49CAFBAE101F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Configurators.Common.Tests", "tests\ViennaNET.WebApi.Configurators.Common.Tests\ViennaNET.WebApi.Configurators.Common.Tests.csproj", "{4F2F35A6-5233-4B85-84CB-49CAFBAE101F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Diagnostic.Tests", "src\ViennaNET.Diagnostic.Tests\ViennaNET.Diagnostic.Tests.csproj", "{0B756A55-3278-4D3E-8FE5-13A451873880}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{5B881C44-0983-49CC-B182-8B886329C763}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1-empty-service", "1-empty-service", "{D030E14A-7AB7-4C5D-8EAB-F1E63E9608B8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2-mediator", "2-mediator", "{91E90136-706E-4973-8D60-D6A9CC14265B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3-validation", "3-validation", "{46666F11-CB9C-42C9-AF5E-526F035F4323}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4-orm", "4-orm", "{406F619A-6DB1-4B30-B9C9-D8BE35BD909D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5-saga", "5-saga", "{FEDC945F-C012-4B84-9F4E-229D4CA5F5CA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6-messaging", "6-messaging", "{9CBD382B-C6D7-4F23-B691-205F77F020B9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmptyService", "src\Examples\1-empty-service\EmptyService.csproj", "{949C269F-05E6-45AD-B5D8-41A72A692107}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediatorService", "src\Examples\2-mediator\MediatorService.csproj", "{B0DC932A-C5A1-429C-B10F-FE2CC48FC1DC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValidationService", "src\Examples\3-validation\ValidationService.csproj", "{B28FE230-2EDB-4C39-A67A-F1C930C09F80}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrmService", "src\Examples\4-orm\OrmService.csproj", "{2955A15E-41F7-4580-AF9D-BD577499C366}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SagaService", "src\Examples\5-saga\SagaService.csproj", "{4C415D32-6ED7-4A87-8E5B-DB7F874982A9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingService", "src\Examples\6-messaging\MessagingService.csproj", "{3FB98667-C7B4-469A-A2C7-2BDBA2C5F811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Diagnostic.Tests", "tests\ViennaNET.Diagnostic.Tests\ViennaNET.Diagnostic.Tests.csproj", "{0B756A55-3278-4D3E-8FE5-13A451873880}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.ActiveMQQueue", "src\ViennaNET.Messaging.ActiveMQQueue\ViennaNET.Messaging.ActiveMQQueue.csproj", "{7658B966-371F-42C7-93B6-335C56DC2CA9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.ActiveMQQueue.DefaultConfiguration", "src\ViennaNET.Messaging.ActiveMQQueue.DefaultConfiguration\ViennaNET.Messaging.ActiveMQQueue.DefaultConfiguration.csproj", "{324F22DE-62CC-4F7F-91F8-E991A13BA977}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.ActiveMQQueue.Tests", "src\ViennaNET.Messaging.ActiveMQQueue.Tests\ViennaNET.Messaging.ActiveMQQueue.Tests.csproj", "{FCB4F714-7BE8-47E1-8D2E-8552537FAAA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.ActiveMQQueue.Tests", "tests\ViennaNET.Messaging.ActiveMQQueue.Tests\ViennaNET.Messaging.ActiveMQQueue.Tests.csproj", "{FCB4F714-7BE8-47E1-8D2E-8552537FAAA6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ActiveMQ", "ActiveMQ", "{30A92A3F-DC9C-4BF4-AE19-B65ADB83CF23}"
 EndProject
@@ -274,11 +253,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kafka", "Kafka", "{1CA87E86
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RabbitMQ", "RabbitMQ", "{C75AAE16-FBFF-4679-AF39-2CA7805AA4A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.MQSeriesQueue.Tests", "src\ViennaNET.Messaging.MQSeriesQueue.Tests\ViennaNET.Messaging.MQSeriesQueue.Tests.csproj", "{B366A396-ADC8-4289-8C14-C9F117E2C827}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.MQSeriesQueue.Tests", "tests\ViennaNET.Messaging.MQSeriesQueue.Tests\ViennaNET.Messaging.MQSeriesQueue.Tests.csproj", "{B366A396-ADC8-4289-8C14-C9F117E2C827}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.KafkaQueue.Tests", "src\ViennaNET.Messaging.KafkaQueue.Tests\ViennaNET.Messaging.KafkaQueue.Tests.csproj", "{B5EC077C-9C3A-476D-B0E2-131BC6BF75C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.KafkaQueue.Tests", "tests\ViennaNET.Messaging.KafkaQueue.Tests\ViennaNET.Messaging.KafkaQueue.Tests.csproj", "{B5EC077C-9C3A-476D-B0E2-131BC6BF75C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.RabbitMQQueue.Tests", "src\ViennaNET.Messaging.RabbitMQQueue.Tests\ViennaNET.Messaging.RabbitMQQueue.Tests.csproj", "{5A297926-3ADE-4A8A-A0FC-FF6BFD10A6F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Messaging.RabbitMQQueue.Tests", "tests\ViennaNET.Messaging.RabbitMQQueue.Tests\ViennaNET.Messaging.RabbitMQQueue.Tests.csproj", "{5A297926-3ADE-4A8A-A0FC-FF6BFD10A6F1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.DB2.Osx", "src\ViennaNET.Orm.DB2.Osx\ViennaNET.Orm.DB2.Osx.csproj", "{FF047E3E-0B14-47D6-A9C7-433A17EB46D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.DB2.Osx.DefaultConfiguration", "src\ViennaNET.Orm.DB2.Osx.DefaultConfiguration\ViennaNET.Orm.DB2.Osx.DefaultConfiguration.csproj", "{A61D0F5A-85FB-4B4C-B004-3B6B183BE2E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.Orm.DB2.NHibernateDriver", "src\ViennaNET.Orm.DB2.NHibernateDriver\ViennaNET.Orm.DB2.NHibernateDriver.csproj", "{5D7B38EC-0DC1-4CE7-92C2-87156BEAC5C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.WebApi.Configurators.Messaging", "src\ViennaNET.WebApi.Configurators.Messaging\ViennaNET.WebApi.Configurators.Messaging.csproj", "{52151019-3240-4758-B0A0-432848354957}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.Extensions.Mediator", "src\ViennaNET.Extensions.Mediator\ViennaNET.Extensions.Mediator.csproj", "{D6CA4A67-A040-434C-8CEC-46EBC132793B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.Extensions.Mediator.Tests", "tests\ViennaNET.Extensions.Mediator.Tests\ViennaNET.Extensions.Mediator.Tests.csproj", "{E4F9018F-4103-4A10-B21A-4BDBCC2C705E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.Extensions.Configuration.Kubernetes", "src\ViennaNET.Extensions.Configuration.Kubernetes\ViennaNET.Extensions.Configuration.Kubernetes.csproj", "{09AE990D-5FEB-43EE-9213-AF0C5B843414}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.Extensions.Configuration.Kubernetes.Tests", "tests\ViennaNET.Extensions.Configuration.Kubernetes.Tests\ViennaNET.Extensions.Configuration.Kubernetes.Tests.csproj", "{8CC3DF1E-7AA2-4024-B60F-7ED695DABFA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.Extensions.Configuration.HashicorpVault", "src\ViennaNET.Extensions.Configuration.HashicorpVault\ViennaNET.Extensions.Configuration.HashicorpVault.csproj", "{A5ABB5B4-86A8-4212-9E60-2F8516ADF48B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.Extensions.Configuration.HashicorpVault.Tests", "tests\ViennaNET.Extensions.Configuration.HashicorpVault.Tests\ViennaNET.Extensions.Configuration.HashicorpVault.Tests.csproj", "{D7C2FF48-DE20-4854-9B47-58EC04AC6EC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.Extensions.Http", "src\ViennaNET.Extensions.Http\ViennaNET.Extensions.Http.csproj", "{913DF99E-0040-47B8-9297-351942AB4822}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.Extensions.Http.Tests", "tests\ViennaNET.Extensions.Http.Tests\ViennaNET.Extensions.Http.Tests.csproj", "{D41B3E30-7B9C-4968-A0F5-660C92464293}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.WebApi.Tests", "tests\ViennaNET.WebApi.Tests\ViennaNET.WebApi.Tests.csproj", "{2E432706-FDF0-46D6-965E-A1164026EE57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -666,30 +671,6 @@ Global
 		{0B756A55-3278-4D3E-8FE5-13A451873880}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B756A55-3278-4D3E-8FE5-13A451873880}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B756A55-3278-4D3E-8FE5-13A451873880}.Release|Any CPU.Build.0 = Release|Any CPU
-		{949C269F-05E6-45AD-B5D8-41A72A692107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{949C269F-05E6-45AD-B5D8-41A72A692107}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{949C269F-05E6-45AD-B5D8-41A72A692107}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{949C269F-05E6-45AD-B5D8-41A72A692107}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0DC932A-C5A1-429C-B10F-FE2CC48FC1DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0DC932A-C5A1-429C-B10F-FE2CC48FC1DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0DC932A-C5A1-429C-B10F-FE2CC48FC1DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0DC932A-C5A1-429C-B10F-FE2CC48FC1DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B28FE230-2EDB-4C39-A67A-F1C930C09F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B28FE230-2EDB-4C39-A67A-F1C930C09F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B28FE230-2EDB-4C39-A67A-F1C930C09F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B28FE230-2EDB-4C39-A67A-F1C930C09F80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2955A15E-41F7-4580-AF9D-BD577499C366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2955A15E-41F7-4580-AF9D-BD577499C366}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2955A15E-41F7-4580-AF9D-BD577499C366}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2955A15E-41F7-4580-AF9D-BD577499C366}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4C415D32-6ED7-4A87-8E5B-DB7F874982A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C415D32-6ED7-4A87-8E5B-DB7F874982A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C415D32-6ED7-4A87-8E5B-DB7F874982A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C415D32-6ED7-4A87-8E5B-DB7F874982A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3FB98667-C7B4-469A-A2C7-2BDBA2C5F811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3FB98667-C7B4-469A-A2C7-2BDBA2C5F811}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3FB98667-C7B4-469A-A2C7-2BDBA2C5F811}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3FB98667-C7B4-469A-A2C7-2BDBA2C5F811}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7658B966-371F-42C7-93B6-335C56DC2CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7658B966-371F-42C7-93B6-335C56DC2CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7658B966-371F-42C7-93B6-335C56DC2CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -714,6 +695,58 @@ Global
 		{5A297926-3ADE-4A8A-A0FC-FF6BFD10A6F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A297926-3ADE-4A8A-A0FC-FF6BFD10A6F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A297926-3ADE-4A8A-A0FC-FF6BFD10A6F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF047E3E-0B14-47D6-A9C7-433A17EB46D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF047E3E-0B14-47D6-A9C7-433A17EB46D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF047E3E-0B14-47D6-A9C7-433A17EB46D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF047E3E-0B14-47D6-A9C7-433A17EB46D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A61D0F5A-85FB-4B4C-B004-3B6B183BE2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A61D0F5A-85FB-4B4C-B004-3B6B183BE2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A61D0F5A-85FB-4B4C-B004-3B6B183BE2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A61D0F5A-85FB-4B4C-B004-3B6B183BE2E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D7B38EC-0DC1-4CE7-92C2-87156BEAC5C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D7B38EC-0DC1-4CE7-92C2-87156BEAC5C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D7B38EC-0DC1-4CE7-92C2-87156BEAC5C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D7B38EC-0DC1-4CE7-92C2-87156BEAC5C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52151019-3240-4758-B0A0-432848354957}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52151019-3240-4758-B0A0-432848354957}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52151019-3240-4758-B0A0-432848354957}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52151019-3240-4758-B0A0-432848354957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6CA4A67-A040-434C-8CEC-46EBC132793B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6CA4A67-A040-434C-8CEC-46EBC132793B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6CA4A67-A040-434C-8CEC-46EBC132793B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6CA4A67-A040-434C-8CEC-46EBC132793B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4F9018F-4103-4A10-B21A-4BDBCC2C705E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4F9018F-4103-4A10-B21A-4BDBCC2C705E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4F9018F-4103-4A10-B21A-4BDBCC2C705E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4F9018F-4103-4A10-B21A-4BDBCC2C705E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09AE990D-5FEB-43EE-9213-AF0C5B843414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09AE990D-5FEB-43EE-9213-AF0C5B843414}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09AE990D-5FEB-43EE-9213-AF0C5B843414}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09AE990D-5FEB-43EE-9213-AF0C5B843414}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CC3DF1E-7AA2-4024-B60F-7ED695DABFA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CC3DF1E-7AA2-4024-B60F-7ED695DABFA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CC3DF1E-7AA2-4024-B60F-7ED695DABFA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CC3DF1E-7AA2-4024-B60F-7ED695DABFA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5ABB5B4-86A8-4212-9E60-2F8516ADF48B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5ABB5B4-86A8-4212-9E60-2F8516ADF48B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5ABB5B4-86A8-4212-9E60-2F8516ADF48B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5ABB5B4-86A8-4212-9E60-2F8516ADF48B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7C2FF48-DE20-4854-9B47-58EC04AC6EC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7C2FF48-DE20-4854-9B47-58EC04AC6EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7C2FF48-DE20-4854-9B47-58EC04AC6EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7C2FF48-DE20-4854-9B47-58EC04AC6EC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{913DF99E-0040-47B8-9297-351942AB4822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{913DF99E-0040-47B8-9297-351942AB4822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{913DF99E-0040-47B8-9297-351942AB4822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{913DF99E-0040-47B8-9297-351942AB4822}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D41B3E30-7B9C-4968-A0F5-660C92464293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D41B3E30-7B9C-4968-A0F5-660C92464293}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D41B3E30-7B9C-4968-A0F5-660C92464293}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D41B3E30-7B9C-4968-A0F5-660C92464293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E432706-FDF0-46D6-965E-A1164026EE57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E432706-FDF0-46D6-965E-A1164026EE57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E432706-FDF0-46D6-965E-A1164026EE57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E432706-FDF0-46D6-965E-A1164026EE57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -804,18 +837,6 @@ Global
 		{52CA7F52-219B-47C9-A34B-6D71E308D051} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
 		{81EF48BF-BDB1-4381-BE91-30C2C72411B1} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
 		{4F2F35A6-5233-4B85-84CB-49CAFBAE101F} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
-		{D030E14A-7AB7-4C5D-8EAB-F1E63E9608B8} = {5B881C44-0983-49CC-B182-8B886329C763}
-		{91E90136-706E-4973-8D60-D6A9CC14265B} = {5B881C44-0983-49CC-B182-8B886329C763}
-		{46666F11-CB9C-42C9-AF5E-526F035F4323} = {5B881C44-0983-49CC-B182-8B886329C763}
-		{406F619A-6DB1-4B30-B9C9-D8BE35BD909D} = {5B881C44-0983-49CC-B182-8B886329C763}
-		{FEDC945F-C012-4B84-9F4E-229D4CA5F5CA} = {5B881C44-0983-49CC-B182-8B886329C763}
-		{9CBD382B-C6D7-4F23-B691-205F77F020B9} = {5B881C44-0983-49CC-B182-8B886329C763}
-		{949C269F-05E6-45AD-B5D8-41A72A692107} = {D030E14A-7AB7-4C5D-8EAB-F1E63E9608B8}
-		{B0DC932A-C5A1-429C-B10F-FE2CC48FC1DC} = {91E90136-706E-4973-8D60-D6A9CC14265B}
-		{B28FE230-2EDB-4C39-A67A-F1C930C09F80} = {46666F11-CB9C-42C9-AF5E-526F035F4323}
-		{2955A15E-41F7-4580-AF9D-BD577499C366} = {406F619A-6DB1-4B30-B9C9-D8BE35BD909D}
-		{4C415D32-6ED7-4A87-8E5B-DB7F874982A9} = {FEDC945F-C012-4B84-9F4E-229D4CA5F5CA}
-		{3FB98667-C7B4-469A-A2C7-2BDBA2C5F811} = {9CBD382B-C6D7-4F23-B691-205F77F020B9}
 		{7658B966-371F-42C7-93B6-335C56DC2CA9} = {30A92A3F-DC9C-4BF4-AE19-B65ADB83CF23}
 		{324F22DE-62CC-4F7F-91F8-E991A13BA977} = {30A92A3F-DC9C-4BF4-AE19-B65ADB83CF23}
 		{FCB4F714-7BE8-47E1-8D2E-8552537FAAA6} = {30A92A3F-DC9C-4BF4-AE19-B65ADB83CF23}
@@ -826,6 +847,13 @@ Global
 		{B366A396-ADC8-4289-8C14-C9F117E2C827} = {A3D57583-B7A4-4380-AE7A-04CAF296137E}
 		{B5EC077C-9C3A-476D-B0E2-131BC6BF75C3} = {1CA87E86-32D2-4CA5-A8DC-B331B375FA9C}
 		{5A297926-3ADE-4A8A-A0FC-FF6BFD10A6F1} = {C75AAE16-FBFF-4679-AF39-2CA7805AA4A9}
+		{FF047E3E-0B14-47D6-A9C7-433A17EB46D9} = {718E1BF4-BBB6-4A28-B31C-CC6B1428B20C}
+		{A61D0F5A-85FB-4B4C-B004-3B6B183BE2E8} = {718E1BF4-BBB6-4A28-B31C-CC6B1428B20C}
+		{5D7B38EC-0DC1-4CE7-92C2-87156BEAC5C7} = {718E1BF4-BBB6-4A28-B31C-CC6B1428B20C}
+		{52151019-3240-4758-B0A0-432848354957} = {86CB75ED-2598-4DFC-B8C3-3F9CD169B126}
+		{D6CA4A67-A040-434C-8CEC-46EBC132793B} = {1FEA39C4-A182-41F6-A871-429939F6CE96}
+		{E4F9018F-4103-4A10-B21A-4BDBCC2C705E} = {1FEA39C4-A182-41F6-A871-429939F6CE96}
+		{2E432706-FDF0-46D6-965E-A1164026EE57} = {D126048F-5089-402A-8BB6-795C96E9F838}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {21931976-D091-46E5-A4E3-F3BA29D6DB9C}

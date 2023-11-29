@@ -24,7 +24,7 @@ namespace ViennaNET.Messaging.Processing.Impl
     private readonly IMessageAdapterFactory _messageAdapterFactory;
     private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
     private readonly IEnumerable<IProcessor> _processors;
-    private readonly Dictionary<Type, string> _registrations = new Dictionary<Type, string>();
+    private readonly Dictionary<Type, string> _registrations = new();
 
     /// <summary>
     ///   Инициализирует экземпляр класса ссылками на <see cref="IMessageAdapterFactory" />,
@@ -99,69 +99,60 @@ namespace ViennaNET.Messaging.Processing.Impl
       GetAllProcessors(queueId, out var processors, out var asyncProcessors);
 
       var queueConfiguration = adapter.Configuration;
-
-      if (!adapter.SupportProcessingType(queueConfiguration.ProcessingType))
-      {
-        throw new
-          MessagingException(
-            $"Processing type: '{queueConfiguration.ProcessingType}' not available for queue: '{queueId}'");
-      }
-
       var messageProcessors = processors.OfType<IMessageProcessor>();
       var messageAsyncProcessors = asyncProcessors.OfType<IMessageProcessorAsync>();
-      switch (adapter)
+
+      if (adapter is IMessageAdapterWithTransactions transacted)
       {
-        case IMessageAdapterWithTransactions transacted:
-          return new QueueTransactedPollingReactor(
-            transacted,
-            messageProcessors,
-            messageAsyncProcessors,
-            queueConfiguration.IntervalPollingQueue,
-            queueConfiguration.ServiceHealthDependent,
-            _healthCheckingService,
-            _messagingCallContextAccessor,
-            _loggerFactory.CreateLogger<QueueTransactedPollingReactor>());
-        case IMessageAdapterWithSubscribing subscribing:
-          switch (queueConfiguration.ProcessingType)
-          {
-            case MessageProcessingType.Subscribe:
-              return new QueueSubscribedReactor(
-                subscribing,
-                messageProcessors,
-                messageAsyncProcessors,
-                queueConfiguration.IntervalPollingQueue,
-                queueConfiguration.ServiceHealthDependent,
-                _healthCheckingService,
-                _messagingCallContextAccessor,
-                _loggerFactory.CreateLogger<QueueSubscribedReactor>());
-            case MessageProcessingType.SubscribeAndReply:
-              var replyProcessors = processors.OfType<IRepliableMessageProcessor>();
-              var replyAsyncProcessors = asyncProcessors.OfType<IRepliableMessageProcessorAsync>();
-              return new QueueSubscribeAndReplyReactor(
-                subscribing,
-                replyProcessors,
-                replyAsyncProcessors,
-                queueConfiguration.IntervalPollingQueue,
-                queueConfiguration.ServiceHealthDependent,
-                _healthCheckingService,
-                _messagingCallContextAccessor,
-                _loggerFactory.CreateLogger<QueueSubscribeAndReplyReactor>());
-            default:
-              throw new
-                MessagingException(
-                  $"There are found no QueueReactors with type '{queueConfiguration.ProcessingType}' for queue with name '{queueId}'.");
-          }
-        default:
-          return new QueuePollingReactor(
-            adapter,
-            messageProcessors,
-            messageAsyncProcessors,
-            queueConfiguration.IntervalPollingQueue,
-            queueConfiguration.ServiceHealthDependent,
-            _healthCheckingService,
-            _messagingCallContextAccessor,
-            _loggerFactory.CreateLogger<QueuePollingReactor>());
+        return new QueueTransactedPollingReactor(
+          transacted,
+          messageProcessors,
+          messageAsyncProcessors,
+          queueConfiguration.IntervalPollingQueue,
+          queueConfiguration.ServiceHealthDependent,
+          _healthCheckingService,
+          _messagingCallContextAccessor,
+          _loggerFactory.CreateLogger<QueueTransactedPollingReactor>());
       }
+
+      if (adapter is IMessageAdapterWithSubscribing subscribing)
+      {
+        switch (queueConfiguration.ProcessingType)
+        {
+          case MessageProcessingType.Subscribe:
+            return new QueueSubscribedReactor(
+              subscribing,
+              messageProcessors,
+              messageAsyncProcessors,
+              queueConfiguration.IntervalPollingQueue,
+              queueConfiguration.ServiceHealthDependent,
+              _healthCheckingService,
+              _messagingCallContextAccessor,
+              _loggerFactory.CreateLogger<QueueSubscribedReactor>());
+          case MessageProcessingType.SubscribeAndReply:
+            var replyProcessors = processors.OfType<IRepliableMessageProcessor>();
+            var replyAsyncProcessors = asyncProcessors.OfType<IRepliableMessageProcessorAsync>();
+            return new QueueSubscribeAndReplyReactor(
+              subscribing,
+              replyProcessors,
+              replyAsyncProcessors,
+              queueConfiguration.IntervalPollingQueue,
+              queueConfiguration.ServiceHealthDependent,
+              _healthCheckingService,
+              _messagingCallContextAccessor,
+              _loggerFactory.CreateLogger<QueueSubscribeAndReplyReactor>());
+        }
+      }
+
+      return new QueuePollingReactor(
+        adapter,
+        messageProcessors,
+        messageAsyncProcessors,
+        queueConfiguration.IntervalPollingQueue,
+        queueConfiguration.ServiceHealthDependent,
+        _healthCheckingService,
+        _messagingCallContextAccessor,
+        _loggerFactory.CreateLogger<QueuePollingReactor>());
     }
 
     private void LogProcessors()

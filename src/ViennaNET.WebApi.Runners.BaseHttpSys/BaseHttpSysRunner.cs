@@ -11,21 +11,21 @@ using ViennaNET.WebApi.Configurators.Swagger;
 namespace ViennaNET.WebApi.Runners.BaseHttpSys
 {
   /// <summary>
-  /// Класс для создания и конфигурирования базового сервиса
+  ///   Класс для создания и конфигурирования базового сервиса
   /// </summary>
   public static class BaseHttpSysRunner
   {
-    public static IViennaHostBuilder Configure()
+    public static ICompanyHostBuilder Configure()
     {
-      return ViennaHostBuilder.Create()
-                               .UseHttpSys()
-                               .UseNtlmAuth()
-                               .UseCallContext()
-                               .UseCommonModules()
-                               .UseSimpleInjector()
-                               .UseSwagger()
-                               .UseDiagnosing()
-                               .UseNtlmHttpClients();
+      return CompanyHostBuilder.Create()
+        .UseHttpSys()
+        .UseNtlmAuth()
+        .UseCallContext()
+        .UseCommonModules()
+        .UseSimpleInjector()
+        .UseSwagger()
+        .UseDiagnosing()
+        .UseNtlmHttpClients();
     }
   }
 }

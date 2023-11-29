@@ -5,14 +5,14 @@ namespace ViennaNET.Messaging.KafkaQueue
 {
   internal interface IKafkaConnectionFactory
   {
-    IConsumer<Ignore, byte[]> CreateConsumer(
+    IConsumer<byte[], byte[]> CreateConsumer(
       KafkaQueueConfiguration config,
-      Action<IConsumer<Ignore, byte[]>, LogMessage> logHandler = null,
-      Action<IConsumer<Ignore, byte[]>, Error> errorHandler = null);
+      Action<IConsumer<byte[], byte[]>, LogMessage> logHandler = null,
+      Action<IConsumer<byte[], byte[]>, Error> errorHandler = null);
 
-    IProducer<Null, byte[]> CreateProducer(
+    IProducer<byte[], byte[]> CreateProducer(
       KafkaQueueConfiguration config,
-      Action<IProducer<Null, byte[]>, LogMessage> logHandler = null,
-      Action<IProducer<Null, byte[]>, Error> errorHandler = null);
+      Action<IProducer<byte[], byte[]>, LogMessage> logHandler = null,
+      Action<IProducer<byte[], byte[]>, Error> errorHandler = null);
   }
 }

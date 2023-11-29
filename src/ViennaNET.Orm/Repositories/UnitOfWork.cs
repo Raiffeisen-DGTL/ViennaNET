@@ -2,31 +2,34 @@
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Orm.Application;
 using ViennaNET.Orm.Exceptions;
 using ViennaNET.Utils;
 
 namespace ViennaNET.Orm.Repositories
 {
-  /// <inheritdoc cref="IUnitOfWork"/>
+  /// <inheritdoc cref="IUnitOfWork" />
   public sealed class UnitOfWork : IUnitOfWork, IUoWSettings
   {
     private readonly bool _autoControl;
     private readonly bool _closeSessions;
     private readonly IEntityFactoryService _factoryService;
     private readonly IsolationLevel _isolationLevel;
+    private readonly ILogger _logger;
     private readonly ISessionManager _sessionManager;
 
     private bool _commited;
     private bool _disposed;
 
     public UnitOfWork(
-      IEntityFactoryService factoryService, ISessionManager sessionManager, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
+      IEntityFactoryService factoryService, ISessionManager sessionManager, ILogger<UnitOfWork> logger,
+      IsolationLevel isolationLevel = IsolationLevel.ReadCommitted,
       bool autoControl = true, bool closeSessions = false)
     {
       _factoryService = factoryService.ThrowIfNull(nameof(factoryService));
       _sessionManager = sessionManager.ThrowIfNull(nameof(sessionManager));
+      _logger = logger.ThrowIfNull(nameof(logger));
       _isolationLevel = isolationLevel;
       _autoControl = autoControl;
       _closeSessions = closeSessions;
@@ -39,7 +42,7 @@ namespace ViennaNET.Orm.Repositories
       _sessionManager.StartTransactionAll();
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public void Commit()
     {
       try
@@ -49,45 +52,45 @@ namespace ViennaNET.Orm.Repositories
       }
       catch (Exception ex)
       {
-        Logger.LogErrorFormat(ex, "UoW Error begin rollback");
+        _logger.LogError(ex, "UoW Error begin rollback");
         _commited = false;
       }
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public void Rollback()
     {
       _sessionManager.RollbackAll(!_commited);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public void Save()
     {
       _sessionManager.SaveAll();
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public async Task CommitAsync(CancellationToken cancellationToken = default)
     {
       await Task.WhenAll(_sessionManager.CommitAllAsync(cancellationToken))
-                .ConfigureAwait(false);
+        .ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public async Task RollbackAsync(CancellationToken cancellationToken = default)
     {
       await Task.WhenAll(_sessionManager.RollbackAllAsync(null, cancellationToken))
-                .ConfigureAwait(false);
+        .ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
       await Task.WhenAll(_sessionManager.SaveAllAsync(cancellationToken))
-                .ConfigureAwait(false);
+        .ConfigureAwait(false);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public void MarkDirty<TEntity>(TEntity entity) where TEntity : class
     {
       var repository = _factoryService.Create<TEntity>();
@@ -95,21 +98,21 @@ namespace ViennaNET.Orm.Repositories
       repository.Add(entity);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public void MarkDeleted<TEntity>(TEntity entity) where TEntity : class
     {
       var repository = _factoryService.Create<TEntity>();
       repository.Delete(entity);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public void MarkNew<TEntity>(TEntity entity) where TEntity : class
     {
       var repository = _factoryService.Create<TEntity>();
       repository.Add(entity);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public async Task MarkDirtyAsync<TEntity>(TEntity entity, CancellationToken token = default) where TEntity : class
     {
       var repository = _factoryService.Create<TEntity>();
@@ -117,14 +120,14 @@ namespace ViennaNET.Orm.Repositories
       await repository.AddAsync(entity, token);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public async Task MarkDeletedAsync<TEntity>(TEntity entity, CancellationToken token = default) where TEntity : class
     {
       var repository = _factoryService.Create<TEntity>();
       await repository.DeleteAsync(entity, token);
     }
 
-    /// <inheritdoc cref="IUnitOfWork"/>
+    /// <inheritdoc cref="IUnitOfWork" />
     public async Task MarkNewAsync<TEntity>(TEntity entity, CancellationToken token = default) where TEntity : class
     {
       var repository = _factoryService.Create<TEntity>();
@@ -163,7 +166,7 @@ namespace ViennaNET.Orm.Repositories
         }
         catch (Exception exc)
         {
-          Logger.LogErrorFormat(exc, "UoW Error rollback");
+          _logger.LogError(exc, "UoW Error rollback");
         }
 
         _sessionManager.UnregisterUoW();

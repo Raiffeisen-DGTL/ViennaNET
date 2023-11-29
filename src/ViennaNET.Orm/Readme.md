@@ -204,3 +204,20 @@ Next, you need to create an executor of commands and call it with the created in
 
     commandExecutor.Execute(command);
 ```
+
+### Logging
+Now ViennaNET.Orm use **Microsoft.Extensions.Logging** instead of **ViennaNET.Logging (log4net)**.
+That means you should use standard configuration section for rule output logs with parameters you want, e.g.:
+```json
+"Logging": {
+    "LogLevel": {
+        ...,
+        "ViennaNET.Orm": "Information",
+        "NHibernate": "Error",
+        "NHibernate.Sql": "Debug",
+    }
+}
+```
+Useful options for LogLevel parameters:
+- To log SQL requests with parameters you should set log level of NHibernate.Sql to Debug
+- To log query execution time you should set log level of NHibernate.AdoNet.AbstractBatcher to Debug. Ad i logs you get `ExecuteReader took X ms` for query execution and `DataReader was closed after X ms` for data mapping

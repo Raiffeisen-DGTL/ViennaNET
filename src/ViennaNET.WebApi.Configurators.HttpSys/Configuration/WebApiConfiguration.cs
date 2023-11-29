@@ -1,34 +1,34 @@
 ﻿namespace ViennaNET.WebApi.Configurators.HttpSys.Configuration
 {
   /// <summary>
-  /// Объект для чтения конфигурационных данных из секции webApiConfiguration (общие настройки сервиса)
+  ///   Объект для чтения конфигурационных данных из секции webApiConfiguration (общие настройки сервиса)
   /// </summary>
   public class WebApiConfiguration
   {
-    private bool? _useHsts = true;
-
     /// <summary>
-    /// Название секции в кофнигурационном файле
+    ///   Название секции в кофнигурационном файле
     /// </summary>
     public const string SectionName = "webApiConfiguration";
 
+    private bool? _useHsts = true;
+
     /// <summary>
-    /// Номер порта сервиса
+    ///   Номер порта сервиса
     /// </summary>
     public int PortNumber { get; set; }
 
     /// <summary>
-    /// Порт для Https
+    ///   Порт для Https
     /// </summary>
     public int? HttpsPort { get; set; }
 
     /// <summary>
-    /// Блокирует использование Http
+    ///   Блокирует использование Http
     /// </summary>
     public bool? UseStrictHttps { get; set; }
 
     /// <summary>
-    /// Выключает отправку HSTS-заголовка в ответах
+    ///   Выключает отправку HSTS-заголовка в ответах
     /// </summary>
     public bool? UseHsts
     {

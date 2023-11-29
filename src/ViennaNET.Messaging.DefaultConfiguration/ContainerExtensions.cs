@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SimpleInjector;
 using ViennaNET.Messaging.Exceptions;
+using ViennaNET.Messaging.Listening;
+using ViennaNET.Messaging.Processing;
 using ViennaNET.Messaging.Tools;
 
 namespace ViennaNET.Messaging.DefaultConfiguration
@@ -82,6 +86,50 @@ namespace ViennaNET.Messaging.DefaultConfiguration
         var registration = CreateRegistration(container, lifestyle, type);
         container.Collection.Append(interfaceType, registration);
       }
+    }
+
+    /// <summary>
+    /// Регистрирует синхронный приемник сообщений
+    /// </summary>
+    /// <typeparam name="TType">Тип обработчика сообщений</typeparam>
+    /// <param name="container"></param>
+    /// <param name="queueName">Имя очереди</param>
+    public static void RegisterMessageProcessor<TType>(this Container container,
+      string queueName)
+      where TType : class, IProcessor
+    {
+      var registration = CreateRegistration(container, Lifestyle.Singleton, typeof(TType));
+      container.Collection.Append(typeof(IProcessor), registration);
+
+      RegisterQueueListener<TType>(container, queueName, Lifestyle.Singleton);
+    }
+
+    /// <summary>
+    /// Регистрирует асинхронный приемник сообщений
+    /// </summary>
+    /// <typeparam name="TType">Тип обработчика сообщений</typeparam>
+    /// <param name="container"></param>
+    /// <param name="queueName">Имя очереди</param>
+    public static void RegisterAsyncMessageProcessor<TType>(this Container container,
+      string queueName)
+      where TType : class, IProcessorAsync
+    {
+      var registration = CreateRegistration(container, Lifestyle.Singleton, typeof(TType));
+      container.Collection.Append(typeof(IProcessorAsync), registration);
+
+      RegisterQueueListener<TType>(container, queueName, Lifestyle.Singleton);
+    }
+
+    private static void RegisterQueueListener<TType>(Container container,
+      string queueName,
+      Lifestyle currentLifestyle)
+      where TType : class
+    {
+      container.Collection.Append<IQueueListener>(() => new QueueListener<TType>(
+          (IQueueReactorFactory)container.GetRequiredService(typeof(IQueueReactorFactory)),
+          (ILogger<QueueListener<TType>>)container.GetRequiredService(typeof(ILogger<QueueListener<TType>>)),
+          queueName),
+        currentLifestyle);
     }
 
     private static Registration CreateRegistration(Container container, Lifestyle lifestyle, Type type)

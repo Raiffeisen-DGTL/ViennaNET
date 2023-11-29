@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ViennaNET.Logging;
 using ViennaNET.WebApi.Cors;
 using ViennaNET.WebApi.Logging;
 using ViennaNET.WebApi.Metrics;
@@ -21,103 +17,125 @@ using ViennaNET.WebApi.StaticFiles;
 namespace ViennaNET.WebApi
 {
   /// <summary>
-  /// Класс-строитель для создания и конфигурирования WebApi-сервисов
+  ///   Класс-строитель для создания и конфигурирования WebApi-сервисов
   /// </summary>
-  public sealed partial class ViennaHostBuilder
+  public sealed partial class CompanyHostBuilder
   {
-    private readonly Assembly _serviceAssembly;
+    private readonly List<Action<IApplicationBuilder>> _addMiddlewareActions;
 
-    private IHostEnvironment HostingEnvironment { get; set; }
-    private IConfiguration Configuration { get; set; }
-
-    private object _container;
-    private Func<object> _createContainerAction;
-    private Action<object> _verifyContainerAction;
-    private Action<IWebHostBuilder> _useServerAction;
-    private readonly List<Action<IMvcCoreBuilder, IConfiguration>> _mvcBuilderActions;
-    private Action<MvcOptions> _configureMvcOptions;
-
-    private readonly List<(Action<IApplicationBuilder, IConfiguration, IHostEnvironment, object> action, bool initBeforeContainer)>
+    private readonly List<(Action<IApplicationBuilder, IConfiguration, IHostEnvironment, object> action, bool
+        initBeforeContainer)>?
       _appActions;
 
-    private readonly List<Action<IApplicationBuilder>> _addMiddlewareActions;
-    private Func<IServiceCollection, IConfiguration, object> _configureContainerFunc;
-    private Action<IServiceCollection, IConfiguration, object> _configureContainerAction;
-    private Action<IApplicationBuilder, object, IConfiguration> _initializeContainerAction;
-    private readonly List<Action<IServiceCollection, IConfiguration>> _servicesToRegister;
-    private readonly List<Action<IServiceCollection, object, IConfiguration>> _servicesToRegisterInContainer;
+    private readonly List<Action<IMvcCoreBuilder, IConfiguration>>? _mvcBuilderActions;
+    private readonly List<Action<IServiceCollection, IConfiguration>>? _servicesToRegister;
+    private readonly List<Action<IServiceCollection, object, IConfiguration>>? _servicesToRegisterInContainer;
+    private Action<IServiceCollection, IConfiguration, object>? _configureContainerAction;
+    private Func<IServiceCollection, IConfiguration, object>? _configureContainerFunc;
+    private Action<MvcOptions>? _configureMvcOptions;
 
-    private Action<IConfiguration> _onStartAction;
-    private Action<IConfiguration> _onStopAction;
+    private object? _container;
+    private Func<object>? _createContainerAction;
 
-    private ViennaHostBuilder(Assembly serviceAssembly)
+    private Action<IHostBuilder>? _hostBuilderAction;
+    private Action<IConfigurationBuilder>? _configurationBuilderAction;
+    private Action<IApplicationBuilder, object, IConfiguration>? _initializeContainerAction;
+
+    private Action<IConfiguration>? _onStartAction;
+    private Action<IConfiguration>? _onStoppedAction;
+    private Action<IConfiguration>? _onStoppingAction;
+    private Action<IWebHostBuilder>? _useServerAction;
+    private Action<object>? _verifyContainerAction;
+
+    private CompanyHostBuilder()
     {
-      _serviceAssembly = serviceAssembly;
-
-      _appActions = new List<(Action<IApplicationBuilder, IConfiguration, IHostEnvironment, object> action, bool initBeforeContainer)>();
+      _appActions =
+        new List<(Action<IApplicationBuilder, IConfiguration, IHostEnvironment, object> action, bool initBeforeContainer
+          )>();
       _addMiddlewareActions = new List<Action<IApplicationBuilder>>();
       _servicesToRegister = new List<Action<IServiceCollection, IConfiguration>>();
       _mvcBuilderActions = new List<Action<IMvcCoreBuilder, IConfiguration>>();
       _servicesToRegisterInContainer = new List<Action<IServiceCollection, object, IConfiguration>>();
     }
 
+    private IHostEnvironment? HostingEnvironment { get; set; }
+    private IConfiguration? Configuration { get; set; }
+
     /// <summary>
-    /// Создает новый экземпляр строителя
+    ///   Собирает сервис
     /// </summary>
+    /// <param name="args"></param>
     /// <returns></returns>
-    public static ViennaHostBuilder Create()
+    public IHost BuildWebHost(string[] args)
     {
-      return new ViennaHostBuilder(Assembly.GetEntryAssembly());
+      _container = _createContainerAction?.Invoke();
+
+      var hostBuilder = Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(builder =>
+        {
+          _useServerAction?.Invoke(builder);
+
+          builder.ConfigureCompanyMetrics()
+            .Configure(ConfigureAppBuilder);
+        })
+        .ConfigureAppConfiguration((context, builder) =>
+        {
+          builder
+            .AddJsonFile("conf/appsettings.json")
+            .AddJsonFile($"conf/appsettings.{context.HostingEnvironment.EnvironmentName}.json", true);
+
+          _configurationBuilderAction?.Invoke(builder);
+          Configuration = builder.Build();
+        })
+        .ConfigureServices(ConfigureServices)
+        .ConfigureLogging(logBuilder =>
+        {
+          if (Configuration.GetValue<bool>("Logging:UseLegacyLogger"))
+          {
+            logBuilder.ClearProviders();
+            logBuilder.AddProvider(new LoggingAdapterProvider());
+          }
+        });
+
+      _hostBuilderAction?.Invoke(hostBuilder);
+      var host = hostBuilder.Build();
+
+      return host;
     }
 
-    private void ConfigureAppConfiguration(WebHostBuilderContext hostingContext, IConfigurationBuilder config)
+    /// <summary>
+    ///   Создает новый экземпляр строителя
+    /// </summary>
+    /// <returns></returns>
+    public static CompanyHostBuilder Create()
     {
-      HostingEnvironment = hostingContext.HostingEnvironment;
-
-      var serviceAssemblyName = _serviceAssembly.GetName();
-      var serviceAssemblyProps = new List<KeyValuePair<string, string>>()
-      {
-        new KeyValuePair<string, string>("serviceAssemblyName", serviceAssemblyName.Name),
-        new KeyValuePair<string, string>("serviceAssemblyVersion", serviceAssemblyName.Version?.ToString()),
-      };
-
-      config.AddInMemoryCollection(serviceAssemblyProps);
-
-      var configFileBasePath = Path.GetDirectoryName(_serviceAssembly.Location) + "/conf/";
-
-      config.AddJsonFile(configFileBasePath + "appsettings.json")
-        .AddJsonFile(
-          configFileBasePath + $"appsettings.{HostingEnvironment.EnvironmentName}.json", optional: true);
-
-      config.AddEnvironmentVariables();
-
-      Configuration = config.Build();
+      return new();
     }
 
     private void ConfigureBaseServices(IServiceCollection services)
     {
       var builder = services.AddMvcCore(options =>
-                            {
-                              _configureMvcOptions?.Invoke(options);
-                              options.EnableEndpointRouting = false;
-                            })
-                            .AddApiExplorer()
-                            .AddApplicationPart(_serviceAssembly)
-                            .AddCors();
+        {
+          _configureMvcOptions?.Invoke(options);
+          options.EnableEndpointRouting = false;
+        })
+        .AddApiExplorer()
+        .AddCors();
 
-      _mvcBuilderActions.ForEach(a => a(builder, Configuration));
+      if (Assembly.GetEntryAssembly() is { } assembly)
+      {
+        builder.AddApplicationPart(assembly);
+      }
 
-      var name = _serviceAssembly.GetName();
-      Logger.DefaultService = name.Name;
-
-      _servicesToRegister.ForEach(service => service(services, Configuration));
+      _mvcBuilderActions?.ForEach(a => a(builder, Configuration));
+      _servicesToRegister?.ForEach(service => service(services, Configuration));
     }
 
     private void ConfigureServices(IServiceCollection services)
     {
       ConfigureBaseServices(services);
       _configureContainerAction?.Invoke(services, Configuration, _container);
-      _servicesToRegisterInContainer.ForEach(x => x(services, _container, Configuration));
+      _servicesToRegisterInContainer?.ForEach(x => x(services, _container, Configuration));
     }
 
     // TODO: нужно доработать, сделать корректные интерфейсы
@@ -155,60 +173,26 @@ namespace ViennaNET.WebApi
       _verifyContainerAction?.Invoke(_container);
 
       // configure lifetime actions
-      if (_onStartAction is null && _onStopAction is null)
+      if (_onStartAction is null && _onStoppingAction is null && _onStoppedAction is null)
       {
         return;
       }
 
-      var lifetime = app.ApplicationServices.GetService<IHostApplicationLifetime>();
+      var lifetime = app.ApplicationServices.GetRequiredService<IHostApplicationLifetime>();
       if (_onStartAction != null)
       {
         lifetime.ApplicationStarted.Register(() => _onStartAction(Configuration));
       }
 
-      if (_onStopAction != null)
+      if (_onStoppingAction != null)
       {
-        lifetime.ApplicationStopped.Register(() => _onStopAction(Configuration));
-      }
-    }
-
-    /// <summary>
-    /// Собирает сервис
-    /// </summary>
-    /// <param name="args"></param>
-    /// <returns></returns>
-    public IWebHost BuildWebHost(string[] args)
-    {
-      VerifyBuilderState();
-
-      if (_createContainerAction != null)
-      {
-        _container = _createContainerAction();
+        lifetime.ApplicationStopping.Register(() => _onStoppingAction(Configuration));
       }
 
-      var pathToExe = Process.GetCurrentProcess()
-                             .MainModule.FileName;
-      var pathToContentRoot = Path.GetDirectoryName(pathToExe);
-
-      var hostBuilder = WebHost.CreateDefaultBuilder(args);
-
-      _useServerAction(hostBuilder);
-      hostBuilder.UseContentRoot(pathToContentRoot)
-                 .ConfigureAppConfiguration(ConfigureAppConfiguration)
-                 .ConfigureServices(ConfigureServices)
-                 .ConfigureCompanyMetrics()
-                 .Configure(ConfigureAppBuilder)
-                 .ConfigureLogging(logBuilder =>
-                 {
-                   if (Configuration.GetValue<bool>("Logging:UseLegacyLogger"))
-                   {
-                     logBuilder.ClearProviders();
-                     logBuilder.AddProvider(new LoggingAdapterProvider());
-                   }
-                 });
-
-
-      return hostBuilder.Build();
+      if (_onStoppedAction != null)
+      {
+        lifetime.ApplicationStopped.Register(() => _onStoppedAction(Configuration));
+      }
     }
   }
 }

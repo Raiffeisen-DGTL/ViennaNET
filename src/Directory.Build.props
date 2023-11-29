@@ -1,0 +1,23 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <Import Project="../Directory.Build.props"/>
+
+    <PropertyGroup>
+        <PackRelease>true</PackRelease>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Company>Raiffeisenbank .NET Community</Company>
+        <Authors>Raiffeisenbank .NET Community</Authors>
+        <Copyright>Copyright © Raiffeisenbank</Copyright>
+        <RepositoryUrl>$(CI_REPOSITORY_URL)</RepositoryUrl>
+        <RepositoryBranch>$(CI_COMMIT_REF_NAME)</RepositoryBranch>
+        <RepositoryCommit>$(CI_COMMIT_SHA)</RepositoryCommit>
+        <PackageProjectUrl>$(CI_PROJECT_URL)</PackageProjectUrl>
+        <PackageVersion>$(GitVersion_NuGetVersion)</PackageVersion>
+        <AssemblyVersion>$(GitVersion_AssemblySemVer)</AssemblyVersion>
+        <FileVersion>$(GitVersion_AssemblySemFileVer)</FileVersion>
+        <InformationalVersion>$(GitVersion_InformationalVersion)</InformationalVersion>
+    </PropertyGroup>
+</Project>

@@ -12,35 +12,35 @@ using ViennaNET.WebApi.Net.IpTools;
 namespace ViennaNET.WebApi.Configurators.Common
 {
   /// <summary>
-  /// Включает базовые сервисы и middleware
+  ///   Включает базовые сервисы и middleware
   /// </summary>
   public static class CommonConfigurator
   {
     /// <summary>
-    /// Включает базовые сервисы и middleware
+    ///   Включает базовые сервисы и middleware
     /// </summary>
     /// <param name="companyHostBuilder"></param>
     /// <returns></returns>
-    public static IViennaHostBuilder UseCommonModules(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseCommonModules(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.ConfigureApp(ConfigureLogger)
-                               .ConfigureApp(ConfigureLoggerMiddleware)
-                               .RegisterServices(RegisterCommonServices);
+        .ConfigureApp(ConfigureLoggerMiddleware)
+        .RegisterServices(RegisterCommonServices);
     }
 
     /// <summary>
-    /// Регистрирует сервисы для работы с IP-адресами
+    ///   Регистрирует сервисы для работы с IP-адресами
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     internal static void RegisterCommonServices(IServiceCollection services, IConfiguration configuration)
     {
-      services.AddSingleton<ILocalIpProvider, LocalIpProvider>(); //TODO Уничтожить!!!
+      services.AddSingleton<ILocalIpProvider, LocalIpProvider>();
       services.AddSingleton<ILoopbackIpFilter, LoopbackIpFilter>();
     }
 
     /// <summary>
-    /// Регистрирует логгер из ViennaNET.Logging
+    ///   Регистрирует логгер из ViennaNET.Logging
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
@@ -53,7 +53,7 @@ namespace ViennaNET.WebApi.Configurators.Common
     }
 
     /// <summary>
-    /// Регистрирует базовые middleware в приложении и DI контейнере
+    ///   Регистрирует базовые middleware в приложении и DI контейнере
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>

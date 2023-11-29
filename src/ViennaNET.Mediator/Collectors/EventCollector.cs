@@ -9,6 +9,8 @@ using ViennaNET.Mediator.Seedwork;
 namespace ViennaNET.Mediator.Collectors
 {
   /// <inheritdoc />
+  [Obsolete(
+      "Данный пакет устарел и будет удален в ноябре 2023. Пожалуйста используйте ViennaNET.Extensions.Mediator")]
   internal sealed class EventCollector : IEventCollector
   {
     private readonly ConcurrentQueue<IEvent> _events;
@@ -16,7 +18,7 @@ namespace ViennaNET.Mediator.Collectors
     private bool _disposed;
 
     /// <summary>
-    /// Инициализирует экземпляр <see cref="EventCollector" /> ссылкой на экземпляр <see cref="IMediator" />.
+    ///   Инициализирует экземпляр <see cref="EventCollector" /> ссылкой на экземпляр <see cref="IMediator" />.
     /// </summary>
     /// <param name="mediator">Ссылка на объект <see cref="IMediator" />.</param>
     internal EventCollector(IMediator mediator)
@@ -28,7 +30,7 @@ namespace ViennaNET.Mediator.Collectors
     /// <inheritdoc />
     public IReadOnlyCollection<IEvent> Events =>
       _events.ToList()
-             .AsReadOnly();
+        .AsReadOnly();
 
     /// <inheritdoc />
     public bool IsEmpty => _events.IsEmpty;
@@ -102,7 +104,8 @@ namespace ViennaNET.Mediator.Collectors
 
     private void Clear()
     {
-      Logger.LogInfo($"{nameof(Events)} collection from {nameof(EventCollector)} will be cleared. {_events.Count} events were not published.");
+      Logger.LogInfo(
+        $"{nameof(Events)} collection from {nameof(EventCollector)} will be cleared. {_events.Count} events were not published.");
 
       if (_events.IsEmpty)
       {

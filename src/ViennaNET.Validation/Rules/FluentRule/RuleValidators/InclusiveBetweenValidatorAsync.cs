@@ -23,7 +23,7 @@ namespace ViennaNET.Validation.Rules.FluentRule.RuleValidators
     protected override async Task<bool> IsValidAsync(Task<T> instance, ValidationContext context)
     {
       var result = await instance;
-      return result == null || result.CompareTo(_from) >= 0 && result.CompareTo(_to) <= 0;
+      return result == null || (result.CompareTo(_from) >= 0 && result.CompareTo(_to) <= 0);
     }
   }
 }

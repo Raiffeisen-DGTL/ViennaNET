@@ -1,5 +1,6 @@
-﻿using BaseDialect = NHibernate.Dialect.DB2Dialect;
+﻿using ViennaNET.Orm.DB2.NHibernateDriver;
 using Environment = NHibernate.Cfg.Environment;
+using BaseDialect = NHibernate.Dialect.DB2Dialect;
 
 namespace ViennaNET.Orm.DB2
 {
@@ -7,12 +8,12 @@ namespace ViennaNET.Orm.DB2
   public class Db2Dialect : BaseDialect
   {
     /// <summary>
-    /// Инициализирует переменную драйвера подключения
-    /// выбранным драйвером
+    ///   Инициализирует переменную драйвера подключения
+    ///   выбранным драйвером
     /// </summary>
     public Db2Dialect()
     {
-      DefaultProperties[Environment.ConnectionDriver] = typeof(Db2Driver).AssemblyQualifiedName;
+      DefaultProperties[Environment.ConnectionDriver] = typeof(NetDB2Driver).AssemblyQualifiedName;
     }
   }
 }

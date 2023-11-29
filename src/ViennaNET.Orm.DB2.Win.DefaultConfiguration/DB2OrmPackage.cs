@@ -2,11 +2,11 @@
 using SimpleInjector.Packaging;
 using ViennaNET.Orm.Factories;
 
-namespace ViennaNET.Orm.DB2.Win.DefaultConfiguration
+namespace ViennaNET.Orm.DB2.DefaultConfiguration
 {
   /// <inheritdoc />
   /// <summary>
-  /// Пакет SimpleInjector для работы с БД DB2
+  ///   Пакет SimpleInjector для работы с БД DB2
   /// </summary>
   public class Db2OrmPackage : IPackage
   {

@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ViennaNET.Orm.Application;
+using ViennaNET.Orm.Repositories;
 using ViennaNET.Orm.Seedwork;
 
 namespace ViennaNET.Orm
 {
   /// <summary>
-  /// Позволяет регистрировать элементы ограниченного контекста приложения.
-  /// Для использование необходимо создать единственного наследника данного класса
-  /// внутри пользовательского приложения и зарегистрировать его в DI 
+  ///   Позволяет регистрировать элементы ограниченного контекста приложения.
+  ///   Для использование необходимо создать единственного наследника данного класса
+  ///   внутри пользовательского приложения и зарегистрировать его в DI
   /// </summary>
   public abstract class ApplicationContext : BoundedContext, IApplicationContext
   {
-    private readonly List<(string, string)> _namedQueries = new List<(string, string)>();
-    private readonly List<(Type, string)> _commands = new List<(Type, string)>();
-    private readonly List<(Type, string)> _customQueries = new List<(Type, string)>();
-    private readonly List<(Type, string, Assembly)> _integrationEvents = new List<(Type, string, Assembly)>();
+    private readonly List<(Type, string)> _commands = new();
+    private readonly List<(Type, string)> _customQueries = new();
+    private readonly List<(Type, string, Assembly)> _integrationEvents = new();
+    private readonly List<(string, string)> _namedQueries = new();
 
     /// <inheritdoc />
     public IReadOnlyCollection<(string, string)> NamedQueries => _namedQueries.AsReadOnly();
@@ -32,7 +33,7 @@ namespace ViennaNET.Orm
     public IReadOnlyCollection<(Type, string, Assembly)> IntegrationEvents => _integrationEvents.AsReadOnly();
 
     /// <summary>
-    /// Позволяет добавить новую команду в контекст
+    ///   Позволяет добавить новую команду в контекст
     /// </summary>
     /// <typeparam name="T">Тип регистрируемой команды</typeparam>
     /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
@@ -43,12 +44,15 @@ namespace ViennaNET.Orm
     }
 
     /// <summary>
-    /// Регистрирует все команды в сборке
+    ///   Регистрирует все команды в сборке
     /// </summary>
     /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
-    /// <param name="assembly">Сборка в которой ведётся поиск команд. По умолчанию - <see cref="Assembly.GetCallingAssembly"/>.</param>
+    /// <param name="assembly">
+    ///   Сборка в которой ведётся поиск команд. По умолчанию - <see cref="Assembly.GetCallingAssembly" />
+    ///   .
+    /// </param>
     /// <returns>Себя</returns>
-    /// <remarks>Поиск команд ведётся по реализации от <see cref="ICommand"/></remarks>
+    /// <remarks>Поиск команд ведётся по реализации от <see cref="ICommand" /></remarks>
     protected IApplicationContext AddAllCommands(string dbNick = null, Assembly assembly = null)
     {
       var myAssembly = assembly ?? Assembly.GetCallingAssembly();
@@ -63,7 +67,7 @@ namespace ViennaNET.Orm
     }
 
     /// <summary>
-    /// Позволяет добавить новый именованный запрос в контекст
+    ///   Позволяет добавить новый именованный запрос в контекст
     /// </summary>
     /// <param name="queryName">Имя регистрируемого запроса</param>
     /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
@@ -74,7 +78,7 @@ namespace ViennaNET.Orm
     }
 
     /// <summary>
-    /// Позволяет добавить новый настраиваемый запрос в контекст
+    ///   Позволяет добавить новый настраиваемый запрос в контекст
     /// </summary>
     /// <typeparam name="T">Тип сущности, возвращаемой запросом</typeparam>
     /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
@@ -85,13 +89,14 @@ namespace ViennaNET.Orm
     }
 
     /// <summary>
-    /// Позволяет добавить новое событие для публикации в контекст
+    ///   Позволяет добавить новое событие для публикации в контекст
     /// </summary>
     /// <typeparam name="T">Тип регистрируемого события</typeparam>
     /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
     /// <param name="assembly">Сборка в которой находится класс события</param>
     /// <returns></returns>
-    protected IApplicationContext AddIntegrationEvent<T>(string dbNick = null, Assembly assembly = null) where T : class, IIntegrationEvent
+    protected IApplicationContext AddIntegrationEvent<T>(string dbNick = null, Assembly assembly = null)
+      where T : class, IIntegrationEvent
     {
       _integrationEvents.Add((typeof(T), dbNick, assembly));
       return this;
@@ -99,12 +104,15 @@ namespace ViennaNET.Orm
 
 
     /// <summary>
-    /// Регистрирует все события в сборке
+    ///   Регистрирует все события в сборке
     /// </summary>
     /// <param name="dbNick">Имя подключения к БД в файле конфигурации</param>
-    /// <param name="assembly">Сборка в которой ведётся поиск событий. По умолчанию - <see cref="Assembly.GetCallingAssembly"/>.</param>
+    /// <param name="assembly">
+    ///   Сборка в которой ведётся поиск событий. По умолчанию -
+    ///   <see cref="Assembly.GetCallingAssembly" />.
+    /// </param>
     /// <returns>Себя</returns>
-    /// <remarks>Поиск событий ведётся по реализации классом интерфейса <see cref="IIntegrationEvent"/></remarks>
+    /// <remarks>Поиск событий ведётся по реализации классом интерфейса <see cref="IIntegrationEvent" /></remarks>
     protected IApplicationContext AddAllIntegrationEvents(string dbNick = null, Assembly assembly = null)
     {
       var myAssembly = assembly ?? Assembly.GetCallingAssembly();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,26 +14,26 @@ using ViennaNET.WebApi.Configurators.Swagger.Configuration;
 namespace ViennaNET.WebApi.Configurators.Swagger
 {
   /// <summary>
-  /// Подключает Swagger
+  ///   Подключает Swagger
   /// </summary>
   public static class SwaggerConfigurator
   {
-    public static IViennaHostBuilder UseSwagger(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseSwagger(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.ConfigureApp((a, c, e, o) => ConfigureSwagger(a, c, e, o, null))
-                               .RegisterServices((s, c) => AddSwagger(s, c, null));
+        .RegisterServices((s, c) => AddSwagger(s, c, null));
     }
 
-    public static IViennaHostBuilder UseSwaggerWithOptions(
-      this IViennaHostBuilder companyHostBuilder, Action<SwaggerUIOptions, IConfiguration> swaggerUiConfig,
+    public static ICompanyHostBuilder UseSwaggerWithOptions(
+      this ICompanyHostBuilder companyHostBuilder, Action<SwaggerUIOptions, IConfiguration> swaggerUiConfig,
       Action<SwaggerGenOptions, IConfiguration> swaggerGenConfig)
     {
       return companyHostBuilder.ConfigureApp((a, c, e, o) => ConfigureSwagger(a, c, e, o, swaggerUiConfig))
-                               .RegisterServices((s, c) => AddSwagger(s, c, swaggerGenConfig));
+        .RegisterServices((s, c) => AddSwagger(s, c, swaggerGenConfig));
     }
 
     /// <summary>
-    /// Включает интерфейс Swagger'а
+    ///   Включает интерфейс Swagger'а
     /// </summary>
     /// <param name="app"></param>
     /// <param name="configuration"></param>
@@ -44,7 +45,7 @@ namespace ViennaNET.WebApi.Configurators.Swagger
       Action<SwaggerUIOptions, IConfiguration> swaggerUiConfig)
     {
       var swaggerConfiguration = configuration.GetSection(SwaggerConfigurationSection.SectionName)
-                                              .Get<SwaggerConfigurationSection>();
+        .Get<SwaggerConfigurationSection>();
 
       if (swaggerConfiguration?.UseSwagger != true)
       {
@@ -63,24 +64,26 @@ namespace ViennaNET.WebApi.Configurators.Swagger
     }
 
     /// <summary>
-    /// Включает генерацию файла-описания публичного API сервиса
+    ///   Включает генерацию файла-описания публичного API сервиса
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     /// <param name="swaggerGenConfig"></param>
     internal static void AddSwagger(
-      IServiceCollection services, IConfiguration configuration, Action<SwaggerGenOptions, IConfiguration> swaggerGenConfig)
+      IServiceCollection services, IConfiguration configuration,
+      Action<SwaggerGenOptions, IConfiguration> swaggerGenConfig)
     {
       var swaggerConfiguration = configuration.GetSection(SwaggerConfigurationSection.SectionName)
-                                              .Get<SwaggerConfigurationSection>();
+        .Get<SwaggerConfigurationSection>();
 
       if (swaggerConfiguration?.UseSwagger != true)
       {
         return;
       }
 
-      var name = configuration.GetValue<string>("serviceAssemblyName");
-      var version = configuration.GetValue<string>("serviceAssemblyVersion");
+      var assemblyName = Assembly.GetEntryAssembly()?.GetName();
+      var name = assemblyName?.Name;
+      var version = assemblyName?.Version?.ToString();
 
       services.AddSwaggerGen(c =>
       {

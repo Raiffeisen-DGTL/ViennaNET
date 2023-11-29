@@ -11,11 +11,14 @@ namespace ViennaNET.Messaging.MQSeriesQueue
   public class MqSeriesQueueMessageAdapterConstructor : QueueMessageAdapterConstructorBase<MqSeriesConfiguration,
     MqSeriesQueueConfiguration>
   {
+    private readonly IMqSeriesQueueConnectionFactoryProvider _connectionFactory =
+      new MqSeriesQueueConnectionFactoryProvider();
+
     private readonly ILoggerFactory _loggerFactory;
-    private readonly IMqSeriesQueueConnectionFactoryProvider _connectionFactory = new MqSeriesQueueConnectionFactoryProvider();
 
     /// <inheritdoc />
-    public MqSeriesQueueMessageAdapterConstructor(IConfiguration configuration, ILoggerFactory loggerFactory) : base(configuration, "mqseries")
+    public MqSeriesQueueMessageAdapterConstructor(IConfiguration configuration, ILoggerFactory loggerFactory) : base(
+      configuration, "mqseries")
     {
       _loggerFactory = loggerFactory;
     }
@@ -25,30 +28,26 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     {
       queueConfiguration.ThrowIfNull(nameof(queueConfiguration));
 
-      return queueConfiguration.TransactionEnabled ||
-             queueConfiguration.ProcessingType == MessageProcessingType.ThreadStrategy
-        ? new MqSeriesQueueTransactedMessageAdapter(
-          _connectionFactory,
+      if (queueConfiguration.TransactionEnabled)
+      {
+        return new MqSeriesQueueTransactedMessageAdapter(_connectionFactory,
           queueConfiguration,
-          _loggerFactory.CreateLogger<MqSeriesQueueTransactedMessageAdapter>())
-        : new MqSeriesQueueSubscribingMessageAdapter(
+          _loggerFactory.CreateLogger<MqSeriesQueueTransactedMessageAdapter>());
+      }
+
+      if (queueConfiguration.ProcessingType == MessageProcessingType.Subscribe ||
+          queueConfiguration.ProcessingType == MessageProcessingType.SubscribeAndReply)
+      {
+        return new MqSeriesQueueSubscribingMessageAdapter(
           _connectionFactory,
           queueConfiguration,
           _loggerFactory.CreateLogger<MqSeriesQueueSubscribingMessageAdapter>());
-    }
-
-    /// <inheritdoc />
-    protected override void CheckConfigurationParameters(MqSeriesQueueConfiguration configuration)
-    {
-      configuration.Id.ThrowIfNullOrWhiteSpace(nameof(configuration.Id));
-      configuration.ClientId.ThrowIfNullOrWhiteSpace(nameof(configuration.ClientId));
-      configuration.Server.ThrowIfNullOrWhiteSpace(nameof(configuration.Server));
-      configuration.QueueName.ThrowIfNullOrWhiteSpace(nameof(configuration.QueueName));
-      configuration.QueueManager.ThrowIfNullOrWhiteSpace(nameof(configuration.QueueManager));
-      if (configuration.UseQueueString)
-      {
-        configuration.QueueString.ThrowIfNullOrWhiteSpace(nameof(configuration.QueueString));
       }
+
+      return new MqSeriesQueueMessageAdapter(
+        _connectionFactory,
+        queueConfiguration,
+        _loggerFactory.CreateLogger<MqSeriesQueueMessageAdapter>());
     }
   }
 }

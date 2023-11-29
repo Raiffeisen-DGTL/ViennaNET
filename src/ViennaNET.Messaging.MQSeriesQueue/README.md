@@ -41,3 +41,13 @@ https://stackoverflow.com/questions/50608415/cwsia0112e-the-property-name-keep-a
 #### Listening mode (processingType)
 * Transactions are only supported in ThreadStrategy mode.
 * If transactions are disabled (transactionEnabled == false), then it can use both ThreadStrategy and the subscription mode (Subscribe).
+
+#### How to make encrypted connection
+Just set TlsEnabled to true. Client will try to connect to broker using TLS 1.2 protocol. Port should be usually the same as for unencrypted traffic. Revocation check is always enabled for 
+server certificates.
+
+If you wish to validate server certificate, set TlsServerCertSubject to subject (DN) of server certificate.
+
+To specific client certificate to connect to server (in case broker validates it) you need to act depending on host OS:
+* On Windows specify TlsClientCertStore (defaults to User) and TlsClientCertLabel which is Friendly Name of a certificate that should be set manually in certmgr.
+* On Linux you just have to put cert into `~/.dotnet/corefx/cryptography/x509stores/`

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using IBM.XMS;
 using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Messages;
@@ -14,7 +13,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
   ///   Адаптер, реализующий взаимодействие с очередью IBM MQ в режиме подписки
   /// </summary>
   /// <remarks>Не поддерживает транзакции</remarks>
-  internal sealed class MqSeriesQueueSubscribingMessageAdapter : MqSeriesQueueMessageAdapterBase,
+  internal sealed class MqSeriesQueueSubscribingMessageAdapter : MqSeriesQueueMessageAdapter,
     IMessageAdapterWithSubscribing
   {
     /// <inheritdoc />
@@ -24,7 +23,6 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       ILogger<MqSeriesQueueSubscribingMessageAdapter> logger)
       : base(connectionFactoryProvider, configuration, logger)
     {
-
     }
 
     /// <inheritdoc />
@@ -60,21 +58,9 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     }
 
     /// <inheritdoc />
-    public override bool SupportProcessingType(MessageProcessingType processingType)
-    {
-      return processingType == MessageProcessingType.Subscribe;
-    }
-
-    /// <inheritdoc />
     public void Unsubscribe()
     {
       GetConsumer().MessageListener = null;
-    }
-
-    /// <inheritdoc />
-    protected override ISession CreateSession()
-    {
-      return GetConnection().CreateSession(false, AcknowledgeMode.AutoAcknowledge);
     }
   }
 }

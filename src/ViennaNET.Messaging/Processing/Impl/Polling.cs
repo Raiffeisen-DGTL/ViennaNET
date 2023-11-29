@@ -7,27 +7,33 @@ using ViennaNET.Utils;
 namespace ViennaNET.Messaging.Processing.Impl
 {
   /// <summary>
-  /// Реализует алгоритм поллинга
+  ///   Реализует алгоритм поллинга
   /// </summary>
   public sealed class Polling : IDisposable
   {
-    private readonly int _timeoutPollingQueue;
-    private readonly Func<CancellationToken, Task<bool>> _processAction;
     private readonly ILogger _logger;
+    private readonly Func<CancellationToken, Task<bool>> _processAction;
 
-    private readonly object _stateLock = new object();
+    private readonly object _stateLock = new();
+    private readonly int _timeoutPollingQueue;
 
     private CancellationTokenSource _cancellationTokenSource;
-    private Task _task;
     private bool _isDisposed;
+    private Task _task;
 
     /// <summary>
-    /// Инициализирует экземпляр значением интервала опроса и идентификатором потока
+    ///   Инициализирует экземпляр значением интервала опроса и идентификатором потока
     /// </summary>
     /// <param name="timeoutPollingQueue">Интервал опроса, мс</param>
-    /// <param name="processAction"><see cref="Func{TResult}"/>, осуществляющий непосредственную работу с очередью. Возвращаемое значение определяет, было ли прочитано сообщение из очереди.</param>
+    /// <param name="processAction">
+    ///   <see cref="Func{TResult}" />, осуществляющий непосредственную работу с очередью.
+    ///   Возвращаемое значение определяет, было ли прочитано сообщение из очереди.
+    /// </param>
     /// <param name="logger">Интерфейс логгирования</param>
-    /// <remarks>В зависимости от возвращаемого значения processAction процесс ждёт заданные интервал (если сообщение не было прчитано) или сразу пытается читать следующее (если было).</remarks>
+    /// <remarks>
+    ///   В зависимости от возвращаемого значения processAction процесс ждёт заданные интервал (если сообщение не было
+    ///   прчитано) или сразу пытается читать следующее (если было).
+    /// </remarks>
     public Polling(int timeoutPollingQueue, Func<CancellationToken, Task<bool>> processAction, ILogger logger)
     {
       _timeoutPollingQueue = timeoutPollingQueue;
@@ -36,7 +42,7 @@ namespace ViennaNET.Messaging.Processing.Impl
     }
 
     /// <summary>
-    /// Статус запуска
+    ///   Статус запуска
     /// </summary>
     public bool IsStarted
     {
@@ -47,8 +53,16 @@ namespace ViennaNET.Messaging.Processing.Impl
       }
     }
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+      Dispose(true);
+      _isDisposed = true;
+      GC.SuppressFinalize(this);
+    }
+
     /// <summary>
-    /// Запуск процесса прослушивания очередей
+    ///   Запуск процесса прослушивания очередей
     /// </summary>
     public void StartPolling()
     {
@@ -70,27 +84,24 @@ namespace ViennaNET.Messaging.Processing.Impl
 
     private async Task ProcessAsync(CancellationToken ct)
     {
-      try
+      while (!ct.IsCancellationRequested)
       {
-        while (!ct.IsCancellationRequested)
+        try
         {
-          try
+          var messageReceived = await _processAction(ct).ConfigureAwait(false);
+          if (!messageReceived)
           {
-            var messageReceived = await _processAction(ct).ConfigureAwait(false);
-            if (!messageReceived)
-            {
-              await Task.Delay(_timeoutPollingQueue, ct).ConfigureAwait(false);
-            }
-          }
-          catch (Exception e)
-          {
-            _logger.LogError(e, "Error while executing polling");
+            await Task.Delay(_timeoutPollingQueue, ct).ConfigureAwait(false);
           }
         }
-      }
-      catch (TaskCanceledException)
-      {
-        // Everything's under control, just end task
+        catch (TaskCanceledException)
+        {
+          // Everything's under control, just end the task
+        }
+        catch (Exception e)
+        {
+          _logger.LogError(e, "Error while executing polling");
+        }
       }
     }
 
@@ -131,14 +142,6 @@ namespace ViennaNET.Messaging.Processing.Impl
           }
         }
       }
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
-      Dispose(true);
-      _isDisposed = true;
-      GC.SuppressFinalize(this);
     }
 
     /// <inheritdoc />

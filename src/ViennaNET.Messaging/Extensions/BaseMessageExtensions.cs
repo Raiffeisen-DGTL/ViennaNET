@@ -61,10 +61,46 @@ namespace ViennaNET.Messaging.Extensions
         case BytesMessage bytesMessage:
           return bytesMessage.Body;
         case TextMessage textMessage:
-          return Encoding.UTF8.GetBytes(textMessage.Body);
+          return textMessage.Body == null ? null : Encoding.UTF8.GetBytes(textMessage.Body);
         default:
           throw new MessagingException($"Unknown type of message: {message.GetType()}");
       }
+    }
+
+    /// <summary>
+    ///   Возвращает тело сообщения в виде строки
+    /// </summary>
+    /// <param name="message">Сообщение для конвертации</param>
+    /// <returns>строка содержащее тело сообщения</returns>
+    /// <exception cref="MessagingException">Исключение при неизвестном типе сообщения</exception>
+    public static string GetMessageBodyAsString(this BaseMessage message)
+    {
+      switch (message)
+      {
+        case BytesMessage bytesMessage:
+          return Encoding.UTF8.GetString(bytesMessage.Body);
+        case TextMessage textMessage:
+          return textMessage.Body;
+        default:
+          throw new MessagingException($"Unknown type of message: {message.GetType()}");
+      }
+    }
+
+    /// <summary>
+    ///   Возвращает заголовки сообщения в виде строки
+    /// </summary>
+    /// <param name="message">Сообщение для конвертации</param>
+    /// <returns>строка содержащее заголовки сообщения</returns>
+    public static string GetMessageHeadersAsString(this BaseMessage message)
+    {
+      var sb = new StringBuilder();
+
+      foreach (var property in message.Properties)
+      {
+        sb.AppendLine($"{property.Key} = {property.Value}");
+      }
+
+      return sb.ToString();
     }
   }
 }

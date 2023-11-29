@@ -44,7 +44,8 @@ namespace ViennaNET.Messaging
     /// <param name="timeout">Время ожидания для запроса сообщения</param>
     /// <param name="additionalParameters">Дополнительные параметры для приема сообщения</param>
     /// <returns>Полученное сообщение</returns>
-    BaseMessage Receive(string correlationId = null, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters);
+    BaseMessage Receive(string correlationId = null, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters);
 
     /// <summary>
     ///   Получить сообщение из очереди
@@ -54,13 +55,7 @@ namespace ViennaNET.Messaging
     /// <param name="additionalParameters">Дополнительные параметры для приема сообщения</param>
     /// <param name="message">Полученное сообщение</param>
     bool TryReceive(
-      [CanBeNull] out BaseMessage message, [CanBeNull] string correlationId = null, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters);
-
-    /// <summary>
-    ///   Проверяет, поддерживает ли адаптер работу по переданному типу обработки
-    /// </summary>
-    /// <param name="processingType">Тип обработки</param>
-    /// <returns>Признак поддержки типа</returns>
-    bool SupportProcessingType(MessageProcessingType processingType);
+      [CanBeNull] out BaseMessage message, [CanBeNull] string correlationId = null, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters);
   }
 }

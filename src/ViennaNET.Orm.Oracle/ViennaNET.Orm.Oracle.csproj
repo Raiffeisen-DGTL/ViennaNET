@@ -1,30 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net6.0</TargetFramework>
+    
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.Orm.Oracle.xml</DocumentationFile>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net6.0\ViennaNET.Orm.Oracle.xml</DocumentationFile>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\ViennaNET.Orm.Oracle.xml</DocumentationFile>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\net6.0\ViennaNET.Orm.Oracle.xml</DocumentationFile>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.1" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.80" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.Orm\ViennaNET.Orm.csproj" />
-    <ProjectReference Include="..\ViennaNET.Protection\ViennaNET.Protection.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Orm\ViennaNET.Orm.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Protection\ViennaNET.Protection.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Readme.md">
+    <None Update="README.md">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Readme.cs</LastGenOutput>
     </None>
