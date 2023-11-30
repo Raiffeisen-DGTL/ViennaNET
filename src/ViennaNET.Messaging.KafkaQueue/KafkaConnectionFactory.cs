@@ -6,30 +6,26 @@ namespace ViennaNET.Messaging.KafkaQueue
 {
   internal class KafkaConnectionFactory : IKafkaConnectionFactory
   {
-    public IConsumer<Ignore, byte[]> CreateConsumer(
+    public IConsumer<byte[], byte[]> CreateConsumer(
       KafkaQueueConfiguration config,
-      Action<IConsumer<Ignore, byte[]>, LogMessage> logHandler = null,
-      Action<IConsumer<Ignore, byte[]>, Error> errorHandler = null)
+      Action<IConsumer<byte[], byte[]>, LogMessage>? logHandler = null,
+      Action<IConsumer<byte[], byte[]>, Error>? errorHandler = null)
     {
       config.ThrowIfNull(nameof(config));
+      config.ConsumerConfig.ThrowIfNull(nameof(config.ProducerConfig));
 
-      var builder = new ConsumerBuilder<Ignore, byte[]>(new ConsumerConfig
-      {
-        GroupId = config.GroupId,
-        BootstrapServers = $"{config.Server}",
-        AutoOffsetReset = config.AutoOffsetReset,
-        SaslKerberosKeytab = config.KeyTab,
-        SaslKerberosPrincipal = config.User,
-        SaslKerberosServiceName = config.ServiceName,
-        SecurityProtocol = config.Protocol,
-        SaslMechanism = config.Mechanism,
-        Debug = config.Debug
-      });
+      config.ConsumerConfig!.EnableAutoCommit ??= !config.TransactionEnabled;
+      config.ConsumerConfig.IsolationLevel ??= config.TransactionEnabled
+        ? IsolationLevel.ReadCommitted
+        : IsolationLevel.ReadUncommitted;
+
+      var builder = new ConsumerBuilder<byte[], byte[]>(config.ConsumerConfig);
 
       if (logHandler != null)
       {
         builder.SetLogHandler(logHandler);
       }
+
       if (errorHandler != null)
       {
         builder.SetErrorHandler(errorHandler);
@@ -38,28 +34,25 @@ namespace ViennaNET.Messaging.KafkaQueue
       return builder.Build();
     }
 
-    public IProducer<Null, byte[]> CreateProducer(
+    public IProducer<byte[], byte[]> CreateProducer(
       KafkaQueueConfiguration config,
-      Action<IProducer<Null, byte[]>, LogMessage> logHandler = null,
-      Action<IProducer<Null, byte[]>, Error> errorHandler = null)
+      Action<IProducer<byte[], byte[]>, LogMessage>? logHandler = null,
+      Action<IProducer<byte[], byte[]>, Error>? errorHandler = null)
     {
       config.ThrowIfNull(nameof(config));
+      config.ProducerConfig.ThrowIfNull(nameof(config.ProducerConfig));
 
-      var builder = new ProducerBuilder<Null, byte[]>(new ProducerConfig
-      {
-        BootstrapServers = $"{config.Server}",
-        SaslKerberosKeytab = config.KeyTab,
-        SaslKerberosPrincipal = config.User,
-        SaslKerberosServiceName = config.ServiceName,
-        SecurityProtocol = config.Protocol,
-        SaslMechanism = config.Mechanism,
-        Debug = config.Debug
-      });
+      config.ProducerConfig!.TransactionalId = config.TransactionEnabled
+        ? config.Id
+        : null;
+
+      var builder = new ProducerBuilder<byte[], byte[]>(config.ProducerConfig);
 
       if (logHandler != null)
       {
         builder.SetLogHandler(logHandler);
       }
+
       if (errorHandler != null)
       {
         builder.SetErrorHandler(errorHandler);

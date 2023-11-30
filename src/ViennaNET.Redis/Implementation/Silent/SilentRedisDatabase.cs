@@ -9,8 +9,8 @@ namespace ViennaNET.Redis.Implementation.Silent
 {
   internal class SilentRedisDatabase : IRedisDatabase
   {
-    private readonly IRedisDatabase _redisDatabase;
     private readonly ILogger _logger;
+    private readonly IRedisDatabase _redisDatabase;
 
     public SilentRedisDatabase(IRedisDatabase redisDatabase, ILogger<SilentRedisDatabase> logger)
     {
@@ -28,7 +28,8 @@ namespace ViennaNET.Redis.Implementation.Silent
       return TryAct(db => db.ObjectGet<T>(keys, flags));
     }
 
-    public bool ObjectSet(string key, object value, TimeSpan? expiry = null, When when = default, CommandFlags flags = default)
+    public bool ObjectSet(string key, object value, TimeSpan? expiry = null, When when = default,
+      CommandFlags flags = default)
     {
       return TryAct(db => db.ObjectSet(key, value, expiry, when, flags));
     }
@@ -62,7 +63,7 @@ namespace ViennaNET.Redis.Implementation.Silent
     public Task<bool> ObjectSetAsync(
       string key, object value, string lifetime, When when = default, CommandFlags flags = default)
     {
-      return TryAct(db => db.ObjectSetAsync(key, value, lifetime, when, flags));
+      return TryActAsync(db => db.ObjectSetAsync(key, value, lifetime, when, flags));
     }
 
     public Task<bool> ObjectSetAsync(
@@ -156,7 +157,8 @@ namespace ViennaNET.Redis.Implementation.Silent
       return TryAct(db => db.HashObjectGet<T>(key, fields, flags));
     }
 
-    public bool HashObjectSet(string key, string field, object value, When when = When.Always, CommandFlags flags = CommandFlags.None)
+    public bool HashObjectSet(string key, string field, object value, When when = When.Always,
+      CommandFlags flags = CommandFlags.None)
     {
       return TryAct(db => db.HashObjectSet(key, field, value, when, flags));
     }
@@ -166,12 +168,14 @@ namespace ViennaNET.Redis.Implementation.Silent
       TryAct(db => db.HashObjectSet(key, values, flags));
     }
 
-    public Task<T> HashObjectGetAsync<T>(string key, string field, CommandFlags flags = CommandFlags.None) where T : class
+    public Task<T> HashObjectGetAsync<T>(string key, string field, CommandFlags flags = CommandFlags.None)
+      where T : class
     {
       return TryActAsync(db => db.HashObjectGetAsync<T>(key, field, flags));
     }
 
-    public Task<Collection<T>> HashObjectGetAsync<T>(string key, IEnumerable<string> fields, CommandFlags flags = CommandFlags.None)
+    public Task<Collection<T>> HashObjectGetAsync<T>(string key, IEnumerable<string> fields,
+      CommandFlags flags = CommandFlags.None)
       where T : class
     {
       return TryActAsync(db => db.HashObjectGetAsync<T>(key, fields, flags));
@@ -183,7 +187,8 @@ namespace ViennaNET.Redis.Implementation.Silent
       return TryActAsync(db => db.HashObjectSetAsync(key, field, value, when, flags));
     }
 
-    public Task HashObjectSetAsync(string key, IDictionary<string, object> values, CommandFlags flags = CommandFlags.None)
+    public Task HashObjectSetAsync(string key, IDictionary<string, object> values,
+      CommandFlags flags = CommandFlags.None)
     {
       return TryActAsync(db => db.HashObjectSetAsync(key, values, flags));
     }
@@ -193,12 +198,14 @@ namespace ViennaNET.Redis.Implementation.Silent
       return TryAct(db => db.HashStringGet(key, field, flags));
     }
 
-    public Collection<string> HashStringGet(string key, IEnumerable<string> fields, CommandFlags flags = CommandFlags.None)
+    public Collection<string> HashStringGet(string key, IEnumerable<string> fields,
+      CommandFlags flags = CommandFlags.None)
     {
       return TryAct(db => db.HashStringGet(key, fields, flags));
     }
 
-    public bool HashStringSet(string key, string field, string value, When when = When.Always, CommandFlags flags = CommandFlags.None)
+    public bool HashStringSet(string key, string field, string value, When when = When.Always,
+      CommandFlags flags = CommandFlags.None)
     {
       return TryAct(db => db.HashStringSet(key, field, value, when, flags));
     }
@@ -213,7 +220,8 @@ namespace ViennaNET.Redis.Implementation.Silent
       return TryActAsync(db => db.HashStringGetAsync(key, field, flags));
     }
 
-    public Task<Collection<string>> HashStringGetAsync(string key, IEnumerable<string> fields, CommandFlags flags = CommandFlags.None)
+    public Task<Collection<string>> HashStringGetAsync(string key, IEnumerable<string> fields,
+      CommandFlags flags = CommandFlags.None)
     {
       return TryActAsync(db => db.HashStringGetAsync(key, fields, flags));
     }
@@ -224,7 +232,8 @@ namespace ViennaNET.Redis.Implementation.Silent
       return TryActAsync(db => db.HashStringSetAsync(key, field, value, when, flags));
     }
 
-    public Task HashStringSetAsync(string key, IDictionary<string, string> values, CommandFlags flags = CommandFlags.None)
+    public Task HashStringSetAsync(string key, IDictionary<string, string> values,
+      CommandFlags flags = CommandFlags.None)
     {
       return TryActAsync(db => db.HashStringSetAsync(key, values, flags));
     }
@@ -254,7 +263,8 @@ namespace ViennaNET.Redis.Implementation.Silent
       return TryAct(db => db.HashObjectGetAll<T>(key, flags));
     }
 
-    public Task<Dictionary<string, T>> HashObjectGetAllAsync<T>(string key, CommandFlags flags = CommandFlags.None) where T : class
+    public Task<Dictionary<string, T>> HashObjectGetAllAsync<T>(string key, CommandFlags flags = CommandFlags.None)
+      where T : class
     {
       return TryActAsync(db => db.HashObjectGetAllAsync<T>(key, flags));
     }
@@ -285,20 +295,39 @@ namespace ViennaNET.Redis.Implementation.Silent
     private void TryAct(Action<IRedisDatabase> action)
     {
       TryAct<object>(db =>
-{
-  action(db);
-  return null;
-});
+      {
+        action(db);
+        return null;
+      });
     }
 
-    private Task<T> TryActAsync<T>(Func<IRedisDatabase, Task<T>> action, T defaultResult = default)
+    private async Task<T> TryActAsync<T>(Func<IRedisDatabase, Task<T>> action, T defaultResult = default)
     {
-      return TryAct(async db => await action(db).ConfigureAwait(false), Task.FromResult(defaultResult));
+      try
+      {
+        return await (_redisDatabase == null
+          ? Task.FromResult(defaultResult)
+          : action(_redisDatabase));
+      }
+      catch (Exception e)
+      {
+        LogError(e);
+        return defaultResult;
+      }
     }
 
-    private Task TryActAsync(Func<IRedisDatabase, Task> action)
+    private async Task TryActAsync(Func<IRedisDatabase, Task> action)
     {
-      return TryAct(async db => await action(db).ConfigureAwait(false));
+      try
+      {
+        await (_redisDatabase == null
+          ? Task.CompletedTask
+          : action(_redisDatabase));
+      }
+      catch (Exception e)
+      {
+        LogError(e);
+      }
     }
 
     private void LogError(Exception e)

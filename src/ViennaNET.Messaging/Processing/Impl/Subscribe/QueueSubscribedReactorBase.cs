@@ -109,7 +109,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
           _healthCheckingService.DiagnosticPassedEvent -= OnDiagnosticPassed;
         }
 
-        _reconnectPolling.Dispose();
+        _reconnectPolling?.Dispose();
         _reconnectPolling = null;
       }
       finally
@@ -310,6 +310,9 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       }
     }
 
-    ~QueueSubscribedReactorBase() => Dispose();
+    ~QueueSubscribedReactorBase()
+    {
+      Dispose();
+    }
   }
 }

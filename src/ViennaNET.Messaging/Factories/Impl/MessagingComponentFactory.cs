@@ -18,10 +18,10 @@ namespace ViennaNET.Messaging.Factories.Impl
   public class MessagingComponentFactory : IMessagingComponentFactory
   {
     private readonly IMessageAdapterFactory _adapterFactory;
+    private readonly ICallContextFactory _callContextFactory;
     private readonly MessagingConfiguration _connectionOptions;
     private readonly IReadOnlyCollection<IMessageDeserializer> _deserializers;
     private readonly IReadOnlyCollection<IMessageSerializer> _serializers;
-    private readonly ICallContextFactory _callContextFactory;
 
     /// <summary>
     ///   Инициализирует компонент ссылками на <see cref="IConfiguration" />,
@@ -34,7 +34,8 @@ namespace ViennaNET.Messaging.Factories.Impl
     /// <param name="deserializers">Коллекция десериализаторов</param>
     /// <param name="callContextFactory">Интерфейс для извлечения актуального контекста вызова</param>
     public MessagingComponentFactory(
-      IConfiguration configuration, IMessageAdapterFactory adapterFactory, IReadOnlyCollection<IMessageSerializer> serializers,
+      IConfiguration configuration, IMessageAdapterFactory adapterFactory,
+      IReadOnlyCollection<IMessageSerializer> serializers,
       IReadOnlyCollection<IMessageDeserializer> deserializers, ICallContextFactory callContextFactory)
     {
       _adapterFactory = adapterFactory.ThrowIfNull(nameof(adapterFactory));
@@ -42,8 +43,8 @@ namespace ViennaNET.Messaging.Factories.Impl
       _deserializers = deserializers.ThrowIfNull(nameof(deserializers));
       _callContextFactory = callContextFactory.ThrowIfNull(nameof(callContextFactory));
       _connectionOptions = configuration.ThrowIfNull(nameof(configuration))
-                                        .GetSection("messaging")
-                                        .Get<MessagingConfiguration>();
+        .GetSection("messaging")
+        .Get<MessagingConfiguration>();
     }
 
     /// <inheritdoc />
@@ -83,7 +84,8 @@ namespace ViennaNET.Messaging.Factories.Impl
       var adapter = _adapterFactory.Create(queueId);
       var serializer = GetMessageSerializer<TMessage>(queueId);
 
-      return new SerializedMessageSender<TMessage>(serializer, adapter, _callContextFactory, _connectionOptions.ApplicationName);
+      return new SerializedMessageSender<TMessage>(serializer, adapter, _callContextFactory,
+        _connectionOptions.ApplicationName);
     }
 
     /// <inheritdoc />
@@ -96,7 +98,7 @@ namespace ViennaNET.Messaging.Factories.Impl
       var deserializer = GetMessageDeserializer<TResponse>(queueId);
 
       return new SerializedMessageRpcSender<TMessage, TResponse>(serializer, deserializer, adapter, _callContextFactory,
-                                                                 _connectionOptions.ApplicationName);
+        _connectionOptions.ApplicationName);
     }
 
     private IMessageDeserializer<TMessage> GetMessageDeserializer<TMessage>(string queueId)
@@ -105,23 +107,24 @@ namespace ViennaNET.Messaging.Factories.Impl
       try
       {
         deserializer = _deserializers.OfType<IMessageDeserializer<TMessage>>()
-                                     .SingleOrDefault();
+          .SingleOrDefault();
       }
       catch (InvalidOperationException exception)
       {
         throw new MessagingException(exception,
-                                     $"There are too many message deserializers with the message type {typeof(TMessage)} for queue id: {queueId}");
+          $"There are too many message deserializers with the message type {typeof(TMessage)} for queue id: {queueId}");
       }
       catch (Exception exception)
       {
         throw new MessagingException(exception,
-                                     $"An error has been occured while fetching message deserializer with the message type {typeof(TMessage)} for queue id: {queueId}");
+          $"An error has occurred while fetching message deserializer with the message type {typeof(TMessage)} for queue id: {queueId}");
       }
 
       if (deserializer == null)
       {
         throw new
-          MessagingException($"There are no message deserializers with the message type {typeof(TMessage)} for queue id: {queueId}");
+          MessagingException(
+            $"There are no message deserializers with the message type {typeof(TMessage)} for queue id: {queueId}");
       }
 
       return deserializer;
@@ -133,23 +136,24 @@ namespace ViennaNET.Messaging.Factories.Impl
       try
       {
         serializer = _serializers.OfType<IMessageSerializer<TMessage>>()
-                                 .SingleOrDefault();
+          .SingleOrDefault();
       }
       catch (InvalidOperationException exception)
       {
         throw new MessagingException(exception,
-                                     $"There are too many message serializers with the message type {typeof(TMessage)} for the queue id: {queueId}");
+          $"There are too many message serializers with the message type {typeof(TMessage)} for the queue id: {queueId}");
       }
       catch (Exception exception)
       {
         throw new MessagingException(exception,
-                                     $"An error has been occured while fetching message serializer with the message type {typeof(TMessage)} for queue id: {queueId}");
+          $"An error has occurred while fetching message serializer with the message type {typeof(TMessage)} for queue id: {queueId}");
       }
 
       if (serializer == null)
       {
         throw new
-          MessagingException($"There are no message serializers with the message type {typeof(TMessage)} for the queue id: {queueId}");
+          MessagingException(
+            $"There are no message serializers with the message type {typeof(TMessage)} for the queue id: {queueId}");
       }
 
       return serializer;

@@ -2,18 +2,20 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using ViennaNET.Logging;
 
 namespace ViennaNET.Security.Jwt.Impl
 {
   public class JwtTokenReader : IJwtTokenReader
   {
+    private readonly ILogger _logger;
     private readonly ISecurityKeysContainer _securityKeysContainer;
 
-    public JwtTokenReader(ISecurityKeysContainer securityKeysContainer)
+    public JwtTokenReader(ISecurityKeysContainer securityKeysContainer, ILogger<JwtTokenReader> logger)
     {
       _securityKeysContainer = securityKeysContainer;
+      _logger = logger;
     }
 
     /// <inheritdoc />
@@ -33,7 +35,8 @@ namespace ViennaNET.Security.Jwt.Impl
       }
       catch (Exception ex)
       {
-        Logger.LogError(ex, $"JwtTokenReader: cannot read token {token}");
+        _logger.LogError(ex, ex.Message);
+        _logger.LogTrace("JwtTokenReader: cannot read token {Token}", token);
         return null;
       }
     }
@@ -41,16 +44,16 @@ namespace ViennaNET.Security.Jwt.Impl
     private static string ClearToken(string token)
     {
       return token.Split(' ')
-                  .Last();
+        .Last();
     }
 
     private static TokenValidationParameters GetValidationParameters(ISecurityKeysContainer keysContainer)
     {
-      return new TokenValidationParameters
+      return new()
       {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = keysContainer.GetEncodingKey()
-                                        .GetKey(),
+          .GetKey(),
         ValidateIssuer = true,
         ValidIssuer = keysContainer.Issuer(),
         ValidateAudience = true,

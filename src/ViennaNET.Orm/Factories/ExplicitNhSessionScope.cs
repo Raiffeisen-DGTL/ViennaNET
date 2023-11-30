@@ -1,29 +1,31 @@
 ﻿using System;
-using ViennaNET.Logging;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Utils;
 
 namespace ViennaNET.Orm.Factories
 {
   internal class ExplicitNhSessionScope : IDisposable
   {
+    private readonly ILogger _logger;
     private bool _disposed;
 
-    public event EventHandler Disposed;
-
-    public ISessionManager SessionManager { get; }
-
-    public ExplicitNhSessionScope(ISessionManager manager)
+    public ExplicitNhSessionScope(ISessionManager manager, ILogger<ExplicitNhSessionScope> logger)
     {
       SessionManager = manager.ThrowIfNull(nameof(manager));
+      _logger = logger.ThrowIfNull(nameof(logger));
       SessionManager.UnregisterUoW();
       _disposed = false;
     }
+
+    public ISessionManager SessionManager { get; }
 
     public void Dispose()
     {
       Dispose(true);
       GC.SuppressFinalize(this);
     }
+
+    public event EventHandler Disposed;
 
     private void Dispose(bool disposing)
     {
@@ -40,7 +42,7 @@ namespace ViennaNET.Orm.Factories
         }
         catch (Exception ex)
         {
-          Logger.LogErrorFormat(ex, "Error to close NH Session");
+          _logger.LogError(ex, "Error to close NH Session");
         }
       }
 

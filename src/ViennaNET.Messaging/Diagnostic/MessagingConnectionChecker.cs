@@ -16,11 +16,12 @@ namespace ViennaNET.Messaging.Diagnostic
     private readonly ILogger _logger;
 
     /// <summary>
-    /// Инициализирует экземпляр ссылкой на коллекцию <see cref="IMessageAdapterConstructor"/>
+    ///   Инициализирует экземпляр ссылкой на коллекцию <see cref="IMessageAdapterConstructor" />
     /// </summary>
     /// <param name="constructors">Коллекция конструкторов адаптеров</param>
     /// <param name="logger">Интерфейс логгирования</param>
-    public MessagingConnectionChecker(IEnumerable<IMessageAdapterConstructor> constructors, ILogger<MessagingConnectionChecker> logger)
+    public MessagingConnectionChecker(IEnumerable<IMessageAdapterConstructor> constructors,
+      ILogger<MessagingConnectionChecker> logger)
     {
       _constructors = constructors;
       _logger = logger;
@@ -40,8 +41,8 @@ namespace ViennaNET.Messaging.Diagnostic
       try
       {
         var adapters = constructor.CreateAll()
-                                  .Where(x => x.Configuration.IsHealthCheck)
-                                  .ToList();
+          .Where(x => x.Configuration.IsHealthCheck)
+          .ToList();
         var result = new List<DiagnosticInfo>(adapters.Count);
 
         foreach (var messageAdapter in adapters)
@@ -52,14 +53,22 @@ namespace ViennaNET.Messaging.Diagnostic
             messageAdapter.Connect();
             messageAdapter.Disconnect();
 
-            _logger.LogTrace("Diagnostic of messaging queue with id {queueId} has been done successfully", itemConfig.Id);
+            _logger.LogTrace(
+              "Diagnostic of messaging queue with id {queueId} has been done successfully",
+              itemConfig.Id);
 
-            result.Add(new DiagnosticInfo(itemConfig.Id, itemConfig.Server));
+            result.Add(new DiagnosticInfo(itemConfig.Id, string.Empty));
           }
           catch (Exception e)
           {
-            _logger.LogTrace("Diagnostic of messaging queue with id {queueId} has been failed with error: {error}", itemConfig.Id, e);
-            result.Add(new DiagnosticInfo(itemConfig.Id, itemConfig.Server, DiagnosticStatus.QueueError, string.Empty, e.ToString()));
+            _logger.LogTrace("Diagnostic of messaging queue with id {queueId} has been failed with error: {error}",
+              itemConfig.Id, e);
+            result.Add(new DiagnosticInfo(itemConfig.Id, string.Empty, DiagnosticStatus.QueueError, string.Empty,
+              e.ToString()));
+          }
+          finally
+          {
+            messageAdapter.Dispose();
           }
         }
 
@@ -70,7 +79,7 @@ namespace ViennaNET.Messaging.Diagnostic
         _logger.LogTrace("Diagnostic of messaging constructor has been failed with error: {error}", e);
         return new List<DiagnosticInfo>
         {
-          new DiagnosticInfo("constructor", null, DiagnosticStatus.ConfigError, string.Empty, e.ToString())
+          new("constructor", null, DiagnosticStatus.ConfigError, string.Empty, e.ToString())
         };
       }
     }

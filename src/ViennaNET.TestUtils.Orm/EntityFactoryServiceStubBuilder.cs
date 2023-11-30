@@ -12,13 +12,13 @@ namespace ViennaNET.TestUtils.Orm
   ///   IEntityFactoryService stub builder.
   ///   Supposed to use like this:
   ///   var entityFactoryServiceStub = EntityFactoryServiceStubBuilder.Create().
-  ///     .With(EntityRepositoryStub.Create(new [] { adminUser, guestUser }))
-  ///     .With(EntityRepositoryStub.Create(new Session[] {}))
-  ///     .Build();
+  ///   .With(EntityRepositoryStub.Create(new [] { adminUser, guestUser }))
+  ///   .With(EntityRepositoryStub.Create(new Session[] {}))
+  ///   .Build();
   /// </summary>
   public class EntityFactoryServiceStubBuilder
   {
-    private readonly EntityFactoryServiceStub _stub = new EntityFactoryServiceStub();
+    private readonly EntityFactoryServiceStub _stub = new();
 
     private EntityFactoryServiceStubBuilder()
     {
@@ -30,7 +30,7 @@ namespace ViennaNET.TestUtils.Orm
     /// <returns>new EntityFactoryServiceStubBuilder instance</returns>
     public static EntityFactoryServiceStubBuilder Create()
     {
-      return new EntityFactoryServiceStubBuilder();
+      return new();
     }
 
     /// <summary>
@@ -54,7 +54,8 @@ namespace ViennaNET.TestUtils.Orm
     /// <param name="customQueryExecutor">ICustomQueryExecutor instance</param>
     /// <typeparam name="T">Query result type</typeparam>
     /// <returns>Returns this builder to enable method chaining</returns>
-    public EntityFactoryServiceStubBuilder WithCustomQueryExecutor<T>(ICustomQueryExecutor<T> customQueryExecutor) where T : class
+    public EntityFactoryServiceStubBuilder WithCustomQueryExecutor<T>(ICustomQueryExecutor<T> customQueryExecutor)
+      where T : class
     {
       _stub.AddCustomQueryExecutor(customQueryExecutor);
 
@@ -68,9 +69,22 @@ namespace ViennaNET.TestUtils.Orm
     /// <param name="commandExecutor">ICommandExecutor instance</param>
     /// <typeparam name="T">Command type</typeparam>
     /// <returns>Returns this builder to enable method chaining</returns>
-    public EntityFactoryServiceStubBuilder WithCommandExecutor<T>(ICommandExecutor<T> commandExecutor) where T : class, ICommand
+    public EntityFactoryServiceStubBuilder WithCommandExecutor<T>(ICommandExecutor<T> commandExecutor)
+      where T : class, ICommand
     {
       _stub.AddCommandExecutor(commandExecutor);
+
+      return this;
+    }
+
+    /// <summary>
+    ///   Set IUnitOfWork to EntityFactoryService
+    /// </summary>
+    /// <param name="uow">IUnitOfWork object to set to EntityFactoryService</param>
+    /// <returns>Returns this builder to enable method chaining</returns>
+    public EntityFactoryServiceStubBuilder WithUow(IUnitOfWork uow)
+    {
+      _stub.SetUow(uow);
 
       return this;
     }
@@ -86,9 +100,10 @@ namespace ViennaNET.TestUtils.Orm
 
     private class EntityFactoryServiceStub : IEntityFactoryService
     {
-      private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
-      private readonly Dictionary<Type, object> _customQueryExecutors = new Dictionary<Type, object>();
-      private readonly Dictionary<Type, object> _commandExecutors = new Dictionary<Type, object>();
+      private readonly Dictionary<Type, object> _commandExecutors = new();
+      private readonly Dictionary<Type, object> _customQueryExecutors = new();
+      private readonly Dictionary<Type, object> _repositories = new();
+      private IUnitOfWork _unitOfWork = new Uow();
 
       public IEntityRepository<T> Create<T>() where T : class
       {
@@ -99,7 +114,7 @@ namespace ViennaNET.TestUtils.Orm
         bool autoControl = true,
         bool closeSessions = false)
       {
-        return new Uow();
+        return _unitOfWork;
       }
 
       public IDisposable GetScopedSession()
@@ -142,6 +157,11 @@ namespace ViennaNET.TestUtils.Orm
         _commandExecutors[typeof(T)] = commandExecutor;
       }
 
+      public void SetUow(IUnitOfWork uow)
+      {
+        _unitOfWork = uow;
+      }
+
       private class ScopedSession : IDisposable
       {
         public void Dispose()
@@ -170,7 +190,7 @@ namespace ViennaNET.TestUtils.Orm
         WasCommitted = true;
       }
 
-      public Task CommitAsync(CancellationToken cancellationToken = new CancellationToken())
+      public Task CommitAsync(CancellationToken cancellationToken = new())
       {
         WasCommitted = true;
         return Task.CompletedTask;
@@ -181,7 +201,7 @@ namespace ViennaNET.TestUtils.Orm
         WasSaved = true;
       }
 
-      public Task SaveAsync(CancellationToken cancellationToken = new CancellationToken())
+      public Task SaveAsync(CancellationToken cancellationToken = new())
       {
         WasSaved = true;
         return Task.CompletedTask;
@@ -192,7 +212,7 @@ namespace ViennaNET.TestUtils.Orm
         WasRolledBack = true;
       }
 
-      public Task RollbackAsync(CancellationToken cancellationToken = new CancellationToken())
+      public Task RollbackAsync(CancellationToken cancellationToken = new())
       {
         WasRolledBack = true;
         return Task.CompletedTask;
@@ -214,19 +234,19 @@ namespace ViennaNET.TestUtils.Orm
       }
 
       public Task MarkDirtyAsync<TEntity>(TEntity entity,
-        CancellationToken cancellationToken = new CancellationToken()) where TEntity : class
+        CancellationToken cancellationToken = new()) where TEntity : class
       {
         throw new NotImplementedException();
       }
 
       public Task MarkDeletedAsync<TEntity>(TEntity entity,
-        CancellationToken cancellationToken = new CancellationToken()) where TEntity : class
+        CancellationToken cancellationToken = new()) where TEntity : class
       {
         throw new NotImplementedException();
       }
 
       public Task MarkNewAsync<TEntity>(TEntity entity,
-        CancellationToken cancellationToken = new CancellationToken())
+        CancellationToken cancellationToken = new())
         where TEntity : class
       {
         throw new NotImplementedException();

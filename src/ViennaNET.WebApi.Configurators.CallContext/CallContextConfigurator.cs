@@ -10,28 +10,29 @@ using ViennaNET.WebApi.Configurators.CallContext.Middleware;
 namespace ViennaNET.WebApi.Configurators.CallContext
 {
   /// <summary>
-  /// Включает базовые сервисы и middleware
+  ///   Включает базовые сервисы и middleware
   /// </summary>
   public static class CallContextConfigurator
   {
     /// <summary>
-    /// Включает базовые сервисы и middleware
-    /// Необходимо подключать сразу после конфигурирования авторизации
+    ///   Включает базовые сервисы и middleware
+    ///   Необходимо подключать сразу после конфигурирования авторизации
     /// </summary>
     /// <param name="companyHostBuilder"></param>
     /// <returns></returns>
-    public static IViennaHostBuilder UseCallContext(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseCallContext(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.ConfigureApp(ConfigureCallContextMiddleware)
-                               .RegisterServices(RegisterCallContextServices);
+        .RegisterServices(RegisterCallContextServices);
     }
 
     /// <summary>
-    /// Регистрирует сервисы для работы с контекстами
+    ///   Регистрирует сервисы для работы с контекстами
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
-    internal static void RegisterCallContextServices(IServiceCollection services, object container, IConfiguration configuration)
+    internal static void RegisterCallContextServices(IServiceCollection services, object container,
+      IConfiguration configuration)
     {
       var typedContainer = (Container)container;
 
@@ -40,11 +41,11 @@ namespace ViennaNET.WebApi.Configurators.CallContext
 
       typedContainer.RegisterSingleton<ICallContextFactory, CallContextFactory>();
 
-      services.AddSingleton<ICallContextFactory>(x => typedContainer.GetInstance<ICallContextFactory>());
+      services.AddSingleton(x => typedContainer.GetInstance<ICallContextFactory>());
     }
 
     /// <summary>
-    /// Регистрирует базовые middleware в приложении и DI контейнере
+    ///   Регистрирует базовые middleware в приложении и DI контейнере
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>

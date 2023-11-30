@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Diagnostic;
 using ViennaNET.Diagnostic.Data;
 using ViennaNET.Utils;
@@ -11,21 +12,28 @@ using ViennaNET.Utils;
 namespace ViennaNET.WebApi.Configurators.Diagnostic
 {
   /// <summary>
-  /// Контроллер для проведения диагностики сервиса
+  ///   Контроллер для проведения диагностики сервиса
   /// </summary>
   [Route("diagnostic")]
   public class DiagnosticController : ControllerBase
   {
     private const string emptyDiagnosticImplementorName = "empty";
     private readonly IHealthCheckingService _healthCheckingService;
+    private readonly ILogger _logger;
 
-    public DiagnosticController(IHealthCheckingService healthCheckingService)
+    /// <summary>
+    ///   Constructor
+    /// </summary>
+    /// <param name="healthCheckingService"></param>
+    /// <param name="logger"></param>
+    public DiagnosticController(IHealthCheckingService healthCheckingService, ILogger<DiagnosticController> logger)
     {
       _healthCheckingService = healthCheckingService.ThrowIfNull(nameof(healthCheckingService));
+      _logger = logger.ThrowIfNull(nameof(logger));
     }
 
     /// <summary>
-    /// Пинг сервиса
+    ///   Пинг сервиса
     /// </summary>
     /// <returns></returns>
     [HttpGet]
@@ -38,7 +46,7 @@ namespace ViennaNET.WebApi.Configurators.Diagnostic
     }
 
     /// <summary>
-    /// Диагностика сервиса без авторизации и без выдачи результата в открытую
+    ///   Диагностика сервиса без авторизации и без выдачи результата в открытую
     /// </summary>
     /// <returns></returns>
     [HttpGet]
@@ -49,6 +57,7 @@ namespace ViennaNET.WebApi.Configurators.Diagnostic
     public async Task<IActionResult> ServiceDiagnose()
     {
       var result = await GetDiagnose();
+      _logger.DiagnoseCompleted(result);
 
       return result.HasErrors
         ? StatusCode((int)HttpStatusCode.ServiceUnavailable)
@@ -56,7 +65,7 @@ namespace ViennaNET.WebApi.Configurators.Diagnostic
     }
 
     /// <summary>
-    /// Обеспечивает диагностику всех интеграций сервиса
+    ///   Обеспечивает диагностику всех интеграций сервиса
     /// </summary>
     /// <returns>Диагностическую информацию</returns>
     [HttpGet("diagnose")]
@@ -73,7 +82,7 @@ namespace ViennaNET.WebApi.Configurators.Diagnostic
 
     private async Task<DiagnoseResult> GetDiagnose()
     {
-      var healthCheckResults = await _healthCheckingService.CheckHealthAsync();
+      var healthCheckResults = (await _healthCheckingService.CheckHealthAsync().ConfigureAwait(false)).ToList();
 
       var service = (Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly()).GetName();
 
@@ -81,16 +90,10 @@ namespace ViennaNET.WebApi.Configurators.Diagnostic
       {
         Name = service.ToString(),
         Host = $"{Dns.GetHostName()}",
-        Version = service.Version.ToString(),
+        Version = service.Version?.ToString(),
         HasErrors = healthCheckResults.Any(x => x.Status != DiagnosticStatus.Ok && !x.IsSkipResult),
         Results = healthCheckResults.Where(x => x.Name != emptyDiagnosticImplementorName)
-                                    .Select(x => new EndpointResult()
-                                    {
-                                      Name = x.Name,
-                                      Url = x.Url,
-                                      Status = x.Status.ToString(),
-                                      Error = x.Error
-                                    })
+          .Select(x => new EndpointResult { Name = x.Name, Url = x.Url, Status = x.Status.ToString(), Error = x.Error })
       };
     }
   }

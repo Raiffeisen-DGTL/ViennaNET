@@ -14,23 +14,23 @@ using ViennaNET.WebApi.Configurators.SimpleInjector.Configuration;
 namespace ViennaNET.WebApi.Configurators.SimpleInjector
 {
   /// <summary>
-  /// Внедряет SimpleInjector в качестве стороннего контейнера
+  ///   Внедряет SimpleInjector в качестве стороннего контейнера
   /// </summary>
   public static class SimpleInjectorConfigurator
   {
     /// <summary>
-    /// Внедряет SimpleInjector в качестве стороннего контейнера
+    ///   Внедряет SimpleInjector в качестве стороннего контейнера
     /// </summary>
-    public static IViennaHostBuilder UseSimpleInjector(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseSimpleInjector(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.CreateContainer(CreateContainer)
-                        .VerifyContainer(VerifyContainer)
-                        .ConfigureContainer(ConfigureContainer)
-                        .InitializeContainer(Initialize);
+        .VerifyContainer(VerifyContainer)
+        .ConfigureContainer(ConfigureContainer)
+        .InitializeContainer(Initialize);
     }
 
     /// <summary>
-    /// Создает экземпляр контейнера
+    ///   Создает экземпляр контейнера
     /// </summary>
     /// <returns>Контейнер</returns>
     internal static object CreateContainer()
@@ -39,7 +39,7 @@ namespace ViennaNET.WebApi.Configurators.SimpleInjector
     }
 
     /// <summary>
-    /// Проверяет консистентность контейнера
+    ///   Проверяет консистентность контейнера
     /// </summary>
     /// <returns>Контейнер</returns>
     internal static void VerifyContainer(object container)
@@ -49,7 +49,7 @@ namespace ViennaNET.WebApi.Configurators.SimpleInjector
     }
 
     /// <summary>
-    /// Регистрация дополнительных сервисов в DI
+    ///   Регистрация дополнительных сервисов в DI
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
@@ -62,7 +62,7 @@ namespace ViennaNET.WebApi.Configurators.SimpleInjector
       services.AddSimpleInjector(typedContainer, options =>
       {
         options.AddAspNetCore()
-               .AddControllerActivation();
+          .AddControllerActivation();
       });
 
       typedContainer.Register(() => configuration, Lifestyle.Singleton);
@@ -71,7 +71,7 @@ namespace ViennaNET.WebApi.Configurators.SimpleInjector
     }
 
     /// <summary>
-    /// Настройка интеграции со встроенным DI и поиск и подключение пакетов (инсталлеров)
+    ///   Настройка интеграции со встроенным DI и поиск и подключение пакетов (инсталлеров)
     /// </summary>
     /// <param name="app"></param>
     /// <param name="container"></param>
@@ -83,7 +83,7 @@ namespace ViennaNET.WebApi.Configurators.SimpleInjector
       app.UseSimpleInjector(typedContainer);
 
       var config = configuration.GetSection(SimpleInjectorConfiguration.SectionName)
-                                .Get<SimpleInjectorConfiguration>();
+        .Get<SimpleInjectorConfiguration>();
 
       if (config?.LoadPackagesDynamically == true)
       {
@@ -97,7 +97,7 @@ namespace ViennaNET.WebApi.Configurators.SimpleInjector
     private static List<Assembly> GetLoadableAssemblies()
     {
       var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly()
-                                               .Location);
+        .Location);
       if (path == null)
       {
         throw new InvalidOperationException("Cannot resolve the path to the executing service");
@@ -106,9 +106,9 @@ namespace ViennaNET.WebApi.Configurators.SimpleInjector
       var result = new List<Assembly>();
 
       var files = new DirectoryInfo(path).GetFiles("*.*", SearchOption.TopDirectoryOnly)
-                                         .Where(file => file.Extension.ToLower() == ".dll" && !file.Name.StartsWith("Microsoft")
-                                                                                           && !file.Name.StartsWith("System"))
-                                         .ToList();
+        .Where(file => file.Extension.ToLower() == ".dll" && !file.Name.StartsWith("Microsoft")
+                                                          && !file.Name.StartsWith("System"))
+        .ToList();
       foreach (var file in files)
       {
         if (TryLoadAssemblyName(file.FullName, out var name))

@@ -1,4 +1,4 @@
-﻿using IBM.Data.DB2.Core;
+﻿using IBM.Data.Db2;
 using ViennaNET.Orm.Configuration;
 
 namespace ViennaNET.Orm.DB2
@@ -13,6 +13,7 @@ namespace ViennaNET.Orm.DB2
       {
         connectionStringBuilder.Password = info.EncPassword;
       }
+
       return connectionStringBuilder.ConnectionString;
     }
   }

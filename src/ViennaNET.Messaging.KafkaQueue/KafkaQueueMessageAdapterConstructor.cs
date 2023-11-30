@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ViennaNET.Messaging.Factories.Impl;
-using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.KafkaQueue
 {
@@ -23,17 +22,18 @@ namespace ViennaNET.Messaging.KafkaQueue
     /// <inheritdoc />
     protected override IMessageAdapter CreateAdapter(KafkaQueueConfiguration queueConfiguration)
     {
+      if (queueConfiguration.TransactionEnabled)
+      {
+        return new KafkaQueueTransactedMessageAdapter(
+          queueConfiguration,
+          _connectionFactory,
+          _loggerFactory.CreateLogger<KafkaQueueTransactedMessageAdapter>());
+      }
+
       return new KafkaQueueMessageAdapter(
         queueConfiguration,
         _connectionFactory,
         _loggerFactory.CreateLogger<KafkaQueueMessageAdapter>());
-    }
-
-    /// <inheritdoc />
-    protected override void CheckConfigurationParameters(KafkaQueueConfiguration configuration)
-    {
-      configuration.Id.ThrowIfNullOrWhiteSpace(nameof(configuration.Id));
-      configuration.Server.ThrowIfNullOrWhiteSpace(nameof(configuration.Server));
     }
   }
 }

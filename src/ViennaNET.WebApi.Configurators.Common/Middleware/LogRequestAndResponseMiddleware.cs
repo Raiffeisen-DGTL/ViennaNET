@@ -13,7 +13,8 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware
   /// <summary>
   ///   Логирует входящий запрос и исходящий ответ сервиса
   /// </summary>
-  [Obsolete("Не используйте данный Middleware. После перехода на систему ведения журналов платформы, будет поддерживать из коробки.")]
+  [Obsolete(
+    "Не используйте данный Middleware. После перехода на систему ведения журналов платформы, будет поддерживать из коробки.")]
   public class LogRequestAndResponseMiddleware
   {
     private static readonly string[] loggingContentTypes = { "application/json", "text/plain" };
@@ -31,12 +32,12 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware
 
       // log request body
       var requestBody = "";
-      if (context.Request.ContentType != null && loggingContentTypes.Any(x => context.Request.ContentType.Contains(x))
-                                              && context.Request.ContentLength > 0)
+      if (context.Request.ContentType != null && loggingContentTypes.Any(context.Request.ContentType.Contains))
       {
         requestBody = await ExtractBody(context.Request);
       }
-      else
+
+      if (string.IsNullOrEmpty(requestBody))
       {
         requestBody = context.Request.ContentType;
       }
@@ -61,7 +62,8 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware
         // run next handling
         await _next(context);
 
-        if (context.Response.ContentType != null && loggingContentTypes.Any(x => context.Response.ContentType.Contains(x))
+        if (context.Response.ContentType != null && loggingContentTypes.Any(x =>
+                                                   context.Response.ContentType.Contains(x))
                                                  && !context.Request.Path.Value.Contains("swagger"))
         {
           memStream.Position = 0;

@@ -11,7 +11,7 @@ using ViennaNET.Messaging.Tools;
 
 namespace ViennaNET.Messaging.Processing.Impl.Poll
 {
-  /// <inheritdoc/>
+  /// <inheritdoc />
   public abstract class QueuePollingReactorBase : IQueueReactor
   {
     private const int ErrorThresholdCount = 15;
@@ -19,24 +19,24 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
     private const int MaxReconnectTimeout = 60000;
 
     private readonly IMessageAdapter _adapter;
-    private readonly IEnumerable<IMessageProcessor> _messageProcessors;
     private readonly IEnumerable<IMessageProcessorAsync> _asyncMessageProcessors;
-    private readonly int _subscribeInterval;
+    private readonly IHealthCheckingService _healthCheckingService;
+    private readonly ILogger _logger;
+    private readonly IEnumerable<IMessageProcessor> _messageProcessors;
 
     private readonly IMessagingCallContextAccessor _messagingCallContextAccessor;
-    private readonly ILogger _logger;
-    private readonly IHealthCheckingService _healthCheckingService;
     private readonly bool _serviceHealthDependent;
-    private bool _hasDiagnosticErrors;
-
-    private Polling _subscribePolling;
-    private bool _isDisposed;
+    private readonly int _subscribeInterval;
     private int _errorCount;
+    private bool _hasDiagnosticErrors;
+    private bool _isDisposed;
     private IDisposable _loggerContext;
 
+    private Polling _subscribePolling;
+
     /// <summary>
-    /// Инициализирует компонент ссылками на <see cref="IMessageAdapter"/>, <see cref="IHealthCheckingService"/>,
-    /// коллекции <see cref="IMessageProcessor"/>, <see cref="IMessageProcessorAsync"/>
+    ///   Инициализирует компонент ссылками на <see cref="IMessageAdapter" />, <see cref="IHealthCheckingService" />,
+    ///   коллекции <see cref="IMessageProcessor" />, <see cref="IMessageProcessorAsync" />
     /// </summary>
     /// <param name="messageAdapter">Адаптер для работы с очередью</param>
     /// <param name="messageProcessors">Процессоры для обработки сообщения</param>
@@ -64,6 +64,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       {
         throw new ArgumentOutOfRangeException(nameof(subscribeInterval));
       }
+
       _healthCheckingService = healthCheckingService;
       _hasDiagnosticErrors = false;
       _serviceHealthDependent = serviceHealthDependent ?? false;
@@ -74,7 +75,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       _subscribeInterval = subscribeInterval;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public bool StartProcessing()
     {
       if (_subscribePolling != null && _subscribePolling.IsStarted)
@@ -88,24 +89,12 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
         _healthCheckingService.DiagnosticFailedEvent += OnDiagnosticFailed;
       }
 
-      _subscribePolling = new Polling(_subscribeInterval, ListenMessagesAsync, _logger);
+      _subscribePolling = new Polling(0, ListenMessagesAsync, _logger);
       _subscribePolling.StartPolling();
       return _subscribePolling.IsStarted;
     }
 
-    private void OnDiagnosticFailed()
-    {
-      _hasDiagnosticErrors = true;
-      _logger.LogDebug("QueuePollingReactor: Service diagnostic failed, stop listening");
-    }
-
-    private void OnDiagnosticPassed()
-    {
-      _hasDiagnosticErrors = false;
-      _logger.LogDebug("QueuePollingReactor: Service diagnostic passed");
-    }
-
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Stop()
     {
       try
@@ -131,8 +120,43 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
     /// <inheritdoc />
     public int ErrorCount => _errorCount;
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+      if (_isDisposed)
+      {
+        return;
+      }
+
+      try
+      {
+        Stop();
+        _adapter.Dispose();
+      }
+      catch (Exception e)
+      {
+        _logger.LogError(e, "Error while dispose");
+      }
+      finally
+      {
+        _isDisposed = true;
+      }
+    }
+
+    private void OnDiagnosticFailed()
+    {
+      _hasDiagnosticErrors = true;
+      _logger.LogDebug("QueuePollingReactor: Service diagnostic failed, stop listening");
+    }
+
+    private void OnDiagnosticPassed()
+    {
+      _hasDiagnosticErrors = false;
+      _logger.LogDebug("QueuePollingReactor: Service diagnostic passed");
+    }
+
     /// <summary>
-    /// Отправляет сообщение в цепочку процессоров для последующей обработки в асинхронном режиме
+    ///   Отправляет сообщение в цепочку процессоров для последующей обработки в асинхронном режиме
     /// </summary>
     /// <param name="message">Сообщение</param>
     /// <returns>Признак успешности обработки</returns>
@@ -142,7 +166,7 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
     }
 
     /// <summary>
-    /// Отправляет сообщение в цепочку процессоров для последующей обработки
+    ///   Отправляет сообщение в цепочку процессоров для последующей обработки
     /// </summary>
     /// <param name="message">Сообщение</param>
     /// <returns>Признак успешности обработки</returns>
@@ -175,8 +199,6 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
 
     private async Task<bool> ListenMessagesAsync(CancellationToken cancellationToken)
     {
-      var hasMessage = false;
-
       try
       {
         _logger.LogDebug("Listen messages ...");
@@ -192,11 +214,10 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
           _adapter.Connect();
         }
 
-        if (_adapter.TryReceive(out var message))
+        if (_adapter.TryReceive(out var message, timeout: TimeSpan.FromMilliseconds(_subscribeInterval)))
         {
           SetCallContextFromMessage(message);
           await ProcessReceivedMessage(message);
-          hasMessage = true;
         }
 
         Interlocked.Exchange(ref _errorCount, 0);
@@ -211,11 +232,11 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
         CleanCallContext();
       }
 
-      return hasMessage;
+      return true;
     }
 
     /// <summary>
-    /// Метод для обработки полученного сообщения
+    ///   Метод для обработки полученного сообщения
     /// </summary>
     /// <param name="message">Сообщение</param>
     protected abstract Task ProcessReceivedMessage(BaseMessage message);
@@ -231,7 +252,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
 
     private int CalculateTimeout()
     {
-      return InternalTools.CalculateTimeout(_errorCount, ErrorThresholdCount, DefaultReconnectTimeout, MaxReconnectTimeout);
+      return InternalTools.CalculateTimeout(_errorCount, ErrorThresholdCount, DefaultReconnectTimeout,
+        MaxReconnectTimeout);
     }
 
     private void ReconnectToQueue()
@@ -251,7 +273,8 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
     {
       var context = MessagingContext.Create(message);
 
-      _loggerContext = _logger.BeginScope("RequestID: {requestId}, UserID: {userId}", context.RequestId, context.UserId);
+      _loggerContext =
+        _logger.BeginScope("RequestID: {requestId}, UserID: {userId}", context.RequestId, context.UserId);
 
       _messagingCallContextAccessor.SetContext(context);
     }
@@ -264,29 +287,9 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       _loggerContext = null;
     }
 
-    /// <inheritdoc />
-    public void Dispose()
+    ~QueuePollingReactorBase()
     {
-      if (_isDisposed)
-      {
-        return;
-      }
-
-      try
-      {
-        Stop();
-        _adapter.Dispose();
-      }
-      catch (Exception e)
-      {
-        _logger.LogError(e, "Error while dispose");
-      }
-      finally
-      {
-        _isDisposed = true;
-      }
+      Dispose();
     }
-
-    ~QueuePollingReactorBase() => Dispose();
   }
 }

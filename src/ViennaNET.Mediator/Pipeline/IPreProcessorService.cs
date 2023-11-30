@@ -5,6 +5,8 @@ using ViennaNET.Mediator.Seedwork;
 
 namespace ViennaNET.Mediator.Pipeline
 {
+  [Obsolete(
+      "Данный пакет устарел и будет удален в ноябре 2023. Пожалуйста используйте ViennaNET.Extensions.Mediator")]
   public interface IPreProcessorService
   {
     void RegisterBroadcastPreProcessor<TPipelineProcessor>(TPipelineProcessor registerPreProcessor, int order)

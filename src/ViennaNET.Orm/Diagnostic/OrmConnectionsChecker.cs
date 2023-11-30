@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Diagnostic;
 using ViennaNET.Diagnostic.Data;
-using ViennaNET.Logging;
 using ViennaNET.Orm.Factories;
 using ViennaNET.Utils;
 
@@ -15,9 +15,10 @@ namespace ViennaNET.Orm.Diagnostic
   /// </summary>
   public class OrmConnectionsChecker : IDiagnosticImplementor
   {
-    private readonly ISessionFactoryProvidersManager _sessionFactoryProvidersManager;
-    private readonly ISessionFactoryManager _sessionFactoryManager;
     private const int DiagnosticTimeout = 300;
+    private readonly ILogger _logger;
+    private readonly ISessionFactoryManager _sessionFactoryManager;
+    private readonly ISessionFactoryProvidersManager _sessionFactoryProvidersManager;
 
     /// <summary>
     ///   Инициализирует экземпляр ссылками на <see cref="ISessionFactoryProvidersManager" /> и
@@ -25,11 +26,15 @@ namespace ViennaNET.Orm.Diagnostic
     /// </summary>
     /// <param name="sessionFactoryProvidersManager">Ссылка на интерфейс, представляющий менеджер провайдеров фабрик сессий</param>
     /// <param name="sessionFactoryManager">Ссылка на интерфейс, представляющий менеджер фабрик сессий</param>
+    /// <param name="logger">Интерфейс логгирования</param>
     public OrmConnectionsChecker(
-      ISessionFactoryProvidersManager sessionFactoryProvidersManager, ISessionFactoryManager sessionFactoryManager)
+      ISessionFactoryProvidersManager sessionFactoryProvidersManager, ISessionFactoryManager sessionFactoryManager,
+      ILogger<OrmConnectionsChecker> logger)
     {
-      _sessionFactoryProvidersManager = sessionFactoryProvidersManager.ThrowIfNull(nameof(sessionFactoryProvidersManager));
+      _sessionFactoryProvidersManager =
+        sessionFactoryProvidersManager.ThrowIfNull(nameof(sessionFactoryProvidersManager));
       _sessionFactoryManager = sessionFactoryManager.ThrowIfNull(nameof(sessionFactoryManager));
+      _logger = logger.ThrowIfNull(nameof(logger));
     }
 
     /// <summary>
@@ -40,8 +45,11 @@ namespace ViennaNET.Orm.Diagnostic
     public Task<IEnumerable<DiagnosticInfo>> Diagnose()
     {
       return Task.FromResult(_sessionFactoryProvidersManager.GetSessionFactoryProviders()
-                                                            .Select(CheckProvider));
+        .Select(CheckProvider));
     }
+
+    /// <inheritdoc />
+    public string Key => "ormdb";
 
     private DiagnosticInfo CheckProvider(ISessionFactoryProvider prov)
     {
@@ -52,33 +60,31 @@ namespace ViennaNET.Orm.Diagnostic
         {
           if (prov.IsSkipHealthCheckEntity)
           {
-            Logger.LogDiagnostic($"Orm provider with nick {prov.Nick} has been diagnosed successfully");
+            _logger.LogTrace("Orm provider with nick {Nick} has been diagnosed successfully", prov.Nick);
             return new DiagnosticInfo($"DB: {prov.Nick}", string.Empty);
           }
 
           var allClassMetadata = session.SessionFactory.GetAllClassMetadata();
           foreach (var entity in allClassMetadata)
           {
-            Logger.LogDiagnostic($"Diagnose the orm entity {entity.Key}");
+            _logger.LogTrace("Diagnose the orm entity {EntityKey}", entity.Key);
             session.CreateCriteria(entity.Key)
-                   .SetTimeout(DiagnosticTimeout)
-                   .SetMaxResults(1)
-                   .List();
-            Logger.LogDiagnostic($"Orm entity {entity.Key} has been diagnosed successfully");
+              .SetTimeout(DiagnosticTimeout)
+              .SetMaxResults(1)
+              .List();
+            _logger.LogTrace("Orm entity {EntityKey} has been diagnosed successfully", entity.Key);
           }
         }
 
-        Logger.LogDiagnostic($"Orm provider with nick {prov.Nick} has been diagnosed successfully");
+        _logger.LogTrace("Orm provider with nick {Nick} has been diagnosed successfully", prov.Nick);
         return new DiagnosticInfo($"DB: {prov.Nick}", string.Empty);
       }
       catch (Exception e)
       {
-        Logger.LogDiagnostic($"Diagnostic of orm provider with nick {prov.Nick} has been failed with error: {e}");
-        return new DiagnosticInfo($"DB: {prov.Nick}", string.Empty, DiagnosticStatus.DbConnectionError, string.Empty, e.ToString());
+        _logger.LogTrace(e, "Diagnostic of orm provider with nick {Nick} has been failed with error", prov.Nick);
+        return new DiagnosticInfo($"DB: {prov.Nick}", string.Empty, DiagnosticStatus.DbConnectionError, string.Empty,
+          e.ToString());
       }
     }
-
-    /// <inheritdoc />
-    public string Key => "ormdb";
   }
 }

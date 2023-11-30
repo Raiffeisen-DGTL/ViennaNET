@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>MessagingService</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ViennaNET.Messaging.DefaultConfiguration\ViennaNET.Messaging.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration\ViennaNET.Messaging.RabbitMQQueue.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.SimpleInjector.Extensions\ViennaNET.SimpleInjector.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.CallContext\ViennaNET.WebApi.Configurators.CallContext.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.Common\ViennaNET.WebApi.Configurators.Common.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.Diagnostic\ViennaNET.WebApi.Configurators.Diagnostic.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.Kestrel\ViennaNET.WebApi.Configurators.Kestrel.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.SimpleInjector\ViennaNET.WebApi.Configurators.SimpleInjector.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.Swagger\ViennaNET.WebApi.Configurators.Swagger.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Runners.Extensions\ViennaNET.WebApi.Runners.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi\ViennaNET.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="conf\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

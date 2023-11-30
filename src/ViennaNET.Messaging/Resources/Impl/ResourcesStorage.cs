@@ -9,7 +9,8 @@ namespace ViennaNET.Messaging.Resources.Impl
   public abstract class ResourcesStorage : IResourcesStorage
   {
     /// <inheritdoc />
-    public IDictionary<Type, IEnumerable<string>> EmbeddedResources { get; } = new Dictionary<Type, IEnumerable<string>>();
+    public IDictionary<Type, IEnumerable<string>> EmbeddedResources { get; } =
+      new Dictionary<Type, IEnumerable<string>>();
 
     /// <summary>
     ///   Помещает соответствие типа сообщения и строки пути в хранилище

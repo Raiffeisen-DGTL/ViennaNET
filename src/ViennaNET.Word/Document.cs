@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -21,15 +22,15 @@ using W14 = DocumentFormat.OpenXml.Office2010.Word;
 namespace ViennaNET.Word
 {
   /// <summary>
-  /// Предоставляет базовую реализацию для расширяемой модели документов Open Xml.
+  ///   Предоставляет базовую реализацию для расширяемой модели документов Open Xml.
   /// </summary>
   /// <remarks>
-  /// <para>
-  /// В данном классе, реализован паттер шаблонный метод.
-  /// </para>
-  /// <para>
-  /// Реализуйте метод <see cref="Fill()"/> который будет вызван при обращении к фабрике документов.
-  /// </para>
+  ///   <para>
+  ///     В данном классе, реализован паттер шаблонный метод.
+  ///   </para>
+  ///   <para>
+  ///     Реализуйте метод <see cref="Fill()" /> который будет вызван при обращении к фабрике документов.
+  ///   </para>
   /// </remarks>
   public abstract class Document : IDisposable
   {
@@ -39,7 +40,7 @@ namespace ViennaNET.Word
     private MainDocumentPart _mainDocumentPart;
 
     /// <summary>
-    /// Инициализирует новый экземпляр класса <see cref="Document"/>.
+    ///   Инициализирует новый экземпляр класса <see cref="Document" />.
     /// </summary>
     protected Document()
     {
@@ -48,15 +49,30 @@ namespace ViennaNET.Word
     }
 
     /// <summary>
-    /// Выполняет поиск стандартных элементов в документе по значению <paramref name="name"/>
-    /// и заполняет их значением <c><paramref name="value"/>.ToString()</c>.
-    /// Если элементы не найдены, действие не выполняется.
+    ///   Получает значение представляющее полный путь для сохранения документа.
+    /// </summary>
+    public abstract string FileName { get; }
+
+    /// <summary>
+    ///   Освобождает и сбрасывает управляемые ресурсы потребляемые типом.
+    /// </summary>
+    public void Dispose()
+    {
+      _elemetns.Clear();
+      _bookmarks.Clear();
+      _mainDocumentPart = null;
+    }
+
+    /// <summary>
+    ///   Выполняет поиск стандартных элементов в документе по значению <paramref name="name" />
+    ///   и заполняет их значением <c><paramref name="value" />.ToString()</c>.
+    ///   Если элементы не найдены, действие не выполняется.
     /// </summary>
     /// <param name="name">Имя целевого(ых) стандартных элементов.</param>
     /// <param name="value">Ссылка на объект, строковое представление которого необходимо поместить в элемент.</param>
     /// <exception cref="InvalidSdtElementException">
-    /// Возникает если дерево дочерних элементов <see cref="SdtElement"/> содержит недопустимые элементы
-    /// или отсутствует обязательный дочерний элемент.
+    ///   Возникает если дерево дочерних элементов <see cref="SdtElement" /> содержит недопустимые элементы
+    ///   или отсутствует обязательный дочерний элемент.
     /// </exception>
     protected void FillSdtElement(string name, object value)
     {
@@ -65,10 +81,11 @@ namespace ViennaNET.Word
 
       try
       {
-        foreach (var element in _elemetns.Where(element => element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
+        foreach (SdtElement element in _elemetns.Where(element =>
+                   element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
         {
           var newContentBlock = new SdtContentRun();
-          var run = newContentBlock.AppendChild(new Run());
+          Run run = newContentBlock.AppendChild(new Run());
 
           if (element.SdtProperties.GetFirstChild<RunProperties>() is RunProperties properties)
           {
@@ -87,15 +104,15 @@ namespace ViennaNET.Word
     }
 
     /// <summary>
-    /// Выполняет поиск стандартных элементов, представляющих флажки в документе,
-    /// по значению параметра <paramref name="name"/> и заполняет их значением параметра <paramref name="value"/>.
-    /// Если элементы не найдены, действие не выполняется.
+    ///   Выполняет поиск стандартных элементов, представляющих флажки в документе,
+    ///   по значению параметра <paramref name="name" /> и заполняет их значением параметра <paramref name="value" />.
+    ///   Если элементы не найдены, действие не выполняется.
     /// </summary>
     /// <param name="name">Имя целевого(ых) стандартных элементов.</param>
     /// <param name="value">Значение для вставки в стандартные элементы.</param>
     /// <exception cref="InvalidSdtElementException">
-    /// Возникает если дерево дочерних элементов <see cref="SdtElement"/> содержит недопустимые элементы
-    /// или отсутствует обязательный дочерний элемент.
+    ///   Возникает если дерево дочерних элементов <see cref="SdtElement" /> содержит недопустимые элементы
+    ///   или отсутствует обязательный дочерний элемент.
     /// </exception>
     protected void FillSdtElement(string name, bool value)
     {
@@ -103,17 +120,15 @@ namespace ViennaNET.Word
 
       try
       {
-        foreach (var element in _elemetns.Where(element => element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
+        foreach (SdtElement element in _elemetns.Where(element =>
+                   element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
         {
           if (element.SdtProperties.GetFirstChild<W14.SdtContentCheckBox>() is W14.SdtContentCheckBox contentCheckBox)
           {
-            contentCheckBox.Checked = new W14.Checked()
-            {
-              Val = value ? W14.OnOffValues.One : W14.OnOffValues.Zero
-            };
+            contentCheckBox.Checked = new W14.Checked { Val = value ? W14.OnOffValues.One : W14.OnOffValues.Zero };
 
             var sdtContentBlock = new SdtContentBlock();
-            var run = sdtContentBlock.AppendChild(new Run());
+            Run run = sdtContentBlock.AppendChild(new Run());
 
             if (element.SdtProperties.GetFirstChild<RunProperties>() is RunProperties properties)
             {
@@ -133,15 +148,15 @@ namespace ViennaNET.Word
     }
 
     /// <summary>
-    /// Выполняет поиск стандартных элементов, представляющих элемент даты и времени в документе,
-    /// по значению параметра <paramref name="name"/> и заполняет их значением параметра <paramref name="value"/>.
-    /// Если элементы не найдены, действие не выполняется.
+    ///   Выполняет поиск стандартных элементов, представляющих элемент даты и времени в документе,
+    ///   по значению параметра <paramref name="name" /> и заполняет их значением параметра <paramref name="value" />.
+    ///   Если элементы не найдены, действие не выполняется.
     /// </summary>
     /// <param name="name">Имя целевого(ых) стандартных элементов.</param>
     /// <param name="value">Значение для вставки в стандартные элементы.</param>
     /// <exception cref="InvalidSdtElementException">
-    /// Возникает если дерево дочерних элементов <see cref="SdtElement"/> содержит недопустимые элементы
-    /// или отсутствует обязательный дочерний элемент.
+    ///   Возникает если дерево дочерних элементов <see cref="SdtElement" /> содержит недопустимые элементы
+    ///   или отсутствует обязательный дочерний элемент.
     /// </exception>
     protected void FillSdtElement(string name, DateTime value)
     {
@@ -149,14 +164,15 @@ namespace ViennaNET.Word
 
       try
       {
-        foreach (var element in _elemetns.Where(element => element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
+        foreach (SdtElement element in _elemetns.Where(element =>
+                   element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
         {
           if (element.SdtProperties.GetFirstChild<SdtContentDate>() is SdtContentDate contentDate)
           {
             contentDate.FullDate = new DateTimeValue(value);
 
             var sdtContentBlock = new SdtContentBlock();
-            var run = sdtContentBlock.AppendChild(new Run());
+            Run run = sdtContentBlock.AppendChild(new Run());
 
             if (element.SdtProperties.GetFirstChild<RunProperties>() is RunProperties properties)
             {
@@ -176,19 +192,19 @@ namespace ViennaNET.Word
     }
 
     /// <summary>
-    /// Выполняет поиск стандартных элементов в документе по значению <paramref name="name"/>.
-    /// Генерирует изображение в формате png, представляющее штрих код соответствующий страндарту Code128,
-    /// на основе значения <c><paramref name="value"/>.ToString()</c>.
-    /// Извлекает из наденых элементов дочерний элемент, представляющий контейнер изображения
-    /// и заполняет сгенерированным изображением.
+    ///   Выполняет поиск стандартных элементов в документе по значению <paramref name="name" />.
+    ///   Генерирует изображение в формате png, представляющее штрих код соответствующий страндарту Code128,
+    ///   на основе значения <c><paramref name="value" />.ToString()</c>.
+    ///   Извлекает из наденых элементов дочерний элемент, представляющий контейнер изображения
+    ///   и заполняет сгенерированным изображением.
     /// </summary>
     /// <param name="name">Имя целевого(ых) стандартных элементов.</param>
     /// <param name="value">
-    /// Ссылка на объект, строковое представление которого необходимо необходимо закодировать.
+    ///   Ссылка на объект, строковое представление которого необходимо необходимо закодировать.
     /// </param>
     /// <exception cref="InvalidSdtElementException">
-    /// Возникает если дерево дочерних элементов <see cref="SdtElement"/> содержит недопустимые элементы
-    /// или отсутствует обязательный дочерний элемент.
+    ///   Возникает если дерево дочерних элементов <see cref="SdtElement" /> содержит недопустимые элементы
+    ///   или отсутствует обязательный дочерний элемент.
     /// </exception>
     protected void FillBarcode(string name, object value)
     {
@@ -200,24 +216,25 @@ namespace ViennaNET.Word
         var imageStream = new MemoryStream();
         var relationshipId = new StringValue(string.Empty);
 
-        using (var barcodeImage = new Code128().Barcode(value.ToString(), false, BarWeight.Double, 40, true))
+        using (Image barcodeImage = new Code128().Barcode(value.ToString(), false, BarWeight.Double, 40, true))
         {
           barcodeImage.Save(imageStream, ImageFormat.Png);
           imageStream.Position = 0;
         }
 
-        foreach (var element in _elemetns.Where(element => element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
+        foreach (SdtElement element in _elemetns.Where(element =>
+                   element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
         {
           relationshipId = element.Descendants<Blip>().Single().Embed;
 
           FeedDataIfExistImagePart(_mainDocumentPart, relationshipId, imageStream);
 
-          foreach (var footerPart in _mainDocumentPart.FooterParts)
+          foreach (FooterPart footerPart in _mainDocumentPart.FooterParts)
           {
             FeedDataIfExistImagePart(footerPart, relationshipId, imageStream);
           }
 
-          foreach (var headerPart in _mainDocumentPart.HeaderParts)
+          foreach (HeaderPart headerPart in _mainDocumentPart.HeaderParts)
           {
             FeedDataIfExistImagePart(headerPart, relationshipId, imageStream);
           }
@@ -230,24 +247,24 @@ namespace ViennaNET.Word
     }
 
     /// <summary>
-    /// Выполняет поиск стандартных элементов в документе по значению <paramref name="name"/>.
-    /// Извлекает из наденых элементов дочерний элемент, представляющий таблицу
-    /// и заполняет её значением свойств объектов из коллекции <paramref name="value"/>.
+    ///   Выполняет поиск стандартных элементов в документе по значению <paramref name="name" />.
+    ///   Извлекает из наденых элементов дочерний элемент, представляющий таблицу
+    ///   и заполняет её значением свойств объектов из коллекции <paramref name="value" />.
     /// </summary>
     /// <param name="name">Имя целевого(ых) стандартных элементов.</param>
     /// <param name="value">Коллекция объектов, значениями свойств которых будут заполнены ячейки таблицы.</param>
     /// <param name="skipHeader">Значение, указывающее, что первая строка является заголовком.</param>
     /// <remarks>
-    /// <para>Ячейки таблицы заполняются в порядке объявления свойств в типе <typeparamref name="T"/>.</para>
-    /// <para>
-    /// Если значение параметра <paramref name="skipHeader"/> = <see langword="true"/>,
-    /// тогда первая страка считается заголовком таблицы и не заполняется
-    /// (Предполагается, что заголовок заполнен на этапе верстки).
-    /// </para>
+    ///   <para>Ячейки таблицы заполняются в порядке объявления свойств в типе <typeparamref name="T" />.</para>
+    ///   <para>
+    ///     Если значение параметра <paramref name="skipHeader" /> = <see langword="true" />,
+    ///     тогда первая страка считается заголовком таблицы и не заполняется
+    ///     (Предполагается, что заголовок заполнен на этапе верстки).
+    ///   </para>
     /// </remarks>
     /// <exception cref="InvalidSdtElementException">
-    /// Возникает если дерево дочерних элементов <see cref="SdtElement"/> содержит недопустимые элементы
-    /// или отсутствует обязательный дочерний элемент.
+    ///   Возникает если дерево дочерних элементов <see cref="SdtElement" /> содержит недопустимые элементы
+    ///   или отсутствует обязательный дочерний элемент.
     /// </exception>
     protected void FillSdtElement<T>(string name, IEnumerable<T> value, bool skipHeader) where T : class
     {
@@ -256,9 +273,10 @@ namespace ViennaNET.Word
 
       try
       {
-        foreach (var element in _elemetns.Where(element => element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
+        foreach (SdtElement element in _elemetns.Where(element =>
+                   element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
         {
-          var table = element.Descendants<Table>().Single();
+          Table table = element.Descendants<Table>().Single();
           WordTableWriter.Write(value, table, skipHeader);
         }
       }
@@ -269,17 +287,17 @@ namespace ViennaNET.Word
     }
 
     /// <summary>
-    /// Выполняет поиск закладки в документе по значению параметра <paramref name="name"/>,
-    /// и заполняет её значением <c><paramref name="value"/>.ToString()</c>.
-    /// Если закладка не найдена, действие не выполняется.
+    ///   Выполняет поиск закладки в документе по значению параметра <paramref name="name" />,
+    ///   и заполняет её значением <c><paramref name="value" />.ToString()</c>.
+    ///   Если закладка не найдена, действие не выполняется.
     /// </summary>
     /// <param name="name">Имя целевой закладки.</param>
     /// <param name="value">
-    /// Ссылка на объект строковое представление которого необходимо поместить в закладку.
+    ///   Ссылка на объект строковое представление которого необходимо поместить в закладку.
     /// </param>
     /// <exception cref="InvalidSdtElementException">
-    /// Возникает если дерево дочерних элементов <see cref="SdtElement"/> содержит недопустимые элементы
-    /// или отсутствует обязательный дочерний элемент.
+    ///   Возникает если дерево дочерних элементов <see cref="SdtElement" /> содержит недопустимые элементы
+    ///   или отсутствует обязательный дочерний элемент.
     /// </exception>
     protected void FillBookmark(string name, object value)
     {
@@ -288,7 +306,7 @@ namespace ViennaNET.Word
 
       try
       {
-        var targetBookmark = _bookmarks.SingleOrDefault(bookmark => bookmark.Name == name);
+        BookmarkStart targetBookmark = _bookmarks.SingleOrDefault(bookmark => bookmark.Name == name);
         targetBookmark.Do(container =>
         {
           container.Parent.InsertAfter(new Run(new Text(value.ToString())), container);
@@ -301,19 +319,20 @@ namespace ViennaNET.Word
     }
 
     /// <summary>
-    /// Выполняет поиск стандартных элементов в документе по значению <paramref name="name"/>
-    /// и удаляет их из их родительских элементов.
+    ///   Выполняет поиск стандартных элементов в документе по значению <paramref name="name" />
+    ///   и удаляет их из их родительских элементов.
     /// </summary>
     /// <param name="name">Имя целевого(ых) стандартных элементов.</param>
     /// <exception cref="InvalidSdtElementException">
-    /// Возникает если дерево дочерних элементов <see cref="SdtElement"/> содержит недопустимые элементы
-    /// или отсутствует обязательный дочерний элемент.
+    ///   Возникает если дерево дочерних элементов <see cref="SdtElement" /> содержит недопустимые элементы
+    ///   или отсутствует обязательный дочерний элемент.
     /// </exception>
     protected void RemoveSdtElement(string name)
     {
       try
       {
-        foreach (var element in _elemetns.Where(element => element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
+        foreach (SdtElement element in _elemetns.Where(element =>
+                   element.SdtProperties.GetFirstChild<SdtAlias>()?.Val == name))
         {
           if (element.Parent is object)
           {
@@ -328,10 +347,10 @@ namespace ViennaNET.Word
     }
 
     /// <summary>
-    /// Метод осуществляющий заполнение коллекций стандартных элементов и закладок документа.
+    ///   Метод осуществляющий заполнение коллекций стандартных элементов и закладок документа.
     /// </summary>
     /// <example>
-    /// <code>
+    ///   <code>
     /// protected override void Fill()
     /// {
     ///   var isNeedRemovingElements = true;
@@ -351,39 +370,25 @@ namespace ViennaNET.Word
     /// </example>
     protected abstract void Fill();
 
-    /// <summary>
-    /// Получает значение представляющее полный путь для сохранения документа.
-    /// </summary>
-    public abstract string FileName { get; }
-
     internal void Fill(MainDocumentPart mainDocumentPart)
     {
       _mainDocumentPart = mainDocumentPart;
       _elemetns.AddRange(mainDocumentPart.Document.Descendants<SdtElement>());
       _bookmarks.AddRange(mainDocumentPart.Document.Descendants<BookmarkStart>());
 
-      foreach (var footerPart in mainDocumentPart.FooterParts)
+      foreach (FooterPart footerPart in mainDocumentPart.FooterParts)
       {
         _elemetns.AddRange(footerPart.Footer.Descendants<SdtElement>());
         _bookmarks.AddRange(footerPart.Footer.Descendants<BookmarkStart>());
       }
-      foreach (var headerPart in mainDocumentPart.HeaderParts)
+
+      foreach (HeaderPart headerPart in mainDocumentPart.HeaderParts)
       {
         _elemetns.AddRange(headerPart.Header.Descendants<SdtElement>());
         _bookmarks.AddRange(headerPart.Header.Descendants<BookmarkStart>());
       }
 
       Fill();
-    }
-
-    /// <summary>
-    /// Освобождает и сбрасывает управляемые ресурсы потребляемые типом.
-    /// </summary>
-    public void Dispose()
-    {
-      _elemetns.Clear();
-      _bookmarks.Clear();
-      _mainDocumentPart = null;
     }
 
     private void FeedDataIfExistImagePart(OpenXmlPart part, string id, MemoryStream stream)
@@ -401,7 +406,6 @@ namespace ViennaNET.Word
       }
       catch (ArgumentOutOfRangeException)
       {
-        return;
       }
     }
   }

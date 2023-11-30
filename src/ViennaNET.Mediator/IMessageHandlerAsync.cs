@@ -5,41 +5,46 @@ using ViennaNET.Mediator.Seedwork;
 namespace ViennaNET.Mediator
 {
   /// <summary>
-  /// Интерфейс-маркер обработчика сообщений
+  ///   Интерфейс-маркер обработчика сообщений
   /// </summary>
+  [Obsolete(
+      "Данный пакет устарел и будет удален в ноябре 2023. Пожалуйста используйте ViennaNET.Extensions.Mediator")]
   public interface IMessageHandlerAsync
-  {
-  }
+  {}
 
   /// <summary>
-  /// Типизированный интерфейс-маркер обработчика сообщений
+  ///   Типизированный интерфейс-маркер обработчика сообщений
   /// </summary>
   /// <typeparam name="TMessage">Type of the message.</typeparam>
+  [Obsolete(
+      "Данный пакет устарел и будет удален в ноябре 2023. Пожалуйста используйте ViennaNET.Extensions.Mediator")]
   public interface IMessageHandlerAsync<in TMessage> : IMessageHandlerAsync
     where TMessage : class, IMessage
   {
     /// <summary>
-    /// Асинхронно обрабатывает сообщение, не возвращая результатов
+    ///   Асинхронно обрабатывает сообщение, не возвращая результатов
     /// </summary>
     /// <param name="message">Ссылка на сообщение.</param>
-    /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
     /// <returns>.</returns>
     Task HandleAsync(TMessage message, CancellationToken cancellationToken);
   }
 
   /// <summary>
-  /// Типизированный интерфейс-маркер обработчика запросов, предполагающего ответ
+  ///   Типизированный интерфейс-маркер обработчика запросов, предполагающего ответ
   /// </summary>
   /// <typeparam name="TMessage">Тип сообщения.</typeparam>
   /// <typeparam name="TResponse">Тип результата.</typeparam>
+  [Obsolete(
+      "Данный пакет устарел и будет удален в ноябре 2023. Пожалуйста используйте ViennaNET.Extensions.Mediator")]
   public interface IMessageHandlerAsync<in TMessage, TResponse> : IMessageHandlerAsync
     where TMessage : class, IMessage
   {
     /// <summary>
-    /// Асинхронно обрабатывает сообщение, возвращая результат.
+    ///   Асинхронно обрабатывает сообщение, возвращая результат.
     /// </summary>
     /// <param name="message">Ссылка на сообщение.</param>
-    /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
     /// <returns>Результат обработки.</returns>
     Task<TResponse> HandleAsync(TMessage message, CancellationToken cancellationToken);
   }

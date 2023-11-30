@@ -1,28 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.ArcSight.xml</DocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DocumentationFile>bin\Debug\net6.0\ViennaNET.ArcSight.xml</DocumentationFile>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\ViennaNET.ArcSight.xml</DocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DocumentationFile>bin\Release\net6.0\ViennaNET.ArcSight.xml</DocumentationFile>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Polly" Version="7.2.2" />
-    <PackageReference Include="SyslogNet.Client.netstandard1.3" Version="1.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2"/>
+        <PackageReference Include="Polly" Version="7.2.3"/>
+        <PackageReference Include="SyslogNet.Client" Version="0.3.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.Validation\ViennaNET.Validation.csproj" />
-    <ProjectReference Include="..\ViennaNET.Logging\ViennaNET.Logging.csproj" />
-    <ProjectReference Include="..\ViennaNET.Utils\ViennaNET.Utils.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.Validation\ViennaNET.Validation.csproj"/>
+        <ProjectReference Include="..\..\src\ViennaNET.Logging\ViennaNET.Logging.csproj"/>
+        <ProjectReference Include="..\..\src\ViennaNET.Utils\ViennaNET.Utils.csproj"/>
+    </ItemGroup>
 
 </Project>

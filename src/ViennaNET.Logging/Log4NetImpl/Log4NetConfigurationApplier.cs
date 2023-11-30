@@ -1,10 +1,4 @@
-﻿#region usings
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using log4net;
+﻿using log4net;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Filter;
@@ -14,16 +8,17 @@ using ViennaNET.Logging.Configuration;
 using ViennaNET.Logging.Contracts;
 using ILog = ViennaNET.Logging.Contracts.ILog;
 
-#endregion
-
 namespace ViennaNET.Logging.Log4NetImpl
 {
-  internal class Log4NetConfigurationApplier : IConfigurationApplier
+    internal class Log4NetConfigurationApplier : IConfigurationApplier
   {
-    private const string AppDomainKey = "LoggerInit";
+    private const string LoggerInitName = "LoggerInit";
     private const string RepositoryName = "Repository";
-    private const string DeafultPatternLayout = "%date [%property{log4net:HostName}][%property{service}][%thread][%property{user}][%property{request_id}] %-5level - %message%newline";
-    private readonly Dictionary<LogLevel, Level> _levelMap = new Dictionary<LogLevel, Level>();
+
+    private const string DefaultPatternLayout =
+      "%date [%property{log4net:HostName}][%property{service}][%thread][%property{user}][%property{request_id}] %-5level - %message%newline";
+
+    private readonly Dictionary<LogLevel, Level> _levelMap = new();
 
     public Log4NetConfigurationApplier()
     {
@@ -31,6 +26,36 @@ namespace ViennaNET.Logging.Log4NetImpl
       _levelMap.Add(LogLevel.Info, Level.Info);
       _levelMap.Add(LogLevel.Warning, Level.Warn);
       _levelMap.Add(LogLevel.Error, Level.Error);
+    }
+
+    private static bool AlreadyDoneFromConfig
+    {
+      get
+      {
+        var obj = AppDomain.CurrentDomain.GetData(LoggerInitName);
+        return obj != null;
+      }
+    }
+
+    public ILog GetLogger(LoggerConfiguration confguration)
+    {
+      if (confguration == null)
+      {
+        throw new ArgumentNullException("confguration");
+      }
+
+      Dictionary<string, log4net.ILog> logs;
+      if (confguration.IsFromConfig && AlreadyDoneFromConfig)
+      {
+        logs = LoadFromCache();
+      }
+      else
+      {
+        logs = CreateCategoryLoggers(confguration);
+        StoreInCache(logs);
+      }
+
+      return new Log4NetWrapper(logs);
     }
 
     private Dictionary<string, log4net.ILog> CreateCategoryLoggers(LoggerConfiguration confguration)
@@ -65,6 +90,7 @@ namespace ViennaNET.Logging.Log4NetImpl
           }
         }
       }
+
       hierarchy.Root.Level = Level.All;
       hierarchy.Configured = true;
       var logs = categoryLoggers.Keys.ToDictionary(n => n, n => LogManager.GetLogger(RepositoryName, n));
@@ -73,26 +99,7 @@ namespace ViennaNET.Logging.Log4NetImpl
 
     private Dictionary<string, log4net.ILog> LoadFromCache()
     {
-      return (Dictionary<string, log4net.ILog>)AppDomain.CurrentDomain.GetData(AppDomainKey);
-    }
-
-    public ILog GetLogger(LoggerConfiguration confguration)
-    {
-      if (confguration == null)
-      {
-        throw new ArgumentNullException("confguration");
-      }
-      Dictionary<string, log4net.ILog> logs;
-      if (confguration.IsFromConfig && AlreadyDoneFromConfig)
-      {
-        logs = LoadFromCache();
-      }
-      else
-      {
-        logs = CreateCategoryLoggers(confguration);
-        StoreInCache(logs);
-      }
-      return new Log4NetWrapper(logs);
+      return (Dictionary<string, log4net.ILog>)AppDomain.CurrentDomain.GetData(LoggerInitName);
     }
 
     private IAppender GetAppender(LogListener listener, LoggerConfiguration confguration)
@@ -114,12 +121,16 @@ namespace ViennaNET.Logging.Log4NetImpl
       if (customListener != null)
       {
         var appender = new CustomAppender(customListener);
-        var patternLayout = new PatternLayout { ConversionPattern = DeafultPatternLayout };
+        var patternLayout = new PatternLayout { ConversionPattern = DefaultPatternLayout };
         patternLayout.ActivateOptions();
         appender.Layout = patternLayout;
-        appender.AddFilter(new LevelRangeFilter { LevelMin = _levelMap[listener.MinLevel], LevelMax = _levelMap[listener.MaxLevel] });
+        appender.AddFilter(new LevelRangeFilter
+        {
+          LevelMin = _levelMap[listener.MinLevel], LevelMax = _levelMap[listener.MaxLevel]
+        });
         return appender;
       }
+
       return null;
     }
 
@@ -130,19 +141,23 @@ namespace ViennaNET.Logging.Log4NetImpl
       {
         appender.RollingStyle = listener.Params[TextFileConstants.Append] == TextFileConstants.RolloverValue ||
                                 listener.Params.ContainsKey(TextFileConstants.FilePatternName)
-                                  ? RollingFileAppender.RollingMode.Composite
-                                  : RollingFileAppender.RollingMode.Size;
+          ? RollingFileAppender.RollingMode.Composite
+          : RollingFileAppender.RollingMode.Size;
       }
       else
       {
         appender.RollingStyle = RollingFileAppender.RollingMode.Size; // append default value
       }
-      var patternLayout = new PatternLayout { ConversionPattern = DeafultPatternLayout };
+
+      var patternLayout = new PatternLayout { ConversionPattern = DefaultPatternLayout };
       patternLayout.ActivateOptions();
       appender.Layout = patternLayout;
       appender.LockingModel = new FileAppender.MinimalLock();
       appender.AppendToFile = false;
-      appender.AddFilter(new LevelRangeFilter { LevelMin = _levelMap[listener.MinLevel], LevelMax = _levelMap[listener.MaxLevel] });
+      appender.AddFilter(new LevelRangeFilter
+      {
+        LevelMin = _levelMap[listener.MinLevel], LevelMax = _levelMap[listener.MaxLevel]
+      });
       if (listener.Params.ContainsKey(TextFileConstants.FileName))
       {
         appender.File = listener.Params[TextFileConstants.FileName];
@@ -165,31 +180,39 @@ namespace ViennaNET.Logging.Log4NetImpl
               filePattern = filePattern.Substring(index + 1);
             }
           }
+
           appender.DatePattern = string.Format("{0}'{1}'", filePattern, extention);
         }
+
         var path = Path.GetDirectoryName(listener.Params[TextFileConstants.FilePatternName]);
         if (!string.IsNullOrEmpty(path))
         {
           path = path + "\\";
         }
+
         path = path + fileNamePrefix;
         appender.File = string.IsNullOrEmpty(path) ? "r" : path;
       }
+
       if (listener.Params.ContainsKey(TextFileConstants.MaxSize))
       {
         appender.MaximumFileSize = listener.Params[TextFileConstants.MaxSize] + "KB";
       }
+
       if (listener.Params.ContainsKey(TextFileConstants.RollBackBackups))
       {
         appender.MaxSizeRollBackups = int.Parse(listener.Params[TextFileConstants.RollBackBackups]);
       }
+
       if (listener.Params.ContainsKey(TextFileConstants.CountDirection))
       {
         appender.CountDirection = int.Parse(listener.Params[TextFileConstants.CountDirection]);
       }
+
       if (listener.Params.ContainsKey(TextFileConstants.PreserveLogFileNameExtension))
       {
-        appender.PreserveLogFileNameExtension = listener.Params[TextFileConstants.PreserveLogFileNameExtension].Equals("true",
+        appender.PreserveLogFileNameExtension = listener.Params[TextFileConstants.PreserveLogFileNameExtension].Equals(
+          "true",
           StringComparison.InvariantCultureIgnoreCase);
       }
 
@@ -200,25 +223,19 @@ namespace ViennaNET.Logging.Log4NetImpl
     private IAppender GetConsoleAppender(LogListener listener)
     {
       var appender = new ConsoleAppender();
-      var patternLayout = new PatternLayout { ConversionPattern = DeafultPatternLayout };
+      var patternLayout = new PatternLayout { ConversionPattern = DefaultPatternLayout };
       patternLayout.ActivateOptions();
       appender.Layout = patternLayout;
-      appender.AddFilter(new LevelRangeFilter { LevelMin = _levelMap[listener.MinLevel], LevelMax = _levelMap[listener.MaxLevel] });
-      return appender;
-    }
-
-    private static bool AlreadyDoneFromConfig
-    {
-      get
+      appender.AddFilter(new LevelRangeFilter
       {
-        var obj = AppDomain.CurrentDomain.GetData(AppDomainKey);
-        return obj != null;
-      }
+        LevelMin = _levelMap[listener.MinLevel], LevelMax = _levelMap[listener.MaxLevel]
+      });
+      return appender;
     }
 
     private void StoreInCache(Dictionary<string, log4net.ILog> map)
     {
-      AppDomain.CurrentDomain.SetData(AppDomainKey, map);
+      AppDomain.CurrentDomain.SetData(LoggerInitName, map);
     }
   }
 }

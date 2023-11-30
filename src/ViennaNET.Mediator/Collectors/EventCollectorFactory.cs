@@ -4,15 +4,17 @@ using ViennaNET.Mediator.Seedwork;
 namespace ViennaNET.Mediator.Collectors
 {
   /// <inheritdoc />
+  [Obsolete(
+      "Данный пакет устарел и будет удален в ноябре 2023. Пожалуйста используйте ViennaNET.Extensions.Mediator")]
   public sealed class EventCollectorFactory : IEventCollectorFactory
   {
+    private readonly AsyncLocal<IEventCollector> _collector = new();
     private readonly IMediator _mediator;
-    private readonly AsyncLocal<IEventCollector> _collector = new AsyncLocal<IEventCollector>();
 
     /// <summary>
-    ///  Инициализирует экземпляр <see cref = "EventCollectorFactory" /> ссылкой на <see cref = "IMediator" />.
+    ///   Инициализирует экземпляр <see cref="EventCollectorFactory" /> ссылкой на <see cref="IMediator" />.
     /// </summary>
-    /// <param name="mediator">Ссылка на объект <see cref="IMediator"/>.</param>
+    /// <param name="mediator">Ссылка на объект <see cref="IMediator" />.</param>
     public EventCollectorFactory(IMediator mediator)
     {
       _mediator = mediator;

@@ -10,11 +10,11 @@ using ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth.Configuration;
 namespace ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth
 {
   /// <summary>
-  /// Подключает Swagger к 
+  ///   Подключает Swagger к
   /// </summary>
   public static class SwaggerJwtAuthConfigurator
   {
-    public static IViennaHostBuilder UseSwaggerWithJwtAuth(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseSwaggerWithJwtAuth(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.UseSwaggerWithOptions(ConfigureSwaggerUiOptions, ConfigureSwaggerGenOptions);
     }
@@ -26,15 +26,16 @@ namespace ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth
 
     public static void ConfigureSwaggerGenOptions(SwaggerGenOptions options, IConfiguration configuration)
     {
-      options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
-      {
-        Type = SecuritySchemeType.Http,
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        Description = "JWT Authorization header using the Bearer scheme."
-      });
+      options.AddSecurityDefinition("bearer",
+        new OpenApiSecurityScheme
+        {
+          Type = SecuritySchemeType.Http,
+          In = ParameterLocation.Header,
+          Name = "Authorization",
+          Scheme = "bearer",
+          BearerFormat = "JWT",
+          Description = "JWT Authorization header using the Bearer scheme."
+        });
       options.AddSecurityRequirement(new OpenApiSecurityRequirement
       {
         {
@@ -42,7 +43,7 @@ namespace ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth
           {
             Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearer" }
           },
-          new string[] {}
+          new string[] { }
         }
       });
     }
@@ -50,15 +51,16 @@ namespace ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth
     private static string GetSwaggerScript(IConfiguration configuration)
     {
       var assembly = typeof(SwaggerJwtAuthConfigurator).Assembly;
-      var stream = assembly.GetManifestResourceStream("ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth.swaggerAuth.js");
+      var stream =
+        assembly.GetManifestResourceStream("ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth.swaggerAuth.js");
 
       if (stream is null)
       {
         return string.Empty;
       }
 
-      var securityEndpoint = configuration.GetSection(SwaggerConfigurationSection.SectionName)
-                                          .Get<SwaggerConfigurationSection>();
+      var securityEndpoint = configuration.GetSection(Swagger.Configuration.SwaggerConfigurationSection.SectionName)
+        .Get<SwaggerConfigurationSection>();
       if (securityEndpoint is null)
       {
         return string.Empty;
@@ -75,6 +77,5 @@ namespace ViennaNET.WebApi.Configurators.Swagger.UiJwtAuth
 
       return $"<script>{script}</script>";
     }
-
   }
 }

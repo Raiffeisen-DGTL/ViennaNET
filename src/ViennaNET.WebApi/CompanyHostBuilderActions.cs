@@ -10,170 +10,186 @@ using ViennaNET.WebApi.Abstractions;
 
 namespace ViennaNET.WebApi
 {
-  public sealed partial class ViennaHostBuilder : IViennaHostBuilder
+  public sealed partial class CompanyHostBuilder : ICompanyHostBuilder
   {
     /// <summary>
-    /// Позволяет дополнительно сконфигурировать MVC Builder
+    ///   Позволяет дополнительно сконфигурировать MVC Builder
     /// </summary>
     /// <param name="configAction"></param>
     /// <returns></returns>
-    public IViennaHostBuilder AddMvcBuilderConfiguration(Action<IMvcCoreBuilder, IConfiguration> configAction)
+    public ICompanyHostBuilder AddMvcBuilderConfiguration(Action<IMvcCoreBuilder, IConfiguration> configAction)
     {
       _mvcBuilderActions.Add(configAction);
       return this;
     }
 
     /// <summary>
-    /// Позволяет сконфигурировать создание MVC Builder
+    ///   Позволяет сконфигурировать создание MVC Builder
     /// </summary>
     /// <param name="configureMvcOptions"></param>
     /// <returns></returns>
-    public IViennaHostBuilder AddMvcOptionsConfiguration(Action<MvcOptions> configureMvcOptions)
+    public ICompanyHostBuilder AddMvcOptionsConfiguration(Action<MvcOptions> configureMvcOptions)
     {
       _configureMvcOptions = configureMvcOptions;
       return this;
     }
 
     /// <summary>
-    /// Конфигурирование внутреннего билдера приложения, здесь добавляются Middleware, применяется Cors и т.п.
+    ///   Конфигурирование внутреннего билдера приложения, здесь добавляются Middleware, применяется Cors и т.п.
     /// </summary>
     /// <param name="appConfigurationAction"></param>
     /// <param name="initBeforeContainer">флаг вызова действия до инициализации контейнера</param>
     /// <returns></returns>
-    public IViennaHostBuilder ConfigureApp(
-      Action<IApplicationBuilder, IConfiguration, IHostEnvironment, object> appConfigurationAction, bool initBeforeContainer = false)
+    public ICompanyHostBuilder ConfigureApp(
+      Action<IApplicationBuilder, IConfiguration, IHostEnvironment, object> appConfigurationAction,
+      bool initBeforeContainer = false)
     {
       _appActions.Add((appConfigurationAction, initBeforeContainer));
       return this;
     }
 
     /// <summary>
-    /// Регистрирует стандартное middleware, без привязки к стороннему контейнеру
+    ///   Регистрирует стандартное middleware, без привязки к стороннему контейнеру
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public IViennaHostBuilder AddMiddleware<T>() where T : IMiddleware
+    public ICompanyHostBuilder AddMiddleware<T>() where T : IMiddleware
     {
       _addMiddlewareActions.Add(app => app.UseMiddleware<T>());
       return this;
     }
 
     /// <summary>
-    /// Кофигурирует сторонний контейнер для замещения встроенного
+    ///   Кофигурирует сторонний контейнер для замещения встроенного
     /// </summary>
     /// <param name="configureContainerFunc"></param>
     /// <returns></returns>
-    public IViennaHostBuilder ConfigureContainer(Func<IServiceCollection, IConfiguration, object> configureContainerFunc)
+    public ICompanyHostBuilder ConfigureContainer(
+      Func<IServiceCollection, IConfiguration, object> configureContainerFunc)
     {
       _configureContainerFunc = configureContainerFunc;
       return this;
     }
 
     /// <summary>
-    /// Кофигурирует сторонний контейнер без замещения встроенного
+    ///   Кофигурирует сторонний контейнер без замещения встроенного
     /// </summary>
     /// <param name="configureContainerAction"></param>
     /// <returns></returns>
-    public IViennaHostBuilder ConfigureContainer(Action<IServiceCollection, IConfiguration, object> configureContainerAction)
+    public ICompanyHostBuilder ConfigureContainer(
+      Action<IServiceCollection, IConfiguration, object> configureContainerAction)
     {
       _configureContainerAction = configureContainerAction;
       return this;
     }
 
     /// <summary>
-    /// Инициализация стороннего контейнера
+    ///   Инициализация стороннего контейнера
     /// </summary>
     /// <param name="initializeContainerAction"></param>
     /// <returns></returns>
-    public IViennaHostBuilder InitializeContainer(Action<IApplicationBuilder, object, IConfiguration> initializeContainerAction)
+    public ICompanyHostBuilder InitializeContainer(
+      Action<IApplicationBuilder, object, IConfiguration> initializeContainerAction)
     {
       _initializeContainerAction = initializeContainerAction;
       return this;
     }
 
     /// <summary>
-    /// Регистрация сервисов в стандартном DI
+    ///   Регистрация сервисов в стандартном DI
     /// </summary>
     /// <param name="registerServices"></param>
     /// <returns></returns>
-    public IViennaHostBuilder RegisterServices(Action<IServiceCollection, IConfiguration> registerServices)
+    public ICompanyHostBuilder RegisterServices(Action<IServiceCollection, IConfiguration> registerServices)
     {
       _servicesToRegister.Add(registerServices);
       return this;
     }
 
     /// <summary>
-    /// Функция для создания объекта DI-контейнера. Если не была вызвана, то используется встроенный контейнер
+    ///   Функция для создания объекта DI-контейнера. Если не была вызвана, то используется встроенный контейнер
     /// </summary>
     /// <param name="createContainerAction"></param>
     /// <returns></returns>
-    public IViennaHostBuilder CreateContainer(Func<object> createContainerAction)
+    public ICompanyHostBuilder CreateContainer(Func<object> createContainerAction)
     {
       _createContainerAction = createContainerAction;
       return this;
     }
 
     /// <summary>
-    /// Функция для вызова валидации стороннего контейнера
+    ///   Функция для вызова валидации стороннего контейнера
     /// </summary>
     /// <param name="verifyContainerAction"></param>
     /// <returns></returns>
-    public IViennaHostBuilder VerifyContainer(Action<object> verifyContainerAction)
+    public ICompanyHostBuilder VerifyContainer(Action<object> verifyContainerAction)
     {
       _verifyContainerAction = verifyContainerAction;
       return this;
     }
 
     /// <summary>
-    /// Регистрация сервисов в стороннем DI
+    ///   Регистрация сервисов в стороннем DI
     /// </summary>
     /// <param name="registerServices"></param>
     /// <returns></returns>
-    public IViennaHostBuilder RegisterServices(Action<IServiceCollection, object, IConfiguration> registerServices)
+    public ICompanyHostBuilder RegisterServices(Action<IServiceCollection, object, IConfiguration> registerServices)
     {
       _servicesToRegisterInContainer.Add(registerServices);
       return this;
     }
 
     /// <summary>
-    /// Настройка сервера
+    ///   Настройка сервера
     /// </summary>
     /// <param name="useServerAction"></param>
     /// <returns></returns>
-    public IViennaHostBuilder UseServer(Action<IWebHostBuilder> useServerAction)
+    public ICompanyHostBuilder UseServer(Action<IWebHostBuilder> useServerAction)
     {
       _useServerAction = useServerAction;
       return this;
     }
 
     /// <summary>
-    /// Добавляет операцию, вызываемую после старта сервиса
+    ///   Добавляет операцию, вызываемую после старта сервиса
     /// </summary>
     /// <param name="action"></param>
     /// <returns></returns>
-    public IViennaHostBuilder AddOnStartAction(Action<IConfiguration> action)
+    public ICompanyHostBuilder AddOnStartAction(Action<IConfiguration> action)
     {
       _onStartAction = action;
       return this;
     }
 
     /// <summary>
-    /// Добавляет операцию, вызываемую после остановки сервиса
+    ///   Добавляет операцию, вызываемую перед остановкой сервиса
     /// </summary>
     /// <param name="action"></param>
     /// <returns></returns>
-    public IViennaHostBuilder AddOnStopAction(Action<IConfiguration> action)
+    public ICompanyHostBuilder AddOnStoppingAction(Action<IConfiguration> action)
     {
-      _onStopAction = action;
+      _onStoppingAction = action;
       return this;
     }
 
     /// <summary>
-    /// Добавляет операцию, вызываемую после старта сервиса, извлекаемую посредством IoC-контейнера и параметра functionToGetAction
+    ///   Добавляет операцию, вызываемую после остановки сервиса
+    /// </summary>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    public ICompanyHostBuilder AddOnStoppedAction(Action<IConfiguration> action)
+    {
+      _onStoppedAction = action;
+      return this;
+    }
+
+    /// <summary>
+    ///   Добавляет операцию, вызываемую после старта сервиса, извлекаемую посредством IoC-контейнера и параметра
+    ///   functionToGetAction
     /// </summary>
     /// <param name="functionToGetAction"></param>
     /// <returns></returns>
-    public IViennaHostBuilder AddOnStartAction(Func<object, Action> functionToGetAction)
+    public ICompanyHostBuilder AddOnStartAction(Func<object, Action> functionToGetAction)
     {
       _onStartAction = configuration =>
       {
@@ -183,17 +199,55 @@ namespace ViennaNET.WebApi
     }
 
     /// <summary>
-    /// Добавляет операцию, вызываемую после остановки сервиса, извлекаемую посредством IoC-контейнера и параметра functionToGetAction 
+    ///   Добавляет операцию, вызываемую перед остановкой сервиса, извлекаемую посредством IoC-контейнера и параметра
+    ///   functionToGetAction
     /// </summary>
     /// <param name="functionToGetAction"></param>
     /// <returns></returns>
-    public IViennaHostBuilder AddOnStopAction(Func<object, Action> functionToGetAction)
+    public ICompanyHostBuilder AddOnStoppingAction(Func<object, Action> functionToGetAction)
     {
-      _onStopAction = configuration =>
+      _onStoppingAction = configuration =>
       {
         functionToGetAction(_container).Invoke();
       };
       return this;
+    }
+
+    /// <summary>
+    ///   Добавляет операцию, вызываемую после остановки сервиса, извлекаемую посредством IoC-контейнера и параметра
+    ///   functionToGetAction
+    /// </summary>
+    /// <param name="functionToGetAction"></param>
+    /// <returns></returns>
+    public ICompanyHostBuilder AddOnStoppedAction(Func<object, Action> functionToGetAction)
+    {
+      _onStoppedAction = configuration =>
+      {
+        functionToGetAction(_container).Invoke();
+      };
+      return this;
+    }
+
+    /// <summary>
+    /// Добавляет регистрацию обработчиков на IHostBuilder
+    /// </summary>
+    /// <param name="hostBuilder"></param>
+    /// <returns></returns>
+    public ICompanyHostBuilder RegisterHostBuilderAction(Action<IHostBuilder> hostBuilder)
+    {
+      _hostBuilderAction = hostBuilder;
+      return this;
+    }
+    
+    /// <summary>
+    /// Добавляет регистрацию обработчиков на IConfigurationBuilder
+    /// </summary>
+    /// <param name="configurationBuilder"></param>
+    /// <returns></returns>
+    public ICompanyHostBuilder RegisterConfigurationBuilderAction(Action<IConfigurationBuilder> configurationBuilder)
+    {
+        _configurationBuilderAction = configurationBuilder;
+        return this;
     }
   }
 }

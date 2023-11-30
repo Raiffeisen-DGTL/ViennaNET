@@ -1,25 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net6.0</TargetFramework>
+    
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net6.0\ViennaNET.EventSourcing.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\net6.0\ViennaNET.EventSourcing.xml</DocumentationFile>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.Messaging.DefaultConfiguration\ViennaNET.Messaging.DefaultConfiguration.csproj" />
-    <ProjectReference Include="..\ViennaNET.Orm.DefaultConfiguration\ViennaNET.Orm.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Messaging.DefaultConfiguration\ViennaNET.Messaging.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Orm.DefaultConfiguration\ViennaNET.Orm.DefaultConfiguration.csproj" />
   </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.EventSourcing.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\ViennaNET.EventSourcing.xml</DocumentationFile>
-  </PropertyGroup>
 
 </Project>

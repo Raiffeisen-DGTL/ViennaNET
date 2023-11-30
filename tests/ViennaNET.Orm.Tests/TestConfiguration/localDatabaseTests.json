@@ -1,0 +1,16 @@
+﻿{
+  "db": [
+    {
+      "nick": "default",
+      "dbServerType": "SQLite",
+      "ConnectionString": "Data Source=LocalDatabaseTests/test.db;Version=3"
+    }
+  ],
+  "Logging": {
+    "LogLevel": {
+      "Default": "Trace",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  }
+}

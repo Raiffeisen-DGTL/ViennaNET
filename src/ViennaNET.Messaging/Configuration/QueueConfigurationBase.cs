@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ViennaNET.Messaging.Configuration
 {
@@ -11,37 +10,19 @@ namespace ViennaNET.Messaging.Configuration
     /// <summary>
     ///   Идентификатор
     /// </summary>
+    [Required]
     public string Id { get; set; }
-
-    /// <summary>
-    ///   Сервер
-    /// </summary>
-    public string Server { get; set; }
-
-    /// <summary>
-    ///   Имя очереди
-    /// </summary>
-    public string QueueName { get; set; }
 
     /// <summary>
     ///   Тип взаимодействия
     /// </summary>
+    [Required]
     public MessageProcessingType ProcessingType { get; set; }
 
     /// <summary>
-    ///   Пользователь (пусто - без авторизации)
+    ///   Очередь для ответа
     /// </summary>
-    public string User { get; set; }
-
-    /// <summary>
-    ///   Пароль
-    /// </summary>
-    public string Password { get; set; }
-
-    /// <summary>
-    /// Очередь для ответа
-    /// </summary>
-    public string ReplyQueue { get; set; }
+    public string? ReplyQueue { get; set; }
 
     /// <summary>
     ///   Время жизни сообщения
@@ -51,27 +32,24 @@ namespace ViennaNET.Messaging.Configuration
     /// <summary>
     ///   Пользовательские заголовки
     /// </summary>
-    public List<CustomHeader> CustomHeaders { get; set; }
+    public List<CustomHeader>? CustomHeaders { get; set; }
 
     /// <summary>
     ///   Интервал для опроса очереди (в режиме ThreadStrategy - интервал опроса, в остальных режимах - интервал
-    ///   переподключения)
+    ///   переподключения), мс
     /// </summary>
+    [Required]
+    [Range(10, 3_600_000)]
     public int IntervalPollingQueue { get; set; }
 
     /// <summary>
     ///   Признак зависимости от 'Health Check'
     /// </summary>
-    public bool? ServiceHealthDependent { get; set; }
+    public bool ServiceHealthDependent { get; set; }
 
     /// <summary>
     ///   Признак использования для 'Health Check'
     /// </summary>
     public bool IsHealthCheck { get; set; }
-
-    /// <summary>
-    ///   Идентификатор потока логирования для опроса очереди
-    /// </summary>
-    public string PollingId { get; set; }
   }
 }

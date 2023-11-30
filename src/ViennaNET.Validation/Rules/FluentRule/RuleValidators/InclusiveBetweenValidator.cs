@@ -21,7 +21,7 @@ namespace ViennaNET.Validation.Rules.FluentRule.RuleValidators
 
     protected override bool IsValid(T instance, ValidationContext context)
     {
-      return instance == null || instance.CompareTo(_from) >= 0 && instance.CompareTo(_to) <= 0;
+      return instance == null || (instance.CompareTo(_from) >= 0 && instance.CompareTo(_to) <= 0);
     }
   }
 }

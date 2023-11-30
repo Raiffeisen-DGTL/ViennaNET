@@ -3,12 +3,12 @@
 namespace ViennaNET.Messaging.Resources
 {
   /// <summary>
-  /// Интерфейс для провайдеров ресурсов
+  ///   Интерфейс для провайдеров ресурсов
   /// </summary>
   public interface IResourcesLoader
   {
     /// <summary>
-    /// Получает в виде потока ресурс по пути
+    ///   Получает в виде потока ресурс по пути
     /// </summary>
     /// <typeparam name="T">Тип для поиска ресурса</typeparam>
     /// <param name="path">Путь до ресурса</param>

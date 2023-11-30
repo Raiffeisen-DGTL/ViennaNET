@@ -15,28 +15,27 @@ using ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Handlers;
 namespace ViennaNET.WebApi.Configurators.HttpClients.Basic
 {
   /// <summary>
-  /// Конфигуратор для регистрации Http-клиентов c basic авторизацией
+  ///   Конфигуратор для регистрации Http-клиентов c basic авторизацией
   /// </summary>
   public static class BasicHttpClientsConfigurator
   {
     /// <summary>
-    /// Регистрирация Http-клиентов с basic авторизацией
+    ///   Регистрирация Http-клиентов с basic авторизацией
     /// </summary>
     /// <param name="companyHostBuilder"></param>
     /// <returns></returns>
-    public static IViennaHostBuilder UseBasicHttpClients(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseBasicHttpClients(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.RegisterServices(RegisterHttpClients);
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     internal static void RegisterHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-      services.TryAddSingleton<IDiagnosticImplementor, RestEndpointsChecker>();
+      services.TryAddSingleton<IDiagnosticImplementor, HttpEndpointsChecker>();
 
       try
       {
@@ -63,7 +62,7 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Basic
     }
 
     /// <summary>
-    /// Создаёт и конфигурирует Http-клиенты
+    ///   Создаёт и конфигурирует Http-клиенты
     /// </summary>
     private static HttpClientRegistrator ConfigureClient(BasicWebApiEndPoint endpoint)
     {

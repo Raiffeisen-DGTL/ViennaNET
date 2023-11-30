@@ -2,45 +2,42 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NHibernate;
-using NHibernate.Engine;
-using ViennaNET.Logging;
-using ViennaNET.Orm.Application;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Orm.Exceptions;
 using ViennaNET.Orm.Seedwork;
 using ViennaNET.Utils;
+using NHibernate;
+using NHibernate.Engine;
+using ViennaNET.Orm.Application;
 
 namespace ViennaNET.Orm.Repositories
 {
-  internal sealed class EntityRepository<T> : IEntityRepository<T>, ICustomQueryExecutor<T>, ISessionProvider where T : class
+  internal sealed class EntityRepository<T> : IEntityRepository<T>, ICustomQueryExecutor<T>, ISessionProvider
+    where T : class
   {
+    private readonly ILogger _logger;
     private readonly ISession _session;
 
-    public EntityRepository(ISession session)
+    public EntityRepository(ISession session, ILogger<EntityRepository<T>> logger)
     {
       _session = session.ThrowIfNull(nameof(session));
+      _logger = logger.ThrowIfNull(nameof(logger));
     }
 
     public IEnumerable<T> CustomQuery(BaseQuery<T> query)
     {
       var queryInt = (ICustomQuery)query;
-      using (new LogAutoStopWatch($"Starting query '{queryInt.Sql}'...", LogLevel.Debug))
-      {
-        var nhQuery = CreateSqlQuery(query, queryInt);
-        return nhQuery.SetResultTransformer(queryInt.Transformer)
-                      .List<T>();
-      }
+      var nhQuery = CreateSqlQuery(query, queryInt);
+      return nhQuery.SetResultTransformer(queryInt.Transformer)
+        .List<T>();
     }
 
     public Task<IList<T>> CustomQueryAsync(BaseQuery<T> query, CancellationToken token = default)
     {
       var queryInt = (ICustomQuery)query;
-      using (new LogAutoStopWatch($"Starting async query '{queryInt.Sql}'...", LogLevel.Debug))
-      {
-        var nhQuery = CreateSqlQuery(query, queryInt);
-        return nhQuery.SetResultTransformer(queryInt.Transformer)
-                      .ListAsync<T>(token);
-      }
+      var nhQuery = CreateSqlQuery(query, queryInt);
+      return nhQuery.SetResultTransformer(queryInt.Transformer)
+        .ListAsync<T>(token);
     }
 
     public IQueryable<T> Query()

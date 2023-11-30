@@ -17,15 +17,15 @@ namespace ViennaNET.Messaging.ActiveMQQueue
   /// </summary>
   public class ActiveMqQueueMessageAdapter : IMessageAdapter
   {
-    private static readonly object connectionLock = new object();
+    private static readonly object connectionLock = new();
 
     private readonly ActiveMqQueueConfiguration _configuration;
 
     private readonly IActiveMqConnectionFactory _connectionFactory;
-    private readonly object _consumerLock = new object();
+    private readonly object _consumerLock = new();
     private readonly ILogger _logger;
-    private readonly object _producerLock = new object();
-    private readonly object _sessionLock = new object();
+    private readonly object _producerLock = new();
+    private readonly object _sessionLock = new();
     private IConnection _connection;
     private volatile IMessageConsumer _consumer;
     private IDestination _destination;
@@ -45,9 +45,43 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       ActiveMqQueueConfiguration queueConfiguration,
       ILogger logger)
     {
-      _connectionFactory = connectionFactory.ThrowIfNull(nameof(connectionFactory));
-      _configuration = queueConfiguration.ThrowIfNull(nameof(queueConfiguration));
-      _logger = logger.ThrowIfNull(nameof(logger));
+      _connectionFactory = connectionFactory;
+      _configuration = queueConfiguration;
+      _logger = logger;
+    }
+
+    /// <summary>
+    ///   Возвращает (и при необходимости создаёт) <see cref="ISession" />
+    /// </summary>
+    protected ISession Session
+    {
+      get
+      {
+        if (_session == null)
+        {
+          lock (_sessionLock)
+          {
+            if (_session == null)
+            {
+              _session = CreateSession(_connection);
+            }
+          }
+        }
+
+        return _session;
+      }
+    }
+
+    /// <summary>
+    ///   Возвращает <see cref="IConnection" />
+    /// </summary>
+    protected IConnection Connection
+    {
+      get
+      {
+        ThrowIfNotConnected();
+        return _connection;
+      }
     }
 
     /// <inheritdoc />
@@ -79,9 +113,9 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       {
         try
         {
-          var connectionFactory = _connectionFactory.GetConnectionFactory(_configuration.Server, _configuration.Port);
+          var connectionFactory = _connectionFactory.GetConnectionFactory(_configuration);
 
-          _connection = string.IsNullOrEmpty(_configuration.User)
+          _connection = string.IsNullOrWhiteSpace(_configuration.User)
             ? connectionFactory.CreateConnection()
             : connectionFactory.CreateConnection(_configuration.User, _configuration.Password);
 
@@ -95,7 +129,9 @@ namespace ViennaNET.Messaging.ActiveMQQueue
         catch (NMSException ex)
         {
           DisconnectInternal();
-          throw new MessagingException(ex, "Error while connect to the queue. See inner exception for more details");
+          throw new MessagingException(
+            ex,
+            $"Error connecting to the queue {_configuration.Id}. See inner exception");
         }
         catch (Exception ex)
         {
@@ -118,7 +154,9 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       }
       catch (NMSException ex)
       {
-        throw new MessagingException(ex, "Error while disconnect from the queue. See inner exception for more details");
+        throw new MessagingException(
+          ex,
+          $"Error disconnecting from the queue {_configuration.Id}. See inner exception");
       }
     }
 
@@ -137,7 +175,8 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       ThrowIfNotConnected();
 
       var msg = ReceiveInternal(correlationId, timeout, additionalParameters);
-      return msg ?? throw new MessageDidNotReceivedException("Can not receive message because queue is empty");
+      return msg ?? throw new MessageDidNotReceivedException(
+        $"Can not receive message because queue {_configuration.Id} is empty");
     }
 
     /// <inheritdoc />
@@ -167,12 +206,6 @@ namespace ViennaNET.Messaging.ActiveMQQueue
 
       message = null;
       return false;
-    }
-
-    /// <inheritdoc />
-    public virtual bool SupportProcessingType(MessageProcessingType processingType)
-    {
-      return processingType == MessageProcessingType.ThreadStrategy;
     }
 
     /// <inheritdoc />
@@ -210,28 +243,6 @@ namespace ViennaNET.Messaging.ActiveMQQueue
     }
 
     /// <summary>
-    ///   Возвращает (и при необходимости создаёт) <see cref="ISession" />
-    /// </summary>
-    protected ISession Session
-    {
-      get
-      {
-        if (_session == null)
-        {
-          lock (_sessionLock)
-          {
-            if (_session == null)
-            {
-              _session = CreateSession(_connection);
-            }
-          }
-        }
-
-        return _session;
-      }
-    }
-
-    /// <summary>
     ///   Создаёт <see cref="ISession" /> с подходящими настройками
     /// </summary>
     /// <returns>
@@ -240,18 +251,6 @@ namespace ViennaNET.Messaging.ActiveMQQueue
     protected virtual ISession CreateSession(IConnection connection)
     {
       return connection.CreateSession();
-    }
-
-    /// <summary>
-    ///   Возвращает <see cref="IConnection" />
-    /// </summary>
-    protected IConnection Connection
-    {
-      get
-      {
-        ThrowIfNotConnected();
-        return _connection;
-      }
     }
 
     /// <summary>
@@ -303,12 +302,12 @@ namespace ViennaNET.Messaging.ActiveMQQueue
     {
       if (!_isConnected || _connection == null)
       {
-        throw new MessagingException("Connection is not open");
+        throw new MessagingException($"Connection to queue {_configuration.Id} is not open");
       }
     }
 
     /// <summary>
-    /// Отключение всех элементов
+    ///   Отключение всех элементов
     /// </summary>
     protected void DisconnectInternal()
     {
@@ -382,7 +381,9 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       }
       catch (NMSException nmsex)
       {
-        throw new MessagingException(nmsex, "Error while receiving message. See inner exception for more details");
+        throw new MessagingException(
+          nmsex,
+          $"Error receiving message from queue {_configuration.Id}. See inner exception");
       }
     }
 
@@ -414,12 +415,16 @@ namespace ViennaNET.Messaging.ActiveMQQueue
       }
       catch (NMSException ex)
       {
-        throw new MessagingException(ex, "Messaging error while sending message. See inner exception for more details");
+        throw new MessagingException(
+          ex,
+          $"Error sending message to queue {_configuration.Id}. See inner exception");
       }
       catch (Exception ex)
       {
         _logger.LogError(ex, "MQ PUT failure on queue with ID: {queueId}", _configuration.Id);
-        throw new MessagingException(ex, "Error while sending message. See inner exception for more details");
+        throw new MessagingException(
+          ex,
+          $"Error sending message to queue {_configuration.Id}. See inner exception");
       }
     }
 
@@ -482,7 +487,7 @@ namespace ViennaNET.Messaging.ActiveMQQueue
     }
 
     /// <summary>
-    /// Логгирование сообщения
+    ///   Логгирование сообщения
     /// </summary>
     /// <param name="message">Сообщение</param>
     /// <param name="isSend">true - как отправку, false - как получение</param>

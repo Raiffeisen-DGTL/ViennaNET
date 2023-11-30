@@ -4,36 +4,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NHibernate;
-using NHibernate.Impl;
-using ViennaNET.Logging;
-using ViennaNET.Orm.Application;
+using Microsoft.Extensions.Logging;
 using ViennaNET.Orm.Factories;
 using ViennaNET.Utils;
+using NHibernate;
+using NHibernate.Impl;
+using ViennaNET.Orm.Application;
 
 namespace ViennaNET.Orm.Repositories
 {
-  /// <inheritdoc cref="ISessionManager"/>
+  /// <inheritdoc cref="ISessionManager" />
   /// <remarks>
-  /// Сохраняет сессии к БД в потокобезопасном словаре.
-  /// Экземпляр менеджера должен соответствовать логическому контексту выполнения,
-  /// например, веб-вызову или отдельной задаче.
+  ///   Сохраняет сессии к БД в потокобезопасном словаре.
+  ///   Экземпляр менеджера должен соответствовать логическому контексту выполнения,
+  ///   например, веб-вызову или отдельной задаче.
   /// </remarks>
   public sealed class ScopedSessionManager : ISessionManager, IDisposable
   {
-    private readonly ConcurrentDictionary<ISessionFactory, ISession> _context = new ConcurrentDictionary<ISessionFactory, ISession>();
+    private readonly ConcurrentDictionary<ISessionFactory, ISession> _context =
+      new();
+
+    private readonly ILogger _logger;
+
     private readonly ISessionFactoryManager _sessionFactoryManager;
     private bool _disposed;
 
     private IUoWSettings _settings;
 
     /// <summary>
-    /// Инициализирует экземпляр ссылкой на <see cref="ISessionFactoryManager"/>
+    ///   Инициализирует экземпляр ссылкой на <see cref="ISessionFactoryManager" />
     /// </summary>
     /// <param name="sessionFactoryManager">Ссылка на интерфейс менеджера фабрик сессий</param>
-    public ScopedSessionManager(ISessionFactoryManager sessionFactoryManager)
+    /// <param name="logger">Интерфейс логгирования</param>
+    public ScopedSessionManager(ISessionFactoryManager sessionFactoryManager, ILogger<ScopedSessionManager> logger)
     {
       _sessionFactoryManager = sessionFactoryManager.ThrowIfNull(nameof(sessionFactoryManager));
+      _logger = logger.ThrowIfNull(nameof(logger));
+    }
+
+    public void Dispose()
+    {
+      DisposeInternal();
+      GC.SuppressFinalize(this);
     }
 
     /// <inheritdoc cref="ISessionManager"/>
@@ -43,7 +55,7 @@ namespace ViennaNET.Orm.Repositories
 
       if (!_context.Any())
       {
-        Logger.LogDebugFormat("The are no bounded sessions. Nothing to close");
+        _logger.LogDebug("The are no bounded sessions. Nothing to close");
         return;
       }
 
@@ -53,13 +65,6 @@ namespace ViennaNET.Orm.Repositories
       }
     }
 
-    private static void CloseSession(ISession session)
-    {
-      Logger.LogDebugFormat("The session factory will be unbound. Current session id: {0}", session.GetHashCode());
-      session.Dispose();
-      Logger.LogDebugFormat("The session has been disposed.", session.GetHashCode());
-    }
-
     /// <inheritdoc cref="ISessionManager"/>
     public ISession GetSession(string nick)
     {
@@ -67,21 +72,25 @@ namespace ViennaNET.Orm.Repositories
       var session = GetCurrentSession(sessionFactory);
 
       session.DefaultReadOnly = _settings == null;
-      Logger.LogDebugFormat("The nhibernate session has been got. SessionId: {0}, ReadOnly: {1}, Nick: {2}", session.GetHashCode(),
-                            session.DefaultReadOnly, nick);
+      _logger.LogDebug(
+        "The nhibernate session has been got. SessionId: {SessionId}, ReadOnly: {ReadOnly}, Nick: {Nick}",
+        session.GetHashCode(),
+        session.DefaultReadOnly,
+        nick);
 
       if (_settings == null)
       {
         return session;
       }
 
-      Logger.LogDebugFormat("A unit of work has been registered, starting the transaction with a level: {0}", _settings.IsolationLevel);
+      _logger.LogDebug("A unit of work has been registered, starting the transaction with a level: {IsolationLevel}",
+        _settings.IsolationLevel);
       session.BeginTransaction(_settings.IsolationLevel);
 
       return session;
     }
 
-    /// <inheritdoc cref="ISessionManager"/>
+    /// <inheritdoc cref="ISessionManager" />
     public IStatelessSession GetStatelessSession(string nick)
     {
       var sessionFactory = _sessionFactoryManager.GetSessionFactory(nick);
@@ -89,7 +98,7 @@ namespace ViennaNET.Orm.Repositories
       return sessionFactory.OpenStatelessSession();
     }
 
-    /// <inheritdoc cref="ISessionManager"/>
+    /// <inheritdoc cref="ISessionManager" />
     public void StartTransactionAll()
     {
       foreach (var session in _context.Values)
@@ -99,7 +108,7 @@ namespace ViennaNET.Orm.Repositories
       }
     }
 
-    /// <inheritdoc cref="ISessionManager"/>
+    /// <inheritdoc cref="ISessionManager" />
     public void CommitAll()
     {
       foreach (var session in _context.Values)
@@ -113,7 +122,7 @@ namespace ViennaNET.Orm.Repositories
       }
     }
 
-    /// <inheritdoc cref="ISessionManager"/>
+    /// <inheritdoc cref="ISessionManager" />
     public void RollbackAll(bool? existException)
     {
       foreach (var session in _context.Values)
@@ -121,7 +130,7 @@ namespace ViennaNET.Orm.Repositories
         HandleExceptionIfNeeded(existException, session);
         if (session.Transaction.IsActive)
         {
-          Logger.LogDebugFormat("The transaction is active, rollback them.");
+          _logger.LogDebug("The transaction is active, rollback them");
           session.Transaction.Rollback();
         }
 
@@ -134,7 +143,7 @@ namespace ViennaNET.Orm.Repositories
       }
     }
 
-    /// <inheritdoc cref="ISessionManager"/>
+    /// <inheritdoc cref="ISessionManager" />
     public void SaveAll()
     {
       foreach (var session in _context.Values)
@@ -143,7 +152,7 @@ namespace ViennaNET.Orm.Repositories
       }
     }
 
-    /// <inheritdoc cref="ISessionManager"/>
+    /// <inheritdoc cref="ISessionManager" />
     public bool RegisterUoW(IUnitOfWork uow)
     {
       if (_settings != null)
@@ -155,7 +164,7 @@ namespace ViennaNET.Orm.Repositories
       return true;
     }
 
-    /// <inheritdoc cref="ISessionManager"/>
+    /// <inheritdoc cref="ISessionManager" />
     public void UnregisterUoW()
     {
       _settings = null;
@@ -166,44 +175,58 @@ namespace ViennaNET.Orm.Repositories
     public IEnumerable<Task> CommitAllAsync(CancellationToken cancellationToken)
     {
       return from session in _context.Values
-             where !CheckCommitTransactionIsActive(session)
-             select session.Transaction.CommitAsync(cancellationToken);
+        where !CheckCommitTransactionIsActive(session)
+        select session.Transaction.CommitAsync(cancellationToken);
     }
 
-    private static bool CheckCommitTransactionIsActive(ISession session)
-    {
-      Logger.LogDebugFormat("Commit the transaction. Current session id: {0}", session.GetHashCode());
-      if (!session.Transaction.IsActive)
-      {
-        return true;
-      }
-
-      Logger.LogDebugFormat("The transaction is active, commit them.");
-      return false;
-    }
-
-    /// <inheritdoc cref="ISessionManager"/>
+    /// <inheritdoc cref="ISessionManager" />
     public IEnumerable<Task> RollbackAllAsync(bool? existException, CancellationToken cancellationToken)
     {
       var result = new List<Task>();
       foreach (var session in _context.Values)
       {
         HandleExceptionIfNeeded(existException, session);
-        Logger.LogDebugFormat("The transaction is active, rollback them.");
+        _logger.LogDebug("The transaction is active, rollback them");
         var rollbackTask = session.Transaction.IsActive
           ? session.Transaction.RollbackAsync(cancellationToken)
           : Task.CompletedTask;
         result.Add(rollbackTask.ContinueWith(task => SetReadonlyIfNeeded(existException, session), cancellationToken)
-                          .ContinueWith(task =>
-                          {
-                            if (_settings.CloseSessions)
-                            {
-                              CloseSession(session);
-                            }
-                          }, cancellationToken));
+          .ContinueWith(task =>
+          {
+            if (_settings.CloseSessions)
+            {
+              CloseSession(session);
+            }
+          }, cancellationToken));
       }
 
       return result;
+    }
+
+    /// <inheritdoc cref="ISessionManager"/>
+    public IEnumerable<Task> SaveAllAsync(CancellationToken cancellationToken)
+    {
+      return from session in _context.Values
+        select session.FlushAsync(cancellationToken);
+    }
+
+    private void CloseSession(ISession session)
+    {
+      _logger.LogDebug("The session factory will be unbound. Current session id: {SessionId}", session.GetHashCode());
+      session.Dispose();
+      _logger.LogDebug("The session {SessionId} has been disposed", session.GetHashCode());
+    }
+
+    private bool CheckCommitTransactionIsActive(ISession session)
+    {
+      _logger.LogDebug("Commit the transaction. Current session id: {SessionId}", session.GetHashCode());
+      if (!session.Transaction.IsActive)
+      {
+        return true;
+      }
+
+      _logger.LogDebug("The transaction is active, commit them");
+      return false;
     }
 
     private void SetReadonlyIfNeeded(bool? existException, ISession session)
@@ -214,23 +237,17 @@ namespace ViennaNET.Orm.Repositories
       }
     }
 
-    private static void HandleExceptionIfNeeded(bool? existException, ISession session)
+    private void HandleExceptionIfNeeded(bool? existException, ISession session)
     {
       if (existException != true)
       {
         return;
       }
 
-      Logger.LogDebugFormat("Prepare to rollback a transaction after an exception. Current session id: {0}", session.GetHashCode());
+      _logger.LogDebug("Prepare to rollback a transaction after an exception. Current session id: {SessionId}",
+        session.GetHashCode());
       session.DefaultReadOnly = true;
       session.Clear();
-    }
-
-    /// <inheritdoc cref="ISessionManager"/>
-    public IEnumerable<Task> SaveAllAsync(CancellationToken cancellationToken)
-    {
-      return from session in _context.Values
-             select session.FlushAsync(cancellationToken);
     }
 
     private ISession GetCurrentSession(ISessionFactory sessionFactory)
@@ -238,7 +255,7 @@ namespace ViennaNET.Orm.Repositories
       return _context.GetOrAdd(sessionFactory, sf => sf.OpenSession());
     }
 
-    private static void SetReadOnly(ISession session, bool readOnly, bool changeEntities)
+    private void SetReadOnly(ISession session, bool readOnly, bool changeEntities)
     {
       if (session.DefaultReadOnly == readOnly)
       {
@@ -251,29 +268,20 @@ namespace ViennaNET.Orm.Repositories
         return;
       }
 
-      using (new LogAutoStopWatch($"SetReadOnly({readOnly})", LogLevel.Debug))
+      var context = ((SessionImpl)session).PersistenceContext;
+      foreach (var entity in context.EntitiesByKey.Values)
       {
-        var context = ((SessionImpl)session).PersistenceContext;
-        foreach (var entity in context.EntitiesByKey.Values)
+        if (!context.EntityEntries.Contains(entity))
         {
-          if (!context.EntityEntries.Contains(entity))
-          {
-            continue;
-          }
+          continue;
+        }
 
-          var entityEntry = context.GetEntry(entity);
-          if (entityEntry.Persister.IsMutable)
-          {
-            context.SetReadOnly(entity, readOnly);
-          }
+        var entityEntry = context.GetEntry(entity);
+        if (entityEntry.Persister.IsMutable)
+        {
+          context.SetReadOnly(entity, readOnly);
         }
       }
-    }
-
-    public void Dispose()
-    {
-      DisposeInternal();
-      GC.SuppressFinalize(this);
     }
 
     private void DisposeInternal()
@@ -289,7 +297,7 @@ namespace ViennaNET.Orm.Repositories
       }
       catch (Exception ex)
       {
-        Logger.LogErrorFormat(ex, "Error to close NH Session");
+        _logger.LogError(ex, "Error to close NH Session");
       }
 
       _disposed = true;

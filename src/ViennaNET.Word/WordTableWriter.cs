@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -58,8 +59,8 @@ namespace ViennaNET.Word
       {
         var headerName = item.Name;
 
-        var displayNameAttr = item.GetCustomAttributes(typeof(System.ComponentModel.DisplayNameAttribute), true)
-          .Cast<System.ComponentModel.DisplayNameAttribute>()
+        var displayNameAttr = item.GetCustomAttributes(typeof(DisplayNameAttribute), true)
+          .Cast<DisplayNameAttribute>()
           .FirstOrDefault();
 
         if (displayNameAttr != null)

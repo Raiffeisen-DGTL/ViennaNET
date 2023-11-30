@@ -9,19 +9,19 @@ using ViennaNET.WebApi.Abstractions;
 namespace ViennaNET.WebApi.Configurators.CallContext
 {
   /// <summary>
-  /// Контекст вызова формируемый из Http-запроса
+  ///   Контекст вызова формируемый из Http-запроса
   /// </summary>
   public class HttpCallContext : ICallContext
   {
     private static readonly char[] loginSeparators = { '\\' };
+
+    protected HttpCallContext() { }
 
     public string RequestId { get; private set; }
     public string UserId { get; private set; }
     public string UserDomain { get; private set; }
     public string RequestCallerIp { get; private set; }
     public string AuthorizeInfo { get; private set; }
-
-    protected HttpCallContext() { }
 
     public static HttpCallContext Create(HttpContext httpContext)
     {
@@ -31,7 +31,7 @@ namespace ViennaNET.WebApi.Configurators.CallContext
       var ip = GetIp(httpContext);
       var authInfo = GetAuthInfo(httpContext);
 
-      return new HttpCallContext()
+      return new HttpCallContext
       {
         RequestId = requestId,
         UserId = CleanUserName(userName),
@@ -45,16 +45,16 @@ namespace ViennaNET.WebApi.Configurators.CallContext
     {
       return context.Request.Headers.ContainsKey(CompanyHttpHeaders.RequestId)
         ? context.Request.Headers[CompanyHttpHeaders.RequestId]
-                 .ToString()
+          .ToString()
         : Guid.NewGuid()
-              .ToString("N");
+          .ToString("N");
     }
 
     private static string GetAuthInfo(HttpContext context)
     {
       return context.Request.Headers.Keys.Contains(HeaderNames.Authorization)
         ? context.Request.Headers[HeaderNames.Authorization]
-                 .ToString()
+          .ToString()
         : string.Empty;
     }
 
@@ -62,9 +62,9 @@ namespace ViennaNET.WebApi.Configurators.CallContext
     {
       return (context.Request.Headers.Keys.Contains(CompanyHttpHeaders.RequestHeaderCallerIp)
         ? context.Request.Headers[CompanyHttpHeaders.RequestHeaderCallerIp]
-                 .ToString()
+          .ToString()
         : context.Connection?.RemoteIpAddress?.MapToIPv4()
-                 .ToString()) ?? string.Empty;
+          .ToString()) ?? string.Empty;
     }
 
     private static string GetUserName(HttpContext context)
@@ -75,13 +75,7 @@ namespace ViennaNET.WebApi.Configurators.CallContext
         username = context.User.Identity.Name;
 
         username ??= context.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)
-                            ?.Value;
-      }
-
-      if (context.Request.Headers.Keys.Contains(CompanyHttpHeaders.UserId))
-      {
-        username = context.Request.Headers[CompanyHttpHeaders.UserId]
-                          .ToString();
+          ?.Value;
       }
 
       return username;
@@ -94,7 +88,7 @@ namespace ViennaNET.WebApi.Configurators.CallContext
       if (context.Request.Headers.Keys.Contains(CompanyHttpHeaders.UserDomain))
       {
         userDomain = context.Request.Headers[CompanyHttpHeaders.UserDomain]
-                            .ToString();
+          .ToString();
       }
 
       return userDomain;

@@ -11,18 +11,21 @@ using ViennaNET.Utils;
 namespace ViennaNET.Messaging.Sending.Impl
 {
   /// <summary>
-  /// Отправка сериализованных сообщений
+  ///   Отправка сериализованных сообщений
   /// </summary>
   /// <typeparam name="TMessage">Тип сообщения</typeparam>
   public class SerializedMessageSender<TMessage> : MessageSender, ISerializedMessageSender<TMessage>
   {
+    private readonly IMessageAdapter _adapter;
     private readonly IMessageSerializer<TMessage> _serializer;
 
     /// <inheritdoc />
     public SerializedMessageSender(
-      IMessageSerializer<TMessage> serializer, IMessageAdapter adapter, ICallContextFactory callContextFactory, string applicationName) :
+      IMessageSerializer<TMessage> serializer, IMessageAdapter adapter, ICallContextFactory callContextFactory,
+      string applicationName) :
       base(adapter, callContextFactory, applicationName)
     {
+      _adapter = adapter;
       _serializer = serializer.ThrowIfNull(nameof(serializer));
     }
 
@@ -32,7 +35,8 @@ namespace ViennaNET.Messaging.Sending.Impl
       return SendMessage(message, null, correlationId);
     }
 
-    public string SendMessage(TMessage message, IReadOnlyDictionary<string, object> additionalProperties, string correlationId = null)
+    public string SendMessage(TMessage message, IReadOnlyDictionary<string, object> additionalProperties,
+      string correlationId = null)
     {
       BaseMessage mes;
       try
@@ -41,7 +45,9 @@ namespace ViennaNET.Messaging.Sending.Impl
       }
       catch (Exception ex)
       {
-        throw new MessagingException(ex, "Can not serialize message to xml");
+        throw new MessagingException(
+          ex,
+          $"Can not serialize message to xml for queue {_adapter.Configuration.Id}");
       }
 
       mes.CorrelationId = correlationId;
@@ -66,7 +72,9 @@ namespace ViennaNET.Messaging.Sending.Impl
       }
       catch (Exception ex)
       {
-        throw new MessagingException(ex, "Can not serialize message to xml");
+        throw new MessagingException(
+          ex,
+          $"Can not serialize message to xml for queue {_adapter.Configuration.Id}");
       }
 
       mes.CorrelationId = correlationId;

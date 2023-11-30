@@ -7,15 +7,15 @@ using ViennaNET.Logging;
 namespace ViennaNET.WebApi.Net.IpTools
 {
   /// <summary>
-  /// Получение локального IPv4-адреса
+  ///   Получение локального IPv4-адреса
   /// </summary>
   public class LocalIpProvider : ILocalIpProvider
   {
     /// <summary>
-    /// Метод для получения IPv4-адреса в локальной сети
+    ///   Метод для получения IPv4-адреса в локальной сети
     /// </summary>
     /// <remarks>
-    /// Получает текущий IPv4-адрес сетевого адаптера
+    ///   Получает текущий IPv4-адрес сетевого адаптера
     /// </remarks>
     /// <returns>IP-адрес</returns>
     public string GetCurrentIp()
@@ -26,18 +26,18 @@ namespace ViennaNET.WebApi.Net.IpTools
       if (adapters.Any())
       {
         addresses = adapters[0]
-                    ?.GetIPProperties()
-                    ?.UnicastAddresses;
+          ?.GetIPProperties()
+          ?.UnicastAddresses;
 
         if (adapters.Length > 1)
         {
           var addressesWithDns = adapters.Where(adapter => adapter.OperationalStatus == OperationalStatus.Up)
-                                         .FirstOrDefault(adapter => adapter.GetIPProperties()
-                                                                           ?.DnsSuffix
-                                                                           ?.Trim()
-                                                                           .ToLower() == "raiffeisen.ru") //TODO Уничтожить!!!
-                                         ?.GetIPProperties()
-                                         ?.UnicastAddresses;
+            .FirstOrDefault(adapter => adapter.GetIPProperties()
+              ?.DnsSuffix
+              ?.Trim()
+              .ToLower() == "raiffeisen.ru")
+            ?.GetIPProperties()
+            ?.UnicastAddresses;
 
           if (addressesWithDns != null && addressesWithDns.Any())
           {

@@ -1,51 +1,62 @@
-﻿using Confluent.Kafka;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Confluent.Kafka;
 using ViennaNET.Messaging.Configuration;
 
 namespace ViennaNET.Messaging.KafkaQueue
 {
   /// <summary>
-  /// Настройки очереди
+  ///   Настройки очереди
   /// </summary>
-  public class KafkaQueueConfiguration : QueueConfigurationBase
+  public class KafkaQueueConfiguration : QueueConfigurationBase, IValidatableObject
   {
     /// <summary>
-    /// Определяет, будет ли адаптер потребителем (True) либо отправителем (False) 
+    ///   Определяет, является ли адаптер потребителем (True) либо отправителем (False)
     /// </summary>
-    public bool IsConsumer { get; set; }
+    [JsonIgnore]
+    public bool IsConsumer => ConsumerConfig is not null;
 
     /// <summary>
-    /// Имя сервиса
+    ///   Имя очереди/топика
     /// </summary>
-    public string ServiceName { get; set; }
+    [Required]
+    public string QueueName { get; set; }
 
     /// <summary>
-    /// Путь до файла keytab
+    ///   Признак работы в транзакции
     /// </summary>
-    public string KeyTab { get; set; }
+    public bool TransactionEnabled { get; set; }
 
     /// <summary>
-    /// Протокол безопасности
+    ///   Полная нативная конфигурация для подписчика Kafka
     /// </summary>
-    public SecurityProtocol? Protocol { get; set; }
+    public ConsumerConfig? ConsumerConfig { get; set; }
 
     /// <summary>
-    /// Механизм безопасности
+    ///   Полная нативная конфигурация для издателя Kafka
     /// </summary>
-    public SaslMechanism? Mechanism { get; set; }
+    public ProducerConfig? ProducerConfig { get; set; }
 
-    /// <summary>
-    /// Идентификатор группы
-    /// </summary>
-    public string GroupId { get; set; }
+    /// <inheritdoc />
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+      if (ProcessingType != MessageProcessingType.ThreadStrategy)
+      {
+        yield return new ValidationResult("Only ThreadStrategy is supported",
+          new[] { nameof(ProcessingType) });
+      }
 
-    /// <summary>
-    /// Строка с настройкой режима логирования
-    /// </summary>
-    public string Debug { get; set; }
+      if (ConsumerConfig is not null && ProducerConfig is not null)
+      {
+        yield return new ValidationResult("Only one of ConsumerConfig and ProducerConfig can be set",
+                                          new[] { nameof(ConsumerConfig), nameof(ProducerConfig) });
+      }
 
-    /// <summary>
-    /// Действие, которое необходимо предпринять, в случае если оффсета нет в харнилище либо он выходит за допустимые границы
-    /// </summary>
-    public AutoOffsetReset? AutoOffsetReset { get; set; }
+      if (ConsumerConfig is null && ProducerConfig is null)
+      {
+        yield return new ValidationResult("ConsumerConfig or ProducerConfig must be set",
+                                          new[] { nameof(ConsumerConfig), nameof(ProducerConfig) });
+      }
+    }
   }
 }

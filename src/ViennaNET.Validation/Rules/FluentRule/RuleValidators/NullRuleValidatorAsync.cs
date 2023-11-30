@@ -6,7 +6,7 @@ namespace ViennaNET.Validation.Rules.FluentRule.RuleValidators
   {
     protected override async Task<bool> IsValidAsync(Task<T> instance, ValidationContext context)
     {
-      var val = await instance;
+      T val = await instance;
       return val == null;
     }
   }

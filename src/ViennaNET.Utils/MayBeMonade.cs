@@ -338,8 +338,8 @@ namespace ViennaNET.Utils
     [AssertionMethod]
     [NotNull]
     public static T ThrowIfNull<T>(
-      [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
-      this T? param, [InvokerParameterName] string? paramName = null)
+      [AssertionCondition(AssertionConditionType.IS_NOT_NULL)] this T? param,
+      [InvokerParameterName] string? paramName = null)
       where T : class
     {
       if (param == null)
@@ -360,8 +360,8 @@ namespace ViennaNET.Utils
     [AssertionMethod]
     [NotNull]
     public static string ThrowIfNullOrEmpty(
-      [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
-      this string? param, [InvokerParameterName] string? paramName = null)
+      [AssertionCondition(AssertionConditionType.IS_NOT_NULL)] this string? param,
+      [InvokerParameterName] string? paramName = null)
     {
       if (string.IsNullOrEmpty(param))
       {
@@ -372,7 +372,7 @@ namespace ViennaNET.Utils
     }
 
     /// <summary>
-    ///   Генерирует исключение в случае строка не пуста, и ссылка на нее не равна null
+    ///   Генерирует исключение в случае строка пуста или ссылка на нее равна null
     /// </summary>
     /// <param name="param">Ссылка на строку</param>
     /// <param name="exception">Ссылка на исключение</param>
@@ -388,8 +388,8 @@ namespace ViennaNET.Utils
     }
 
     /// <summary>
-    ///   Генерирует <see cref="ArgumentNullException" /> в случае если строка не
-    ///   пуста и не содержит только пробелы, и ссылка на нее не равна null
+    ///   Генерирует <see cref="ArgumentNullException" /> в случае если строка
+    ///   пуста или содержит только пробелы, или ссылка на нее равна null
     /// </summary>
     /// <param name="param">Ссылка на строку</param>
     /// <param name="paramName">Имя параметра</param>
@@ -397,8 +397,8 @@ namespace ViennaNET.Utils
     [AssertionMethod]
     [NotNull]
     public static string ThrowIfNullOrWhiteSpace(
-      [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
-      this string? param, [InvokerParameterName] string? paramName = null)
+      [AssertionCondition(AssertionConditionType.IS_NOT_NULL)] this string? param,
+      [InvokerParameterName] string? paramName = null)
     {
       if (string.IsNullOrWhiteSpace(param))
       {
@@ -409,8 +409,8 @@ namespace ViennaNET.Utils
     }
 
     /// <summary>
-    ///   Генерирует исключение в случае если строка не
-    ///   пуста и не содержит только пробелы, и ссылка на нее не равна null
+    ///   Генерирует исключение в случае если строка
+    ///   пуста или содержит только пробелы, или ссылка на нее равна null
     /// </summary>
     /// <param name="param">Ссылка на строку</param>
     /// <param name="exception">Ссылка на исключение</param>

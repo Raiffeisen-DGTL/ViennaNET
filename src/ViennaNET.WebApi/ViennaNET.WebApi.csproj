@@ -1,34 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net6.0</TargetFramework>
+    
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net6.0\ViennaNET.WebApi.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\net6.0\ViennaNET.WebApi.xml</DocumentationFile>
   </PropertyGroup>
   
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.WebApi.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\ViennaNET.WebApi.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.2.0" />
-    <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.2.0" />
+    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.3.0" />
+    <PackageReference Include="App.Metrics.Formatters.Prometheus" Version="4.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
-    <ProjectReference Include="..\ViennaNET.Logging\ViennaNET.Logging.csproj" />
-    <ProjectReference Include="..\ViennaNET.Security\ViennaNET.Security.csproj" />
-    <ProjectReference Include="..\ViennaNET.Utils\ViennaNET.Utils.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Logging\ViennaNET.Logging.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Security\ViennaNET.Security.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Utils\ViennaNET.Utils.csproj" />
   </ItemGroup>
 
 </Project>

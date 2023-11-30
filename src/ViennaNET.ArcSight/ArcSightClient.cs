@@ -13,15 +13,15 @@ namespace ViennaNET.ArcSight
   /// <inheritdoc />
   public class ArcSightClient : IArcSightClient
   {
-    private readonly ILogger _logger;
     private readonly ArcSightSection _cefConfig;
+    private readonly ICefSenderFactory _cefSenderFactory;
+    private readonly ILogger _logger;
     private readonly ISyncPolicy _policy;
     private readonly CefMessageSerializer _serializer;
-    private readonly ICefSenderFactory _cefSenderFactory;
 
     /// <summary>
-    /// Инициализирует экземпляр <see cref="ArcSightClient" /> ссылками на экземпляры <see cref="IConfiguration" />,
-    /// <see cref="IErrorHandlingPoliciesFactory" />, <see cref="ICefSenderFactory" />.
+    ///   Инициализирует экземпляр <see cref="ArcSightClient" /> ссылками на экземпляры <see cref="IConfiguration" />,
+    ///   <see cref="IErrorHandlingPoliciesFactory" />, <see cref="ICefSenderFactory" />.
     /// </summary>
     /// <param name="configuration">Ссылка на интерфейс, предоставляющий доступ к конфигурации</param>
     /// <param name="policiesFactory">Ссылка на интерфейс фабрики по созданию политик вызовов</param>
@@ -50,7 +50,7 @@ namespace ViennaNET.ArcSight
       var syslogMessage = _serializer.Serialize(message);
       var stream = new MemoryStream(_serializer.Serialize(syslogMessage));
       var syslogMessageStr = new StreamReader(stream).ReadToEnd();
-      _logger.LogInformation($"Send syslog message: {syslogMessageStr}");
+      _logger.LogInformation("Send syslog message: {SyslogMessage}", syslogMessageStr);
       _policy.Execute(() => SendInternal(message));
     }
 
@@ -75,7 +75,7 @@ namespace ViennaNET.ArcSight
         sender.Send(message, _serializer);
       }
 
-      _logger.LogDebug("Call SendInternal done.");
+      _logger.LogDebug("Call SendInternal done");
     }
   }
 }

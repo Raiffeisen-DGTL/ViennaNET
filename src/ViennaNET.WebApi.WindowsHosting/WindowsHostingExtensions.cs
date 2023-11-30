@@ -1,32 +1,34 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.WindowsServices;
+﻿using System.Linq;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Hosting;
+using ViennaNET.WebApi.Abstractions;
 
 namespace ViennaNET.WebApi.WindowsHosting
 {
   /// <summary>
-  /// Класс с расширением для запуска сервисов как Windows-службы
+  ///   Класс с расширением для настройки сервисов как Windows-службы
   /// </summary>
+  [ExcludeFromCodeCoverage]
   public static class WindowsHostingExtensions
   {
     /// <summary>
-    /// Запускает сервис как Windows-службу, если не подключен дебаггер
-    /// и в аргументах не передан параметр запуска в режиме консоли
+    ///   Настраивает сервис как Windows-службу, если не подключен дебаггер
+    ///   и в аргументах не передан параметр запуска в режиме консоли
     /// </summary>
-    /// <param name="webHost">Сконфигурированный WebHost</param>
+    /// <param name="hostBuilder">Сборщик сервиса</param>
     /// <param name="args">Аргументы командной строки</param>
-    public static void RunAsWindowsService(this IWebHost webHost, string[] args)
+    /// <returns>Сборщик сервиса</returns>
+    public static ICompanyHostBuilder UseWindowsService(this ICompanyHostBuilder hostBuilder, string[] args)
     {
       var isService = !(Debugger.IsAttached || args.Contains("--console"));
 
       if (isService)
       {
-        webHost.RunAsService();
-        return;
+        hostBuilder.RegisterHostBuilderAction(builder => builder.UseWindowsService());
       }
 
-      webHost.Run();
+      return hostBuilder;
     }
   }
 }

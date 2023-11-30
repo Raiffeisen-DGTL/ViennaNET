@@ -11,14 +11,16 @@ using ViennaNET.Utils;
 namespace ViennaNET.Messaging.Sending.Impl
 {
   /// <summary>
-  /// Отправка сериализованных сообщений
+  ///   Отправка сериализованных сообщений
   /// </summary>
   /// <typeparam name="TMessage">Тип сообщения</typeparam>
   /// <typeparam name="TResponse">Тип ответа</typeparam>
-  public class SerializedMessageRpcSender<TMessage, TResponse> : MessageSender, ISerializedMessageRpcSender<TMessage, TResponse>
+  public class SerializedMessageRpcSender<TMessage, TResponse> : MessageSender,
+    ISerializedMessageRpcSender<TMessage, TResponse>
   {
-    private readonly IMessageSerializer<TMessage> _serializer;
+    private readonly IMessageAdapter _adapter;
     private readonly IMessageDeserializer<TResponse> _deserializer;
+    private readonly IMessageSerializer<TMessage> _serializer;
 
     /// <inheritdoc />
     public SerializedMessageRpcSender(
@@ -28,6 +30,7 @@ namespace ViennaNET.Messaging.Sending.Impl
       ICallContextFactory callContextFactory,
       string applicationName) : base(adapter, callContextFactory, applicationName)
     {
+      _adapter = adapter;
       _serializer = serializer.ThrowIfNull(nameof(serializer));
       _deserializer = deserializer.ThrowIfNull(nameof(deserializer));
     }
@@ -38,7 +41,8 @@ namespace ViennaNET.Messaging.Sending.Impl
       return SendMessageAndWaitResponse(message, null);
     }
 
-    public TResponse SendMessageAndWaitResponse(TMessage message, IReadOnlyDictionary<string, object> additionalProperties)
+    public TResponse SendMessageAndWaitResponse(TMessage message,
+      IReadOnlyDictionary<string, object> additionalProperties)
     {
       BaseMessage mes;
       try
@@ -47,7 +51,9 @@ namespace ViennaNET.Messaging.Sending.Impl
       }
       catch (Exception ex)
       {
-        throw new MessagingException(ex, "Can't serialize message to xml");
+        throw new MessagingException(
+          ex,
+          $"Can't serialize message to xml for queue {_adapter.Configuration.Id}");
       }
 
       var response = SendAndWaitReplyMessage(mes, additionalProperties);
@@ -55,12 +61,14 @@ namespace ViennaNET.Messaging.Sending.Impl
     }
 
     /// <inheritdoc />
-    public async Task<TResponse> SendMessageAndWaitResponseAsync(TMessage message, CancellationToken cancellationToken = default)
+    public async Task<TResponse> SendMessageAndWaitResponseAsync(TMessage message,
+      CancellationToken cancellationToken = default)
     {
       return await SendMessageAndWaitResponseAsync(message, null, cancellationToken);
     }
 
-    public async Task<TResponse> SendMessageAndWaitResponseAsync(TMessage message, IReadOnlyDictionary<string, object> additionalProperties, CancellationToken cancellationToken = default)
+    public async Task<TResponse> SendMessageAndWaitResponseAsync(TMessage message,
+      IReadOnlyDictionary<string, object> additionalProperties, CancellationToken cancellationToken = default)
     {
       BaseMessage mes;
       try
@@ -69,7 +77,9 @@ namespace ViennaNET.Messaging.Sending.Impl
       }
       catch (Exception ex)
       {
-        throw new MessagingException(ex, "Can't serialize message to xml");
+        throw new MessagingException(
+          ex,
+          $"Can't serialize message to xml for queue {_adapter.Configuration.Id}");
       }
 
       var response = await SendAndWaitReplyMessageAsync(mes, additionalProperties, cancellationToken);

@@ -14,18 +14,18 @@ using ViennaNET.WebApi.Configurators.Kestrel.Configuration;
 namespace ViennaNET.WebApi.Configurators.Kestrel
 {
   /// <summary>
-  /// Конфигуратор для регистрации Kestrel в качестве сервера
+  ///   Конфигуратор для регистрации Kestrel в качестве сервера
   /// </summary>
   public static class KestrelConfigurator
   {
     /// <summary>
-    /// Регистрирует Kestrel как сервер на основе параметров в конфигурации
+    ///   Регистрирует Kestrel как сервер на основе параметров в конфигурации
     /// </summary>
-    public static IViennaHostBuilder UseKestrel(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseKestrel(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.UseServer(ConfigureKestrel)
-                               .ConfigureApp(ConfigureHsts)
-                               .RegisterServices(ConfigureRedirect);
+        .ConfigureApp(ConfigureHsts)
+        .RegisterServices(ConfigureRedirect);
     }
 
     internal static void ConfigureKestrel(IWebHostBuilder builder)
@@ -36,7 +36,7 @@ namespace ViennaNET.WebApi.Configurators.Kestrel
     internal static void SetKestrelOptions(WebHostBuilderContext context, KestrelServerOptions options)
     {
       var hostConfiguration = context.Configuration.GetSection(WebApiConfiguration.SectionName)
-                                     .Get<WebApiConfiguration>();
+        .Get<WebApiConfiguration>();
 
       if (hostConfiguration == null)
       {
@@ -49,13 +49,7 @@ namespace ViennaNET.WebApi.Configurators.Kestrel
       {
         return;
       }
-
-      var certificatePath = Path.Combine(Directory.GetCurrentDirectory(), hostConfiguration.CertificatePath);
-      if (!File.Exists(certificatePath))
-      {
-        throw new FileNotFoundException("Файл сертификата для HTTPS не найден");
-      }
-
+      
       options.Listen(IPAddress.Any, hostConfiguration.HttpsPort.Value, listenOptions =>
       {
         listenOptions.UseHttps();
@@ -63,16 +57,17 @@ namespace ViennaNET.WebApi.Configurators.Kestrel
     }
 
     /// <summary>
-    /// Настраивает Hsts
+    ///   Настраивает Hsts
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
     /// <param name="env"></param>
     /// <param name="container"></param>
-    internal static void ConfigureHsts(IApplicationBuilder builder, IConfiguration configuration, IHostEnvironment env, object container)
+    internal static void ConfigureHsts(IApplicationBuilder builder, IConfiguration configuration, IHostEnvironment env,
+      object container)
     {
       var hostConfiguration = configuration.GetSection(WebApiConfiguration.SectionName)
-                                           .Get<WebApiConfiguration>();
+        .Get<WebApiConfiguration>();
 
       if (hostConfiguration?.HttpsPort == null)
       {
@@ -91,14 +86,14 @@ namespace ViennaNET.WebApi.Configurators.Kestrel
     }
 
     /// <summary>
-    /// Настраивает редиректы с Http на Https
+    ///   Настраивает редиректы с Http на Https
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     internal static void ConfigureRedirect(IServiceCollection services, IConfiguration configuration)
     {
       var hostConfiguration = configuration.GetSection(WebApiConfiguration.SectionName)
-                                           .Get<WebApiConfiguration>();
+        .Get<WebApiConfiguration>();
 
       if (hostConfiguration?.HttpsPort == null)
       {

@@ -6,14 +6,15 @@ namespace ViennaNET.Orm.Oracle.DefaultConfiguration
 {
   /// <inheritdoc />
   /// <summary>
-  /// Пакет SimpleInjector для работы с БД Oracle
+  ///   Пакет SimpleInjector для работы с БД Oracle
   /// </summary>
   public class OracleOrmPackage : IPackage
   {
     /// <inheritdoc />
     public void RegisterServices(Container container)
     {
-      container.Collection.Append<ISessionFactoryProviderGetter, OracleSessionFactoryProviderGetter>(Lifestyle.Singleton);
+      container.Collection.Append<ISessionFactoryProviderGetter, OracleSessionFactoryProviderGetter>(
+        Lifestyle.Singleton);
     }
   }
 }

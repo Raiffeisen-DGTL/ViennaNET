@@ -36,13 +36,13 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       IHealthCheckingService healthCheckingService,
       IMessagingCallContextAccessor messagingCallContextAccessor,
       ILogger<QueueTransactedPollingReactor> logger) : base(messageAdapter,
-                                                            messageProcessors,
-                                                            asyncMessageProcessors,
-                                                            subscribeInterval,
-                                                            serviceHealthDependent,
-                                                            healthCheckingService,
-                                                            messagingCallContextAccessor,
-                                                            logger)
+      messageProcessors,
+      asyncMessageProcessors,
+      subscribeInterval,
+      serviceHealthDependent,
+      healthCheckingService,
+      messagingCallContextAccessor,
+      logger)
     {
       _logger = logger;
       _transactedAdapter = messageAdapter;
@@ -64,11 +64,6 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
           _logger.LogError("The message did not processed. Message body: {messageBody}", message.LogBody());
         }
 
-        _transactedAdapter.CommitIfTransacted(message);
-      }
-      catch (SystemException)
-      {
-        _logger.LogError("Process message failed: commit message");
         _transactedAdapter.CommitIfTransacted(message);
       }
       catch (Exception e)

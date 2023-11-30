@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SimpleInjector.Packaging" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\ViennaNET.Messaging\ViennaNET.Messaging.csproj" />
+		<ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+	</ItemGroup>
+</Project>

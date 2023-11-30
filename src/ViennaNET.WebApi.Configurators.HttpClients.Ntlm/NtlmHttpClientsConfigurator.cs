@@ -12,14 +12,14 @@ using ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Handlers;
 namespace ViennaNET.WebApi.Configurators.HttpClients.Ntlm
 {
   /// <summary>
-  /// Конфигуратор для регистрации Http-клиентов со специальной настройкой для поддержки NTLM
+  ///   Конфигуратор для регистрации Http-клиентов со специальной настройкой для поддержки NTLM
   /// </summary>
   public static class NtlmHttpClientsConfigurator
   {
     /// <summary>
-    /// Регистрирует Http-клиентов, реализующих NTLM-авторизацию
+    ///   Регистрирует Http-клиентов, реализующих NTLM-авторизацию
     /// </summary>
-    public static IViennaHostBuilder UseNtlmHttpClients(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseNtlmHttpClients(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.RegisterServices(RegisterHttpClients);
     }
@@ -29,7 +29,7 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Ntlm
       try
       {
         var endpoints = configuration.GetSection("webApiEndpoints")
-                                     .Get<WebapiEndpoint[]>();
+          .Get<WebapiEndpoint[]>();
         if (endpoints == null)
         {
           services.AddHttpClient();
@@ -52,10 +52,10 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Ntlm
     private static HttpClientRegistrator ConfigureBaseClient(WebapiEndpoint endpoint)
     {
       return HttpClientRegistrator.Create()
-                                  .WithName(endpoint.Name)
-                                  .WithUrl(endpoint.Url)
-                                  .WithTimeout(endpoint.Timeout)
-                                  .WithHandler<BaseCompanyRequestHeadersHandler>();
+        .WithName(endpoint.Name)
+        .WithUrl(endpoint.Url)
+        .WithTimeout(endpoint.Timeout)
+        .WithHandler<BaseCompanyRequestHeadersHandler>();
     }
 
     private static HttpClientRegistrator ConfigureNtlmClient(WebapiEndpoint endpoint)
@@ -63,7 +63,7 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Ntlm
       return ConfigureBaseClient(endpoint)
         .ConfigureBuilder(x =>
         {
-          x.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
+          x.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
           {
             AllowAutoRedirect = false,
             UseDefaultCredentials = true,

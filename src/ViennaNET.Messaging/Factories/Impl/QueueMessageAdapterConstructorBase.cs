@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using ViennaNET.Messaging.Configuration;
 using ViennaNET.Messaging.Exceptions;
@@ -11,7 +14,7 @@ namespace ViennaNET.Messaging.Factories.Impl
   public abstract class QueueMessageAdapterConstructorBase<TConf, TQueueConf> : IMessageAdapterConstructor
     where TQueueConf : QueueConfigurationBase where TConf : ConfigurationsListBase<TQueueConf>
   {
-    private readonly TConf _configuration;
+    private readonly TConf? _configuration;
 
     /// <summary>
     ///   Инициализирует конструктор адаптеров экземпляром класса <see cref="IConfiguration" />
@@ -22,8 +25,13 @@ namespace ViennaNET.Messaging.Factories.Impl
     protected QueueMessageAdapterConstructorBase(IConfiguration configuration, string sectionName)
     {
       _configuration = configuration.ThrowIfNull(nameof(configuration))
-                                    .GetSection(sectionName)
-                                    .Get<TConf>();
+        .GetSection(sectionName)
+        .Get<TConf>();
+
+      if (_configuration != null)
+      {
+        ValidateConfiguration();
+      }
     }
 
     /// <inheritdoc />
@@ -33,18 +41,19 @@ namespace ViennaNET.Messaging.Factories.Impl
 
       if (queueConfiguration == null)
       {
-        throw new MessagingConfigurationException($"There are no configuration with id '{queueId}' in configuration file");
+        throw new MessagingConfigurationException(
+          $"There are no configuration with id '{queueId}' in configuration file");
       }
 
-      return CreateInternal(queueConfiguration);
+      return CreateAdapter(queueConfiguration);
     }
 
     /// <inheritdoc />
     public IReadOnlyCollection<IMessageAdapter> CreateAll()
     {
       return _configuration == null
-        ? new IMessageAdapter[0]
-        : _configuration.Queues.Select(x => CreateInternal(x)).ToArray();
+        ? Array.Empty<IMessageAdapter>()
+        : _configuration.Queues.Select(CreateAdapter).ToArray();
     }
 
     /// <inheritdoc />
@@ -53,11 +62,30 @@ namespace ViennaNET.Messaging.Factories.Impl
       return _configuration?.GetQueueConfiguration(queueId) != null;
     }
 
-    private IMessageAdapter CreateInternal(TQueueConf queueConfiguration)
+    private void ValidateConfiguration()
     {
-      CheckConfigurationParameters(queueConfiguration);
+      var hasErrors = false;
+      var message = new StringBuilder();
 
-      return CreateAdapter(queueConfiguration);
+      foreach (var queueConfig in _configuration.Queues)
+      {
+        var context = new ValidationContext(queueConfig, null);
+        var results = new LinkedList<ValidationResult>();
+        if (!Validator.TryValidateObject(queueConfig, context, results, true))
+        {
+          var errors = results.Select(r =>
+            $"{string.Join(", ", r.MemberNames)} => '{r.ErrorMessage}'.");
+          var allErrors = string.Join(Environment.NewLine, errors);
+          message.AppendLine(
+            $"Configuration for queue {queueConfig.Id} failed validation:{Environment.NewLine}{allErrors}");
+          hasErrors = true;
+        }
+      }
+
+      if (hasErrors)
+      {
+        throw new MessagingException(message.ToString());
+      }
     }
 
     /// <summary>
@@ -66,11 +94,5 @@ namespace ViennaNET.Messaging.Factories.Impl
     /// <param name="queueConfiguration">Конфигурация очереди</param>
     /// <returns></returns>
     protected abstract IMessageAdapter CreateAdapter(TQueueConf queueConfiguration);
-
-    /// <summary>
-    ///   Проверяет параметры конфигурации
-    /// </summary>
-    /// <param name="configuration">Конфигурация</param>
-    protected abstract void CheckConfigurationParameters(TQueueConf configuration);
   }
 }

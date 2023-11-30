@@ -28,7 +28,7 @@ namespace ViennaNET.Messaging.Factories.Impl
       {
         constructor = _constructors.SingleOrDefault(x => x.HasQueue(queueId));
       }
-      catch (Exception e)
+      catch (InvalidOperationException e)
       {
         throw new MessagingConfigurationException(e, $"There are too many constructors for queue: '{queueId}'");
       }

@@ -42,9 +42,11 @@ _________________
 *  ConfigureContainer(Action) - third-party container configuration **without replacing** the internal one. Ex: SimpleInjector
 *  InitializeContainer - third-party DI container initialization
 *  RegisterServices - service registration in standard DI container
+*  RegisterConfigurationBuilderAction - register an Action what be Invoked before IConfigurationBuilder build
 *  UseServer - Web server configuration (Kestrel, HttpSys, etc)
 *  AddOnStartAction - this method adds operation, that will be called when the app starts
-*  AddOnStopAction - this method adds operation, that will be called when the app stops
+*  AddOnStoppingAction - this method adds operation, that will be called when the app start stopping
+*  AddOnStoppedAction - this method adds operation, that will be called when the app stops
 *  AddHealthChecks - this method adds HealthChecks (https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks)
 
 ### Diagnostics

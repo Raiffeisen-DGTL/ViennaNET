@@ -11,41 +11,42 @@ using ViennaNET.WebApi.Abstractions;
 namespace ViennaNET.WebApi.Configurators.Security.Ntlm
 {
   /// <summary>
-  /// Настраивает NTLM-авторизацию
+  ///   Настраивает NTLM-авторизацию
   /// </summary>
   public static class NtlmSecurityConfigurator
   {
     /// <summary>
-    /// Добавляет NTLM-авторизацию
+    ///   Добавляет NTLM-авторизацию
     /// </summary>
     /// <param name="companyHostBuilder"></param>
-    public static IViennaHostBuilder UseNtlmAuth(this IViennaHostBuilder companyHostBuilder)
+    public static ICompanyHostBuilder UseNtlmAuth(this ICompanyHostBuilder companyHostBuilder)
     {
       return companyHostBuilder.ConfigureApp(UseAuthentication)
-                               .AddMvcBuilderConfiguration(ConfigureMvcBuilder)
-                               .RegisterServices(Register);
+        .AddMvcBuilderConfiguration(ConfigureMvcBuilder)
+        .RegisterServices(Register);
     }
 
-    internal static void UseAuthentication(IApplicationBuilder app, IConfiguration configuration, IHostEnvironment env, object container)
+    internal static void UseAuthentication(IApplicationBuilder app, IConfiguration configuration, IHostEnvironment env,
+      object container)
     {
       app.UseAuthentication();
     }
 
     /// <summary>
-    /// Добавляет обязательность авторизации ко всем запросам
+    ///   Добавляет обязательность авторизации ко всем запросам
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
     internal static void ConfigureMvcBuilder(IMvcCoreBuilder builder, IConfiguration configuration)
     {
       var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
-                                                   .Build();
+        .Build();
       builder.AddAuthorization()
-             .AddMvcOptions(o => o.Filters.Add(new AuthorizeFilter(policy)));
+        .AddMvcOptions(o => o.Filters.Add(new AuthorizeFilter(policy)));
     }
 
     /// <summary>
-    /// Регистрирует необходимые сервисы, схемы и атрибуты для NTLM-авторизации
+    ///   Регистрирует необходимые сервисы, схемы и атрибуты для NTLM-авторизации
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>

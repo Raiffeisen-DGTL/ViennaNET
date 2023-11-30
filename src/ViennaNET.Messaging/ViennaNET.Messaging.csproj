@@ -1,31 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.Messaging.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TargetFramework>net6.0</TargetFramework>
     
-    <DocumentationFile>bin\Release\ViennaNET.Messaging.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net6.0\ViennaNET.Messaging.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\net6.0\ViennaNET.Messaging.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    <PackageReference Include="System.Text.Json" Version="6.0.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
-    <ProjectReference Include="..\ViennaNET.Diagnostic\ViennaNET.Diagnostic.csproj" />
-    <ProjectReference Include="..\ViennaNET.Logging\ViennaNET.Logging.csproj" />
-    <ProjectReference Include="..\ViennaNET.Utils\ViennaNET.Utils.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Diagnostic\ViennaNET.Diagnostic.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Utils\ViennaNET.Utils.csproj" />
   </ItemGroup>
 
 </Project>

@@ -21,7 +21,7 @@ function waitForElement() {
             resolve(node);
             return;
           }
-        };
+        }
       });
     });
 

@@ -1,17 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\ViennaNET.Orm.MSSQL.DefaultConfiguration.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\ViennaNET.Orm.MSSQL.DefaultConfiguration.xml</DocumentationFile>
+    <TargetFramework>net6.0</TargetFramework>
+    
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.Orm.DefaultConfiguration\ViennaNET.Orm.DefaultConfiguration.csproj" />
-    <ProjectReference Include="..\ViennaNET.Orm.MSSQL\ViennaNET.Orm.MSSQL.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Orm.DefaultConfiguration\ViennaNET.Orm.DefaultConfiguration.csproj" />
+    <ProjectReference Include="..\..\src\ViennaNET.Orm.MSSQL\ViennaNET.Orm.MSSQL.csproj" />
   </ItemGroup>
 
 </Project>
