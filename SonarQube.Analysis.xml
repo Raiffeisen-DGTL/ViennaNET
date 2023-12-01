@@ -1,0 +1,15 @@
+<SonarQubeAnalysisProperties xmlns="http://www.sonarsource.com/msbuild/integration/2015/1"
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Property Name="sonar.host.url">https://sonarcloud.io</Property>
+    <Property Name="sonar.projectName">ViennaNET</Property>
+    <Property Name="sonar.projectDescription">
+        Библиотеки классов, предоставляющая набор API расширяющих платформы .NET и AspNetCore.
+        Оптимизирует производительность разработки, за счёт API решающего типовые задачи.
+    </Property>
+    <Property Name="sonar.links.homepage">https://github.com/Raiffeisen-DGTL/ViennaNET</Property>
+    <Property Name="sonar.exclusions">artifacts/reports/*</Property>
+    <Property Name="sonar.cs.junit.reportsPaths">artifacts/reports/*-nunit-tests-result.xml</Property>
+    <Property Name="sonar.coverageReportPaths">artifacts/reports/SonarQube.xml</Property>
+    <Property Name="sonar.qualitygate.wait">true</Property>
+</SonarQubeAnalysisProperties>
+

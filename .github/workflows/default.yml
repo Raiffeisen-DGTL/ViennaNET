@@ -9,8 +9,8 @@ on:
       - 'hotfix/**'
       - 'refactoring/**'
   release:
-   types:
-    - released
+    types:
+      - released
 jobs:
   default:
     name: Default Job
@@ -18,7 +18,8 @@ jobs:
     env:
       PROJECT_KEY: 'Raiffeisen-DGTL_ViennaNET'
       PROJECT_NAME: 'ViennaNET.sln'
-
+      ARTIFACTS_DIR: '${{ github.workspace }}/artifacts'
+      REPORTS_DIR: '${{ github.workspace }}/artifacts/reports'
     steps:
       - name: Setup GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.7
@@ -71,42 +72,29 @@ jobs:
           SONAR_ORG: 'raiffeisen-dgtl'
           SONAR_HOST_URL: https://sonarcloud.io
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin \
-              /k:$PROJECT_KEY \
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:$PROJECT_KEY \
               /o:$SONAR_ORG \
-              /v:$GITVERSION_SEMVER \
-              /n:$PROJECT_NAME \
+              /v:$GITVERSION_FULLSEMVER \
+              /s:"${{ github.workspace }}/SonarQube.Analysis.xml" \
               /d:sonar.login=$SONAR_TOKEN \
-              /d:sonar.host.url=$SONAR_HOST_URL \
-              /d:sonar.cs.nunit.reportsPaths="**/TestResult/TestResults*.xml" \
-              /d:sonar.cs.opencover.reportsPaths="**/TestResult/coverage.opencover.xml"
+              /d:sonar.host.url=$SONAR_HOST_URL
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: |
-          dotnet build $PROJECT_NAME \
-            -c Release \
-            --no-restore \
-            --nologo \
-            /p:Company=Raiffeisenbank \
-            /p:Product=ViennaNET \
-            /p:AssemblyVersion=$GITVERSION_ASSEMBLYSEMVER \
-            /p:FileVersion=$GITVERSION_ASSEMBLYSEMFILEVER \
-            /p:InformationalVersion=$GITVERSION_INFORMATIONALVERSION
+          dotnet build "$PROJECT_NAME" -c Release --nologo --no-restore
 
       - name: Test
         run: |
-          dotnet test $PROJECT_NAME \
-            -c Release \
-            -r '${{ github.workspace }}/reports' \
-            --no-build \
-            --nologo \
-            --logger "nunit;LogFilePath=TestResult-{assembly}.xml" \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=\"opencover\" \
-            /p:CoverletOutput=TestResult/
+          dotnet tool update -g dotnet-reportgenerator-globaltool;
+          dotnet test "$PROJECT_NAME"  -c Release --nologo --no-restore --no-build \
+            --logger "nunit;LogFilePath=$REPORTS_DIR/{assembly}-nunit-tests-result.xml";
+          reportgenerator "-reports:${{ github.workspace }}/**/*.cobertura.xml" \
+            "-targetdir:$REPORTS_DIR/" \
+            "-reporttypes:SonarQube;TextSummary";
+
 
       - name: End sonarscanner
         env:
@@ -116,7 +104,7 @@ jobs:
 
       - name: Pack
         if: github.event_name == 'release'
-        run: dotnet pack $PROJECT_NAME -c Release -o ./nupkgs --nologo --no-build -p:PackageVersion=$GITVERSION_NUGETVERSIONV2
+        run: dotnet pack $PROJECT_NAME -c Release -o ./nupkgs --nologo --no-build
 
       - name: Push nuget packages
         if: github.event_name == 'release'

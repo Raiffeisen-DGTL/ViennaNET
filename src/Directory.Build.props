@@ -15,9 +15,9 @@
         <RepositoryBranch>$(CI_COMMIT_REF_NAME)</RepositoryBranch>
         <RepositoryCommit>$(CI_COMMIT_SHA)</RepositoryCommit>
         <PackageProjectUrl>$(CI_PROJECT_URL)</PackageProjectUrl>
-        <PackageVersion>$(GitVersion_NuGetVersion)</PackageVersion>
-        <AssemblyVersion>$(GitVersion_AssemblySemVer)</AssemblyVersion>
-        <FileVersion>$(GitVersion_AssemblySemFileVer)</FileVersion>
-        <InformationalVersion>$(GitVersion_InformationalVersion)</InformationalVersion>
+        <PackageVersion>$(GITVERSION_NUGETVERSION)</PackageVersion>
+        <AssemblyVersion>$(GITVERSION_ASSEMBLYSEMVER)</AssemblyVersion>
+        <FileVersion>$(GITVERSION_ASSEMBLYSEMFILEVER)</FileVersion>
+        <InformationalVersion>$(GITVERSION_INFORMATIONALVERSION)</InformationalVersion>
     </PropertyGroup>
 </Project>
