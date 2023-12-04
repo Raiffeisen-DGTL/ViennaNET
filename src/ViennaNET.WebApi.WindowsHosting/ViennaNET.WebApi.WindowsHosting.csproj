@@ -15,10 +15,7 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.1" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    <PackageReference Include="ViennaNET.WebApi.Abstractions" Version="5.8.1" />
   </ItemGroup>
 
 </Project>

@@ -48,14 +48,16 @@ namespace ViennaNET.Messaging.Receiving.Impl
 
     /// <inheritdoc />
     public TMessage Receive(
-      out BaseMessage receivedMessage, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+      out BaseMessage receivedMessage, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
     {
       CheckDisposed();
       return ReceiveMessageInternal(null, timeout, out receivedMessage, additionalParameters);
     }
 
     /// <inheritdoc />
-    public TMessage Receive(string correlationId, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+    public TMessage Receive(string correlationId, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
     {
       correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
 
@@ -77,7 +79,8 @@ namespace ViennaNET.Messaging.Receiving.Impl
     }
 
     /// <inheritdoc />
-    public bool TryReceive(out TMessage message, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+    public bool TryReceive(out TMessage message, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
     {
       CheckDisposed();
 
@@ -96,7 +99,8 @@ namespace ViennaNET.Messaging.Receiving.Impl
 
     /// <inheritdoc />
     public bool TryReceive(
-      string correlationId, out TMessage message, TimeSpan? timeout = null, params (string Name, string Value)[] additionalParameters)
+      string correlationId, out TMessage message, TimeSpan? timeout = null,
+      params (string Name, string Value)[] additionalParameters)
     {
       correlationId.ThrowIfNullOrEmpty(nameof(correlationId));
 
@@ -118,7 +122,8 @@ namespace ViennaNET.Messaging.Receiving.Impl
     }
 
     private TMessage ReceiveMessageInternal(
-      string correlationId, TimeSpan? timeout, out BaseMessage receivedMessage, params (string Name, string Value)[] additionalParameters)
+      string correlationId, TimeSpan? timeout, out BaseMessage receivedMessage,
+      params (string Name, string Value)[] additionalParameters)
     {
       if (!_adapter.IsConnected)
       {
@@ -129,7 +134,8 @@ namespace ViennaNET.Messaging.Receiving.Impl
       receivedMessage = msg;
       if (msg.IsEmpty())
       {
-        throw new MessagingException("Can not deserialize message. Message body is empty");
+        throw new MessagingException(
+          $"Can not deserialize message from queue {_adapter.Configuration.Id}. Message body is empty");
       }
 
       try
@@ -139,7 +145,9 @@ namespace ViennaNET.Messaging.Receiving.Impl
       }
       catch (Exception ex)
       {
-        throw new MessagingException(ex, "Can not deserialize message");
+        throw new MessagingException(
+          ex,
+          $"Can not deserialize message from queue {_adapter.Configuration.Id}");
       }
     }
 
@@ -158,7 +166,8 @@ namespace ViennaNET.Messaging.Receiving.Impl
       {
         if (receivedMessage.IsEmpty())
         {
-          throw new MessagingException("Can't deserialize message. Message body is empty");
+          throw new MessagingException(
+            $"Can't deserialize message from queue {_adapter.Configuration.Id}. Message body is empty");
         }
 
         try
@@ -169,7 +178,9 @@ namespace ViennaNET.Messaging.Receiving.Impl
         }
         catch (Exception ex)
         {
-          throw new MessagingException(ex, "Can't deserialize message");
+          throw new MessagingException(
+            ex,
+            $"Can't deserialize message from queue {_adapter.Configuration.Id}");
         }
       }
 

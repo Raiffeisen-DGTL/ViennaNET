@@ -7,7 +7,8 @@ namespace ViennaNET.Mediator.DefaultConfiguration
     where TMessagePreProcessor : IMessagePreProcessor<TMessage>
   {
     public PipelineMessagePreProcessorRegistrar(
-      IPipelineProcessorsRegistrar registrar, TMessagePreProcessor preProcessor, PreProcessorOrder<TMessagePreProcessor> order)
+      IPipelineProcessorsRegistrar registrar, TMessagePreProcessor preProcessor,
+      PreProcessorOrder<TMessagePreProcessor> order)
     {
       registrar.RegisterMessagePreProcessor<TMessage, TMessagePreProcessor>(preProcessor, order.Order);
     }

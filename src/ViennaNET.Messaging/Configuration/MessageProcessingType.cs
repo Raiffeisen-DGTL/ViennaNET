@@ -3,23 +3,23 @@
 namespace ViennaNET.Messaging.Configuration
 {
   /// <summary>
-  /// Тип взаимодействия
+  ///   Тип взаимодействия
   /// </summary>
   [Serializable]
   public enum MessageProcessingType
   {
     /// <summary>
-    /// Цикличное выполнение
+    ///   Цикличное выполнение
     /// </summary>
     ThreadStrategy = 0,
 
     /// <summary>
-    /// Подписчик
+    ///   Подписчик
     /// </summary>
     Subscribe = 1,
 
     /// <summary>
-    /// Подписчик с ответом
+    ///   Подписчик с ответом
     /// </summary>
     SubscribeAndReply = 2
   }

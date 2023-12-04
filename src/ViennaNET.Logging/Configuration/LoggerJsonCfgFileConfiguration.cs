@@ -9,11 +9,13 @@ namespace ViennaNET.Logging.Configuration
   {
     private const string ExceptionMessage =
       "[A]ViennaNET.Tools.Log.Configuration.LoggerConfiguration cannot be cast to [B]ViennaNET.Tools.Log.Configuration.LoggerConfiguration";
-    private readonly string _sectionName;
+
     private readonly IConfigurationApplier _applier;
     private readonly IConfiguration _configuration;
+    private readonly string _sectionName;
 
-    public LoggerJsonCfgFileConfiguration(IConfiguration configuration, string sectionName, IConfigurationApplier applier)
+    public LoggerJsonCfgFileConfiguration(IConfiguration configuration, string sectionName,
+      IConfigurationApplier applier)
     {
       _sectionName = sectionName;
       _applier = applier;
@@ -22,7 +24,8 @@ namespace ViennaNET.Logging.Configuration
 
     public LoggerJsonCfgFileConfiguration(IConfiguration configuration, string sectionName = "logger") :
       this(configuration, sectionName, new Log4NetConfigurationApplier())
-    { }
+    {
+    }
 
     public ILog BuildLogger()
     {
@@ -30,7 +33,7 @@ namespace ViennaNET.Logging.Configuration
       try
       {
         configuration = _configuration.GetSection(_sectionName)
-                                      .Get<LoggerConfiguration>();
+          .Get<LoggerConfiguration>();
       }
       catch (InvalidCastException ex)
       {
@@ -43,10 +46,12 @@ namespace ViennaNET.Logging.Configuration
           throw;
         }
       }
+
       if (configuration == null)
       {
         return null;
       }
+
       return _applier.GetLogger(configuration);
     }
   }

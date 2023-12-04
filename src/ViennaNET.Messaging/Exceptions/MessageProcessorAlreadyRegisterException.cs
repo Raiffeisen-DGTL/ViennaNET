@@ -13,12 +13,14 @@ namespace ViennaNET.Messaging.Exceptions
     }
 
     /// <inheritdoc />
-    public MessageProcessorAlreadyRegisterException(Exception innerException, string message) : base(innerException, message)
+    public MessageProcessorAlreadyRegisterException(Exception innerException, string message) : base(innerException,
+      message)
     {
     }
 
     /// <inheritdoc />
-    protected MessageProcessorAlreadyRegisterException(SerializationInfo info, StreamingContext context) : base(info, context)
+    protected MessageProcessorAlreadyRegisterException(SerializationInfo info, StreamingContext context) : base(info,
+      context)
     {
     }
   }

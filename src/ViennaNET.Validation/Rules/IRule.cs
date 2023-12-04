@@ -6,7 +6,7 @@ namespace ViennaNET.Validation.Rules
   public interface IRule<T> : IRuleBase<T>
   {
     /// <summary>
-    /// Синхронно проверяет объект на соответствие правилу
+    ///   Синхронно проверяет объект на соответствие правилу
     /// </summary>
     /// <param name="value">Ссылка на объект</param>
     /// <param name="context">Контекст валидации</param>

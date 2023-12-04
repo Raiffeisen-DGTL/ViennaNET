@@ -14,16 +14,6 @@ namespace ViennaNET.ArcSight
       _syslogMessageSender = syslogMessageSender;
     }
 
-    public void Dispose()
-    {
-      _syslogMessageSender.Dispose();
-    }
-
-    public void Reconnect()
-    {
-      _syslogMessageSender.Reconnect();
-    }
-
     public void Send(CefMessage message, CefMessageSerializer serializer)
     {
       Send(serializer.Serialize(message), serializer);
@@ -35,6 +25,16 @@ namespace ViennaNET.ArcSight
       {
         Send(message, serializer);
       }
+    }
+
+    public void Dispose()
+    {
+      _syslogMessageSender.Dispose();
+    }
+
+    public void Reconnect()
+    {
+      _syslogMessageSender.Reconnect();
     }
 
     public void Send(SyslogMessage message, ISyslogMessageSerializer serializer)

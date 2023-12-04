@@ -23,6 +23,7 @@ namespace ViennaNET.Validation.ValidationChains
       {
         throw new ValidationStoppedException(result);
       }
+
       return result;
     }
 

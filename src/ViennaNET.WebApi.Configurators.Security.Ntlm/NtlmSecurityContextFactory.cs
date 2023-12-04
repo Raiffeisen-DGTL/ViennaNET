@@ -12,21 +12,21 @@ using ViennaNET.WebApi.Net;
 namespace ViennaNET.WebApi.Configurators.Security.Ntlm
 {
   /// <summary>
-  /// Фабрика по получению авторизационных данных пользователя из JWT
+  ///   Фабрика по получению авторизационных данных пользователя из JWT
   /// </summary>
   public class NtlmSecurityContextFactory : ISecurityContextFactory
   {
     private static readonly char[] loginSeparators = { '\\' };
-
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ICallContextFactory _callContextFactory;
     private readonly IHttpClientFactory _httpClientFactory;
+
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILoopbackIpFilter _loopbackIpFilter;
 
     public NtlmSecurityContextFactory(IHttpContextAccessor httpContextAccessor,
-                                      IHttpClientFactory httpClientFactory,
-                                      ILoopbackIpFilter loopbackIpFilter,
-                                      ICallContextFactory callContextFactory)
+      IHttpClientFactory httpClientFactory,
+      ILoopbackIpFilter loopbackIpFilter,
+      ICallContextFactory callContextFactory)
     {
       _httpContextAccessor = httpContextAccessor.ThrowIfNull(nameof(httpContextAccessor));
       _httpClientFactory = httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
@@ -35,7 +35,7 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm
     }
 
     /// <summary>
-    /// Создает контекст и заполняет его из WindowsIdentity
+    ///   Создает контекст и заполняет его из WindowsIdentity
     /// </summary>
     /// <returns>Контекст</returns>
     public ISecurityContext Create()
@@ -57,7 +57,7 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm
     }
 
     /// <summary>
-    /// Создает контекст и заполняет его из JWT-токена
+    ///   Создает контекст и заполняет его из JWT-токена
     /// </summary>
     /// <returns>Контекст</returns>
     public Task<ISecurityContext> CreateAsync()

@@ -45,21 +45,23 @@ namespace ViennaNET.Logging
       _stopWatch.Stop();
       var ts = _stopWatch.Elapsed;
       Logger.Log(_level,
-                 string.Format("{4}. Time elapsed: {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10,
-                               _description));
+        string.Format("{4}. Time elapsed: {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
+          ts.Milliseconds / 10,
+          _description));
     }
 
     public static LogAutoStopWatch CreateDebugLog(string className, string methodName, string description = "")
     {
-      return new LogAutoStopWatch($"{className}.{methodName} {description}", LogLevel.Debug);
+      return new($"{className}.{methodName} {description}", LogLevel.Debug);
     }
 
     public static void WriteDebugLog(string className, string methodName, string description, TimeSpan ts)
     {
       var message = $"{className}.{methodName} {description}";
       Logger.Log(LogLevel.Debug,
-                 string.Format("{4}. Time elapsed: {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10,
-                               message));
+        string.Format("{4}. Time elapsed: {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds,
+          ts.Milliseconds / 10,
+          message));
     }
   }
 }

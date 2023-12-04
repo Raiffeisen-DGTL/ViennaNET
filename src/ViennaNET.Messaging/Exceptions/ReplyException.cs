@@ -3,7 +3,7 @@
 namespace ViennaNET.Messaging.Exceptions
 {
   /// <summary>
-  /// Ошибка во время ответа хендлером
+  ///   Ошибка во время ответа хендлером
   /// </summary>
   public class ReplyException : MessagingException
   {

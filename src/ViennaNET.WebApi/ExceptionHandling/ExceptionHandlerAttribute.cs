@@ -14,8 +14,8 @@ namespace ViennaNET.WebApi.ExceptionHandling
   public sealed class ExceptionHandlerAttribute : ExceptionFilterAttribute
   {
     private readonly HttpStatusCode _code;
-    private readonly Type _type;
     private readonly bool _includeExceptionInfo;
+    private readonly Type _type;
 
     public ExceptionHandlerAttribute(Type type, HttpStatusCode code, bool includeExceptionInfo = true)
     {
@@ -32,7 +32,7 @@ namespace ViennaNET.WebApi.ExceptionHandling
         {
           Message = exception.Message,
           ExceptionType = exception.GetType()
-                                   .ToString(),
+            .ToString(),
           StackTrace = exception.StackTrace
         };
       }
@@ -47,10 +47,7 @@ namespace ViennaNET.WebApi.ExceptionHandling
         return;
       }
 
-      var result = new ObjectResult(GetExceptionInfo(actionExecutedContext.Exception))
-      {
-        StatusCode = (int)_code
-      };
+      var result = new ObjectResult(GetExceptionInfo(actionExecutedContext.Exception)) { StatusCode = (int)_code };
 
       actionExecutedContext.Result = result;
     }

@@ -1,12 +1,12 @@
 ﻿namespace ViennaNET.Logging.Contracts
 {
   /// <summary>
-  /// logger interface
+  ///   logger interface
   /// </summary>
   public interface ILog
   {
     /// <summary>
-    /// log message with specific category, logging level and message
+    ///   log message with specific category, logging level and message
     /// </summary>
     /// <param name="category">log category</param>
     /// <param name="level">logging level</param>
@@ -14,13 +14,13 @@
     void Log(string category, LogLevel level, string message);
 
     /// <summary>
-    /// merge internal state 
+    ///   merge internal state
     /// </summary>
     /// <param name="logger">logger internal state to add</param>
     void Merge(ILog logger);
 
     /// <summary>
-    /// flush cached data into the log
+    ///   flush cached data into the log
     /// </summary>
     void Flush();
   }

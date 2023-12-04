@@ -8,11 +8,13 @@ namespace ViennaNET.ArcSight
   /// <inheritdoc />
   public class ErrorHandlingPoliciesFactory : IErrorHandlingPoliciesFactory
   {
-    private readonly ILogger<ErrorHandlingPoliciesFactory> _logger;
     private const int retryInterval = 250;
 
+    private const int retryCount = 3;
+    private readonly ILogger<ErrorHandlingPoliciesFactory> _logger;
+
     /// <summary>
-    /// Contructor
+    ///   Contructor
     /// </summary>
     /// <param name="logger">A logger interface</param>
     public ErrorHandlingPoliciesFactory(ILogger<ErrorHandlingPoliciesFactory> logger)
@@ -20,19 +22,17 @@ namespace ViennaNET.ArcSight
       _logger = logger;
     }
 
-    private const int retryCount = 3;
-
     /// <inheritdoc />
     public ISyncPolicy CreateStdCommunicationPolicy()
     {
       var countOfRetries = 0;
       return Policy.Handle<TimeoutException>()
-                   .Or<SocketException>()
-                   .Or<Exception>(InnerExceptionIsApplicable)
-                   .WaitAndRetry(retryCount, retrySleep => TimeSpan.FromMilliseconds(retryInterval), (ex, time) =>
-                   {
-                     _logger.LogError(ex, $"Communication or Timeout exception. Retry: {++countOfRetries}");
-                   });
+        .Or<SocketException>()
+        .Or<Exception>(InnerExceptionIsApplicable)
+        .WaitAndRetry(retryCount, retrySleep => TimeSpan.FromMilliseconds(retryInterval), (ex, time) =>
+        {
+          _logger.LogError(ex, $"Communication or Timeout exception. Retry: {++countOfRetries}");
+        });
     }
 
     private static bool InnerExceptionIsApplicable(Exception ex)

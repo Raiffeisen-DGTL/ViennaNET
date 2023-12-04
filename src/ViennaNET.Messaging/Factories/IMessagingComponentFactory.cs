@@ -4,12 +4,12 @@ using ViennaNET.Messaging.Sending;
 namespace ViennaNET.Messaging.Factories
 {
   /// <summary>
-  /// Фабрика компонентов для обмена сообщениями
+  ///   Фабрика компонентов для обмена сообщениями
   /// </summary>
   public interface IMessagingComponentFactory
   {
     /// <summary>
-    /// Создает отправителя сообщения с сериализацией
+    ///   Создает отправителя сообщения с сериализацией
     /// </summary>
     /// <typeparam name="TMessage">Тип сообщения</typeparam>
     /// <param name="queueId">Идентификатор очереди</param>
@@ -20,11 +20,11 @@ namespace ViennaNET.Messaging.Factories
     ///   Создает отправителя сообщения
     /// </summary>
     /// <param name="queueId">Идентификатор очереди</param>
-    /// <returns>Адаптер очереди <see cref="IMessageAdapter"/></returns>
+    /// <returns>Адаптер очереди <see cref="IMessageAdapter" /></returns>
     IMessageSender CreateMessageSender(string queueId);
 
     /// <summary>
-    /// Создает получатель сообщения
+    ///   Создает получатель сообщения
     /// </summary>
     /// <typeparam name="TMessage">Тип сообщения</typeparam>
     /// <param name="queueId">Идентификатор очереди</param>
@@ -32,7 +32,7 @@ namespace ViennaNET.Messaging.Factories
     IMessageReceiver<TMessage> CreateMessageReceiver<TMessage>(string queueId);
 
     /// <summary>
-    /// Создает получателя сообщения с поддержкой транзакций
+    ///   Создает получателя сообщения с поддержкой транзакций
     /// </summary>
     /// <param name="queueId">Идентификатор очереди</param>
     /// <typeparam name="TMessage">Тип сообщения</typeparam>
@@ -40,7 +40,7 @@ namespace ViennaNET.Messaging.Factories
     ITransactedMessageReceiver<TMessage> CreateTransactedMessageReceiver<TMessage>(string queueId);
 
     /// <summary>
-    /// Создает отправителя сообщения с сериализацией и ожиданием ответа с десериализацией
+    ///   Создает отправителя сообщения с сериализацией и ожиданием ответа с десериализацией
     /// </summary>
     /// <typeparam name="TMessage">Тип сообщения</typeparam>
     /// <typeparam name="TResponse">Тип ответа</typeparam>

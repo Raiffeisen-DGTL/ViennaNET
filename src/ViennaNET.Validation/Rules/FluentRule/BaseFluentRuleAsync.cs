@@ -7,15 +7,13 @@ using ViennaNET.Validation.ValidationChains;
 namespace ViennaNET.Validation.Rules.FluentRule
 {
   /// <summary>
-  /// Базовый класс для асинхронного правила валидации, поддерживающего
-  /// текучий интерфейс конфигурирования
+  ///   Базовый класс для асинхронного правила валидации, поддерживающего
+  ///   текучий интерфейс конфигурирования
   /// </summary>
   /// <typeparam name="T">Тип объекта валидации</typeparam>
   public class BaseFluentRuleAsync<T> : IRuleAsync<T>
   {
-    public RuleIdentity Identity { get; }
-
-    private readonly ValidationChain<IRuleValidationMember<T>> _validationChain = new ValidationChain<IRuleValidationMember<T>>();
+    private readonly ValidationChain<IRuleValidationMember<T>> _validationChain = new();
 
     protected BaseFluentRuleAsync()
     {
@@ -27,6 +25,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     {
       Identity = new RuleIdentity(internalCode);
     }
+
+    public RuleIdentity Identity { get; }
 
     /// <inheritdoc />
     public async Task<RuleValidationResult> ValidateAsync(T value, ValidationContext context)
@@ -42,12 +42,13 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Позволяет начать построение цепи валидаторов правила с текучим интерфейсом
+    ///   Позволяет начать построение цепи валидаторов правила с текучим интерфейсом
     /// </summary>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
     /// <param name="expression">Выражение, возвращающее значение свойства для валидации</param>
     /// <returns>Cтроитель валидаторов правила с текучим интерфейсом</returns>
-    protected RuleValidationMemberBuilder<T, TProperty> ForProperty<TProperty>(Expression<Func<T, TProperty>> expression)
+    protected RuleValidationMemberBuilder<T, TProperty> ForProperty<TProperty>(
+      Expression<Func<T, TProperty>> expression)
     {
       var member = new PropertyRuleValidationMember<T, TProperty>(expression);
       _validationChain.Add(member);

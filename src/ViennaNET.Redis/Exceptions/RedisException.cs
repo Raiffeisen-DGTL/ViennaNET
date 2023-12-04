@@ -3,7 +3,7 @@
 namespace ViennaNET.Redis.Exceptions
 {
   /// <summary>
-  /// Исключение, возникающее при ошибках во время выполнения операций с Redis
+  ///   Исключение, возникающее при ошибках во время выполнения операций с Redis
   /// </summary>
   public class RedisException : Exception
   {

@@ -9,12 +9,12 @@ using ViennaNET.Validation.ValidationChains;
 namespace ViennaNET.Validation.Validators
 {
   /// <summary>
-  /// Базовый класс для создания набора правил
+  ///   Базовый класс для создания набора правил
   /// </summary>
   /// <typeparam name="T">Тип объекта для валидации</typeparam>
   public abstract class BaseValidationRuleSet<T> : IValidationRuleSet<T>
   {
-    private readonly ValidationChain<IValidationChainMember<T>> _validationChain = new ValidationChain<IValidationChainMember<T>>();
+    private readonly ValidationChain<IValidationChainMember<T>> _validationChain = new();
 
     /// <inheritdoc />
     public IValidationChainMember<T> AddMemberToChain(IRuleBase<T> rule)
@@ -65,6 +65,7 @@ namespace ViennaNET.Validation.Validators
       {
         action();
       }
+
       list.ForEach(x =>
       {
         if (condition == null)
@@ -85,7 +86,8 @@ namespace ViennaNET.Validation.Validators
 
     protected void WhenNoWarningsAndErrors(IRuleBase<T> rule, Action action)
     {
-      WhenInternal(rule, action, r => !r.Results.Any(x => x.Messages.Any(m => m is WarningRuleMessage || m is ErrorRuleMessage)));
+      WhenInternal(rule, action,
+        r => !r.Results.Any(x => x.Messages.Any(m => m is WarningRuleMessage || m is ErrorRuleMessage)));
     }
 
     protected void WhenNoInfos(IRuleBase<T> rule, Action action)
@@ -95,12 +97,14 @@ namespace ViennaNET.Validation.Validators
 
     protected void WhenNoInfosAndWarnings(IRuleBase<T> rule, Action action)
     {
-      WhenInternal(rule, action, r => !r.Results.Any(x => x.Messages.Any(m => m is WarningRuleMessage || m is InfoRuleMessage)));
+      WhenInternal(rule, action,
+        r => !r.Results.Any(x => x.Messages.Any(m => m is WarningRuleMessage || m is InfoRuleMessage)));
     }
 
     protected void WhenNoInfosAndErrors(IRuleBase<T> rule, Action action)
     {
-      WhenInternal(rule, action, r => !r.Results.Any(x => x.Messages.Any(m => m is ErrorRuleMessage || m is InfoRuleMessage)));
+      WhenInternal(rule, action,
+        r => !r.Results.Any(x => x.Messages.Any(m => m is ErrorRuleMessage || m is InfoRuleMessage)));
     }
 
     protected IValidationChainMemberBuilder<T> SetCollectionContext<TEntity>(
@@ -131,7 +135,7 @@ namespace ViennaNET.Validation.Validators
     }
 
     /// <summary>
-    /// Задает для участника цепи логику, позволяющую останавливать выполнение цепи
+    ///   Задает для участника цепи логику, позволяющую останавливать выполнение цепи
     /// </summary>
     /// <param name="member">Участник сообщений</param>
     /// <returns>Участник цепи</returns>

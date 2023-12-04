@@ -13,7 +13,8 @@ namespace ViennaNET.Logging
   /// <summary>
   ///   main wrapper class for working with the logger
   /// </summary>
-  [Obsolete("Данная система журналирования устарела и скоро будет удалена. Пожалуйста используйте Microsoft.Extensions.Logging")]
+  [Obsolete(
+    "Данная система журналирования устарела и скоро будет удалена. Пожалуйста используйте Microsoft.Extensions.Logging")]
   public static class Logger
   {
     private static string Category
@@ -30,6 +31,7 @@ namespace ViennaNET.Logging
         catch
         {
         }
+
         return string.Empty;
       }
     }
@@ -201,7 +203,7 @@ namespace ViennaNET.Logging
     public static void LogWarningFormat(Exception exception, string message, params object[] formatParams)
     {
       loggerImpl.Log(Category, LogLevel.Warning,
-                     string.Concat(string.Format(message, formatParams), Environment.NewLine, exception.ToString()));
+        string.Concat(string.Format(message, formatParams), Environment.NewLine, exception.ToString()));
     }
 
     /// <summary>
@@ -214,7 +216,7 @@ namespace ViennaNET.Logging
     public static void LogErrorFormat(Exception exception, string message, params object[] formatParams)
     {
       loggerImpl.Log(Category, LogLevel.Error,
-                     string.Concat(string.Format(message, formatParams), Environment.NewLine, exception.ToString()));
+        string.Concat(string.Format(message, formatParams), Environment.NewLine, exception.ToString()));
     }
 
     /// <summary>
@@ -256,6 +258,7 @@ namespace ViennaNET.Logging
       {
         return;
       }
+
       categoryLoggers.Value.Push(category);
     }
 
@@ -265,6 +268,7 @@ namespace ViennaNET.Logging
       {
         return;
       }
+
       categoryLoggers.Value.Pop();
       Flush();
     }
@@ -314,13 +318,13 @@ namespace ViennaNET.Logging
 
     /// <summary>
     /// </summary>
-    private static readonly ThreadLocal<Stack<string>> categoryLoggers = new ThreadLocal<Stack<string>>(() => new Stack<string>());
+    private static readonly ThreadLocal<Stack<string>> categoryLoggers = new(() => new Stack<string>());
 
     private const string userParameter = "user";
     private const string requestIdParameter = "request_id";
     private const string serviceParameter = "service";
 
-    private static readonly Random rnd = new Random();
+    private static readonly Random rnd = new();
     private static readonly string requestDic = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     #endregion
@@ -346,9 +350,9 @@ namespace ViennaNET.Logging
     private static void ConfigureDefaultLogger()
     {
       var configuration = new FluentConfiguration().AddTextListener()
-                                                   .SetTextFileAppendMode(0, true)
-                                                   .SetMinLevel(0, LogLevel.Error)
-                                                   .SetTextFileName(0, "application.log");
+        .SetTextFileAppendMode(0, true)
+        .SetMinLevel(0, LogLevel.Error)
+        .SetTextFileName(0, "application.log");
       Configure(configuration);
     }
 

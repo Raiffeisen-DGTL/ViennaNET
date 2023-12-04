@@ -7,21 +7,21 @@ using Microsoft.Extensions.FileProviders;
 namespace ViennaNET.WebApi.StaticFiles
 {
   /// <summary>
-  /// Конфигуратор для настройки доступа к файлам через сервис
+  ///   Конфигуратор для настройки доступа к файлам через сервис
   /// </summary>
   public static class StaticFilesConfigurator
   {
     private const int defaultCacheInterval = 3600;
 
     /// <summary>
-    /// Считывает секцию конфигурации webApiStaticFiles, если она есть и включает доступ к файлам
+    ///   Считывает секцию конфигурации webApiStaticFiles, если она есть и включает доступ к файлам
     /// </summary>
     /// <param name="app"></param>
     /// <param name="configuration"></param>
     public static void ConfigureStaticFiles(this IApplicationBuilder app, IConfiguration configuration)
     {
       var config = configuration.GetSection("webApiStaticFiles")
-                                ?.Get<StaticFilesConfiguration>();
+        ?.Get<StaticFilesConfiguration>();
       if (config == null)
       {
         app.UseStaticFiles();

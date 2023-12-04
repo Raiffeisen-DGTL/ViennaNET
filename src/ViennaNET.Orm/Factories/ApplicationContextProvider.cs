@@ -12,17 +12,19 @@ namespace ViennaNET.Orm.Factories
   {
     private const string DefaultNick = "default";
 
-    private readonly Dictionary<Type, string> _commands = new Dictionary<Type, string>();
-    private readonly Dictionary<Type, string> _entities = new Dictionary<Type, string>();
-    private readonly Dictionary<string, string> _namedQueries = new Dictionary<string, string>();
+    private readonly Dictionary<Type, string> _commands = new();
+    private readonly Dictionary<Type, string> _entities = new();
+    private readonly Dictionary<string, string> _namedQueries = new();
 
     /// <summary>
-    /// Инициализирует экземпляр ссылками на коллекцию <see cref="IBoundedContext" /> и <see cref="ISessionFactoryProvidersManager" />.
-    /// Последний позволяет получить профайдер фабрик сессий и зарегистрировать в нем сущности для получения фабрики сессий
+    ///   Инициализирует экземпляр ссылками на коллекцию <see cref="IBoundedContext" /> и
+    ///   <see cref="ISessionFactoryProvidersManager" />.
+    ///   Последний позволяет получить профайдер фабрик сессий и зарегистрировать в нем сущности для получения фабрики сессий
     /// </summary>
     /// <param name="boundedContexts">Ссылка на перечисление ограниченных контекстов</param>
     /// <param name="providersManager">Ссылка на интерфейс, представляющий менеджер провайдеров фабрик сессий</param>
-    public ApplicationContextProvider(IEnumerable<IBoundedContext> boundedContexts, ISessionFactoryProvidersManager providersManager)
+    public ApplicationContextProvider(IEnumerable<IBoundedContext> boundedContexts,
+      ISessionFactoryProvidersManager providersManager)
     {
       RegisterBoundedContexts(boundedContexts, providersManager);
     }
@@ -60,7 +62,8 @@ namespace ViennaNET.Orm.Factories
       throw new EntityRepositoryException($"Command {type.Name} is not registered in factory");
     }
 
-    private void RegisterBoundedContexts(IEnumerable<IBoundedContext> boundedContexts, ISessionFactoryProvidersManager providersManager)
+    private void RegisterBoundedContexts(IEnumerable<IBoundedContext> boundedContexts,
+      ISessionFactoryProvidersManager providersManager)
     {
       foreach (var boundedContext in boundedContexts)
       {
@@ -124,7 +127,8 @@ namespace ViennaNET.Orm.Factories
       _entities.Add(type, nick ?? DefaultNick);
     }
 
-    private void RegisterEntity(ISessionFactoryProvidersManager providersManager, Type type, string nick, Assembly assembly)
+    private void RegisterEntity(ISessionFactoryProvidersManager providersManager, Type type, string nick,
+      Assembly assembly)
     {
       if (_entities.ContainsKey(type))
       {
@@ -134,13 +138,13 @@ namespace ViennaNET.Orm.Factories
       if (nick == null)
       {
         providersManager.GetSessionFactoryProvider(DefaultNick)
-                        .AddClass(type, assembly);
+          .AddClass(type, assembly);
         _entities.Add(type, DefaultNick);
       }
       else
       {
         providersManager.GetSessionFactoryProvider(nick)
-                        .AddClass(type, assembly);
+          .AddClass(type, assembly);
         _entities.Add(type, nick);
       }
     }

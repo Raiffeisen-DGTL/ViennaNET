@@ -8,7 +8,7 @@ using ViennaNET.Utils;
 namespace ViennaNET.WebApi.Configurators.Security.Jwt
 {
   /// <summary>
-  /// Контекст, содержащий авторизационные данные пользователя
+  ///   Контекст, содержащий авторизационные данные пользователя
   /// </summary>
   public class SecurityContext : ISecurityContext
   {
@@ -17,7 +17,7 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
     protected SecurityContext() { }
 
     /// <summary>
-    /// Конструктор
+    ///   Конструктор
     /// </summary>
     /// <param name="userName">Имя пользователя</param>
     /// <param name="ip">IP-адрес пользователя</param>
@@ -31,20 +31,20 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
     }
 
     /// <summary>
-    /// Проверяет наличие полномочий у пользователя
+    ///   Проверяет наличие полномочий у пользователя
     /// </summary>
     /// <param name="permissions">Набор полномочий</param>
     /// <returns>Есть ли пересечение</returns>
     public Task<bool> HasPermissionsAsync(params string[] permissions)
     {
       var result = _permissions.Intersect(permissions)
-                               .Any();
+        .Any();
 
       return Task.FromResult(result);
     }
 
     /// <summary>
-    /// Возвращает все полномочия пользователя
+    ///   Возвращает все полномочия пользователя
     /// </summary>
     /// <returns>Набор полномочий</returns>
     public Task<IEnumerable<string>> GetUserPermissionsAsync()
@@ -53,12 +53,12 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
     }
 
     /// <summary>
-    /// Имя пользователя
+    ///   Имя пользователя
     /// </summary>
     public string UserName { get; }
 
     /// <summary>
-    /// IP-адрес пользователя
+    ///   IP-адрес пользователя
     /// </summary>
     public string UserIp { get; }
 

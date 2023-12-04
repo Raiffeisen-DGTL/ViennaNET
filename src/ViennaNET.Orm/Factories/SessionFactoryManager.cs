@@ -9,12 +9,12 @@ namespace ViennaNET.Orm.Factories
   /// <inheritdoc />
   public class SessionFactoryManager : ISessionFactoryManager
   {
-    private readonly OrderedDictionary _factories = new OrderedDictionary();
-    private readonly object _lockObject = new object();
+    private readonly OrderedDictionary _factories = new();
+    private readonly object _lockObject = new();
     private readonly ISessionFactoryProvidersManager _providersManager;
 
     /// <summary>
-    /// Инициализирует экземпляр ссылкой на <see cref="ISessionFactoryProvidersManager" />
+    ///   Инициализирует экземпляр ссылкой на <see cref="ISessionFactoryProvidersManager" />
     /// </summary>
     /// <param name="providersManager">Ссылка на интерфейс, представляющий менеджер провайдеров фабрик сессий</param>
     public SessionFactoryManager(ISessionFactoryProvidersManager providersManager)
@@ -32,11 +32,12 @@ namespace ViennaNET.Orm.Factories
           if (!_factories.Contains(nick))
           {
             var factory = _providersManager.GetSessionFactoryProvider(nick)
-                                           .GetSessionFactory();
+              .GetSessionFactory();
             _factories.Add(nick, factory);
           }
         }
       }
+
       return (ISessionFactory)_factories[nick];
     }
 

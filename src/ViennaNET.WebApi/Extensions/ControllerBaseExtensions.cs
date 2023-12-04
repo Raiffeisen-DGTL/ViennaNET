@@ -7,7 +7,7 @@ namespace ViennaNET.WebApi.Extensions
   public static class ControllerBaseExtensions
   {
     /// <summary>
-    /// Позволяет обработать <see cref="ResultOf{T}"/> как HTTP ответ
+    ///   Позволяет обработать <see cref="ResultOf{T}" /> как HTTP ответ
     /// </summary>
     /// <param name="controller">Контроллер</param>
     /// <param name="result">Результат для обработки</param>
@@ -18,14 +18,10 @@ namespace ViennaNET.WebApi.Extensions
     {
       switch (result.State)
       {
-        case ResultState.Empty:
-          return new NotFoundResult();
-        case ResultState.Invalid:
-          return new BadRequestObjectResult(result.InvalidMessage);
-        case ResultState.Success:
-          return new OkObjectResult(result.Result);
-        default:
-          throw new ArgumentOutOfRangeException(nameof(result));
+        case ResultState.Empty: return new NotFoundResult();
+        case ResultState.Invalid: return new BadRequestObjectResult(result.InvalidMessage);
+        case ResultState.Success: return new OkObjectResult(result.Result);
+        default: throw new ArgumentOutOfRangeException(nameof(result));
       }
     }
   }

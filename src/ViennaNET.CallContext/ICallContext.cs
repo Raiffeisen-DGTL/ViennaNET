@@ -3,27 +3,27 @@
   public interface ICallContext
   {
     /// <summary>
-    /// Идентификатор запроса
+    ///   Идентификатор запроса
     /// </summary>
     string RequestId { get; }
 
     /// <summary>
-    /// Идентификатор пользователя
+    ///   Идентификатор пользователя
     /// </summary>
     string UserId { get; }
 
     /// <summary>
-    /// Домен пользователя
+    ///   Домен пользователя
     /// </summary>
     string UserDomain { get; }
 
     /// <summary>
-    /// IP-адрес создателя первого запроса в цепочке
+    ///   IP-адрес создателя первого запроса в цепочке
     /// </summary>
     string RequestCallerIp { get; }
 
     /// <summary>
-    /// Авторизационный токен пользователя
+    ///   Авторизационный токен пользователя
     /// </summary>
     string AuthorizeInfo { get; }
   }

@@ -11,31 +11,31 @@ namespace ViennaNET.Mediator.Seedwork
   public interface IEventCollector : IDisposable
   {
     /// <summary>
-    /// Возвращает коллекцию событий только для чтения, сохраненных для отправки
+    ///   Возвращает коллекцию событий только для чтения, сохраненных для отправки
     /// </summary>
     IReadOnlyCollection<IEvent> Events { get; }
 
     /// <summary>
-    /// Возвращает признак того, что очередь сообщений пуста
+    ///   Возвращает признак того, что очередь сообщений пуста
     /// </summary>
     bool IsEmpty { get; }
 
     /// <summary>
-    ///  Добавляет новое событие в очередь
+    ///   Добавляет новое событие в очередь
     /// </summary>
     /// <param name="evt">Ссылка на сохраняемое событие</param>
     void Enqueue<TEvent>(TEvent evt)
       where TEvent : class, IEvent;
 
     /// <summary>
-    /// Синхронно публикует сообщения
+    ///   Синхронно публикует сообщения
     /// </summary>
     void Publish();
 
     /// <summary>
-    /// Асинхронно публикует событие
+    ///   Асинхронно публикует событие
     /// </summary>
-    /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken" />.</param>
     Task PublishAsync(CancellationToken cancellationToken = default);
   }
 }

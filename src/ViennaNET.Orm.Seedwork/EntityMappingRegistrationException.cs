@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ViennaNET.Orm.Seedwork
 {
   /// <summary>
-  /// Исключение, возникающее при ошибках регистрации сущности
+  ///   Исключение, возникающее при ошибках регистрации сущности
   /// </summary>
   [Serializable]
   public class EntityRegistrationException : Exception

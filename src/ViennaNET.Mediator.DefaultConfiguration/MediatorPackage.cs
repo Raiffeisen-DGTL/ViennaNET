@@ -3,12 +3,11 @@ using SimpleInjector.Packaging;
 using ViennaNET.Mediator.Collectors;
 using ViennaNET.Mediator.Pipeline;
 using ViennaNET.Mediator.Seedwork;
-using Container = SimpleInjector.Container;
 
 namespace ViennaNET.Mediator.DefaultConfiguration
 {
   /// <summary>
-  /// Пакет SimpleInjector для работы с Mediator
+  ///   Пакет SimpleInjector для работы с Mediator
   /// </summary>
   public class MediatorPackage : IPackage
   {

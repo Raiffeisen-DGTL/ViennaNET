@@ -6,18 +6,18 @@ using ViennaNET.Validation.ValidationChains;
 namespace ViennaNET.Validation.Rules.FluentRule
 {
   /// <summary>
-  /// Базовый класс для правила валидации, поддерживающего
-  /// текучий интерфейс конфигурирования
+  ///   Базовый класс для правила валидации, поддерживающего
+  ///   текучий интерфейс конфигурирования
   /// </summary>
   /// <typeparam name="T">Тип объекта валидации</typeparam>
   public abstract class BaseFluentRule<T> : IRule<T>
   {
-    private readonly ValidationChain<IRuleValidationMember<T>> _validationChain = new ValidationChain<IRuleValidationMember<T>>();
+    private readonly ValidationChain<IRuleValidationMember<T>> _validationChain = new();
 
     protected BaseFluentRule()
     {
       Identity = new RuleIdentity(Guid.NewGuid()
-                                      .ToString());
+        .ToString());
     }
 
     protected BaseFluentRule(string internalCode)
@@ -36,10 +36,12 @@ namespace ViennaNET.Validation.Rules.FluentRule
       {
         result.AppendRange(member.Validate(value, context));
       }
+
       return result;
     }
 
-    protected RuleValidationMemberBuilder<T, TProperty> ForProperty<TProperty>(Expression<Func<T, TProperty>> expression)
+    protected RuleValidationMemberBuilder<T, TProperty> ForProperty<TProperty>(
+      Expression<Func<T, TProperty>> expression)
     {
       var member = new PropertyRuleValidationMember<T, TProperty>(expression);
       _validationChain.Add(member);

@@ -9,8 +9,8 @@ using ViennaNET.Validation.Validators.Exceptions;
 namespace ViennaNET.Validation.Validators
 {
   /// <summary>
-  /// Синхронный валидатор. Обеспечивает выполнение цепи валидации,
-  /// учитывая правила, заданные для различных участников цепи
+  ///   Синхронный валидатор. Обеспечивает выполнение цепи валидации,
+  ///   учитывая правила, заданные для различных участников цепи
   /// </summary>
   public class ValidatorAsync : IValidatorAsync
   {
@@ -31,7 +31,8 @@ namespace ViennaNET.Validation.Validators
     }
 
     /// <inheritdoc />
-    public async Task<ValidationResult> ValidateManyAsync<T>(IEnumerable<IValidationRuleSet<T>> ruleSets, T instance, ValidationContext context)
+    public async Task<ValidationResult> ValidateManyAsync<T>(IEnumerable<IValidationRuleSet<T>> ruleSets, T instance,
+      ValidationContext context)
     {
       if (ruleSets == null)
       {
@@ -49,11 +50,13 @@ namespace ViennaNET.Validation.Validators
         var res = await ValidateInternal(ruleSet, instance, context);
         result.Results.AddRange(res.Results);
       }
+
       return result;
     }
 
     /// <inheritdoc />
-    public Task<ValidationResult> ValidateAsync<T>(IEnumerable<IRuleBase<T>> rules, T instance, ValidationContext context)
+    public Task<ValidationResult> ValidateAsync<T>(IEnumerable<IRuleBase<T>> rules, T instance,
+      ValidationContext context)
     {
       if (rules == null)
       {
@@ -87,13 +90,15 @@ namespace ViennaNET.Validation.Validators
     }
 
     private static async Task<ValidationResult> ProcessRule<T>(
-      T instance, IValidationChainMember<T> validationChainMember, Dictionary<RuleIdentity, ValidationResult> validationMap,
+      T instance, IValidationChainMember<T> validationChainMember,
+      Dictionary<RuleIdentity, ValidationResult> validationMap,
       ValidationResult result, ValidationContext context)
     {
       if (validationMap.TryGetValue(validationChainMember.Identity, out var validationResult))
       {
         return validationResult;
       }
+
       var res = await validationChainMember.ProcessAsync(instance, context);
       validationMap[validationChainMember.Identity] = res;
       result.MergeResult(res);
@@ -114,10 +119,12 @@ namespace ViennaNET.Validation.Validators
           {
             throw new ValidationException($"Не зарегистрировано правила с кодом {onMember.RuleIdentity.Code}");
           }
+
           if (!await CheckDependsOnMembers(chain, instance, member, validationMap, result, context))
           {
             return false;
           }
+
           var processResult = await ProcessRule(instance, member, validationMap, result, context);
           if (!dependsOnMember.SatisfyCondition(processResult))
           {
@@ -132,10 +139,12 @@ namespace ViennaNET.Validation.Validators
           }
         }
       }
+
       return true;
     }
 
-    private static async Task<ValidationResult> ValidateInternal<T>(IValidationRuleSet<T> ruleSet, T instance, ValidationContext context)
+    private static async Task<ValidationResult> ValidateInternal<T>(IValidationRuleSet<T> ruleSet, T instance,
+      ValidationContext context)
     {
       var validationMap = new Dictionary<RuleIdentity, ValidationResult>();
       var result = new ValidationResult();

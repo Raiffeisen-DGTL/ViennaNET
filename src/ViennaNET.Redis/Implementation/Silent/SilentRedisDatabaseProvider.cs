@@ -9,12 +9,12 @@ namespace ViennaNET.Redis.Implementation.Silent
   /// <inheritdoc />
   public class SilentRedisDatabaseProvider : ISilentRedisDatabaseProvider
   {
-    private readonly IRedisDatabaseProvider _redisDatabaseProvider;
-    private readonly ILoggerFactory _loggerFactory;
     private readonly ILogger _logger;
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly IRedisDatabaseProvider _redisDatabaseProvider;
 
     /// <summary>
-    /// Инициализирует экземпляр ссылкой на <see cref="IConnectionConfiguration" />
+    ///   Инициализирует экземпляр ссылкой на <see cref="IConnectionConfiguration" />
     /// </summary>
     /// <param name="redisDatabaseProvider">Провайдер конфигурации</param>
     /// <param name="loggerFactory">Фабрика логгеров</param>

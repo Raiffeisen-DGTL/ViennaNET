@@ -4,12 +4,12 @@ using NHibernate;
 namespace ViennaNET.Orm.Repositories
 {
   /// <summary>
-  /// Методы расширения для <see cref="ISession"/>.
+  ///   Методы расширения для <see cref="ISession" />.
   /// </summary>
   public static class SessionExtensions
   {
     /// <summary>
-    /// Позволяет получить изначальное значение поля сущности до его изменения
+    ///   Позволяет получить изначальное значение поля сущности до его изменения
     /// </summary>
     /// <param name="session">Ссылка на сессию БД</param>
     /// <param name="entity">Ссылка на сущность</param>

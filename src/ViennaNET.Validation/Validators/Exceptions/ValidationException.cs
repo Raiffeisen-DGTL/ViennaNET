@@ -3,7 +3,7 @@
 namespace ViennaNET.Validation.Validators.Exceptions
 {
   /// <summary>
-  /// Исключение, возникающее при ошибках валидации
+  ///   Исключение, возникающее при ошибках валидации
   /// </summary>
   public class ValidationException : Exception
   {

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ViennaNET.Orm.Exceptions
 {
   /// <summary>
-  /// Исключение, возникающее при ошибках работы с сохраненными сессиями БД
+  ///   Исключение, возникающее при ошибках работы с сохраненными сессиями БД
   /// </summary>
   [Serializable]
   public class SessionManagerException : Exception

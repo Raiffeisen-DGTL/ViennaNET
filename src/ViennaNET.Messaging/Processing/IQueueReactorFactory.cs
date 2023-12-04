@@ -7,10 +7,10 @@
   public interface IQueueReactorFactory : IMessageProcessorRegister
   {
     /// <summary>
-    /// Создает экземпляр <see cref="IQueueReactor"/>
+    ///   Создает экземпляр <see cref="IQueueReactor" />
     /// </summary>
     /// <param name="queueId">Имя очереди</param>
-    /// <returns>Реактор очередей <see cref="IQueueReactor"/></returns>
+    /// <returns>Реактор очередей <see cref="IQueueReactor" /></returns>
     IQueueReactor CreateQueueReactor(string queueId);
   }
 }

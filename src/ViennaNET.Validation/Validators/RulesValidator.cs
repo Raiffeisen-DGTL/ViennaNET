@@ -4,7 +4,7 @@ using ViennaNET.Validation.Rules;
 namespace ViennaNET.Validation.Validators
 {
   /// <summary>
-  /// Статический класс для работы с валидатором
+  ///   Статический класс для работы с валидатором
   /// </summary>
   public static class RulesValidator
   {
@@ -15,20 +15,21 @@ namespace ViennaNET.Validation.Validators
     }
 
     /// <summary>
-    /// Валидирует заданный объект набором правил валидации 
+    ///   Валидирует заданный объект набором правил валидации
     /// </summary>
     /// <typeparam name="T">Тип объекта для валидации</typeparam>
     /// <param name="ruleSet">Набор правил валидации</param>
     /// <param name="instance">Ссылка на объект валидации</param>
     /// <param name="context">Контекст валидации</param>
     /// <returns>Результат валидации</returns>
-    public static ValidationResult Validate<T>(IValidationRuleSet<T> ruleSet, T instance, ValidationContext context = null)
+    public static ValidationResult Validate<T>(IValidationRuleSet<T> ruleSet, T instance,
+      ValidationContext context = null)
     {
       return validator.Validate(ruleSet, instance, context);
     }
 
     /// <summary>
-    /// Валидирует заданный объект несколькими наборами правил валидации 
+    ///   Валидирует заданный объект несколькими наборами правил валидации
     /// </summary>
     /// <typeparam name="T">Тип объекта для валидации</typeparam>
     /// <param name="ruleSets">Коллекция наборов правил валидации</param>
@@ -42,20 +43,21 @@ namespace ViennaNET.Validation.Validators
     }
 
     /// <summary>
-    /// Валидирует заданный объект коллекцией правил валидации 
+    ///   Валидирует заданный объект коллекцией правил валидации
     /// </summary>
     /// <typeparam name="T">Тип объекта для валидации</typeparam>
     /// <param name="rules">Коллекция правил валидации</param>
     /// <param name="instance">Ссылка на объект валидации</param>
     /// <param name="context">Контекст валидации</param>
     /// <returns>Результат валидации</returns>
-    public static ValidationResult Validate<T>(IEnumerable<IRule<T>> rules, T instance, ValidationContext context = null)
+    public static ValidationResult Validate<T>(IEnumerable<IRule<T>> rules, T instance,
+      ValidationContext context = null)
     {
       return validator.Validate(rules, instance, context);
     }
 
     /// <summary>
-    /// Валидирует заданный объект правилом валидации 
+    ///   Валидирует заданный объект правилом валидации
     /// </summary>
     /// <typeparam name="T">Тип объекта для валидации</typeparam>
     /// <param name="rule">Правило валидации</param>

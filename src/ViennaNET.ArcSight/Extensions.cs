@@ -5,7 +5,7 @@ using System.Net.NetworkInformation;
 namespace ViennaNET.ArcSight
 {
   /// <summary>
-  /// Расширение сообщения в ArcSight в стандартном CEF-формате
+  ///   Расширение сообщения в ArcSight в стандартном CEF-формате
   /// </summary>
   public class Extensions
   {

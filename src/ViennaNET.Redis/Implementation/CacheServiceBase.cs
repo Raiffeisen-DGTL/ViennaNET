@@ -24,6 +24,7 @@ namespace ViennaNET.Redis.Implementation
       {
         return;
       }
+
       throw new ArgumentException("Key identifier is empty.", nameof(keyIdentifier));
     }
 
@@ -41,8 +42,10 @@ namespace ViennaNET.Redis.Implementation
         {
           sb.Append(key);
         }
+
         sb.Append(separator);
       }
+
       return sb.ToString().TrimEnd(separator);
     }
   }

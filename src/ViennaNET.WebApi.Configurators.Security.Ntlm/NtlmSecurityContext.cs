@@ -23,10 +23,24 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm
       _permissions = new AsyncLazy<List<string>>(async () => await ReadDataAsync(clientFactory));
     }
 
+    public string UserName { get; }
+    public string UserIp { get; }
+
+    public async Task<bool> HasPermissionsAsync(params string[] permissions)
+    {
+      return (await _permissions).Intersect(permissions)
+        .Any();
+    }
+
+    public async Task<IEnumerable<string>> GetUserPermissionsAsync()
+    {
+      return await _permissions;
+    }
+
     public async Task<bool> IsInRolesAsync(params string[] permissions)
     {
       return (await _permissions).Intersect(permissions)
-                                 .Any();
+        .Any();
     }
 
     public async Task<IEnumerable<string>> GetUserRolesAsync()
@@ -39,7 +53,7 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm
       try
       {
         var client = clientFactory.CreateClient("security")
-                                  .ThrowIfNull("securityRestClient");
+          .ThrowIfNull("securityRestClient");
 
         var response = await client.GetAsync($"api/users/{UserName}/permissions");
 
@@ -52,20 +66,6 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm
         Logger.LogError(ex, $"Ошибка при запросе полномочий пользователя {UserName}");
         return new List<string>(0);
       }
-    }
-
-    public string UserName { get; }
-    public string UserIp { get; }
-
-    public async Task<bool> HasPermissionsAsync(params string[] permissions)
-    {
-      return (await _permissions).Intersect(permissions)
-                                 .Any();
-    }
-
-    public async Task<IEnumerable<string>> GetUserPermissionsAsync()
-    {
-      return await _permissions;
     }
   }
 }

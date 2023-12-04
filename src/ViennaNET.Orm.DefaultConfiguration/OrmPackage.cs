@@ -13,7 +13,7 @@ namespace ViennaNET.Orm.DefaultConfiguration
 {
   /// <inheritdoc />
   /// <summary>
-  /// Пакет SimpleInjector для работы с ORM на основе NHibernate
+  ///   Пакет SimpleInjector для работы с ORM на основе NHibernate
   /// </summary>
   public class OrmPackage : IPackage
   {

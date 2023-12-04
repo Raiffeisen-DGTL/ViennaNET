@@ -5,7 +5,7 @@ namespace ViennaNET.Security.Jwt
   public interface IJwtTokenFactory
   {
     /// <summary>
-    /// Создает новый токен
+    ///   Создает новый токен
     /// </summary>
     /// <param name="userName">Имя пользователя</param>
     /// <param name="permissions">Список доступов</param>

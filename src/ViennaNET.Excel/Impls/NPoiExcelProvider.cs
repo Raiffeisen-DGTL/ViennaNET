@@ -85,6 +85,7 @@ namespace ViennaNET.Excel.Impl
             // ignored
             // do nothing in case of password protected file
           }
+
           file.Seek(0, SeekOrigin.Begin);
         }
 
@@ -101,7 +102,7 @@ namespace ViennaNET.Excel.Impl
     }
 
     /// <summary>
-    /// Читаем либо создаем новый документ
+    ///   Читаем либо создаем новый документ
     /// </summary>
     /// <param name="stream">File Stream</param>
     /// <param name="isXml"></param>
@@ -116,6 +117,7 @@ namespace ViennaNET.Excel.Impl
         {
           return new NPoiExcelFile(stream, _fileUtils, false, fileName);
         }
+
         try
         {
           _processor.RemoveInvalidUrls(stream);
@@ -125,8 +127,10 @@ namespace ViennaNET.Excel.Impl
           // ignored
           // do nothing in case of password protected file
         }
+
         stream.Seek(0, SeekOrigin.Begin);
       }
+
       return new NPoiExcelFile(stream, _fileUtils, isXml, fileName);
     }
 
@@ -136,6 +140,7 @@ namespace ViennaNET.Excel.Impl
       {
         File.Delete(fileName);
       }
+
       using (var stream = File.OpenWrite(fileName))
       {
         ((NPoiExcelFile)excel).Excel.Write(stream);
@@ -150,7 +155,7 @@ namespace ViennaNET.Excel.Impl
       }
 
       return !magicNumber.Where((t, i) => fileContent[i] != t)
-                         .Any();
+        .Any();
     }
 
     private static void CheckFileName(string fileName)

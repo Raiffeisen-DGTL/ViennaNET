@@ -11,12 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ViennaNET.WebApi.Metrics
 {
   /// <summary>
-  /// Конфигуратор для подключения сборщика метрик
+  ///   Конфигуратор для подключения сборщика метрик
   /// </summary>
   internal static class MetricsConfigurator
   {
     /// <summary>
-    /// Конфигурирует подключение метрик
+    ///   Конфигурирует подключение метрик
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
@@ -33,7 +33,7 @@ namespace ViennaNET.WebApi.Metrics
     private static void ConfigureInternal(IServiceCollection services, IConfiguration configuration)
     {
       var config = configuration.GetSection("metrics")
-                                ?.Get<MetricsConfiguration>();
+        ?.Get<MetricsConfiguration>();
 
       if (config is null || !config.Enabled)
       {
@@ -52,25 +52,23 @@ namespace ViennaNET.WebApi.Metrics
     }
 
     /// <summary>
-    /// Переопределяет форматирование метрик роута "/metrics-text" для использования в Prometheus
+    ///   Переопределяет форматирование метрик роута "/metrics-text" для использования в Prometheus
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     private static void ConfigurePrometheusMetrics(IServiceCollection services, IConfiguration configuration)
     {
       var metrics = AppMetrics.CreateDefaultBuilder()
-                              .OutputMetrics.AsPrometheusPlainText()
-                              .Build();
+        .OutputMetrics.AsPrometheusPlainText()
+        .Build();
       services.AddMetrics(metrics);
 
-      var options = new MetricsWebHostOptions
+      var options = new MetricsWebHostOptions();
+      options.EndpointOptions = endpointsOptions =>
       {
-        EndpointOptions = endpointsOptions =>
-        {
-          endpointsOptions.MetricsTextEndpointOutputFormatter = metrics
-                                                                .OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>()
-                                                                .First();
-        }
+        endpointsOptions.MetricsTextEndpointOutputFormatter = metrics
+          .OutputMetricsFormatters.OfType<MetricsPrometheusTextOutputFormatter>()
+          .First();
       };
 
       services.AddMetricsReportingHostedService(options.UnobservedTaskExceptionHandler);
@@ -83,14 +81,14 @@ namespace ViennaNET.WebApi.Metrics
     }
 
     /// <summary>
-    /// Конфигурирование базовых метрик
+    ///   Конфигурирование базовых метрик
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
     private static void ConfigureDefaultMetrics(IServiceCollection services, IConfiguration configuration)
     {
       var metrics = AppMetrics.CreateDefaultBuilder()
-                              .Build();
+        .Build();
       services.AddMetrics(metrics);
 
       services.AddMetricsReportingHostedService();

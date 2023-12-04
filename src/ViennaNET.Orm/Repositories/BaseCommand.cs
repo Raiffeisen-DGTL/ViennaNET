@@ -6,8 +6,8 @@ namespace ViennaNET.Orm.Repositories
   /// <inheritdoc />
   public abstract class BaseCommand : ICommand
   {
+    protected Dictionary<string, TypeWrapper> Parameters = new();
     protected string Sql;
-    protected Dictionary<string, TypeWrapper> Parameters = new Dictionary<string, TypeWrapper>();
 
     /// <inheritdoc />
     IDictionary<string, TypeWrapper> ICommand.Parameters => Parameters;

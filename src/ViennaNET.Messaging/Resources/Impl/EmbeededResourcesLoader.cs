@@ -3,7 +3,7 @@
 namespace ViennaNET.Messaging.Resources.Impl
 {
   /// <summary>
-  /// Получает внедренный ресурс
+  ///   Получает внедренный ресурс
   /// </summary>
   public class EmbeddedResourcesLoader : IResourcesLoader
   {

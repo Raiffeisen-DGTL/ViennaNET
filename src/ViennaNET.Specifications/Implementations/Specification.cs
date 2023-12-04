@@ -5,8 +5,8 @@ using ViennaNET.Specifications.Interfaces;
 namespace ViennaNET.Specifications.Implementations
 {
   /// <summary>
-  /// Базовый класс спецификации. Позволяет преобразовать
-  /// спецификацию в элемент дерева выражений
+  ///   Базовый класс спецификации. Позволяет преобразовать
+  ///   спецификацию в элемент дерева выражений
   /// </summary>
   /// <typeparam name="T">Тип объекта спецификации</typeparam>
   public abstract class Specification<T> : ISpecification<T>
@@ -21,41 +21,41 @@ namespace ViennaNET.Specifications.Implementations
     }
 
     /// <summary>
-    /// Возвращает выражение <see cref="Expression"/> для спецификации
+    ///   Возвращает выражение <see cref="Expression" /> для спецификации
     /// </summary>
-    /// <returns>Выражение <see cref="Expression"/></returns>
+    /// <returns>Выражение <see cref="Expression" /></returns>
     public abstract Expression<Func<T, bool>> ToExpression();
 
     /// <summary>
-    /// Соединяет две спецификации с оператором И
+    ///   Соединяет две спецификации с оператором И
     /// </summary>
     /// <param name="spec1">Ссылка на спецификацию</param>
     /// <param name="spec2">Ссылка на спецификацию</param>
     /// <returns>Объединенная спецификация</returns>
     public static AndSpecification<T> operator &(Specification<T> spec1, Specification<T> spec2)
     {
-      return new AndSpecification<T>(spec1, spec2);
+      return new(spec1, spec2);
     }
 
     /// <summary>
-    /// Соединяет две спецификации с оператором ИЛИ
+    ///   Соединяет две спецификации с оператором ИЛИ
     /// </summary>
     /// <param name="spec1">Ссылка на спецификацию</param>
     /// <param name="spec2">Ссылка на спецификацию</param>
     /// <returns>Объединенная спецификация</returns>
     public static OrSpecification<T> operator |(Specification<T> spec1, Specification<T> spec2)
     {
-      return new OrSpecification<T>(spec1, spec2);
+      return new(spec1, spec2);
     }
 
     /// <summary>
-    /// Применяет к переданной спецификации оператор НЕ
+    ///   Применяет к переданной спецификации оператор НЕ
     /// </summary>
     /// <param name="spec">Ссылка на спецификацию</param>
     /// <returns>Спецификация с применением оператора НЕ</returns>
     public static NotSpecification<T> operator !(Specification<T> spec)
     {
-      return new NotSpecification<T>(spec);
+      return new(spec);
     }
   }
 }

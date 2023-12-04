@@ -3,13 +3,14 @@ using Microsoft.Extensions.Logging;
 
 namespace ViennaNET.Redis.Implementation.Silent
 {
-  /// <inheritdoc cref="ISilentCacheService"/> />
+  /// <inheritdoc cref="ISilentCacheService" />
+  /// />
   public class SilentCacheService : CacheServiceBase, ISilentCacheService
   {
     private readonly ILogger _logger;
 
     /// <summary>
-    /// Создаёт экземпляр класса
+    ///   Создаёт экземпляр класса
     /// </summary>
     /// <param name="redisDatabaseProvider">Провайдер БД</param>
     /// <param name="logger">Интерфейс логгирования</param>
@@ -17,11 +18,6 @@ namespace ViennaNET.Redis.Implementation.Silent
       redisDatabaseProvider)
     {
       _logger = logger;
-    }
-
-    private void LogError(Exception e)
-    {
-      _logger.LogError(e, "Action Redis has been failed.");
     }
 
     /// <inheritdoc />
@@ -78,6 +74,11 @@ namespace ViennaNET.Redis.Implementation.Silent
       {
         LogError(e);
       }
+    }
+
+    private void LogError(Exception e)
+    {
+      _logger.LogError(e, "Action Redis has been failed.");
     }
   }
 }

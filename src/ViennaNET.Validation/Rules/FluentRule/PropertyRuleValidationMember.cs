@@ -10,7 +10,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
 {
   internal class PropertyRuleValidationMember<T, TProperty> : IRuleValidationMember<T>
   {
-    private readonly object _criteriaLocker = new object();
+    private readonly object _criteriaLocker = new();
     private readonly Func<T, TProperty> _propertyGetter;
     private readonly List<IRuleValidatorBase> _validators;
 
@@ -61,15 +61,6 @@ namespace ViennaNET.Validation.Rules.FluentRule
       return result;
     }
 
-    private TProperty GetProperty(T instance)
-    {
-      lock (_propertyGetter)
-      {
-        var val = _propertyGetter.Invoke(instance);
-        return val;
-      }
-    }
-
     public async Task<IEnumerable<IRuleMessage>> ValidateAsync(T instance, ValidationContext context)
     {
       var result = new List<IRuleMessage>();
@@ -118,6 +109,15 @@ namespace ViennaNET.Validation.Rules.FluentRule
     public void AddValidator(IRuleValidatorBase validator)
     {
       _validators.Add(validator);
+    }
+
+    private TProperty GetProperty(T instance)
+    {
+      lock (_propertyGetter)
+      {
+        var val = _propertyGetter.Invoke(instance);
+        return val;
+      }
     }
   }
 }

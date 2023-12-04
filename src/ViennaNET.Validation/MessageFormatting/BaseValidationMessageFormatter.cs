@@ -16,6 +16,7 @@ namespace ViennaNET.Validation.MessageFormatting
       {
         rule.Format(result);
       }
+
       return result;
     }
 

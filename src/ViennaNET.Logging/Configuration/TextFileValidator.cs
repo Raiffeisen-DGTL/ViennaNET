@@ -27,19 +27,21 @@ namespace ViennaNET.Logging.Configuration
 
     private void VerifyFileNameAndFilePatternParameters(LogListener listener)
     {
-      var fileName = listener.Params.ContainsKey(TextFileConstants.FileName) ? listener.Params[TextFileConstants.FileName] : string.Empty;
+      var fileName = listener.Params.ContainsKey(TextFileConstants.FileName)
+        ? listener.Params[TextFileConstants.FileName]
+        : string.Empty;
       var filePatternName = listener.Params.ContainsKey(TextFileConstants.FilePatternName)
-                                 ? listener.Params[TextFileConstants.FilePatternName] : string.Empty;
+        ? listener.Params[TextFileConstants.FilePatternName]
+        : string.Empty;
       if (string.IsNullOrEmpty(fileName.Trim()) &&
-        string.IsNullOrEmpty(filePatternName.Trim()))
+          string.IsNullOrEmpty(filePatternName.Trim()))
       {
-
         throw new InvalidOperationException("parameters fileName and filePatternName are empty");
       }
-      if (!string.IsNullOrEmpty(fileName.Trim()) &&
-        !string.IsNullOrEmpty(filePatternName.Trim()))
-      {
 
+      if (!string.IsNullOrEmpty(fileName.Trim()) &&
+          !string.IsNullOrEmpty(filePatternName.Trim()))
+      {
         throw new InvalidOperationException("one of the parameters fileName and filePatternName must be empty");
       }
     }
@@ -89,6 +91,5 @@ namespace ViennaNET.Logging.Configuration
         throw new InvalidOperationException(string.Format("{0} parameter must be true of false", name));
       }
     }
-
   }
 }

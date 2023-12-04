@@ -23,7 +23,7 @@ namespace ViennaNET.TestUtils.Orm
     /// <returns></returns>
     public static CustomQueryExecutorStub<T> Create<T>(IEnumerable<T> items) where T : class
     {
-      return new CustomQueryExecutorStub<T>(items);
+      return new(items);
     }
   }
 

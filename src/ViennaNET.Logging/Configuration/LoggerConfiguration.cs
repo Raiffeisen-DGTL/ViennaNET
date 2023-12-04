@@ -6,11 +6,17 @@ using ViennaNET.Logging.Contracts;
 namespace ViennaNET.Logging.Configuration
 {
   /// <summary>
-  /// logger configuration
+  ///   logger configuration
   /// </summary>
   [Serializable]
   public class LoggerConfiguration
   {
+    #region default values
+
+    private const bool EnabledDefault = true;
+
+    #endregion
+
     public LoggerConfiguration()
     {
       Enabled = EnabledDefault;
@@ -32,14 +38,8 @@ namespace ViennaNET.Logging.Configuration
       {
         return (IListener)Activator.CreateInstance(customTypeDescr.Type);
       }
+
       return null;
     }
-
-
-    #region default values 
-
-    private const bool EnabledDefault = true;
-
-    #endregion
   }
 }

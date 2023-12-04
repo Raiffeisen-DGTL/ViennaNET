@@ -5,7 +5,7 @@ using ViennaNET.Validation.Rules.FluentRule.RuleValidators;
 namespace ViennaNET.Validation.Rules.FluentRule
 {
   /// <summary>
-  /// Строитель валидаторов правила с текучим интерфейсом
+  ///   Строитель валидаторов правила с текучим интерфейсом
   /// </summary>
   /// <typeparam name="T">Тип объекта для валидации</typeparam>
   /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -14,7 +14,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     private readonly IRuleValidationMember<T> _member;
 
     /// <summary>
-    /// Инициализирует экземпляр ссылкой на участника цепи валидаторов правила с текучим интерфейсом
+    ///   Инициализирует экземпляр ссылкой на участника цепи валидаторов правила с текучим интерфейсом
     /// </summary>
     /// <param name="member">Участник цепи валидаторов правила с текучим интерфейсом</param>
     public RuleValidationMemberBuilder(IRuleValidationMember<T> member)
@@ -26,7 +26,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     internal override IRuleValidatorBase CurrentValidator { get; set; }
 
     /// <summary>
-    /// Устанавливает валидатор правила с текучим интерфейсом
+    ///   Устанавливает валидатор правила с текучим интерфейсом
     /// </summary>
     /// <param name="validator">Валидатор правила с текучим интерфейсом</param>
     /// <returns>Ссылка на строитель</returns>
@@ -43,7 +43,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Устанавливает условие выполнение валидатора
+    ///   Устанавливает условие выполнение валидатора
     /// </summary>
     /// <param name="condition">Условие выполнения валидатора</param>
     /// <returns>Ссылка на строитель</returns>
@@ -59,7 +59,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Устанавливает условие выполнение валидатора, возвращающее задачу
+    ///   Устанавливает условие выполнение валидатора, возвращающее задачу
     /// </summary>
     /// <param name="condition">Условие выполнения валидатора</param>
     /// <returns>Ссылка на строитель</returns>

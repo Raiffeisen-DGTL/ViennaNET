@@ -9,7 +9,7 @@ namespace ViennaNET.Redis.DefaultConfiguration
 {
   /// <inheritdoc />
   /// <summary>
-  /// Пакет SimpleInjector для работы с Redis
+  ///   Пакет SimpleInjector для работы с Redis
   /// </summary>
   public class RedisPackage : IPackage
   {

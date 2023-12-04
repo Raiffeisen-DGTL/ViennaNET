@@ -11,7 +11,7 @@ namespace ViennaNET.Orm.Repositories
     protected string Sql;
 
     /// <summary>
-    /// Параметры для записи в формируемый SQL-запрос
+    ///   Параметры для записи в формируемый SQL-запрос
     /// </summary>
     public IDictionary<string, object> Parameters { get; set; }
 

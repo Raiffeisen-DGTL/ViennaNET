@@ -4,7 +4,7 @@ using ViennaNET.Utils;
 namespace ViennaNET.CallContext
 {
   /// <summary>
-  /// Класс для извлечения актуального контекста вызова
+  ///   Класс для извлечения актуального контекста вызова
   /// </summary>
   public class CallContextFactory : ICallContextFactory
   {
@@ -16,7 +16,7 @@ namespace ViennaNET.CallContext
     }
 
     /// <summary>
-    /// Возвращает актуальный контекст вызова
+    ///   Возвращает актуальный контекст вызова
     /// </summary>
     /// <returns></returns>
     public ICallContext Create()

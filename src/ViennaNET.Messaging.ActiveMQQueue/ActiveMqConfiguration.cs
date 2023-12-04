@@ -3,9 +3,8 @@
 namespace ViennaNET.Messaging.ActiveMQQueue
 {
   /// <summary>
-  /// Конфигурация для работы с очередями ActiveMQ
+  ///   Конфигурация для работы с очередями ActiveMQ
   /// </summary>
   public class ActiveMqConfiguration : ConfigurationsListBase<ActiveMqQueueConfiguration>
-  {
-  }
+  {}
 }

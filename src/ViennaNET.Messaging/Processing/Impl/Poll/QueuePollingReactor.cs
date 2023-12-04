@@ -35,13 +35,13 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       IHealthCheckingService healthCheckingService,
       IMessagingCallContextAccessor messagingCallContextAccessor,
       ILogger<QueuePollingReactor> logger) : base(messageAdapter,
-                                                  messageProcessors,
-                                                  asyncMessageProcessors,
-                                                  subscribeInterval,
-                                                  serviceHealthDependent,
-                                                  healthCheckingService,
-                                                  messagingCallContextAccessor,
-                                                  logger)
+      messageProcessors,
+      asyncMessageProcessors,
+      subscribeInterval,
+      serviceHealthDependent,
+      healthCheckingService,
+      messagingCallContextAccessor,
+      logger)
     {
       _logger = logger;
     }

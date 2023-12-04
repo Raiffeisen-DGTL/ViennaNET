@@ -9,24 +9,10 @@ namespace ViennaNET.Security.Jwt.Impl
     private const string defaultAudience = "TokenAudience";
     private const string defaultIssuer = "TokenIssuer";
     private const string defaultSigningAlgorithm = SecurityAlgorithms.HmacSha256;
-
-    private readonly SigningSymmetricKey _key;
     private readonly string _audience;
     private readonly string _issuer;
 
-    public string Issuer()
-    {
-      return string.IsNullOrWhiteSpace(_issuer)
-? defaultIssuer
-: _issuer;
-    }
-
-    public string Audience()
-    {
-      return string.IsNullOrWhiteSpace(_audience)
-? defaultAudience
-: _audience;
-    }
+    private readonly SigningSymmetricKey _key;
 
     public SecurityKeysContainer() : this(defaultEnvironmentVariable, defaultAudience, defaultIssuer,
       defaultSigningAlgorithm)
@@ -45,6 +31,25 @@ namespace ViennaNET.Security.Jwt.Impl
         : signingAlgorithm;
 
       _key = new SigningSymmetricKey(signingSecurityKey, signingAlgorithm);
+    }
+
+    public string Issuer()
+    {
+      return string.IsNullOrWhiteSpace(_issuer)
+        ? defaultIssuer
+        : _issuer;
+    }
+
+    public string Audience()
+    {
+      return string.IsNullOrWhiteSpace(_audience)
+        ? defaultAudience
+        : _audience;
+    }
+
+    public IJwtSigningEncodingKey GetEncodingKey()
+    {
+      return _key;
     }
 
     private string GetSigningSecurityKey(string keyEnvVariable)
@@ -70,11 +75,6 @@ namespace ViennaNET.Security.Jwt.Impl
     }
 
     public IJwtSigningDecodingKey GetDecodingKey()
-    {
-      return _key;
-    }
-
-    public IJwtSigningEncodingKey GetEncodingKey()
     {
       return _key;
     }

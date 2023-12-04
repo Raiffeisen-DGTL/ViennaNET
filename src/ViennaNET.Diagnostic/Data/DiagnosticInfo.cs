@@ -15,7 +15,8 @@
     /// <param name="error">Ошибка диагностики</param>
     /// <param name="isSkipResult">Пропустить результат диагностики</param>
     public DiagnosticInfo(
-      string name, string url, DiagnosticStatus status = DiagnosticStatus.Ok, string version = "", string error = "", bool isSkipResult = false)
+      string name, string url, DiagnosticStatus status = DiagnosticStatus.Ok, string version = "", string error = "",
+      bool isSkipResult = false)
     {
       Name = name;
       Url = url;
@@ -51,7 +52,7 @@
     public string Version { get; }
 
     /// <summary>
-    /// Пропустить результат диагностики 
+    ///   Пропустить результат диагностики
     /// </summary>
     public bool IsSkipResult { get; }
   }

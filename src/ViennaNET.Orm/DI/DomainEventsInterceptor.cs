@@ -7,8 +7,8 @@ namespace ViennaNET.Orm.DI
 {
   /// <inheritdoc />
   /// <summary>
-  /// Позволяет при загрузке и сохранении сущности через NHibernate
-  /// задать ей коллектор для временного хранения созданных доменных событий
+  ///   Позволяет при загрузке и сохранении сущности через NHibernate
+  ///   задать ей коллектор для временного хранения созданных доменных событий
   /// </summary>
   public class DomainEventsInterceptor : EmptyInterceptor
   {
@@ -20,7 +20,7 @@ namespace ViennaNET.Orm.DI
     }
 
     /// <summary>
-    /// Задает коллектор при загрузке сущности
+    ///   Задает коллектор при загрузке сущности
     /// </summary>
     public override bool OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types)
     {
@@ -28,12 +28,13 @@ namespace ViennaNET.Orm.DI
       {
         eventSupportable.SetCollector(_factory.Create());
       }
+
       return false;
     }
 
     /// <summary>
-    /// Задает коллектор при сохранении сущности. Требуется 
-    /// для вызова событий после сохранения вновь созданной сущности
+    ///   Задает коллектор при сохранении сущности. Требуется
+    ///   для вызова событий после сохранения вновь созданной сущности
     /// </summary>
     public override bool OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types)
     {
@@ -41,6 +42,7 @@ namespace ViennaNET.Orm.DI
       {
         eventSupportable.SetCollector(_factory.Create());
       }
+
       return false;
     }
   }

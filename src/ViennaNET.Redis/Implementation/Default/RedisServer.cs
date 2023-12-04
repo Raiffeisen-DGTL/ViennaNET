@@ -11,9 +11,9 @@ namespace ViennaNET.Redis.Implementation.Default
 {
   internal class RedisServer : IRedisServer
   {
+    private readonly ILogger _logger;
     private readonly string _prefixKey;
     private readonly IServer _server;
-    private readonly ILogger _logger;
 
     public RedisServer(IServer server, ILogger<RedisServer> logger, string prefixKey)
     {
@@ -32,17 +32,12 @@ namespace ViennaNET.Redis.Implementation.Default
 
     public bool IsSlave => _server.IsSlave;
 
-    private void LogDebug(string action, string arguments)
-    {
-      _logger.LogDebug("Action Redis: {action}. Arguments: {arguments}.", action, arguments);
-    }
-
     public IEnumerable<string> Keys(
       string pattern, int database = 0, int pageSize = 10, CommandFlags flags = default)
     {
       LogDebug("Keys", $"Database = {database}; Pattern = {pattern}; Page size = {pageSize}; Flags = {flags}");
       return _server.Keys(database, $"{_prefixKey}{pattern}", pageSize, flags)
-                    .Select(v => ((string)v)?.Remove(0, _prefixKey.Length));
+        .Select(v => ((string)v)?.Remove(0, _prefixKey.Length));
     }
 
     public void Save(SaveType saveType = SaveType.BackgroundSave, CommandFlags flags = default)
@@ -64,7 +59,8 @@ namespace ViennaNET.Redis.Implementation.Default
       return _server.ConfigGet(pattern, flags);
     }
 
-    public async Task<KeyValuePair<string, string>[]> ConfigGetAsync(string pattern = default, CommandFlags flags = default)
+    public async Task<KeyValuePair<string, string>[]> ConfigGetAsync(string pattern = default,
+      CommandFlags flags = default)
     {
       var result = _server.ConfigGetAsync(pattern, flags);
       LogDebug("ConfigGetAsync", $"Pattern = {pattern}; Flags = {flags}");
@@ -92,7 +88,8 @@ namespace ViennaNET.Redis.Implementation.Default
       return _server.Info(section, flags);
     }
 
-    public async Task<IGrouping<string, KeyValuePair<string, string>>[]> InfoAsync(string section, CommandFlags flags = default)
+    public async Task<IGrouping<string, KeyValuePair<string, string>>[]> InfoAsync(string section,
+      CommandFlags flags = default)
     {
       var result = _server.InfoAsync(section, flags);
       LogDebug("InfoAsync", $"Section = {section}; Flags = {flags}");
@@ -149,6 +146,11 @@ namespace ViennaNET.Redis.Implementation.Default
       var result = _server.FlushDatabaseAsync(database, flags);
       LogDebug("FlushAllDatabasesAsync", $"Database = {database}; Flags = {flags}");
       await result.ConfigureAwait(false);
+    }
+
+    private void LogDebug(string action, string arguments)
+    {
+      _logger.LogDebug("Action Redis: {action}. Arguments: {arguments}.", action, arguments);
     }
 
     private static int GetValueLength(string value)

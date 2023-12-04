@@ -6,7 +6,7 @@ namespace ViennaNET.CallContext
   {
     public string RequestId =>
       Guid.NewGuid()
-          .ToString("N");
+        .ToString("N");
 
     public string UserId => Environment.UserName;
 

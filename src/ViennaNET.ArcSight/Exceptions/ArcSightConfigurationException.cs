@@ -3,7 +3,7 @@
 namespace ViennaNET.ArcSight.Exceptions
 {
   /// <summary>
-  /// Исключение, возникающее при наличии ошибки в конфигурации
+  ///   Исключение, возникающее при наличии ошибки в конфигурации
   /// </summary>
   public class ArcSightConfigurationException : Exception
   {

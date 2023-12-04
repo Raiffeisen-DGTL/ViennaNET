@@ -6,30 +6,31 @@ namespace ViennaNET.Orm.Application
 {
   /// <inheritdoc />
   /// <summary>
-  /// Интерфейс фабричного сервиса для инфраструктурных операций с БД,
-  /// недоступных в доменной модели
+  ///   Интерфейс фабричного сервиса для инфраструктурных операций с БД,
+  ///   недоступных в доменной модели
   /// </summary>
   public interface IEntityFactoryService : IEntityRepositoryFactory
   {
     /// <summary>
-    /// Создает единицу работы
+    ///   Создает единицу работы
     /// </summary>
     /// <param name="isolationLevel">Уровень изоляции транзакции</param>
     /// <param name="autoControl">Признак изменения состояния уже загруженных сущностей</param>
     /// <param name="closeSessions">Признак закрытия сессий при откате транзакции</param>
     /// <returns>Единица работы</returns>
-    IUnitOfWork Create(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, bool autoControl = true, bool closeSessions = false);
+    IUnitOfWork Create(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, bool autoControl = true,
+      bool closeSessions = false);
 
     /// <summary>
-    /// Создает пользовательский контекст сессии. Необходимо использовать
-    /// при работе с БД в потоках и задачах, порожденных пользователем
-    /// и не относящихся к веб-вызовам
+    ///   Создает пользовательский контекст сессии. Необходимо использовать
+    ///   при работе с БД в потоках и задачах, порожденных пользователем
+    ///   и не относящихся к веб-вызовам
     /// </summary>
     /// <returns>Контекст сессии</returns>
     IDisposable GetScopedSession();
 
     /// <summary>
-    /// Получает результат выполнения именованного запроса
+    ///   Получает результат выполнения именованного запроса
     /// </summary>
     /// <typeparam name="T">Тип данных запроса</typeparam>
     /// <param name="namedQuery">Имя запроса</param>
@@ -37,21 +38,21 @@ namespace ViennaNET.Orm.Application
     T GetByNameSingle<T>(string namedQuery);
 
     /// <summary>
-    /// Получает результат выполнения именованного запроса
+    ///   Получает результат выполнения именованного запроса
     /// </summary>
     /// <param name="namedQuery">Имя запроса</param>
     /// <returns>Результат запроса</returns>
     object GetByNameSingle(string namedQuery);
 
     /// <summary>
-    /// Создает исполнитель команд 
+    ///   Создает исполнитель команд
     /// </summary>
-    /// <typeparam name="T">Тип команды<see cref="ICommand"/></typeparam>
+    /// <typeparam name="T">Тип команды<see cref="ICommand" /></typeparam>
     /// <returns>Экземпляр исполнителя команд</returns>
     ICommandExecutor<T> CreateCommandExecutor<T>() where T : class, ICommand;
 
     /// <summary>
-    /// Создает исполнитель запросов
+    ///   Создает исполнитель запросов
     /// </summary>
     /// <typeparam name="T">Тип запроса</typeparam>
     /// <returns>Экземпляр исполнителя запросов</returns>

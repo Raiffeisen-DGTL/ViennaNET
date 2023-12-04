@@ -74,16 +74,17 @@ namespace ViennaNET.Excel.Impl
       int fromRow, int fromColumn, int startRow, int startColumn, int endRow, int endColumn, string dataFormat = null)
     {
       var cellStyle = _sheet.GetRow(fromRow)
-                            .GetCell(fromColumn)
-                            .CellStyle;
+        .GetCell(fromColumn)
+        .CellStyle;
       var newStyle = _sheet.Workbook.CreateCellStyle();
       newStyle.CloneStyleFrom(cellStyle);
       if (!string.IsNullOrEmpty(dataFormat))
       {
         var format = ExcelFile.Excel.CreateDataFormat()
-                              .GetFormat(dataFormat);
+          .GetFormat(dataFormat);
         newStyle.DataFormat = format;
       }
+
       for (var r = startRow; r < endRow + 1; r++)
       {
         for (var c = startColumn; c < endColumn + 1; c++)
@@ -158,20 +159,22 @@ namespace ViennaNET.Excel.Impl
       {
         throw new InvalidOperationException("CreateRange - startRow can not be greater to endRow");
       }
+
       var namedRange = GetName(name);
       var forumla = new StringBuilder();
       forumla.Append(Name)
-             .Append("!$")
-             .Append(CellReference.ConvertNumToColString(cellIndex))
-             .Append("$")
-             .Append(startRow + 1);
+        .Append("!$")
+        .Append(CellReference.ConvertNumToColString(cellIndex))
+        .Append("$")
+        .Append(startRow + 1);
       if (endRow > startRow)
       {
         forumla.Append(":$")
-               .Append(CellReference.ConvertNumToColString(cellIndex))
-               .Append("$")
-               .Append(endRow + 1);
+          .Append(CellReference.ConvertNumToColString(cellIndex))
+          .Append("$")
+          .Append(endRow + 1);
       }
+
       namedRange.RefersToFormula = forumla.ToString();
     }
 
@@ -181,32 +184,34 @@ namespace ViennaNET.Excel.Impl
       {
         throw new InvalidOperationException("CreateRange - startRow can not be greater to endRow");
       }
+
       var namedRange = GetName(name);
       var forumla = new StringBuilder();
       forumla.Append(Name)
-             .Append("!$")
-             .Append(CellReference.ConvertNumToColString(startCell))
-             .Append("$")
-             .Append(startRow + 1)
-             .Append(":$")
-             .Append(CellReference.ConvertNumToColString(endCell))
-             .Append("$")
-             .Append(endRow + 1);
+        .Append("!$")
+        .Append(CellReference.ConvertNumToColString(startCell))
+        .Append("$")
+        .Append(startRow + 1)
+        .Append(":$")
+        .Append(CellReference.ConvertNumToColString(endCell))
+        .Append("$")
+        .Append(endRow + 1);
       namedRange.RefersToFormula = forumla.ToString();
     }
 
-    public void CreateHierarchicalRange(string mainName, string tableName, string newName, int rowIndex, int cellIndex, string sheetName)
+    public void CreateHierarchicalRange(string mainName, string tableName, string newName, int rowIndex, int cellIndex,
+      string sheetName)
     {
       var namedRange = GetName(newName);
       var forumla = new StringBuilder();
       forumla.Append("INDEX(")
-             .Append(tableName)
-             .Append(", MATCH(")
-             .Append(sheetName)
-             .Append("!XFD1")
-             .Append(",")
-             .Append(mainName)
-             .Append(",0),0)");
+        .Append(tableName)
+        .Append(", MATCH(")
+        .Append(sheetName)
+        .Append("!XFD1")
+        .Append(",")
+        .Append(mainName)
+        .Append(",0),0)");
       namedRange.RefersToFormula = forumla.ToString();
     }
 
@@ -246,6 +251,7 @@ namespace ViennaNET.Excel.Impl
       {
         return ExcelFile.Workbook.GetNameAt(index);
       }
+
       var namedRange = ExcelFile.Workbook.CreateName();
       namedRange.NameName = name;
       return namedRange;

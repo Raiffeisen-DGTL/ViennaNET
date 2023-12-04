@@ -17,8 +17,8 @@ namespace ViennaNET.Messaging.Tools
     public XmlResourcesMessageSerializer(IResourcesProvider resourcesProvider)
     {
       xsd = resourcesProvider.ThrowIfNull(nameof(resourcesProvider))
-                             .GetResourceStream<T>()
-                             .ToList();
+        .GetResourceStream<T>()
+        .ToList();
     }
   }
 }

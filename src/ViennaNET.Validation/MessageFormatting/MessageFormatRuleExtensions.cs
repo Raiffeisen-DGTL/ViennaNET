@@ -3,12 +3,12 @@
 namespace ViennaNET.Validation.MessageFormatting
 {
   /// <summary>
-  /// Расширения для правила форматирования
+  ///   Расширения для правила форматирования
   /// </summary>
   public static class MessageFormatRuleExtensions
   {
     /// <summary>
-    /// Устанавливает идентификатор сообщения правила для форматирования
+    ///   Устанавливает идентификатор сообщения правила для форматирования
     /// </summary>
     /// <param name="rule">Ссылка на правило форматирования</param>
     /// <param name="identity">Ссылка на идентификатор сообщения</param>
@@ -20,7 +20,7 @@ namespace ViennaNET.Validation.MessageFormatting
     }
 
     /// <summary>
-    /// Устанавливает сообщение для замены существующего
+    ///   Устанавливает сообщение для замены существующего
     /// </summary>
     /// <param name="rule">Ссылка на правило форматирования</param>
     /// <param name="message">Сообщение для замены</param>

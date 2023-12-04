@@ -13,7 +13,7 @@ namespace ViennaNET.Messaging.Configuration
     /// <summary>
     ///   Коллекция конфигураций очередей <see cref="QueueConfigurationBase" />
     /// </summary>
-    public List<T> Queues { get; set; } = new List<T>();
+    public List<T> Queues { get; set; } = new();
 
     /// <summary>
     ///   Возвращает конфигурацию очереди по переданному идентификатору
@@ -29,7 +29,8 @@ namespace ViennaNET.Messaging.Configuration
       }
       catch (Exception e)
       {
-        throw new MessagingConfigurationException(e, $"There are too many configuration with id '{queueId}' in configuration file");
+        throw new MessagingConfigurationException(e,
+          $"There are too many configuration with id '{queueId}' in configuration file");
       }
 
       return queueConfiguration;

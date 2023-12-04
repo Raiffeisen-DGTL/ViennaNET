@@ -3,37 +3,37 @@
 namespace ViennaNET.Orm.Application
 {
   /// <summary>
-  /// Интерфейс для интеграционных событий
+  ///   Интерфейс для интеграционных событий
   /// </summary>
   public interface IIntegrationEvent
   {
     /// <summary>
-    /// Идентификатор события
+    ///   Идентификатор события
     /// </summary>
     int Id { get; }
 
     /// <summary>
-    /// Идентификатор типа события
+    ///   Идентификатор типа события
     /// </summary>
     int Type { get; }
 
     /// <summary>
-    /// Дата стоздания
+    ///   Дата стоздания
     /// </summary>
     DateTime Timestamp { get; }
 
     /// <summary>
-    /// Инициатор события
+    ///   Инициатор события
     /// </summary>
     string Initiator { get; }
 
     /// <summary>
-    /// Сериализованное тело события
+    ///   Сериализованное тело события
     /// </summary>
     string Body { get; }
 
     /// <summary>
-    /// Признак для отправки события в очередь при сохранении
+    ///   Признак для отправки события в очередь при сохранении
     /// </summary>
     bool IsSendable { get; }
   }

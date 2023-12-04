@@ -6,32 +6,32 @@ namespace ViennaNET.Messaging.Context
 {
   public class MessagingContext : ICallContext
   {
+    protected MessagingContext() { }
+
     /// <summary>
-    /// Идентификатор запроса
+    ///   Идентификатор запроса
     /// </summary>
     public string RequestId { get; private set; }
 
     /// <summary>
-    /// Идентификатор пользователя
+    ///   Идентификатор пользователя
     /// </summary>
     public string UserId { get; private set; }
 
     /// <summary>
-    /// Домен пользователя
+    ///   Домен пользователя
     /// </summary>
     public string UserDomain { get; private set; }
 
     /// <summary>
-    /// IP-адрес создателя первого запроса в цепочке
+    ///   IP-адрес создателя первого запроса в цепочке
     /// </summary>
     public string RequestCallerIp { get; private set; }
 
     /// <summary>
-    /// Авторизационные данные создателя первого запроса в цепочке
+    ///   Авторизационные данные создателя первого запроса в цепочке
     /// </summary>
     public string AuthorizeInfo { get; private set; }
-
-    protected MessagingContext() { }
 
     public static MessagingContext Create(BaseMessage message)
     {
@@ -43,14 +43,14 @@ namespace ViennaNET.Messaging.Context
 
       var reqId = string.IsNullOrWhiteSpace(requestId as string)
         ? Guid.NewGuid()
-              .ToString("N")
+          .ToString("N")
         : (string)requestId;
 
       var usr = string.IsNullOrWhiteSpace(userId as string)
         ? Environment.UserName
         : (string)userId;
 
-      return new MessagingContext()
+      return new MessagingContext
       {
         RequestId = reqId,
         UserId = usr,

@@ -13,7 +13,8 @@ namespace ViennaNET.Excel.Contracts
     {
     }
 
-    public BadExcelFormatExeption(Exception innerException, string message, params object[] args) : base(string.Format(message, args), innerException)
+    public BadExcelFormatExeption(Exception innerException, string message, params object[] args) : base(
+      string.Format(message, args), innerException)
     {
     }
 

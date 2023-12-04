@@ -1,7 +1,7 @@
 ﻿namespace ViennaNET.Logging
 {
   /// <summary>
-  /// loging levels enum
+  ///   loging levels enum
   /// </summary>
   public enum LogLevel : byte
   {

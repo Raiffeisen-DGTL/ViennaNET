@@ -6,18 +6,18 @@ namespace ViennaNET.FileUtils.Implementations
 {
   public class FileUtilsImpl : IFileUtils
   {
+    public Stream GetStreamFromFile(string fileName)
+    {
+      var bytes = ReadAllBytesFromFile(fileName);
+      return GetStreamFromBytes(bytes);
+    }
+
     private Stream GetStreamFromBytes(byte[] bytes)
     {
       var stream = new MemoryStream();
       stream.Write(bytes, 0, bytes.Length);
       stream.Seek(0, SeekOrigin.Begin);
       return stream;
-    }
-
-    public Stream GetStreamFromFile(string fileName)
-    {
-      var bytes = ReadAllBytesFromFile(fileName);
-      return GetStreamFromBytes(bytes);
     }
 
     private byte[] ReadAllBytesFromFile(string fileName)
@@ -29,6 +29,7 @@ namespace ViennaNET.FileUtils.Implementations
         {
           throw new InvalidOperationException("File size is too big");
         }
+
         var count = (int)length;
         var buffer = new byte[count];
         var offset = 0;
@@ -39,9 +40,11 @@ namespace ViennaNET.FileUtils.Implementations
           {
             throw new InvalidOperationException("Unexpected end of file");
           }
+
           offset += num;
           count -= num;
         }
+
         return buffer;
       }
     }

@@ -10,11 +10,13 @@ using ViennaNET.Utils;
 namespace ViennaNET.ArcSight
 {
   /// <summary>
-  /// Сериализатор для преобразования <see cref="CefMessage"/> в <see cref="SyslogMessage"/>/>
+  ///   Сериализатор для преобразования <see cref="CefMessage" /> в <see cref="SyslogMessage" />/>
   /// </summary>
   public class CefMessageSerializer : ISyslogMessageSerializer
   {
     private static readonly Dictionary<string, string> cefKeys;
+
+    private readonly ISyslogMessageSerializer _syslogMessageSerializer;
 
     static CefMessageSerializer()
     {
@@ -151,10 +153,8 @@ namespace ViennaNET.ArcSight
       };
     }
 
-    private readonly ISyslogMessageSerializer _syslogMessageSerializer;
-
     /// <summary>
-    /// Contructor
+    ///   Contructor
     /// </summary>
     /// <param name="syslogMessageSerializer">ISyslogMessageSerializer interface</param>
     public CefMessageSerializer(ISyslogMessageSerializer syslogMessageSerializer)
@@ -163,29 +163,39 @@ namespace ViennaNET.ArcSight
     }
 
     /// <summary>
-    /// Сериализует сообщение из <see cref="CefMessage"/> в <see cref="SyslogMessage"/> 
+    ///   Сериализует сообщение в формате Syslog в поток
+    /// </summary>
+    /// <param name="message">Сообщение в формате Syslog</param>
+    /// <param name="stream">Поток для помещения сериализованного сообщения</param>
+    public void Serialize(SyslogMessage message, Stream stream)
+    {
+      _syslogMessageSerializer.Serialize(message, stream);
+    }
+
+    /// <summary>
+    ///   Сериализует сообщение из <see cref="CefMessage" /> в <see cref="SyslogMessage" />
     /// </summary>
     /// <param name="message">Сообщение для сериализации</param>
     /// <returns>Сообщение в формате библиотеки Syslog</returns>
     public SyslogMessage Serialize(CefMessage message)
     {
       var msg = string.Join("|",
-                            message.Version,
-                            CefEncoder.EncodeHeader(message.DeviceVendor),
-                            CefEncoder.EncodeHeader(message.DeviceProduct),
-                            CefEncoder.EncodeHeader(message.DeviceVersion),
-                            message.DeviceEventClassId,
-                            CefEncoder.EncodeHeader(message.Name),
-                            (int)message.Severity,
-                            Serialize(message.Extensions));
+        message.Version,
+        CefEncoder.EncodeHeader(message.DeviceVendor),
+        CefEncoder.EncodeHeader(message.DeviceProduct),
+        CefEncoder.EncodeHeader(message.DeviceVersion),
+        message.DeviceEventClassId,
+        CefEncoder.EncodeHeader(message.Name),
+        (int)message.Severity,
+        Serialize(message.Extensions));
 
       return new SyslogMessage(
-                               message.Extensions.StartTime,
-                               Facility.UserLevelMessages,
-                               message.Severity.ToSyslogSeverity(),
-                               message.HostName,
-                               "CEF",
-                               msg);
+        message.Extensions.StartTime,
+        Facility.UserLevelMessages,
+        message.Severity.ToSyslogSeverity(),
+        message.HostName,
+        "CEF",
+        msg);
     }
 
     private static string Serialize(Extensions extensions)
@@ -195,21 +205,29 @@ namespace ViennaNET.ArcSight
       result.Append(Serialize(nameof(extensions.DeviceAction), extensions.DeviceAction));
       result.Append(Serialize(nameof(extensions.ApplicationProtocol), extensions.ApplicationProtocol));
       result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address1), extensions.DeviceCustomIPv6Address1));
-      result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address1Label), extensions.DeviceCustomIPv6Address1Label));
+      result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address1Label),
+        extensions.DeviceCustomIPv6Address1Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address2), extensions.DeviceCustomIPv6Address2));
-      result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address2Label), extensions.DeviceCustomIPv6Address2Label));
+      result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address2Label),
+        extensions.DeviceCustomIPv6Address2Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address3), extensions.DeviceCustomIPv6Address3));
-      result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address3Label), extensions.DeviceCustomIPv6Address3Label));
+      result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address3Label),
+        extensions.DeviceCustomIPv6Address3Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address4), extensions.DeviceCustomIPv6Address4));
-      result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address4Label), extensions.DeviceCustomIPv6Address4Label));
+      result.Append(Serialize(nameof(extensions.DeviceCustomIPv6Address4Label),
+        extensions.DeviceCustomIPv6Address4Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint1), extensions.DeviceCustomFloatingPoint1));
-      result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint1Label), extensions.DeviceCustomFloatingPoint1Label));
+      result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint1Label),
+        extensions.DeviceCustomFloatingPoint1Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint2), extensions.DeviceCustomFloatingPoint2));
-      result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint2Label), extensions.DeviceCustomFloatingPoint2Label));
+      result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint2Label),
+        extensions.DeviceCustomFloatingPoint2Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint3), extensions.DeviceCustomFloatingPoint3));
-      result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint3Label), extensions.DeviceCustomFloatingPoint3Label));
+      result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint3Label),
+        extensions.DeviceCustomFloatingPoint3Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint4), extensions.DeviceCustomFloatingPoint4));
-      result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint4Label), extensions.DeviceCustomFloatingPoint4Label));
+      result.Append(Serialize(nameof(extensions.DeviceCustomFloatingPoint4Label),
+        extensions.DeviceCustomFloatingPoint4Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomNumber1), extensions.DeviceCustomNumber1));
       result.Append(Serialize(nameof(extensions.DeviceCustomNumber1Label), extensions.DeviceCustomNumber1Label));
       result.Append(Serialize(nameof(extensions.DeviceCustomNumber2), extensions.DeviceCustomNumber2));
@@ -231,7 +249,8 @@ namespace ViennaNET.ArcSight
       result.Append(Serialize(nameof(extensions.DeviceCustomString6Label), extensions.DeviceCustomString6Label));
       result.Append(Serialize(nameof(extensions.DestinationDnsDomain), extensions.DestinationDnsDomain));
       result.Append(Serialize(nameof(extensions.DestinationServiceName), extensions.DestinationServiceName));
-      result.Append(Serialize(nameof(extensions.DestinationTranslatedAddress), extensions.DestinationTranslatedAddress));
+      result.Append(Serialize(nameof(extensions.DestinationTranslatedAddress),
+        extensions.DestinationTranslatedAddress));
       result.Append(Serialize(nameof(extensions.DestinationTranslatedPort), extensions.DestinationTranslatedPort));
       result.Append(Serialize(nameof(extensions.DeviceCustomDate1), extensions.DeviceCustomDate1));
       result.Append(Serialize(nameof(extensions.DeviceCustomDate1Label), extensions.DeviceCustomDate1Label));
@@ -246,7 +265,8 @@ namespace ViennaNET.ArcSight
       result.Append(Serialize(nameof(extensions.DeviceOutboundInterface), extensions.DeviceOutboundInterface));
       result.Append(Serialize(nameof(extensions.DevicePayloadId), extensions.DevicePayloadId));
       result.Append(Serialize(nameof(extensions.DeviceProcessName), extensions.DeviceProcessName));
-      result.Append(Serialize(nameof(extensions.DestinationTranslatedAddress), extensions.DestinationTranslatedAddress));
+      result.Append(Serialize(nameof(extensions.DestinationTranslatedAddress),
+        extensions.DestinationTranslatedAddress));
       result.Append(Serialize(nameof(extensions.DestinationHostName), extensions.DestinationHostName));
       result.Append(Serialize(nameof(extensions.DestinationMacAddress), extensions.DestinationMacAddress));
       result.Append(Serialize(nameof(extensions.DestinationNtDomain), extensions.DestinationNtDomain));
@@ -321,7 +341,7 @@ namespace ViennaNET.ArcSight
       result.Append(Serialize(nameof(extensions.Type), extensions.Type));
 
       return result.ToString()
-                   .Trim();
+        .Trim();
     }
 
     [CanBeNull]
@@ -337,7 +357,7 @@ namespace ViennaNET.ArcSight
       if (value is Enum)
       {
         valueAsString = Convert.ToInt32(value)
-                               .ToString();
+          .ToString();
       }
       else if (value is DateTimeOffset)
       {
@@ -349,16 +369,6 @@ namespace ViennaNET.ArcSight
       }
 
       return $"{cefKeys[fullName]}={valueAsString} ";
-    }
-
-    /// <summary>
-    /// Сериализует сообщение в формате Syslog в поток
-    /// </summary>
-    /// <param name="message">Сообщение в формате Syslog</param>
-    /// <param name="stream">Поток для помещения сериализованного сообщения</param>
-    public void Serialize(SyslogMessage message, Stream stream)
-    {
-      _syslogMessageSerializer.Serialize(message, stream);
     }
   }
 }

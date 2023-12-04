@@ -44,7 +44,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
-    public static CurrentValidatorHolder<T, Task<TProperty>> Null<T, TProperty>(this RuleValidationMemberBuilder<T, Task<TProperty>> obj)
+    public static CurrentValidatorHolder<T, Task<TProperty>> Null<T, TProperty>(
+      this RuleValidationMemberBuilder<T, Task<TProperty>> obj)
       where TProperty : class
     {
       return obj.SetValidator(new NullRuleValidatorAsync<TProperty>());
@@ -73,7 +74,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <param name="comparer">Компаратор</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
     public static CurrentValidatorHolder<T, TProperty> Equal<T, TProperty>(
-      this RuleValidationMemberBuilder<T, TProperty> obj, Task<TProperty> compareTo, IEqualityComparer<TProperty> comparer = null)
+      this RuleValidationMemberBuilder<T, TProperty> obj, Task<TProperty> compareTo,
+      IEqualityComparer<TProperty> comparer = null)
     {
       return obj.SetValidator(new EqualValidatorAsync<TProperty>(compareTo, comparer));
     }
@@ -158,7 +160,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
-    public static CurrentValidatorHolder<T, Task<string>> NotEmpty<T>(this RuleValidationMemberBuilder<T, Task<string>> obj)
+    public static CurrentValidatorHolder<T, Task<string>> NotEmpty<T>(
+      this RuleValidationMemberBuilder<T, Task<string>> obj)
     {
       return obj.SetValidator(new NotEmptyRuleValidatorAsync());
     }
@@ -244,7 +247,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <param name="to">Верхнее пороговое значение</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
     public static CurrentValidatorHolder<T, Task<TProperty>> InclusiveBetween<T, TProperty>(
-      this RuleValidationMemberBuilder<T, Task<TProperty>> obj, IComparable from, IComparable to) where TProperty : IComparable
+      this RuleValidationMemberBuilder<T, Task<TProperty>> obj, IComparable from, IComparable to)
+      where TProperty : IComparable
     {
       return obj.SetValidator(new InclusiveBetweenValidatorAsync<TProperty>(from, to));
     }

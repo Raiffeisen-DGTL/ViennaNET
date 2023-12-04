@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ViennaNET.Orm.Exceptions
 {
   /// <summary>
-  /// Исключение, возникающее при ошибках загрузки профайдера фабрики сессий
+  ///   Исключение, возникающее при ошибках загрузки профайдера фабрики сессий
   /// </summary>
   [Serializable]
   public class SessionFactoryProviderException : Exception

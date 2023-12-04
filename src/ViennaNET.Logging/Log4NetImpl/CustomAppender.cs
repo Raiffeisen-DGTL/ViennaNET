@@ -11,17 +11,17 @@ using ViennaNET.Logging.Contracts;
 namespace ViennaNET.Logging.Log4NetImpl
 {
   /// <summary>
-  /// custom appender for using with the log4net (with buffer posibility)
+  ///   custom appender for using with the log4net (with buffer posibility)
   /// </summary>
   public class CustomAppender : BufferingAppenderSkeleton
   {
     /// <summary>
-    /// custom listener
+    ///   custom listener
     /// </summary>
     private readonly IListener _listener;
 
     /// <summary>
-    /// Ctor
+    ///   Ctor
     /// </summary>
     /// <param name="listener">custom listener </param>
     public CustomAppender(IListener listener)
@@ -30,11 +30,12 @@ namespace ViennaNET.Logging.Log4NetImpl
       {
         throw new ArgumentNullException("listener");
       }
+
       _listener = listener;
     }
 
     /// <summary>
-    /// append message to the listener
+    ///   append message to the listener
     /// </summary>
     /// <param name="loggingEvent">logging event</param>
     protected override void Append(LoggingEvent loggingEvent)
@@ -55,13 +56,14 @@ namespace ViennaNET.Logging.Log4NetImpl
           logLevel = LogLevel.Warning;
           break;
       }
+
       var textWriter = new StringWriter();
       RenderLoggingEvent(textWriter, loggingEvent);
       _listener.LogMessage(textWriter.ToString(), logLevel);
     }
 
     /// <summary>
-    /// send data into the log
+    ///   send data into the log
     /// </summary>
     /// <param name="events">events to process</param>
     protected override void SendBuffer(LoggingEvent[] events)
@@ -70,11 +72,12 @@ namespace ViennaNET.Logging.Log4NetImpl
       {
         Append(loggingEvent);
       }
+
       _listener.Flush();
     }
 
     /// <summary>
-    /// override flush function
+    ///   override flush function
     /// </summary>
     public override void Flush()
     {
@@ -83,7 +86,7 @@ namespace ViennaNET.Logging.Log4NetImpl
     }
 
     /// <summary>
-    /// override flush function
+    ///   override flush function
     /// </summary>
     /// <param name="flushLossyBuffer"></param>
     public override void Flush(bool flushLossyBuffer)

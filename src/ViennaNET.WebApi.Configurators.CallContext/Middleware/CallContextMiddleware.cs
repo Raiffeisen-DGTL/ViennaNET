@@ -6,7 +6,7 @@ using ViennaNET.WebApi.Abstractions;
 namespace ViennaNET.WebApi.Configurators.CallContext.Middleware
 {
   /// <summary>
-  /// Формирует контекст вызова из контекста Http-запроса
+  ///   Формирует контекст вызова из контекста Http-запроса
   /// </summary>
   public class CallContextMiddleware : IMiddleware
   {
@@ -22,7 +22,7 @@ namespace ViennaNET.WebApi.Configurators.CallContext.Middleware
       if (!context.Request.Headers.ContainsKey(CompanyHttpHeaders.RequestId))
       {
         context.Request.Headers.Add(CompanyHttpHeaders.RequestId, Guid.NewGuid()
-                                                                      .ToString("N"));
+          .ToString("N"));
       }
 
       try

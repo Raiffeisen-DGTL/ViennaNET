@@ -32,7 +32,8 @@ namespace ViennaNET.Messaging.Resources.Impl
         if (_resources.ContainsKey(resource.Key))
         {
           throw new
-            MessagingConfigurationException($"An embedded resource path for type {resource.Key} has already been registered in ResourceProvider for the message serialization");
+            MessagingConfigurationException(
+              $"An embedded resource path for type {resource.Key} has already been registered in ResourceProvider for the message serialization");
         }
 
         _resources.Add(resource);
@@ -45,7 +46,8 @@ namespace ViennaNET.Messaging.Resources.Impl
       if (!_resources.TryGetValue(typeof(T), out var paths))
       {
         throw new
-          MessagingConfigurationException($"There is no registered embedded resource paths for the message serialization for the type {typeof(T)}");
+          MessagingConfigurationException(
+            $"There is no registered embedded resource paths for the message serialization for the type {typeof(T)}");
       }
 
       try
@@ -55,7 +57,7 @@ namespace ViennaNET.Messaging.Resources.Impl
       catch (Exception e)
       {
         throw new MessagingConfigurationException(e,
-                                                  $"Cannot load embedded resource for the type {typeof(T)} from the path {paths}. Probably you forgot to make your resource as Embedded Resource?");
+          $"Cannot load embedded resource for the type {typeof(T)} from the path {paths}. Probably you forgot to make your resource as Embedded Resource?");
       }
     }
   }

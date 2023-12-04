@@ -5,7 +5,7 @@ namespace ViennaNET.WebApi.Configurators.CallContext
 {
   public class HttpCallContextAccessor : IHttpCallContextAccessor
   {
-    private static readonly AsyncLocal<CallContextHolder> messagingContextCurrent = new AsyncLocal<CallContextHolder>();
+    private static readonly AsyncLocal<CallContextHolder> messagingContextCurrent = new();
 
     public void SetContext(ICallContext callContext)
     {

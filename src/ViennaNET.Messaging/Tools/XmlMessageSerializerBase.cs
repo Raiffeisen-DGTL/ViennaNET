@@ -48,7 +48,7 @@ namespace ViennaNET.Messaging.Tools
     }
 
     /// <summary>
-    /// Валидирует входящий XML-документ по списку заданных XSD-схем
+    ///   Валидирует входящий XML-документ по списку заданных XSD-схем
     /// </summary>
     /// <param name="xml">XML-документ</param>
     protected void ValidateXml(string xml)

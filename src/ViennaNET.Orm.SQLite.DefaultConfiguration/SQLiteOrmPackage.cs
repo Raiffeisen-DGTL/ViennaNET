@@ -8,7 +8,8 @@ namespace ViennaNET.Orm.SQLite.DefaultConfiguration
   {
     public void RegisterServices(Container container)
     {
-      container.Collection.Append<ISessionFactoryProviderGetter, SQLiteSessionFactoryProviderGetter>(Lifestyle.Singleton);
+      container.Collection.Append<ISessionFactoryProviderGetter, SQLiteSessionFactoryProviderGetter>(
+        Lifestyle.Singleton);
     }
   }
 }

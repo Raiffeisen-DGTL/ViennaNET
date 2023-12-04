@@ -29,6 +29,7 @@ namespace ViennaNET.Messaging.Extensions
       {
         return InfiniteWaitTimeout;
       }
+
       if (timeout == TimeSpan.MinValue || timeout == null)
       {
         return NoWaitTimeout;

@@ -12,19 +12,19 @@ using ViennaNET.WebApi.Abstractions;
 namespace ViennaNET.WebApi.Configurators.Common.Middleware
 {
   /// <summary>
-  /// Заполняет в логгере поля RequestId и User из входящего запроса
+  ///   Заполняет в логгере поля RequestId и User из входящего запроса
   /// </summary>
   public class SetLoggingScopeMiddleware
   {
-    private readonly RequestDelegate _next;
     private readonly ILogger<SetLoggingScopeMiddleware> _logger;
+    private readonly RequestDelegate _next;
 
     /// <summary>
-    ///  Создаёт и инициализирует новый экземпляр класса <see cref="SetLoggingScopeMiddleware"/>,
-    ///  с заданными значениями полей.
+    ///   Создаёт и инициализирует новый экземпляр класса <see cref="SetLoggingScopeMiddleware" />,
+    ///   с заданными значениями полей.
     /// </summary>
     /// <param name="next">Ссылка на делегат следующего промежуточное ПО.</param>
-    /// <param name="logger">Ссылка на объект <see cref="ILogger{SetLoggingScopeMiddleware}"/>.</param>
+    /// <param name="logger">Ссылка на объект <see cref="ILogger{SetLoggingScopeMiddleware}" />.</param>
     public SetLoggingScopeMiddleware(RequestDelegate next, ILogger<SetLoggingScopeMiddleware> logger)
     {
       _next = next;
@@ -42,7 +42,7 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware
     }
 
     /// <summary>
-    /// Выполняет шаг конвейера промежуточного ПО настраивающий систему ведения журналов.
+    ///   Выполняет шаг конвейера промежуточного ПО настраивающий систему ведения журналов.
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
@@ -51,8 +51,8 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware
       var userName = TrimUserDomain(context.User.Identity.Name ?? Environment.UserName);
 
       _logger.BeginScope($"Host: {Environment.MachineName}, " +
-        $"Thread: {Environment.CurrentManagedThreadId}, " +
-        $"User: {userName}");
+                         $"Thread: {Environment.CurrentManagedThreadId}, " +
+                         $"User: {userName}");
 
       Logger.User = userName;
       Logger.RequestId = context.Request.Headers.ContainsKey(CompanyHttpHeaders.RequestId)

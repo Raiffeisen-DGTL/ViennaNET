@@ -19,7 +19,7 @@ namespace ViennaNET.Excel.Impl
     public void SetFormat(string format)
     {
       Style.DataFormat = _workbook.CreateDataFormat()
-                                  .GetFormat(format);
+        .GetFormat(format);
     }
   }
 }

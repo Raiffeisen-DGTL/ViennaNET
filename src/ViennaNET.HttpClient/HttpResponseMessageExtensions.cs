@@ -11,7 +11,7 @@ namespace ViennaNET.HttpClient
 {
   public static class HttpResponseMessageExtensions
   {
-    private static readonly IEnumerable<MediaTypeFormatter> formatters = new List<MediaTypeFormatter>()
+    private static readonly IEnumerable<MediaTypeFormatter> formatters = new List<MediaTypeFormatter>
     {
       new JsonMediaTypeFormatter(), new FormUrlEncodedMediaTypeFormatter()
     };
@@ -30,14 +30,14 @@ namespace ViennaNET.HttpClient
     }
 
     /// <summary>
-    /// При успешном коде ответа, возвращает объект типа <see cref="ResultOf{T}" /> в состоянии 'Success'.
-    /// При ответе <see cref="HttpStatusCode.NotFound"/> возвращает <see cref="ResultOf{T}" /> в состоянии 'Empty'.
-    /// При ответе <see cref="HttpStatusCode.BadRequest"/> возвращает <see cref="ResultOf{T}" /> в состоянии 'Invalid'.
+    ///   При успешном коде ответа, возвращает объект типа <see cref="ResultOf{T}" /> в состоянии 'Success'.
+    ///   При ответе <see cref="HttpStatusCode.NotFound" /> возвращает <see cref="ResultOf{T}" /> в состоянии 'Empty'.
+    ///   При ответе <see cref="HttpStatusCode.BadRequest" /> возвращает <see cref="ResultOf{T}" /> в состоянии 'Invalid'.
     /// </summary>
     /// <exception cref="InvalidOperationException">При неизвестных ответах</exception>
     /// <typeparam name="T"></typeparam>
     /// <param name="response"></param>
-    /// <returns>Объект типа <see cref="ResultOf{T}"/>.</returns>
+    /// <returns>Объект типа <see cref="ResultOf{T}" />.</returns>
     public static async Task<ResultOf<T>> HandleAsync<T>(this HttpResponseMessage response) where T : class
     {
       if (response.IsSuccessStatusCode)

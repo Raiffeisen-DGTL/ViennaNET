@@ -7,13 +7,13 @@ namespace ViennaNET.Security.Jwt.Impl
   {
     private readonly SymmetricSecurityKey _secretKey;
 
-    public string SigningAlgorithm { get; }
-
     public SigningSymmetricKey(string key, string signingAlgorithm)
     {
       _secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
       SigningAlgorithm = signingAlgorithm;
     }
+
+    public string SigningAlgorithm { get; }
 
     public SecurityKey GetKey()
     {

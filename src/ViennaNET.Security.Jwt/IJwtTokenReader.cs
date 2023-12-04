@@ -3,12 +3,12 @@
 namespace ViennaNET.Security.Jwt
 {
   /// <summary>
-  /// Сервис для расшифровки токена
+  ///   Сервис для расшифровки токена
   /// </summary>
   public interface IJwtTokenReader
   {
     /// <summary>
-    /// Расшифровывает токен
+    ///   Расшифровывает токен
     /// </summary>
     /// <param name="token"></param>
     /// <returns></returns>

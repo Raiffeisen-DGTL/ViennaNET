@@ -34,12 +34,12 @@ namespace ViennaNET.Security.Jwt.Impl
       claims.Add(new Claim(ClaimTypes.Name, userName));
       claims.AddRange(permissionClaims);
 
-      var token = new JwtSecurityToken(issuer: _securityKeysContainer.Issuer(),
-        audience: _securityKeysContainer.Audience(),
-        claims: claims,
+      var token = new JwtSecurityToken(_securityKeysContainer.Issuer(),
+        _securityKeysContainer.Audience(),
+        claims,
         expires: DateTime.Now.AddMinutes(30),
         signingCredentials: new SigningCredentials(signingEncodingKey.GetKey(),
-        signingEncodingKey.SigningAlgorithm));
+          signingEncodingKey.SigningAlgorithm));
 
       if (additionalData != null)
       {

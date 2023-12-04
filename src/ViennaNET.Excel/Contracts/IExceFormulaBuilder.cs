@@ -12,6 +12,7 @@
 
     string CreateRoundWithIfAndMultiply2Cells(int row, int firstCell, int secondCell, int thirdCell);
 
-    string CreateNamedRangeSelectionWithErrorString(string rowName, string tableName, int columnIndex, string defaultText);
+    string CreateNamedRangeSelectionWithErrorString(string rowName, string tableName, int columnIndex,
+      string defaultText);
   }
 }

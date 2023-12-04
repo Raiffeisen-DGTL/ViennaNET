@@ -7,7 +7,7 @@ using ViennaNET.Diagnostic.Data;
 namespace ViennaNET.WebApi.Configurators.Diagnostic
 {
   /// <summary>
-  /// "Пустой" диагностический сервис
+  ///   "Пустой" диагностический сервис
   /// </summary>
   public class EmptyDiagnosticImplementor : IDiagnosticImplementor
   {

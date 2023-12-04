@@ -8,7 +8,8 @@ namespace ViennaNET.Orm.PostgreSql.DefaultConfiguration
   {
     public void RegisterServices(Container container)
     {
-      container.Collection.Append<ISessionFactoryProviderGetter, PostgreSqlSessionFactoryProviderGetter>(Lifestyle.Singleton);
+      container.Collection.Append<ISessionFactoryProviderGetter, PostgreSqlSessionFactoryProviderGetter>(
+        Lifestyle.Singleton);
     }
   }
 }

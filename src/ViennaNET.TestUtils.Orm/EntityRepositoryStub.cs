@@ -64,7 +64,7 @@ namespace ViennaNET.TestUtils.Orm
       return Get(id.Value);
     }
 
-    public Task<T> GetAsync<TKey>(TKey? id, CancellationToken token = new CancellationToken()) where TKey : struct
+    public Task<T> GetAsync<TKey>(TKey? id, CancellationToken token = new()) where TKey : struct
     {
       return Task.FromResult(Get(id));
     }
@@ -74,7 +74,7 @@ namespace ViennaNET.TestUtils.Orm
       return _items.SingleOrDefault(i => i.Id.Equals(id));
     }
 
-    public Task<T> GetAsync<TKey>(TKey id, CancellationToken token = new CancellationToken())
+    public Task<T> GetAsync<TKey>(TKey id, CancellationToken token = new())
     {
       return Task.FromResult(Get(id));
     }
@@ -85,7 +85,7 @@ namespace ViennaNET.TestUtils.Orm
       _items.Add(entity);
     }
 
-    public Task AddAsync(T entity, CancellationToken token = new CancellationToken())
+    public Task AddAsync(T entity, CancellationToken token = new())
     {
       var items = _items
         .Where(i => !i.Id.Equals(entity.Id))
@@ -107,7 +107,7 @@ namespace ViennaNET.TestUtils.Orm
       _items.Add(entity);
     }
 
-    public Task InsertAsync(T entity, CancellationToken token = new CancellationToken())
+    public Task InsertAsync(T entity, CancellationToken token = new())
     {
       _items.Add(entity);
       return Task.CompletedTask;
@@ -118,7 +118,7 @@ namespace ViennaNET.TestUtils.Orm
       _items.Remove(entity);
     }
 
-    public Task DeleteAsync(T entity, CancellationToken token = new CancellationToken())
+    public Task DeleteAsync(T entity, CancellationToken token = new())
     {
       _items.Remove(entity);
       return Task.CompletedTask;
