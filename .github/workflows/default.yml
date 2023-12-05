@@ -110,4 +110,4 @@ jobs:
         if: github.event_name == 'release'
         env:
           NUGET_URL: https://api.nuget.org/v3/index.json
-        run: dotnet nuget push ./nupkgs/**/*.nupkg -s $NUGET_URL -k ${{secrets.NUGETKEY}} --skip-duplicate --no-symbols true
+        run: dotnet nuget push ./nupkgs/**/*.nupkg -s $NUGET_URL -k ${{secrets.NUGETKEY}} --skip-duplicate --no-symbols
