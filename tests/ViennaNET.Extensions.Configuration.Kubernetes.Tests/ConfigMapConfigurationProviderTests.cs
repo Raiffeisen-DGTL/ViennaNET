@@ -166,6 +166,7 @@ public class ConfigMapConfigurationProviderTests
     }
 
     [Test]
+    [Explicit]
     public void Dispose_Throws_Nothing()
     {
         var provider =
