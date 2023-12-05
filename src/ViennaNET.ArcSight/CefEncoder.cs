@@ -6,7 +6,7 @@ namespace ViennaNET.ArcSight
   {
     public static string EncodeHeader(string value)
     {
-      return new string(value.Trim().SelectMany(EncodeHeader).ToArray());
+      return new(value.Trim().SelectMany(EncodeHeader).ToArray());
     }
 
     private static string EncodeHeader(char c)
@@ -24,7 +24,7 @@ namespace ViennaNET.ArcSight
 
     public static string EncodeExtension(string value)
     {
-      return new string(value.Trim().SelectMany(EncodeExtension).ToArray());
+      return new(value.Trim().SelectMany(EncodeExtension).ToArray());
     }
 
     private static string EncodeExtension(char c)

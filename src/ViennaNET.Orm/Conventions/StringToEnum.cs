@@ -23,10 +23,12 @@ namespace ViennaNET.Orm.Conventions
       {
         return true;
       }
+
       if (x == null || y == null)
       {
         return false;
       }
+
       return x.Equals(y);
     }
 
@@ -41,6 +43,7 @@ namespace ViennaNET.Orm.Conventions
       {
         return null;
       }
+
       value = value.Trim();
       return value.IsEmpty()
         ? null

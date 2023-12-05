@@ -9,8 +9,8 @@ namespace ViennaNET.TestUtils.Orm.NhQueryable
     internal static Type GetElementType(Type seqType)
     {
       return FindIEnumerable(seqType) is Type foundType
-? foundType.GetGenericArguments()[0]
-: seqType;
+        ? foundType.GetGenericArguments()[0]
+        : seqType;
     }
 
     private static Type FindIEnumerable(Type seqType)

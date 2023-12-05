@@ -3,12 +3,12 @@
 namespace ViennaNET.Validation.Rules
 {
   /// <summary>
-  /// Идентификатор правила
+  ///   Идентификатор правила
   /// </summary>
   public sealed class RuleIdentity
   {
     /// <summary>
-    /// Инициализирует идентификатор правила уникальной строкой
+    ///   Инициализирует идентификатор правила уникальной строкой
     /// </summary>
     /// <param name="code">Код правила</param>
     public RuleIdentity(string code)
@@ -22,7 +22,7 @@ namespace ViennaNET.Validation.Rules
     }
 
     /// <summary>
-    /// Код правила
+    ///   Код правила
     /// </summary>
     public string Code { get; }
 

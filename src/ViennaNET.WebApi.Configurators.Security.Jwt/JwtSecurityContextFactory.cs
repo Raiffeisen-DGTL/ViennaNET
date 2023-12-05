@@ -11,13 +11,13 @@ using ViennaNET.WebApi.Net;
 namespace ViennaNET.WebApi.Configurators.Security.Jwt
 {
   /// <summary>
-  /// Фабрика по получению авторизационных данных пользователя из JWT
+  ///   Фабрика по получению авторизационных данных пользователя из JWT
   /// </summary>
   public class JwtSecurityContextFactory : ISecurityContextFactory
   {
     private readonly ICallContextFactory _callContextFactory;
-    private readonly ILoopbackIpFilter _loopbackIpFilter;
     private readonly IJwtTokenReader _jwtTokenReader;
+    private readonly ILoopbackIpFilter _loopbackIpFilter;
 
     public JwtSecurityContextFactory(
       ICallContextFactory callContextFactory, ILoopbackIpFilter loopbackIpFilter, IJwtTokenReader jwtTokenReader)
@@ -28,8 +28,8 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
     }
 
     /// <summary>
-    /// Создает контекст и заполняет его из JWT-токена
-    /// и заголовков запроса
+    ///   Создает контекст и заполняет его из JWT-токена
+    ///   и заголовков запроса
     /// </summary>
     /// <returns>Контекст с данными пользователя</returns>
     public ISecurityContext Create()
@@ -40,6 +40,15 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
       var ip = _loopbackIpFilter.FilterIp(callContext.RequestCallerIp);
 
       return new SecurityContext(callContext.UserId, ip, permissions);
+    }
+
+    /// <summary>
+    ///   Создает контекст и заполняет его из JWT-токена
+    /// </summary>
+    /// <returns>Контекст с данными пользователя</returns>
+    public Task<ISecurityContext> CreateAsync()
+    {
+      return Task.FromResult(Create());
     }
 
     private string[] GetPermissions(ICallContext callContext)
@@ -56,17 +65,8 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
     private string[] ExtractPermissions(IEnumerable<Claim> claims)
     {
       return claims.Where(x => x.Type == ClaimTypes.Role)
-                   .Select(x => x.Value)
-                   .ToArray();
-    }
-
-    /// <summary>
-    /// Создает контекст и заполняет его из JWT-токена
-    /// </summary>
-    /// <returns>Контекст с данными пользователя</returns>
-    public Task<ISecurityContext> CreateAsync()
-    {
-      return Task.FromResult(Create());
+        .Select(x => x.Value)
+        .ToArray();
     }
   }
 }

@@ -3,7 +3,7 @@
 namespace ViennaNET.Diagnostic
 {
   /// <summary>
-  /// Результат диагностики сервиса
+  ///   Результат диагностики сервиса
   /// </summary>
   public class DiagnoseResult
   {
@@ -15,7 +15,7 @@ namespace ViennaNET.Diagnostic
   }
 
   /// <summary>
-  /// Результат диагностики подключения к сторонним сущностям
+  ///   Результат диагностики подключения к сторонним сущностям
   /// </summary>
   public class EndpointResult
   {

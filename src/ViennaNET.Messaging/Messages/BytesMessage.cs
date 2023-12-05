@@ -23,7 +23,7 @@ namespace ViennaNET.Messaging.Messages
         : $"bytes buffer with length = {Body.Length}";
     }
 
-    /// <inheritdoc cref="BaseMessage"/>
+    /// <inheritdoc cref="BaseMessage" />
     public override bool IsEmpty()
     {
       return Body == null || Body.Length == 0;

@@ -12,18 +12,17 @@ namespace ViennaNET.Utils.Threading
   public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
   {
     // Indicates whether the current thread is processing work items.
-    [ThreadStatic]
-    private static bool currentThreadIsProcessingItems;
+    [ThreadStatic] private static bool currentThreadIsProcessingItems;
 
     // The maximum concurrency level allowed by this scheduler. 
 
     /// <summary>
     ///   mutex
     /// </summary>
-    private readonly object _mutex = new object();
+    private readonly object _mutex = new();
 
     // The list of tasks to be executed 
-    private readonly LinkedList<Task> _tasks = new LinkedList<Task>(); // protected by lock(_tasks)
+    private readonly LinkedList<Task> _tasks = new(); // protected by lock(_tasks)
 
     /// <summary>
     ///   Indicates whether the scheduler is currently processing work items.

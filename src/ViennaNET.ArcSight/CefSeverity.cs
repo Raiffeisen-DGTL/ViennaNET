@@ -1,7 +1,7 @@
 ﻿namespace ViennaNET.ArcSight
 {
   /// <summary>
-  /// Уровень критичности сообщения в ArcSight
+  ///   Уровень критичности сообщения в ArcSight
   /// </summary>
   public enum CefSeverity
   {

@@ -10,12 +10,12 @@ using ViennaNET.Utils;
 namespace ViennaNET.WebApi.Configurators.Security.Ntlm
 {
   /// <summary>
-  /// Атрибут авторизации для контроллеров и действий, проверяющий полномочия пользователя
+  ///   Атрибут авторизации для контроллеров и действий, проверяющий полномочия пользователя
   /// </summary>
   public class WithPermissionsAttribute : TypeFilterAttribute
   {
     /// <summary>
-    /// Конструктор
+    ///   Конструктор
     /// </summary>
     /// <param name="permissions">Набор обязательных полномочий</param>
     public WithPermissionsAttribute(params string[] permissions) : base(typeof(WithPermissionsImpl))
@@ -44,7 +44,7 @@ namespace ViennaNET.WebApi.Configurators.Security.Ntlm
         try
         {
           var hasPermissions = await _securityContextFactory.Create()
-                                                            .HasPermissionsAsync(_permissions);
+            .HasPermissionsAsync(_permissions);
           if (!hasPermissions)
           {
             context.Result = new ForbidResult();

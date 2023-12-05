@@ -6,12 +6,12 @@ namespace ViennaNET.Mediator.Pipelines
 {
   /// <inheritdoc />
   /// <summary>
-  /// Defined a broadcast pre-processor
+  ///   Defined a broadcast pre-processor
   /// </summary>
   public interface IBroadcastPreProcessor : IPipelineProcessor
   {
     /// <summary>
-    /// Asynchronously process method executes before calling the Handle method on your handler
+    ///   Asynchronously process method executes before calling the Handle method on your handler
     /// </summary>
     /// <param name="message">Message instance</param>
     /// <param name="cancellationToken">Cancellation token</param>
@@ -19,7 +19,7 @@ namespace ViennaNET.Mediator.Pipelines
     Task ProcessAsync(IMessage message, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Synchronously process method executes before calling the Handle method on your handler
+    ///   Synchronously process method executes before calling the Handle method on your handler
     /// </summary>
     /// <param name="message">Message instance</param>
     void Process(IMessage message);

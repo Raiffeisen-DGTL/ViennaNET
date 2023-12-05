@@ -7,12 +7,12 @@ using System;
 namespace ViennaNET.Logging.Configuration
 {
   /// <summary>
-  /// listener type description 
+  ///   listener type description
   /// </summary>
   public class ListenerTypeDescription
   {
     /// <summary>
-    /// type name of the listener
+    ///   type name of the listener
     /// </summary>
     public string TypeName
     {
@@ -21,7 +21,7 @@ namespace ViennaNET.Logging.Configuration
     }
 
     /// <summary>
-    /// type of the listener
+    ///   type of the listener
     /// </summary>
     public Type Type
     {
@@ -30,7 +30,7 @@ namespace ViennaNET.Logging.Configuration
     }
 
     /// <summary>
-    /// short uqniue name of the listener
+    ///   short uqniue name of the listener
     /// </summary>
     public string Name
     {

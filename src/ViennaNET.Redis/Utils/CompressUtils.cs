@@ -20,6 +20,7 @@ namespace ViennaNET.Redis.Utils
           {
             msi.CopyTo(gs);
           }
+
           return Convert.ToBase64String(mso.ToArray());
         }
       }
@@ -35,6 +36,7 @@ namespace ViennaNET.Redis.Utils
       {
         return null;
       }
+
       try
       {
         var bytes = Convert.FromBase64String(value);
@@ -45,6 +47,7 @@ namespace ViennaNET.Redis.Utils
           {
             gs.CopyTo(mso);
           }
+
           return Encoding.Default.GetString(mso.ToArray());
         }
       }

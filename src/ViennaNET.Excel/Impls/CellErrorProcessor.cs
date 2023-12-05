@@ -17,9 +17,11 @@ namespace ViennaNET.Excel.Impl
           type = ErrorType.BadReference;
           return true;
         }
+
         return exception.Message.Contains("Could not resolve external workbook name")
                || exception.Message.Contains("Unexpected ptg class (ArrayPtg)");
       }
+
       return exception is NotImplementedException;
     }
 
@@ -35,6 +37,7 @@ namespace ViennaNET.Excel.Impl
       {
         message = $"В файле содержится ссылка на внешний файл: {ex.Message}";
       }
+
       return message;
     }
 
@@ -49,6 +52,7 @@ namespace ViennaNET.Excel.Impl
       {
         ProcessException(exception, FormatException(cell, exception, type));
       }
+
       return false;
     }
 

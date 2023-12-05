@@ -5,12 +5,12 @@ using ViennaNET.Utils;
 namespace ViennaNET.Word
 {
   /// <summary>
-  /// Представляет контекст создания пакета OpenXml, инкапсулирующий логику освобождения ресурсов.
+  ///   Представляет контекст создания пакета OpenXml, инкапсулирующий логику освобождения ресурсов.
   /// </summary>
   internal class CreateOpenXmlPackageContext : IDisposable
   {
-    private readonly OpenXmlPackage _package;
     private readonly Document _document;
+    private readonly OpenXmlPackage _package;
 
     internal CreateOpenXmlPackageContext(OpenXmlPackage package, Document document)
     {

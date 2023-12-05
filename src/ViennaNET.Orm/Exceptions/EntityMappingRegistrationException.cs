@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ViennaNET.Orm.Exceptions
 {
   /// <summary>
-  /// Исключение, возникающее при ошибках регистрации маппинга NHibernate
+  ///   Исключение, возникающее при ошибках регистрации маппинга NHibernate
   /// </summary>
   [Serializable]
   public class EntityMappingRegistrationException : Exception

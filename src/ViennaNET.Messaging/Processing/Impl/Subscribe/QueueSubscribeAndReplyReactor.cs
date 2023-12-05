@@ -24,11 +24,11 @@ namespace ViennaNET.Messaging.Processing.Impl.Subscribe
       IHealthCheckingService healthCheckingService,
       IMessagingCallContextAccessor messagingCallContextAccessor,
       ILogger<QueueSubscribeAndReplyReactor> logger) : base(messageAdapter,
-                                                            reconnectTimeout,
-                                                            serviceHealthDependent,
-                                                            healthCheckingService,
-                                                            messagingCallContextAccessor,
-                                                            logger)
+      reconnectTimeout,
+      serviceHealthDependent,
+      healthCheckingService,
+      messagingCallContextAccessor,
+      logger)
     {
       _messageProcessors = messageProcessors;
       _asyncMessageProcessors = asyncMessageProcessor;

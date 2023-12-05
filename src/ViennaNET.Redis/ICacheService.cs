@@ -3,12 +3,12 @@
 namespace ViennaNET.Redis
 {
   /// <summary>
-  /// Описывает возможности, которые предоставлены для работы с сервисом кэширования
+  ///   Описывает возможности, которые предоставлены для работы с сервисом кэширования
   /// </summary>
   public interface ICacheService
   {
     /// <summary>
-    /// Возвращет объект в случае существования ключа
+    ///   Возвращет объект в случае существования ключа
     /// </summary>
     /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="name">Префикс имени ключа</param>
@@ -19,7 +19,7 @@ namespace ViennaNET.Redis
     bool TryGetObject<T>(string name, out T obj, params object[] keyIdentifier) where T : class;
 
     /// <summary>
-    /// Сохраняет объект
+    ///   Сохраняет объект
     /// </summary>
     /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="name">Префикс имени ключа</param>
@@ -30,7 +30,7 @@ namespace ViennaNET.Redis
     void SetObject<T>(string name, string lifetime, T obj, params object[] keyIdentifier) where T : class;
 
     /// <summary>
-    /// Сохраняет объект
+    ///   Сохраняет объект
     /// </summary>
     /// <typeparam name="T">Тип объекта</typeparam>
     /// <param name="name">Префикс имени ключа</param>

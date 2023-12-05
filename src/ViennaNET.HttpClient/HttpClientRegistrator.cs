@@ -10,30 +10,38 @@ using ViennaNET.Utils;
 namespace ViennaNET.HttpClient
 {
   /// <summary>
-  /// Класс-строитель для создания и регистрации Http-клиентов в стандартном DI
+  ///   Класс-строитель для создания и регистрации Http-клиентов в стандартном DI
   /// </summary>
   public class HttpClientRegistrator
   {
     private const int defaultTimeout = 30;
+
+    private readonly List<Action<IServiceCollection, IHttpClientBuilder>> _addHandlerActions;
+
+    private Action<IHttpClientBuilder> _configureBuilderAction;
 
     protected HttpClientRegistrator()
     {
       _addHandlerActions = new List<Action<IServiceCollection, IHttpClientBuilder>>();
     }
 
+    protected string _url { get; set; }
+
+    protected string _name { get; set; }
+
+    private int? _secondsTimeout { get; set; }
+
     /// <summary>
-    /// Создает экземпляр данного регистратора
+    ///   Создает экземпляр данного регистратора
     /// </summary>
     /// <returns></returns>
     public static HttpClientRegistrator Create()
     {
-      return new HttpClientRegistrator();
+      return new();
     }
 
-    protected string _url { get; set; }
-
     /// <summary>
-    /// Устанавливает базовый адрес
+    ///   Устанавливает базовый адрес
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
@@ -43,10 +51,8 @@ namespace ViennaNET.HttpClient
       return this;
     }
 
-    protected string _name { get; set; }
-
     /// <summary>
-    /// Задает имя клиента. Должно быть уникально
+    ///   Задает имя клиента. Должно быть уникально
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
@@ -56,10 +62,8 @@ namespace ViennaNET.HttpClient
       return this;
     }
 
-    private int? _secondsTimeout { get; set; }
-
     /// <summary>
-    /// Устанавливает таймаут. По-умолчанию 30 секунд
+    ///   Устанавливает таймаут. По-умолчанию 30 секунд
     /// </summary>
     /// <param name="secondsTimeout"></param>
     /// <returns></returns>
@@ -69,10 +73,8 @@ namespace ViennaNET.HttpClient
       return this;
     }
 
-    private readonly List<Action<IServiceCollection, IHttpClientBuilder>> _addHandlerActions;
-
     /// <summary>
-    /// Регистрирует стандартное middleware, без привязки к стороннему контейнеру
+    ///   Регистрирует стандартное middleware, без привязки к стороннему контейнеру
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
@@ -87,7 +89,7 @@ namespace ViennaNET.HttpClient
     }
 
     /// <summary>
-    /// Регистрирует стандартное middleware, без привязки к стороннему контейнеру
+    ///   Регистрирует стандартное middleware, без привязки к стороннему контейнеру
     /// </summary>
     public HttpClientRegistrator WithHandler<T>(Func<T> configureHandler) where T : DelegatingHandler
     {
@@ -99,10 +101,8 @@ namespace ViennaNET.HttpClient
       return this;
     }
 
-    private Action<IHttpClientBuilder> _configureBuilderAction;
-
     /// <summary>
-    /// Дополнительно конфигурирует билдер Http-клиентов
+    ///   Дополнительно конфигурирует билдер Http-клиентов
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public HttpClientRegistrator ConfigureBuilder(Action<IHttpClientBuilder> builderAction)
@@ -113,7 +113,7 @@ namespace ViennaNET.HttpClient
     }
 
     /// <summary>
-    /// Завершает регистрацию Http-клиента в приложении AspNetCore
+    ///   Завершает регистрацию Http-клиента в приложении AspNetCore
     /// </summary>
     /// <param name="services"></param>
     public void Register(IServiceCollection services)
@@ -130,10 +130,10 @@ namespace ViennaNET.HttpClient
     private IHttpClientBuilder BuildBaseHttpClient(IServiceCollection services)
     {
       var builder = services.AddHttpClient(_name, client =>
-                     {
-                       client.BaseAddress = new Uri(_url);
-                       client.Timeout = TimeSpan.FromSeconds(_secondsTimeout ?? defaultTimeout);
-                     });
+      {
+        client.BaseAddress = new Uri(_url);
+        client.Timeout = TimeSpan.FromSeconds(_secondsTimeout ?? defaultTimeout);
+      });
       _configureBuilderAction?.Invoke(builder);
       builder.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(Enumerable.Repeat(TimeSpan.FromSeconds(1), 3)));
 
@@ -142,8 +142,8 @@ namespace ViennaNET.HttpClient
 
     private void ValidateClientBuilder()
     {
-      _name.ThrowIfNull($"httpClient.Name");
-      _url.ThrowIfNull($"httpClient.Url");
+      _name.ThrowIfNull("httpClient.Name");
+      _url.ThrowIfNull("httpClient.Url");
     }
   }
 }

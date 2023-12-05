@@ -14,7 +14,8 @@ namespace ViennaNET.Excel.Impl
     {
     }
 
-    public ExcelProcessingException(Exception innerException, string message, params object[] args) : base(string.Format(message, args), innerException)
+    public ExcelProcessingException(Exception innerException, string message, params object[] args) : base(
+      string.Format(message, args), innerException)
     {
     }
 

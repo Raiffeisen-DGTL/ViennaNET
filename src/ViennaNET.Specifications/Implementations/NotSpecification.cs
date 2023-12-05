@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 namespace ViennaNET.Specifications.Implementations
 {
   /// <summary>
-  /// Спецификация, применяющая к другой спецификации оператор НЕ
+  ///   Спецификация, применяющая к другой спецификации оператор НЕ
   /// </summary>
   /// <typeparam name="T">Тип объекта спецификации</typeparam>
   public sealed class NotSpecification<T> : Specification<T>

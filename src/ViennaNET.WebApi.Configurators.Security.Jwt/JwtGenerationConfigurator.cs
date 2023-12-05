@@ -9,7 +9,7 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
   public static class JwtFactoryConfigurator
   {
     /// <summary>
-    /// Регистрирует фабрику для генерации
+    ///   Регистрирует фабрику для генерации
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
@@ -28,7 +28,8 @@ namespace ViennaNET.WebApi.Configurators.Security.Jwt
 
       return jwtSettings is null
         ? new SecurityKeysContainer()
-        : new SecurityKeysContainer(jwtSettings.TokenKeyEnvVariable, jwtSettings.Audience, jwtSettings.Issuer, jwtSettings.SigningAlgorithm);
+        : new SecurityKeysContainer(jwtSettings.TokenKeyEnvVariable, jwtSettings.Audience, jwtSettings.Issuer,
+          jwtSettings.SigningAlgorithm);
     }
   }
 }

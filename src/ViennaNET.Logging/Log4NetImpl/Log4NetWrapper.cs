@@ -25,7 +25,7 @@ namespace ViennaNET.Logging.Log4NetImpl
     }
 
     /// <summary>
-    /// merge logger internal states
+    ///   merge logger internal states
     /// </summary>
     /// <param name="logger">logger to merge</param>
     public void Merge(ILog logger)
@@ -34,11 +34,13 @@ namespace ViennaNET.Logging.Log4NetImpl
       {
         return;
       }
+
       var log4netWrapper = logger as Log4NetWrapper;
       if (log4netWrapper == null)
       {
         return;
       }
+
       foreach (var logEntry in log4netWrapper._logs)
       {
         if (!_logs.ContainsKey(logEntry.Key))
@@ -72,6 +74,7 @@ namespace ViennaNET.Logging.Log4NetImpl
       {
         return;
       }
+
       switch (level)
       {
         case LogLevel.Debug:

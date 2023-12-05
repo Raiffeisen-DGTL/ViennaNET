@@ -3,17 +3,16 @@
 namespace ViennaNET.Messaging.Tools
 {
   /// <summary>
-  /// Сериализатор в сообщение
+  ///   Сериализатор в сообщение
   /// </summary>
   public interface IMessageSerializer
-  {
-  }
+  {}
 
   /// <inheritdoc />
   public interface IMessageSerializer<in TMessage> : IMessageSerializer
   {
     /// <summary>
-    /// Сериализует сообщение в <see cref="BaseMessage"/>
+    ///   Сериализует сообщение в <see cref="BaseMessage" />
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>

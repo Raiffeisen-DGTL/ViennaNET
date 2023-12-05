@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace ViennaNET.Orm.Exceptions
 {
   /// <summary>
-  /// Исключение, возникающее при ошибках в единице работы
+  ///   Исключение, возникающее при ошибках в единице работы
   /// </summary>
   [Serializable]
   public class UowException : Exception

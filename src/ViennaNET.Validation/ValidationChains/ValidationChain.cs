@@ -6,7 +6,7 @@ namespace ViennaNET.Validation.ValidationChains
 {
   internal class ValidationChain<T> : IEnumerable<T>, IEnumerable
   {
-    private readonly List<T> _chain = new List<T>();
+    private readonly List<T> _chain = new();
 
     public IEnumerator<T> GetEnumerator()
     {

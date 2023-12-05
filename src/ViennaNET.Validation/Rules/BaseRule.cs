@@ -4,8 +4,8 @@ using ViennaNET.Validation.Rules.ValidationResults;
 namespace ViennaNET.Validation.Rules
 {
   /// <summary>
-  /// Базовый класс правила, позволяеющего задавать
-  /// собственную логику валидации
+  ///   Базовый класс правила, позволяеющего задавать
+  ///   собственную логику валидации
   /// </summary>
   /// <typeparam name="T">Тип объекта для валидации</typeparam>
   public abstract class BaseRule<T> : IRule<T>
@@ -13,7 +13,7 @@ namespace ViennaNET.Validation.Rules
     protected BaseRule()
     {
       Identity = new RuleIdentity(Guid.NewGuid()
-                                      .ToString());
+        .ToString());
     }
 
     protected BaseRule(string code)

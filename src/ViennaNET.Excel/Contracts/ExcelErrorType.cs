@@ -7,6 +7,6 @@
     BadUrl = 2,
     PasswordProtected = 3,
     OldFormat = 4,
-    BadFormat = 5,
+    BadFormat = 5
   }
 }

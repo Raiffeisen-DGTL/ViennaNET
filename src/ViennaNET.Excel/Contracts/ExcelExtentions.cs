@@ -13,6 +13,7 @@
       {
         canAssign = value != null;
       }
+
       if (canAssign)
       {
         sheet[coordinate.RowIndex][coordinate.CellIndex] = value;
@@ -29,6 +30,7 @@
       {
         str = " ";
       }
+
       sheet[coordinate.RowIndex][coordinate.CellIndex] = str + value;
     }
   }

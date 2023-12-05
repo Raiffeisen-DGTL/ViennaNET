@@ -26,7 +26,7 @@ namespace ViennaNET.Excel.Impl
       using (var excel = SpreadsheetDocument.Open(fileName, true))
       {
         var sheet = excel.WorkbookPart.Workbook.Descendants<Sheet>()
-                         .First();
+          .First();
         var ws = ((WorksheetPart)excel.WorkbookPart.GetPartById(sheet.Id)).Worksheet;
 
         var sheetData = ws.GetFirstChild<SheetData>();
@@ -51,21 +51,22 @@ namespace ViennaNET.Excel.Impl
       using (var excel = SpreadsheetDocument.Open(stream, true))
       {
         var sheet = excel.WorkbookPart.Workbook.Descendants<Sheet>()
-                         .First();
+          .First();
         var ws = ((WorksheetPart)excel.WorkbookPart.GetPartById(sheet.Id)).Worksheet;
         var links = ws.Descendants<Hyperlinks>()
-                      .FirstOrDefault();
+          .FirstOrDefault();
         if (links != null)
         {
           var sheetData = ws.GetFirstChild<SheetData>();
           var sharedStrings = excel.WorkbookPart.SharedStringTablePart.SharedStringTable;
           foreach (var hyperlink in links.Descendants<Hyperlink>()
-                                         .ToList())
+                     .ToList())
           {
             ProcessUrl(sheetData, sharedStrings, hyperlink);
           }
+
           if (!links.Descendants<Hyperlink>()
-                    .Any())
+                .Any())
           {
             links.Remove();
           }
@@ -81,12 +82,13 @@ namespace ViennaNET.Excel.Impl
     private static string GetSharedString(SharedStringTable table, int index)
     {
       var item = table.Descendants<SharedStringItem>()
-                      .Skip(index)
-                      .FirstOrDefault();
+        .Skip(index)
+        .FirstOrDefault();
       if (item != null)
       {
         return item.Text.InnerText;
       }
+
       return string.Empty;
     }
 
@@ -100,10 +102,13 @@ namespace ViennaNET.Excel.Impl
           num.Append(ch);
         }
       }
-      if (int.TryParse(num.ToString(), out var rowNum))
+
+      int rowNum;
+      if (int.TryParse(num.ToString(), out rowNum))
       {
         return rowNum;
       }
+
       return -1;
     }
 
@@ -114,11 +119,11 @@ namespace ViennaNET.Excel.Impl
       if (rowNumber != -1)
       {
         var row = sheetData.Descendants<Row>()
-                           .FirstOrDefault(r => r.RowIndex == rowNumber);
+          .FirstOrDefault(r => r.RowIndex == rowNumber);
         if (row != null)
         {
           var cell = row.Descendants<Cell>()
-                        .FirstOrDefault(c => c.CellReference.Value == reference);
+            .FirstOrDefault(c => c.CellReference.Value == reference);
           if (cell != null)
           {
             string url;
@@ -135,6 +140,7 @@ namespace ViennaNET.Excel.Impl
             {
               return;
             }
+
             if (InvalidUrl(url))
             {
               hyperlink.Remove();
@@ -149,12 +155,15 @@ namespace ViennaNET.Excel.Impl
       var conditionalFormatting1 =
         new ConditionalFormatting { SequenceOfReferences = new ListValue<StringValue> { InnerText = formatReference } };
       var conditionalFormattingRule1 =
-        new ConditionalFormattingRule { Type = ConditionalFormatValues.Expression, FormatId = (uint)index, Priority = 1 };
+        new ConditionalFormattingRule
+        {
+          Type = ConditionalFormatValues.Expression, FormatId = (uint)index, Priority = 1
+        };
       var formula1 = new Formula { Text = formatFormula };
       conditionalFormattingRule1.Append(formula1);
       conditionalFormatting1.Append(conditionalFormattingRule1);
       var pp = ws.Descendants<PhoneticProperties>()
-                 .FirstOrDefault();
+        .FirstOrDefault();
       ws.InsertAfter(conditionalFormatting1, pp);
     }
 
@@ -167,7 +176,7 @@ namespace ViennaNET.Excel.Impl
       {
         var modulo = (dividend - 1) % 26;
         columnName = Convert.ToChar(65 + modulo) + columnName;
-        dividend = ((dividend - modulo) / 26);
+        dividend = (dividend - modulo) / 26;
       }
 
       return columnName;
@@ -178,7 +187,7 @@ namespace ViennaNET.Excel.Impl
       var diff1 = new DifferentialFormat(new Fill(new PatternFill(new BackgroundColor { Rgb = color })));
       stylesheet.DifferentialFormats.AppendChild(diff1);
       var count = stylesheet.DifferentialFormats.Descendants<DifferentialFormat>()
-                            .Count();
+        .Count();
       stylesheet.DifferentialFormats.Count = (uint)count;
       return count - 1;
     }
@@ -186,9 +195,9 @@ namespace ViennaNET.Excel.Impl
     private static void AddRows(OpenXmlCompositeElement sheet, int maxCount, int columns)
     {
       var maxIndex = sheet.Elements<Row>()
-                          .Select(r => r.RowIndex.Value).Max();
+        .Select(r => r.RowIndex.Value).Max();
       var count = sheet.Elements<Row>()
-                       .Count();
+        .Count();
       for (var i = count; i <= maxCount; i++)
       {
         var row = new Row { RowIndex = ++maxIndex };
@@ -203,6 +212,7 @@ namespace ViennaNET.Excel.Impl
           };
           row.AppendChild(cell);
         }
+
         sheet.AppendChild(row);
       }
     }

@@ -5,12 +5,12 @@ namespace ViennaNET.Logging
 {
   public class ScopeLogRedirector : IDisposable
   {
+    private bool _disposed;
+
     public ScopeLogRedirector(ICategoryLogger logger)
       : this(logger.Category)
     {
-
     }
-
 
 
     public ScopeLogRedirector(string category)
@@ -29,14 +29,16 @@ namespace ViennaNET.Logging
       {
         return;
       }
+
       try
       {
         Logger.RedirectOff();
         _disposed = true;
       }
-      // ReSharper disable EmptyGeneralCatchClause
+// ReSharper disable EmptyGeneralCatchClause
       catch { }
-      // ReSharper restore EmptyGeneralCatchClause
+// ReSharper restore EmptyGeneralCatchClause
+
       if (disposing)
       {
         GC.SuppressFinalize(this);
@@ -48,7 +50,5 @@ namespace ViennaNET.Logging
     {
       Dispose(false);
     }
-
-    private bool _disposed;
   }
 }

@@ -14,14 +14,14 @@ namespace ViennaNET.TestUtils.Orm
   public static class CommandExecutorStub
   {
     /// <summary>
-    /// Create CommandExecutorStub instance with constant command result specified
+    ///   Create CommandExecutorStub instance with constant command result specified
     /// </summary>
     /// <param name="result">result to return on each command execution</param>
     /// <typeparam name="T">Command type - ICommand interface realization</typeparam>
     /// <returns>CommandExecutorStub instance</returns>
     public static CommandExecutorStub<T> Create<T>(int result) where T : class, ICommand
     {
-      return new CommandExecutorStub<T>(result);
+      return new(result);
     }
   }
 

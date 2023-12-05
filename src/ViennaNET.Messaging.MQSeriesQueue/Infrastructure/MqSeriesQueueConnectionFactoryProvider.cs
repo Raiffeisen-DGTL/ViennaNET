@@ -4,7 +4,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue.Infrastructure
 {
   internal class MqSeriesQueueConnectionFactoryProvider : IMqSeriesQueueConnectionFactoryProvider
   {
-    private static readonly object connectionFactoryLock = new object();
+    private static readonly object connectionFactoryLock = new();
 
     public IConnectionFactory GetConnectionFactory(int connectionType)
     {

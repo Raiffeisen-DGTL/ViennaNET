@@ -20,7 +20,8 @@ namespace ViennaNET.Excel.Contracts
 
     int GetColumnWidth(int column);
 
-    void CopyStyles(int fromRow, int fromColumn, int startRow, int startColumn, int endRow, int endColumn, string dataFormat = null);
+    void CopyStyles(int fromRow, int fromColumn, int startRow, int startColumn, int endRow, int endColumn,
+      string dataFormat = null);
 
     void SetColumnWidth(int column, int width);
 
@@ -36,7 +37,8 @@ namespace ViennaNET.Excel.Contracts
 
     void CreateRange(string name, int startCell, int startRow, int endCell, int endRow);
 
-    void CreateHierarchicalRange(string mainName, string tableName, string newName, int rowIndex, int cellIndex, string sheetName);
+    void CreateHierarchicalRange(string mainName, string tableName, string newName, int rowIndex, int cellIndex,
+      string sheetName);
 
     void MergeCells(int startRow, int endRow, int startColumn, int endColumn);
 

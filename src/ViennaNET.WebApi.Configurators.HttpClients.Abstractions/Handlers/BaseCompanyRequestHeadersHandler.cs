@@ -9,12 +9,16 @@ using ViennaNET.WebApi.Abstractions;
 namespace ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Handlers
 {
   /// <summary>
-  /// Базовый обработчик Http-запросов, пробрасывающий заголовки CompanyHeaders из входящего запроса в исходящий
+  ///   Базовый обработчик Http-запросов, пробрасывающий заголовки CompanyHeaders из входящего запроса в исходящий
   /// </summary>
   public class BaseCompanyRequestHeadersHandler : DelegatingHandler
   {
     private readonly ICallContextFactory _callContextFactory;
 
+    /// <summary>
+    ///   Constructor
+    /// </summary>
+    /// <param name="callContextFactory"></param>
     public BaseCompanyRequestHeadersHandler(ICallContextFactory callContextFactory)
     {
       _callContextFactory = callContextFactory.ThrowIfNull(nameof(callContextFactory));
@@ -35,7 +39,8 @@ namespace ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Handlers
       }
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+      CancellationToken cancellationToken)
     {
       var context = _callContextFactory.Create();
 

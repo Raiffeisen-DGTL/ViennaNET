@@ -3,12 +3,12 @@
 namespace ViennaNET.Validation.Rules.ValidationResults.RuleMessages
 {
   /// <summary>
-  /// Идентификатор сообщения
+  ///   Идентификатор сообщения
   /// </summary>
   public sealed class MessageIdentity
   {
     /// <summary>
-    /// Инициализирует идентификатор сообщения уникальной строкой
+    ///   Инициализирует идентификатор сообщения уникальной строкой
     /// </summary>
     /// <param name="code">Код сообщения</param>
     public MessageIdentity(string code)
@@ -22,7 +22,7 @@ namespace ViennaNET.Validation.Rules.ValidationResults.RuleMessages
     }
 
     /// <summary>
-    /// Код сообщения
+    ///   Код сообщения
     /// </summary>
     public string Code { get; }
 

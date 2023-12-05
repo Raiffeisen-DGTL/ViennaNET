@@ -4,13 +4,13 @@ using System.Linq.Expressions;
 namespace ViennaNET.Specifications.Implementations
 {
   /// <summary>
-  /// Спецификация, соединяющая две спецификации с оператором И
+  ///   Спецификация, соединяющая две спецификации с оператором И
   /// </summary>
   /// <typeparam name="T">Тип объекта спецификации</typeparam>
   public sealed class AndSpecification<T> : Specification<T>
   {
     /// <summary>
-    /// Инициализирует экземпляр ссылками на <see cref="Specification{T}"/>
+    ///   Инициализирует экземпляр ссылками на <see cref="Specification{T}" />
     /// </summary>
     /// <param name="firstSpec">Ссылка на спецификацию</param>
     /// <param name="secondSpec">Ссылка на спецификацию</param>
@@ -19,8 +19,9 @@ namespace ViennaNET.Specifications.Implementations
       var firstExp = firstSpec.ToExpression();
       var secondExp = secondSpec.ToExpression();
 
-      expression = Expression.Lambda<Func<T, bool>>(Expression.And(firstExp.Body, Expression.Invoke(secondExp, firstExp.Parameters)),
-                                                    firstExp.Parameters);
+      expression = Expression.Lambda<Func<T, bool>>(
+        Expression.And(firstExp.Body, Expression.Invoke(secondExp, firstExp.Parameters)),
+        firstExp.Parameters);
     }
 
     /// <inheritdoc />

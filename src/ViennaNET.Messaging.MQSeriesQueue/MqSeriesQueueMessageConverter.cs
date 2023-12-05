@@ -12,8 +12,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
       var mes = ConvertToInternalMessage(message, session);
       mes.JMSMessageID = string.IsNullOrWhiteSpace(message.MessageId)
         ? Guid.NewGuid()
-              .ToString()
-              .ToUpper()
+          .ToString()
+          .ToUpper()
         : message.MessageId;
       mes.JMSCorrelationID = string.IsNullOrWhiteSpace(message.CorrelationId)
         ? mes.JMSMessageID
@@ -45,7 +45,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue
           result.WriteBytes(bytesMessage.Body);
           return result;
         default:
-          throw new ArgumentException($"Unknown inherited type of BaseMessage ({message.GetType()}) while converting to IMessage");
+          throw new ArgumentException(
+            $"Unknown inherited type of BaseMessage ({message.GetType()}) while converting to IMessage");
       }
     }
 
@@ -73,9 +74,9 @@ namespace ViennaNET.Messaging.MQSeriesQueue
         var prop = receivedMessage.GetObjectProperty(name);
         message.Properties.Add(name, prop);
         messageProps = messageProps.Append(name)
-                                   .Append(" = ")
-                                   .Append(prop)
-                                   .Append(";\n");
+          .Append(" = ")
+          .Append(prop)
+          .Append(";\n");
       }
 
       return message;
@@ -85,7 +86,7 @@ namespace ViennaNET.Messaging.MQSeriesQueue
     {
       // Example:  Converting Java millis time to .NET time
       var baseTime = new DateTime(1970, 1, 1, 0, 0, 0);
-      var utcTimeTicks = jmsTimestamp * 10000 + baseTime.Ticks;
+      var utcTimeTicks = (jmsTimestamp * 10000) + baseTime.Ticks;
       return new DateTime(utcTimeTicks, DateTimeKind.Utc);
     }
 

@@ -5,8 +5,8 @@ using ViennaNET.Validation.Rules.ValidationResults;
 namespace ViennaNET.Validation.Rules
 {
   /// <summary>
-  /// Базовый класс правила, позволяеющего задавать
-  /// собственную логику валидации
+  ///   Базовый класс правила, позволяеющего задавать
+  ///   собственную логику валидации
   /// </summary>
   /// <typeparam name="T">Тип объекта для валидации</typeparam>
   public abstract class BaseRuleAsync<T> : IRuleAsync<T>

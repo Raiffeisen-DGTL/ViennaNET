@@ -15,21 +15,18 @@ namespace ViennaNET.Orm.Conventions
       {
         return true;
       }
+
       if (x == null || y == null)
       {
         return false;
       }
+
       return x.Equals(y);
     }
 
     public int GetHashCode(object x)
     {
       return x.GetHashCode();
-    }
-
-    private static bool IsInt(object value)
-    {
-      return int.TryParse(value.ToString(), out var unsusedVal);
     }
 
     public object NullSafeGet(DbDataReader rs, string[] names, ISessionImplementor session, object owner)
@@ -68,5 +65,11 @@ namespace ViennaNET.Orm.Conventions
     public Type ReturnedType => typeof(string);
 
     public bool IsMutable => false;
+
+    private static bool IsInt(object value)
+    {
+      int unsusedVal;
+      return int.TryParse(value.ToString(), out unsusedVal);
+    }
   }
 }

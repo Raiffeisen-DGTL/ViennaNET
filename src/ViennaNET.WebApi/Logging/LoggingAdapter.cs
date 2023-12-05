@@ -10,13 +10,53 @@ using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 namespace ViennaNET.WebApi.Logging
 {
   /// <summary>
-  /// Реализация журнала, поддерживающая обратную совместимость системы журналирования с <see cref="ViennaNET.Logging.Logger"/>,
-  /// на время перехода на систему журналирования платформы <see cref="ILogger{TCategoryName}"/>.
+  ///   Реализация журнала, поддерживающая обратную совместимость системы журналирования с
+  ///   <see cref="ViennaNET.Logging.Logger" />,
+  ///   на время перехода на систему журналирования платформы <see cref="ILogger{TCategoryName}" />.
   /// </summary>
   [ExcludeFromCodeCoverage]
   internal sealed class LoggingAdapter : ILogger, IDisposable
   {
     private ICategoryLogger _categoryLogger;
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+      _categoryLogger = null;
+    }
+
+    /// <inheritdoc />
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
+      Func<TState, Exception, string> formatter)
+    {
+      if (!IsEnabled(logLevel))
+      {
+        return;
+      }
+
+      if (_categoryLogger is null)
+      {
+        Log(logLevel, state.ToString(), exception);
+      }
+      else
+      {
+        LogCategory(logLevel, state.ToString(), exception);
+      }
+    }
+
+    /// <inheritdoc />
+    public IDisposable BeginScope<TState>(TState state)
+    {
+      _categoryLogger = Logger.GetCategoryLogger(state.ToString());
+      return this;
+    }
+
+    /// <inheritdoc />
+    public bool IsEnabled(LogLevel logLevel)
+    {
+      return logLevel != LogLevel.None;
+    }
+
     private void Log(LogLevel logLevel, string message, Exception exception = null)
     {
       message.ThrowIfNull(nameof(message));
@@ -86,44 +126,6 @@ namespace ViennaNET.WebApi.Logging
           throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null);
       }
     }
-
-    /// <inheritdoc />
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
-      Func<TState, Exception, string> formatter)
-    {
-      if (!IsEnabled(logLevel))
-      {
-        return;
-      }
-
-      if (_categoryLogger is null)
-      {
-        Log(logLevel, state.ToString(), exception);
-      }
-      else
-      {
-        LogCategory(logLevel, state.ToString(), exception);
-      }
-    }
-
-    /// <inheritdoc />
-    public IDisposable BeginScope<TState>(TState state)
-    {
-      _categoryLogger = Logger.GetCategoryLogger(state.ToString());
-      return this;
-    }
-
-    /// <inheritdoc />
-    public bool IsEnabled(LogLevel logLevel)
-    {
-      return logLevel != LogLevel.None;
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
-      _categoryLogger = null;
-    }
   }
 
 
@@ -132,7 +134,7 @@ namespace ViennaNET.WebApi.Logging
   [ExcludeFromCodeCoverage]
   internal sealed class LoggingAdapterProvider : ILoggerProvider
   {
-    private readonly ConcurrentDictionary<string, LoggingAdapter> _loggers = new ConcurrentDictionary<string, LoggingAdapter>();
+    private readonly ConcurrentDictionary<string, LoggingAdapter> _loggers = new();
 
     public void Dispose()
     {

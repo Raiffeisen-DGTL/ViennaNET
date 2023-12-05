@@ -8,7 +8,7 @@ namespace ViennaNET.Messaging.KafkaQueue.DefaultConfiguration
   public class KafkaPackage : IPackage
   {
     /// <summary>
-    /// Пакет SimpleInjector для работы с Messaging
+    ///   Пакет SimpleInjector для работы с Messaging
     /// </summary>
     public void RegisterServices(Container container)
     {

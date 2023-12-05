@@ -50,7 +50,8 @@ namespace ViennaNET.Redis.Implementation.Default
       return JsonUtils.DeserializeObject<T>(stringValue);
     }
 
-    public Collection<T> HashObjectGet<T>(string key, IEnumerable<string> fields, CommandFlags flags = default) where T : class
+    public Collection<T> HashObjectGet<T>(string key, IEnumerable<string> fields, CommandFlags flags = default)
+      where T : class
     {
       LogDebug(nameof(HashObjectGet), $"Key = {key}; Fields = {fields}; Flags = {flags}");
       var stringListValues = HashStringGetInternal(key, fields, flags);
@@ -64,11 +65,13 @@ namespace ViennaNET.Redis.Implementation.Default
       return stringDictionary.ToDictionary(kvp => kvp.Key, kvp => JsonUtils.DeserializeObject<T>(kvp.Value));
     }
 
-    public bool ObjectSet(string key, object value, TimeSpan? expiry = null, When when = default, CommandFlags flags = default)
+    public bool ObjectSet(string key, object value, TimeSpan? expiry = null, When when = default,
+      CommandFlags flags = default)
     {
       var stringValue = JsonUtils.SerializeObject(value);
       var valueLength = GetValueLength(stringValue);
-      LogDebug("ObjectSet", $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
+      LogDebug("ObjectSet",
+        $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
       return StringSetInternal(key, stringValue, expiry, when, flags);
     }
 
@@ -76,7 +79,8 @@ namespace ViennaNET.Redis.Implementation.Default
     {
       var stringValue = JsonUtils.SerializeObject(value);
       var valueLength = GetValueLength(stringValue);
-      LogDebug("ObjectSet", $"Keys = {key}; Value-length = {valueLength}; Lifetime = {lifetime}; When = {when}; Flags = {flags}");
+      LogDebug("ObjectSet",
+        $"Keys = {key}; Value-length = {valueLength}; Lifetime = {lifetime}; When = {when}; Flags = {flags}");
       return StringSetInternal(key, stringValue, lifetime, when, flags);
     }
 
@@ -89,6 +93,7 @@ namespace ViennaNET.Redis.Implementation.Default
         var stringValue = JsonUtils.SerializeObject(pair.Value);
         stringDictValues.Add(pair.Key, stringValue);
       }
+
       return StringSetInternal(stringDictValues, when, flags);
     }
 
@@ -96,7 +101,8 @@ namespace ViennaNET.Redis.Implementation.Default
     {
       var stringValue = JsonUtils.SerializeObject(value);
       var valueLength = GetValueLength(stringValue);
-      LogDebug(nameof(HashObjectSet), $"Key = {key}; Field = {field}; Value-length = {valueLength}; When = {when}; Flags = {flags}");
+      LogDebug(nameof(HashObjectSet),
+        $"Key = {key}; Field = {field}; Value-length = {valueLength}; When = {when}; Flags = {flags}");
       return HashStringSetInternal(key, field, stringValue, when, flags);
     }
 
@@ -109,6 +115,7 @@ namespace ViennaNET.Redis.Implementation.Default
         var stringValue = JsonUtils.SerializeObject(pair.Value);
         stringDictValues.Add(pair.Key, stringValue);
       }
+
       HashStringSetInternal(key, stringDictValues, flags);
     }
 
@@ -120,7 +127,8 @@ namespace ViennaNET.Redis.Implementation.Default
       return JsonUtils.DeserializeObject<T>(stringValue);
     }
 
-    public async Task<Collection<T>> ObjectGetAsync<T>(IEnumerable<string> keys, CommandFlags flags = default) where T : class
+    public async Task<Collection<T>> ObjectGetAsync<T>(IEnumerable<string> keys, CommandFlags flags = default)
+      where T : class
     {
       var result = StringGetInternalAsync(keys, flags).ConfigureAwait(false);
       LogDebug("ObjectGetAsync", $"Keys = {keys}; Flags = {flags}");
@@ -145,7 +153,8 @@ namespace ViennaNET.Redis.Implementation.Default
       return new Collection<T>(stringListValues.Select(JsonUtils.DeserializeObject<T>).ToList());
     }
 
-    public async Task<Dictionary<string, T>> HashObjectGetAllAsync<T>(string key, CommandFlags flags = default) where T : class
+    public async Task<Dictionary<string, T>> HashObjectGetAllAsync<T>(string key, CommandFlags flags = default)
+      where T : class
     {
       LogDebug(nameof(HashObjectGetAllAsync), $"Key = {key}; Flags = {flags}");
       var stringDictionary = await HashStringGetAllInternalAsync(key, flags).ConfigureAwait(false);
@@ -158,7 +167,8 @@ namespace ViennaNET.Redis.Implementation.Default
       var stringValue = JsonUtils.SerializeObject(value);
       var result = StringSetInternalAsync(key, stringValue, expiry, when, flags);
       var valueLength = GetValueLength(stringValue);
-      LogDebug("ObjectSetAsync", $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
+      LogDebug("ObjectSetAsync",
+        $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
       return await result;
     }
 
@@ -168,11 +178,13 @@ namespace ViennaNET.Redis.Implementation.Default
       var stringValue = JsonUtils.SerializeObject(value);
       var result = StringSetInternalAsync(key, stringValue, lifetime, when, flags);
       var valueLength = GetValueLength(stringValue);
-      LogDebug("ObjectSetAsync", $"Keys = {key}; Value-length = {valueLength}; Lifetime = {lifetime}; When = {when}; Flags = {flags}");
+      LogDebug("ObjectSetAsync",
+        $"Keys = {key}; Value-length = {valueLength}; Lifetime = {lifetime}; When = {when}; Flags = {flags}");
       return await result;
     }
 
-    public async Task<bool> ObjectSetAsync(IDictionary<string, object> values, When when = default, CommandFlags flags = default)
+    public async Task<bool> ObjectSetAsync(IDictionary<string, object> values, When when = default,
+      CommandFlags flags = default)
     {
       var stringDictValues = new Dictionary<string, string>();
       foreach (var pair in values)
@@ -180,6 +192,7 @@ namespace ViennaNET.Redis.Implementation.Default
         var stringValue = JsonUtils.SerializeObject(pair.Value);
         stringDictValues.Add(pair.Key, stringValue);
       }
+
       var result = StringSetInternalAsync(stringDictValues, when, flags);
       LogDebug("ObjectSetAsync", $"Values-count = {values.Count}; When = {when}; Flags = {flags}");
 
@@ -192,7 +205,8 @@ namespace ViennaNET.Redis.Implementation.Default
       var stringValue = JsonUtils.SerializeObject(value);
       var result = HashStringSetInternalAsync(key, field, stringValue, when, flags).ConfigureAwait(false);
       var valueLength = GetValueLength(stringValue);
-      LogDebug("ObjectSetAsync", $"Key = {key}; Field = {field}; Value-length = {valueLength};  When = {when}; Flags = {flags}");
+      LogDebug("ObjectSetAsync",
+        $"Key = {key}; Field = {field}; Value-length = {valueLength};  When = {when}; Flags = {flags}");
       return await result;
     }
 
@@ -204,6 +218,7 @@ namespace ViennaNET.Redis.Implementation.Default
         var stringValue = JsonUtils.SerializeObject(pair.Value);
         stringDictValues.Add(pair.Key, stringValue);
       }
+
       var result = HashStringSetInternalAsync(key, stringDictValues, flags).ConfigureAwait(false);
       LogDebug("ObjectSetAsync", $"Key = {key}; Values-count = {values.Count}; Flags = {flags}");
 
@@ -246,11 +261,13 @@ namespace ViennaNET.Redis.Implementation.Default
       var valueLength = GetValueLength(value);
       if (isDiagnostic)
       {
-        LogDiagnostic("StringSet", $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
+        LogDiagnostic("StringSet",
+          $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
       }
       else
       {
-        LogDebug("StringSet", $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
+        LogDebug("StringSet",
+          $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
       }
 
       return StringSetInternal(key, value, expiry, when, flags);
@@ -260,7 +277,8 @@ namespace ViennaNET.Redis.Implementation.Default
       string key, string value, string lifetime, When when = default, CommandFlags flags = default)
     {
       var valueLength = GetValueLength(value);
-      LogDebug("StringSet", $"Keys = {key}; Value-length = {valueLength}; Lifetime = {lifetime}; When = {when}; Flags = {flags}");
+      LogDebug("StringSet",
+        $"Keys = {key}; Value-length = {valueLength}; Lifetime = {lifetime}; When = {when}; Flags = {flags}");
       return StringSetInternal(key, value, lifetime, when, flags);
     }
 
@@ -273,7 +291,8 @@ namespace ViennaNET.Redis.Implementation.Default
     public bool HashStringSet(string key, string field, string value, When when = default, CommandFlags flags = default)
     {
       var valueLength = GetValueLength(value);
-      LogDebug(nameof(HashStringSet), $"Key = {key}; Field = {field}; Value-length = {valueLength}; When = {when}; Flags = {flags}");
+      LogDebug(nameof(HashStringSet),
+        $"Key = {key}; Field = {field}; Value-length = {valueLength}; When = {when}; Flags = {flags}");
       return HashStringSetInternal(key, field, value, when, flags);
     }
 
@@ -304,7 +323,8 @@ namespace ViennaNET.Redis.Implementation.Default
       return await result;
     }
 
-    public async Task<Collection<string>> HashStringGetAsync(string key, IEnumerable<string> fields, CommandFlags flags = default)
+    public async Task<Collection<string>> HashStringGetAsync(string key, IEnumerable<string> fields,
+      CommandFlags flags = default)
     {
       var result = HashStringGetInternalAsync(key, fields, flags).ConfigureAwait(false);
       LogDebug(nameof(HashStringGetAsync), $"Key = {key}; Fields = {fields}; Flags = {flags}");
@@ -323,7 +343,8 @@ namespace ViennaNET.Redis.Implementation.Default
     {
       var result = StringSetInternalAsync(key, value, expiry, when, flags);
       var valueLength = GetValueLength(value);
-      LogDebug("StringSetAsync", $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
+      LogDebug("StringSetAsync",
+        $"Keys = {key}; Value-length = {valueLength}; Expiry = {expiry}; When = {when}; Flags = {flags}");
       return await result;
     }
 
@@ -332,7 +353,8 @@ namespace ViennaNET.Redis.Implementation.Default
     {
       var result = StringSetInternalAsync(key, value, lifetime, when, flags);
       var valueLength = GetValueLength(value);
-      LogDebug("StringSetAsync", $"Keys = {key}; Value-length = {valueLength}; Lifetime = {lifetime}; When = {when}; Flags = {flags}");
+      LogDebug("StringSetAsync",
+        $"Keys = {key}; Value-length = {valueLength}; Lifetime = {lifetime}; When = {when}; Flags = {flags}");
       return await result;
     }
 
@@ -344,11 +366,13 @@ namespace ViennaNET.Redis.Implementation.Default
       return await result;
     }
 
-    public async Task<bool> HashStringSetAsync(string key, string field, string value, When when = default, CommandFlags flags = default)
+    public async Task<bool> HashStringSetAsync(string key, string field, string value, When when = default,
+      CommandFlags flags = default)
     {
       var result = HashStringSetInternalAsync(key, field, value, when, flags).ConfigureAwait(false);
       var valueLength = GetValueLength(value);
-      LogDebug(nameof(HashStringSetAsync), $"Key = {key}; Field = {field}; Value-length = {valueLength}; When = {when}; Flags = {flags}");
+      LogDebug(nameof(HashStringSetAsync),
+        $"Key = {key}; Field = {field}; Value-length = {valueLength}; When = {when}; Flags = {flags}");
       return await result;
     }
 
@@ -413,7 +437,8 @@ namespace ViennaNET.Redis.Implementation.Default
 
     public async Task<long> HashDeleteAsync(string key, IEnumerable<string> fields, CommandFlags flags = default)
     {
-      var result = _database.HashDeleteAsync(GetKeyName(key), fields.Select(f => (RedisValue)f).ToArray(), flags).ConfigureAwait(false);
+      var result = _database.HashDeleteAsync(GetKeyName(key), fields.Select(f => (RedisValue)f).ToArray(), flags)
+        .ConfigureAwait(false);
       LogDebug(nameof(HashDeleteAsync), $"Key = {key}; Fields = {fields}; Flags = {flags}");
       return await result;
     }
@@ -452,7 +477,7 @@ namespace ViennaNET.Redis.Implementation.Default
     private Collection<string> StringGetInternal(IEnumerable<string> keys, CommandFlags flags = default)
     {
       var result = _database.StringGet(keys.Select(k => (RedisKey)GetKeyName(k))
-                                           .ToArray(), flags);
+        .ToArray(), flags);
       return new Collection<string>(result.Select(v => GetDecompressedString(v)).ToList());
     }
 
@@ -462,7 +487,8 @@ namespace ViennaNET.Redis.Implementation.Default
       return GetDecompressedString(result);
     }
 
-    private Collection<string> HashStringGetInternal(string key, IEnumerable<string> fields, CommandFlags flags = default)
+    private Collection<string> HashStringGetInternal(string key, IEnumerable<string> fields,
+      CommandFlags flags = default)
     {
       var result = _database.HashGet(GetKeyName(key), fields.Select(f => (RedisValue)f).ToArray(), flags);
       return new Collection<string>(result.Select(v => GetDecompressedString(v)).ToList());
@@ -474,7 +500,8 @@ namespace ViennaNET.Redis.Implementation.Default
       return result.ToDictionary(entry => entry.Name.ToString(), entry => GetDecompressedString(entry.Value));
     }
 
-    private async Task<Dictionary<string, string>> HashStringGetAllInternalAsync(string key, CommandFlags flags = default)
+    private async Task<Dictionary<string, string>> HashStringGetAllInternalAsync(string key,
+      CommandFlags flags = default)
     {
       var result = await _database.HashGetAllAsync(GetKeyName(key), flags).ConfigureAwait(false);
       return result.ToDictionary(entry => entry.Name.ToString(), entry => GetDecompressedString(entry.Value));
@@ -495,8 +522,9 @@ namespace ViennaNET.Redis.Implementation.Default
     private bool StringSetInternal(
       IDictionary<string, string> values, When when = default, CommandFlags flags = default)
     {
-      var arrayValues = values.Select(p => new KeyValuePair<RedisKey, RedisValue>(GetKeyName(p.Key), SetCompressedString(p.Value)))
-                              .ToArray();
+      var arrayValues = values.Select(p =>
+          new KeyValuePair<RedisKey, RedisValue>(GetKeyName(p.Key), SetCompressedString(p.Value)))
+        .ToArray();
       return _database.StringSet(arrayValues, when, flags);
     }
 
@@ -512,7 +540,7 @@ namespace ViennaNET.Redis.Implementation.Default
     private void HashStringSetInternal(string key, IDictionary<string, string> values, CommandFlags flags = default)
     {
       var arrayValues = values.Select(p => new HashEntry(p.Key, p.Value))
-                              .ToArray();
+        .ToArray();
       _database.HashSet(GetKeyName(key), arrayValues, flags);
     }
 
@@ -522,10 +550,11 @@ namespace ViennaNET.Redis.Implementation.Default
       return GetDecompressedString(result);
     }
 
-    private async Task<Collection<string>> StringGetInternalAsync(IEnumerable<string> keys, CommandFlags flags = default)
+    private async Task<Collection<string>> StringGetInternalAsync(IEnumerable<string> keys,
+      CommandFlags flags = default)
     {
       var result = await _database.StringGetAsync(keys.Select(k => (RedisKey)GetKeyName(k))
-                                                      .ToArray(), flags);
+        .ToArray(), flags);
       return new Collection<string>(result.Select(v => GetDecompressedString(v)).ToList());
     }
 
@@ -535,9 +564,11 @@ namespace ViennaNET.Redis.Implementation.Default
       return GetDecompressedString(await result);
     }
 
-    private async Task<Collection<string>> HashStringGetInternalAsync(string key, IEnumerable<string> fields, CommandFlags flags = default)
+    private async Task<Collection<string>> HashStringGetInternalAsync(string key, IEnumerable<string> fields,
+      CommandFlags flags = default)
     {
-      var result = await _database.HashGetAsync(GetKeyName(key), fields.Select(f => (RedisValue)f).ToArray(), flags).ConfigureAwait(false);
+      var result = await _database.HashGetAsync(GetKeyName(key), fields.Select(f => (RedisValue)f).ToArray(), flags)
+        .ConfigureAwait(false);
       return new Collection<string>(result.Select(v => GetDecompressedString(v)).ToList());
     }
 
@@ -550,14 +581,16 @@ namespace ViennaNET.Redis.Implementation.Default
     private async Task<bool> StringSetInternalAsync(
       string key, string value, string lifetime, When when = default, CommandFlags flags = default)
     {
-      return await _database.StringSetAsync(GetKeyName(key), SetCompressedString(value), GetKeyLifetime(lifetime), when, flags);
+      return await _database.StringSetAsync(GetKeyName(key), SetCompressedString(value), GetKeyLifetime(lifetime), when,
+        flags);
     }
 
     private async Task<bool> StringSetInternalAsync(
       IDictionary<string, string> values, When when = default, CommandFlags flags = default)
     {
-      var arrayValues = values.Select(p => new KeyValuePair<RedisKey, RedisValue>(GetKeyName(p.Key), SetCompressedString(p.Value)))
-                              .ToArray();
+      var arrayValues = values.Select(p =>
+          new KeyValuePair<RedisKey, RedisValue>(GetKeyName(p.Key), SetCompressedString(p.Value)))
+        .ToArray();
       return await _database.StringSetAsync(arrayValues, when, flags);
     }
 
@@ -568,10 +601,11 @@ namespace ViennaNET.Redis.Implementation.Default
       return await result;
     }
 
-    private async Task HashStringSetInternalAsync(string key, IDictionary<string, string> values, CommandFlags flags = default)
+    private async Task HashStringSetInternalAsync(string key, IDictionary<string, string> values,
+      CommandFlags flags = default)
     {
       var arrayValues = values.Select(kvp => new HashEntry(kvp.Key, SetCompressedString(kvp.Value)))
-                              .ToArray();
+        .ToArray();
       await _database.HashSetAsync(GetKeyName(key), arrayValues, flags).ConfigureAwait(false);
     }
 
@@ -584,7 +618,8 @@ namespace ViennaNET.Redis.Implementation.Default
     {
       if (!_keyLifetimes.TryGetValue(lifetime, out var expiry))
       {
-        throw new RedisException($"Lifetime with name {lifetime} could not be found. Check an app.config file of the executing assembly");
+        throw new RedisException(
+          $"Lifetime with name {lifetime} could not be found. Check an app.config file of the executing assembly");
       }
 
       return expiry;

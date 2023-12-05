@@ -88,8 +88,13 @@ namespace ViennaNET.Excel.Impl
       var cell = _row.GetCell(cellIndex) ?? _row.CreateCell(cellIndex);
       var creationHelper = _sheet.ExcelFile.Workbook.GetCreationHelper();
       var format = creationHelper.CreateDataFormat()
-                                 .GetFormat("TEXT");
+        .GetFormat("TEXT");
       cell.CellStyle.DataFormat = format;
+    }
+
+    public double GetNumericCellValue(int cellIndex)
+    {
+      return _row.Cells[cellIndex].NumericCellValue;
     }
 
     private static bool IsDateValue(CellValue cellValue, ICell cell)
@@ -106,7 +111,7 @@ namespace ViennaNET.Excel.Impl
     private object TryToEvaluateFormula(ICell cell)
     {
       var evaluator = _sheet.ExcelFile.Excel.GetCreationHelper()
-                            .CreateFormulaEvaluator();
+        .CreateFormulaEvaluator();
       CellValue cellValue = null;
       try
       {
@@ -119,6 +124,7 @@ namespace ViennaNET.Excel.Impl
           throw;
         }
       }
+
       switch (cellValue.CellType)
       {
         case CellType.Boolean:
@@ -131,6 +137,7 @@ namespace ViennaNET.Excel.Impl
           {
             return DateUtil.GetJavaDate(cellValue.NumberValue);
           }
+
           return cellValue.NumberValue;
         case CellType.String:
           return cellValue.StringValue;
@@ -161,17 +168,14 @@ namespace ViennaNET.Excel.Impl
           {
             return DateUtil.GetJavaDate(cell.NumericCellValue);
           }
+
           return cell.NumericCellValue;
         case CellType.String:
           return cell.StringCellValue;
         default:
-          throw new InvalidOperationException(string.Format("Can not find value for cell {0}, row {1}", cell.ColumnIndex, _row.RowNum));
+          throw new InvalidOperationException(string.Format("Can not find value for cell {0}, row {1}",
+            cell.ColumnIndex, _row.RowNum));
       }
-    }
-
-    public double GetNumericCellValue(int cellIndex)
-    {
-      return _row.Cells[cellIndex].NumericCellValue;
     }
 
     private static void SetCell(ICell cell, object value)
@@ -183,7 +187,8 @@ namespace ViennaNET.Excel.Impl
       else
       {
         var type = value.GetType();
-        if (type == typeof(short) || type == typeof(byte) || type == typeof(int) || type == typeof(long) || type == typeof(float)
+        if (type == typeof(short) || type == typeof(byte) || type == typeof(int) || type == typeof(long) ||
+            type == typeof(float)
             || type == typeof(double))
         {
           cell.SetCellValue(Convert.ToDouble(value));

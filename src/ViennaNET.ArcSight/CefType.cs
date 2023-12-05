@@ -1,7 +1,7 @@
 ﻿namespace ViennaNET.ArcSight
 {
   /// <summary>
-  /// Тип сообщения в ArcSight
+  ///   Тип сообщения в ArcSight
   /// </summary>
   public enum CefType
   {

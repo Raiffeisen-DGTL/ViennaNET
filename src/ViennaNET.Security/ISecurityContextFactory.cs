@@ -3,7 +3,7 @@
 namespace ViennaNET.Security
 {
   /// <summary>
-  /// Фабрика по получению авторизационных данных пользователя из JWT
+  ///   Фабрика по получению авторизационных данных пользователя из JWT
   /// </summary>
   public interface ISecurityContextFactory
   {

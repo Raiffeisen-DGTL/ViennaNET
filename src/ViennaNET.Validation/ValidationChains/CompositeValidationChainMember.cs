@@ -30,7 +30,7 @@ namespace ViennaNET.Validation.ValidationChains
       _contexts = contexts ?? throw new ArgumentNullException(nameof(contexts));
       _func = expression.Compile();
       _ruleIdentity = Guid.NewGuid()
-                          .ToString();
+        .ToString();
     }
 
     public ValidationResult Process(T value, ValidationContext context)
@@ -41,6 +41,7 @@ namespace ViennaNET.Validation.ValidationChains
       {
         enumerable = _func.Invoke(value);
       }
+
       lock (_contexts)
       {
         foreach (var res in enumerable.Select(item => _validator.ValidateMany(_contexts, item, context)))
@@ -48,6 +49,7 @@ namespace ViennaNET.Validation.ValidationChains
           result.Results.AddRange(res.Results);
         }
       }
+
       return result;
     }
 
@@ -79,7 +81,7 @@ namespace ViennaNET.Validation.ValidationChains
       _dependOnRules.Add(new DependsOnMember(condition, member.Identity));
     }
 
-    public RuleIdentity Identity => new RuleIdentity(_ruleIdentity);
+    public RuleIdentity Identity => new(_ruleIdentity);
 
     public IEnumerable<DependsOnMember> DependOnRules => _dependOnRules;
   }

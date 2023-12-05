@@ -12,7 +12,7 @@ namespace ViennaNET.Validation.Behaviors
 {
   public class MessageValidationBehavior : IBroadcastPreProcessor
   {
-    private readonly Dictionary<Type, IMessageValidation> _rules = new Dictionary<Type, IMessageValidation>();
+    private readonly Dictionary<Type, IMessageValidation> _rules = new();
 
     public MessageValidationBehavior(IEnumerable<IMessageValidation> rules)
     {
@@ -23,6 +23,7 @@ namespace ViennaNET.Validation.Behaviors
         {
           throw new InvalidOperationException($"Base type of rule '{nameof(rule)}' is null or not generic type.");
         }
+
         _rules.Add(baseType.GetGenericArguments()[0], rule);
       }
     }

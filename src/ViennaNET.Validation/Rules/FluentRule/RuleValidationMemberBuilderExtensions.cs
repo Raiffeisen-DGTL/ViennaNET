@@ -6,64 +6,68 @@ using ViennaNET.Validation.Rules.FluentRule.RuleValidators;
 namespace ViennaNET.Validation.Rules.FluentRule
 {
   /// <summary>
-  /// Методы расширения для строителя валидаторов правила с текучим интерфейсом
+  ///   Методы расширения для строителя валидаторов правила с текучим интерфейсом
   /// </summary>
   public static class RuleValidationMemberBuilderExtensions
   {
     /// <summary>
-    /// Задает валидатор, проверяющий, что ссылка на свойство не содержит null
+    ///   Задает валидатор, проверяющий, что ссылка на свойство не содержит null
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
-    public static CurrentValidatorHolder<T, TProperty> NotNull<T, TProperty>(this RuleValidationMemberBuilder<T, TProperty> obj)
+    public static CurrentValidatorHolder<T, TProperty> NotNull<T, TProperty>(
+      this RuleValidationMemberBuilder<T, TProperty> obj)
       where TProperty : class
     {
       return obj.SetValidator(new NotNullRuleValidator<TProperty>());
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что ссылка на свойство не содержит null
+    ///   Задает валидатор, проверяющий, что ссылка на свойство не содержит null
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
-    public static CurrentValidatorHolder<T, TProperty?> NotNull<T, TProperty>(this RuleValidationMemberBuilder<T, TProperty?> obj)
+    public static CurrentValidatorHolder<T, TProperty?> NotNull<T, TProperty>(
+      this RuleValidationMemberBuilder<T, TProperty?> obj)
       where TProperty : struct
     {
       return obj.SetValidator(new HasValueRuleValidator<TProperty>());
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что ссылка на свойство содержит null
+    ///   Задает валидатор, проверяющий, что ссылка на свойство содержит null
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
-    public static CurrentValidatorHolder<T, TProperty> Null<T, TProperty>(this RuleValidationMemberBuilder<T, TProperty> obj)
+    public static CurrentValidatorHolder<T, TProperty> Null<T, TProperty>(
+      this RuleValidationMemberBuilder<T, TProperty> obj)
       where TProperty : class
     {
       return obj.SetValidator(new NullRuleValidator<TProperty>());
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что ссылка на свойство содержит null
+    ///   Задает валидатор, проверяющий, что ссылка на свойство содержит null
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
-    public static CurrentValidatorHolder<T, TProperty?> Null<T, TProperty>(this RuleValidationMemberBuilder<T, TProperty?> obj)
+    public static CurrentValidatorHolder<T, TProperty?> Null<T, TProperty>(
+      this RuleValidationMemberBuilder<T, TProperty?> obj)
       where TProperty : struct
     {
       return obj.SetValidator(new HasNoValueRuleValidator<TProperty>());
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что значение свойства равно указанному
+    ///   Задает валидатор, проверяющий, что значение свойства равно указанному
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
@@ -72,13 +76,14 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <param name="comparer">Компаратор</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
     public static CurrentValidatorHolder<T, TProperty> Equal<T, TProperty>(
-      this RuleValidationMemberBuilder<T, TProperty> obj, TProperty compareTo, IEqualityComparer<TProperty> comparer = null)
+      this RuleValidationMemberBuilder<T, TProperty> obj, TProperty compareTo,
+      IEqualityComparer<TProperty> comparer = null)
     {
       return obj.SetValidator(new EqualValidator<TProperty>(compareTo, comparer));
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что значение свойства больше указанного или равно ему
+    ///   Задает валидатор, проверяющий, что значение свойства больше указанного или равно ему
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
@@ -92,7 +97,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что значение свойства больше указанного или равно ему
+    ///   Задает валидатор, проверяющий, что значение свойства больше указанного или равно ему
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
@@ -107,7 +112,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что значение свойства больше указанного
+    ///   Задает валидатор, проверяющий, что значение свойства больше указанного
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
@@ -121,7 +126,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что значение свойства больше указанного
+    ///   Задает валидатор, проверяющий, что значение свойства больше указанного
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
@@ -136,8 +141,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что длина значения свойства лежит
-    /// в указанных границах. Граничные значения длины тоже допустимы
+    ///   Задает валидатор, проверяющий, что длина значения свойства лежит
+    ///   в указанных границах. Граничные значения длины тоже допустимы
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип валидируемого свойства</typeparam>
@@ -152,7 +157,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что строка не пуста и ссылка на нее не равна null
+    ///   Задает валидатор, проверяющий, что строка не пуста и ссылка на нее не равна null
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
@@ -163,31 +168,33 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что строка соответствует регулярному выражению
+    ///   Задает валидатор, проверяющий, что строка соответствует регулярному выражению
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
     /// <param name="expression">Строка регулярного выражения</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
-    public static CurrentValidatorHolder<T, string> Matches<T>(this RuleValidationMemberBuilder<T, string> obj, string expression)
+    public static CurrentValidatorHolder<T, string> Matches<T>(this RuleValidationMemberBuilder<T, string> obj,
+      string expression)
     {
       return obj.SetValidator(new RegexRuleValidator(expression));
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что строка соответствует регулярному выражению
+    ///   Задает валидатор, проверяющий, что строка соответствует регулярному выражению
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <param name="obj">Строитель цепи валидаторов правила с текучим интерфейсом</param>
     /// <param name="expression">Регулярное выражение</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
-    public static CurrentValidatorHolder<T, string> Matches<T>(this RuleValidationMemberBuilder<T, string> obj, Regex expression)
+    public static CurrentValidatorHolder<T, string> Matches<T>(this RuleValidationMemberBuilder<T, string> obj,
+      Regex expression)
     {
       return obj.SetValidator(new RegexRuleValidator(expression));
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что свойство соответствует переданному критерию
+    ///   Задает валидатор, проверяющий, что свойство соответствует переданному критерию
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -201,8 +208,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий свойство правилом валидации.
-    /// Подходит для валидации вложенных свойств
+    ///   Задает валидатор, проверяющий свойство правилом валидации.
+    ///   Подходит для валидации вложенных свойств
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -216,8 +223,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает условие, при котором правило будет выполняться
-    /// Подходит для валидации вложенных свойств
+    ///   Задает условие, при котором правило будет выполняться
+    ///   Подходит для валидации вложенных свойств
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -231,8 +238,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает валидатор, проверяющий, что значение свойства находится
-    /// между заданными значениями. Границы включаются.
+    ///   Задает валидатор, проверяющий, что значение свойства находится
+    ///   между заданными значениями. Границы включаются.
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -241,7 +248,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <param name="to">Верхнее пороговое значение</param>
     /// <returns>Контейнер со ссылкой на последний валидатор в цепи</returns>
     public static CurrentValidatorHolder<T, TProperty> InclusiveBetween<T, TProperty>(
-      this RuleValidationMemberBuilder<T, TProperty> obj, IComparable from, IComparable to) where TProperty : IComparable
+      this RuleValidationMemberBuilder<T, TProperty> obj, IComparable from, IComparable to)
+      where TProperty : IComparable
     {
       return obj.SetValidator(new InclusiveBetweenValidator<TProperty>(from, to));
     }

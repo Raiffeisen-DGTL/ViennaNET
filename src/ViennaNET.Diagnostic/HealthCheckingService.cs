@@ -7,14 +7,14 @@ using ViennaNET.Utils;
 namespace ViennaNET.Diagnostic
 {
   /// <summary>
-  /// Сервис для централизованного вызова диагностики приложения
+  ///   Сервис для централизованного вызова диагностики приложения
   /// </summary>
   public class HealthCheckingService : IHealthCheckingService
   {
     private readonly IEnumerable<IDiagnosticImplementor> _implementors;
 
     /// <summary>
-    /// Конструктор
+    ///   Конструктор
     /// </summary>
     /// <param name="implementors">набор диагностик</param>
     public HealthCheckingService(IEnumerable<IDiagnosticImplementor> implementors)
@@ -23,16 +23,16 @@ namespace ViennaNET.Diagnostic
     }
 
     /// <summary>
-    /// Выполняет вызов всех зарегистрированных диагностик
+    ///   Выполняет вызов всех зарегистрированных диагностик
     /// </summary>
     /// <returns>результат диагностики</returns>
     public async Task<IEnumerable<DiagnosticInfo>> CheckHealthAsync()
     {
       var tasks = _implementors.Select(implementor => implementor.Diagnose())
-                               .ToList();
+        .ToList();
       var result = (await Task.WhenAll(tasks)
-                              .ConfigureAwait(false)).SelectMany(diagnosticInfos => diagnosticInfos)
-                                                     .ToList();
+          .ConfigureAwait(false)).SelectMany(diagnosticInfos => diagnosticInfos)
+        .ToList();
       if (result.Any(x => x.Status != DiagnosticStatus.Ok && !x.IsSkipResult))
       {
         DiagnosticFailedEvent?.Invoke();
@@ -46,12 +46,12 @@ namespace ViennaNET.Diagnostic
     }
 
     /// <summary>
-    /// Событие о непрохождении диагностики
+    ///   Событие о непрохождении диагностики
     /// </summary>
     public event DiagnosticFailedDelegate DiagnosticFailedEvent;
 
     /// <summary>
-    /// Событие об успешном прохождении диагностики
+    ///   Событие об успешном прохождении диагностики
     /// </summary>
     public event DiagnosticPassedDelegate DiagnosticPassedEvent;
   }

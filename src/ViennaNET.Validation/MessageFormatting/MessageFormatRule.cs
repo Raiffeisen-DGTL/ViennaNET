@@ -7,7 +7,7 @@ using ViennaNET.Validation.Validators.Exceptions;
 namespace ViennaNET.Validation.MessageFormatting
 {
   /// <summary>
-  /// Правило для форматирования сообщений валидации
+  ///   Правило для форматирования сообщений валидации
   /// </summary>
   public sealed class MessageFormatRule
   {
@@ -17,7 +17,7 @@ namespace ViennaNET.Validation.MessageFormatting
     private string _overridingMessage;
 
     /// <summary>
-    /// Инициализирует экземпляр ссылкой на <see cref="RuleIdentity"/>
+    ///   Инициализирует экземпляр ссылкой на <see cref="RuleIdentity" />
     /// </summary>
     /// <param name="ruleIdentity">Ссылка на идентификатор правила</param>
     public MessageFormatRule(RuleIdentity ruleIdentity)
@@ -26,7 +26,7 @@ namespace ViennaNET.Validation.MessageFormatting
     }
 
     /// <summary>
-    /// Устанавливает идентификатор сообщения правила для форматирования
+    ///   Устанавливает идентификатор сообщения правила для форматирования
     /// </summary>
     /// <param name="identity">Ссылка на идентификатор сообщения</param>
     public void SetMessageIdentity(MessageIdentity identity)
@@ -35,7 +35,7 @@ namespace ViennaNET.Validation.MessageFormatting
     }
 
     /// <summary>
-    /// Устанавливает сообщение для замены существующего
+    ///   Устанавливает сообщение для замены существующего
     /// </summary>
     /// <param name="message">Сообщение для замены</param>
     public void SetOverridingMessage(string message)
@@ -44,8 +44,8 @@ namespace ViennaNET.Validation.MessageFormatting
     }
 
     /// <summary>
-    /// Выполняет форматирование сообщения правила по <see cref="RuleIdentity"/> с
-    /// заданным <see cref="MessageIdentity"/>, заменяя его текст
+    ///   Выполняет форматирование сообщения правила по <see cref="RuleIdentity" /> с
+    ///   заданным <see cref="MessageIdentity" />, заменяя его текст
     /// </summary>
     /// <param name="result">Результат валидации для форматирования</param>
     /// <returns>Результат валидации с замененными текстами сообщений</returns>
@@ -59,16 +59,20 @@ namespace ViennaNET.Validation.MessageFormatting
         {
           return result;
         }
+
         if (ruleValidationResult.Messages.Count > 1)
         {
           throw new
-            ValidationException($"Для правила с кодом {_ruleIdentity.Code} нельзя заменить текст сообщения, поскольку правило вернуло несколько сообщений");
+            ValidationException(
+              $"Для правила с кодом {_ruleIdentity.Code} нельзя заменить текст сообщения, поскольку правило вернуло несколько сообщений");
         }
+
         var message = ruleValidationResult.Messages.FirstOrDefault();
         if (message == null)
         {
           return result;
         }
+
         message.SetMessage(_overridingMessage);
       }
       else
@@ -78,13 +82,16 @@ namespace ViennaNET.Validation.MessageFormatting
         {
           return result;
         }
+
         var message = ruleValidationResult.Messages.FirstOrDefault(x => x.Identity == _messageIdentity);
         if (message == null)
         {
           return result;
         }
+
         message.SetMessage(_overridingMessage);
       }
+
       return result;
     }
   }

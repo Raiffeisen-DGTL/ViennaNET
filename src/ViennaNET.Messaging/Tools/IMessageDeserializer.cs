@@ -3,17 +3,16 @@
 namespace ViennaNET.Messaging.Tools
 {
   /// <summary>
-  /// Десериализатор сообщения
+  ///   Десериализатор сообщения
   /// </summary>
   public interface IMessageDeserializer
-  {
-  }
+  {}
 
   /// <inheritdoc />
   public interface IMessageDeserializer<out TMessage> : IMessageDeserializer
   {
     /// <summary>
-    /// Десереализует сообщение <see cref="BaseMessage"/>
+    ///   Десереализует сообщение <see cref="BaseMessage" />
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>

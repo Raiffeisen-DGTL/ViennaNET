@@ -3,6 +3,5 @@
 namespace ViennaNET.Messaging.Context
 {
   public interface IMessagingCallContextAccessor : ICallContextAccessor
-  {
-  }
+  {}
 }

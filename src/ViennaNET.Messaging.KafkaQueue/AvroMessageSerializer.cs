@@ -10,7 +10,8 @@ namespace ViennaNET.Messaging.KafkaQueue
   ///   Сериализатор/десериализатор для Avro-сообщений
   /// </summary>
   /// <typeparam name="T"></typeparam>
-  public class AvroMessageSerializer<T> : IMessageSerializer<T>, IMessageDeserializer<T> where T : ISpecificRecord, new()
+  public class AvroMessageSerializer<T> : IMessageSerializer<T>, IMessageDeserializer<T>
+    where T : ISpecificRecord, new()
   {
     /// <inheritdoc />
     public T Deserialize(BaseMessage message)

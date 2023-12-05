@@ -7,20 +7,15 @@ using ViennaNET.Logging;
 namespace ViennaNET.Sagas.SagaDefinition
 {
   /// <summary>
-  /// Базовый класс для создания саг
+  ///   Базовый класс для создания саг
   /// </summary>
   /// <typeparam name="TCont"></typeparam>
   public abstract class SagaBase<TCont> where TCont : class
   {
-    /// <summary>
-    /// Имя саги
-    /// </summary>
-    public string Name { get; }
-
     private readonly IList<ISagaStep> _steps;
 
     /// <summary>
-    /// Конструктор
+    ///   Конструктор
     /// </summary>
     /// <param name="name">Имя саги</param>
     public SagaBase(string name = null)
@@ -30,7 +25,12 @@ namespace ViennaNET.Sagas.SagaDefinition
     }
 
     /// <summary>
-    /// Метод для объявления очередного шага саги
+    ///   Имя саги
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    ///   Метод для объявления очередного шага саги
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
@@ -43,7 +43,7 @@ namespace ViennaNET.Sagas.SagaDefinition
     }
 
     /// <summary>
-    /// Метод для объявления очередного асинхронного шага саги
+    ///   Метод для объявления очередного асинхронного шага саги
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
@@ -56,7 +56,7 @@ namespace ViennaNET.Sagas.SagaDefinition
     }
 
     /// <summary>
-    /// Запускает выполнение саги
+    ///   Запускает выполнение саги
     /// </summary>
     /// <param name="context">Контекст выполнения саги</param>
     /// <returns>Успешность выполнения</returns>
@@ -102,8 +102,7 @@ namespace ViennaNET.Sagas.SagaDefinition
       {
         var step = executedSteps.Pop();
         await CallStepCompensation(step, context);
-      }
-      while (executedSteps.Count > 0);
+      } while (executedSteps.Count > 0);
     }
 
     private async Task<bool> CallStepAction(ISagaStep step, TCont context)

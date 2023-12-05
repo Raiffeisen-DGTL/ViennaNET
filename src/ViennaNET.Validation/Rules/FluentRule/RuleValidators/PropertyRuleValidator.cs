@@ -6,17 +6,17 @@ using ViennaNET.Validation.Rules.ValidationResults.RuleMessages;
 namespace ViennaNET.Validation.Rules.FluentRule.RuleValidators
 {
   /// <summary>
-  /// Позволяет проверять заданное правило на основе публичного интерфейса
-  /// проверяемого объекта и вернуть сформированное сообщение
+  ///   Позволяет проверять заданное правило на основе публичного интерфейса
+  ///   проверяемого объекта и вернуть сформированное сообщение
   /// </summary>
   public abstract class PropertyRuleValidator<T> : IRuleValidator<T>
   {
-    private readonly List<Func<object, object>> _customFormatArgs = new List<Func<object, object>>();
+    private readonly List<Func<object, object>> _customFormatArgs = new();
     private Func<IRuleMessage> _source;
     private Func<object, object> _state;
 
     /// <summary>
-    /// Функции для расчета валидационных аргументов 
+    ///   Функции для расчета валидационных аргументов
     /// </summary>
     public ICollection<Func<object, object>> Arguments => _customFormatArgs;
 
@@ -48,7 +48,7 @@ namespace ViennaNET.Validation.Rules.FluentRule.RuleValidators
 
       var source = _source.Invoke();
       source.SetArgs(_customFormatArgs.Select(func => func(entity))
-                                      .ToArray());
+        .ToArray());
       if (_state != null)
       {
         source.State = _state.Invoke(entity);

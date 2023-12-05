@@ -35,28 +35,29 @@ namespace ViennaNET.EventSourcing
     {
       _entityFactoryService = entityFactoryService.ThrowIfNull(nameof(entityFactoryService));
       _messagingComponentFactory = messagingComponentFactory.ThrowIfNull(nameof(messagingComponentFactory));
-      _integrationEventMapperStrategy = integrationEventMapperFactory.ThrowIfNull(nameof(integrationEventMapperFactory));
+      _integrationEventMapperStrategy =
+        integrationEventMapperFactory.ThrowIfNull(nameof(integrationEventMapperFactory));
     }
 
     /// <inheritdoc />
     public IEnumerable<T> LoadFromStream<T>(Expression<Func<T, bool>> predicate) where T : class, IIntegrationEvent
     {
       return _entityFactoryService.Create<T>()
-                                  .Query()
-                                  .Where(predicate)
-                                  .OrderBy(x => x.Timestamp);
+        .Query()
+        .Where(predicate)
+        .OrderBy(x => x.Timestamp);
     }
 
     /// <inheritdoc />
     public void AppendToStream<T>(bool withCommit, params IEvent[] events) where T : class, IIntegrationEvent
     {
       var integrationEvents = events.Select(e =>
-                                    {
-                                      var body = JsonConvert.SerializeObject(e);
-                                      return _integrationEventMapperStrategy.GetMapper<T>(e)
-                                                                            .Map(e, body);
-                                    })
-                                    .ToArray();
+        {
+          var body = JsonConvert.SerializeObject(e);
+          return _integrationEventMapperStrategy.GetMapper<T>(e)
+            .Map(e, body);
+        })
+        .ToArray();
 
       IUnitOfWork uow = null;
       if (withCommit)
@@ -80,12 +81,12 @@ namespace ViennaNET.EventSourcing
       where T : class, IIntegrationEvent
     {
       var integrationEvents = events.Select(e =>
-                                    {
-                                      var body = JsonConvert.SerializeObject(e);
-                                      return _integrationEventMapperStrategy.GetMapper<T>(e)
-                                                                            .Map(e, body);
-                                    })
-                                    .ToArray();
+        {
+          var body = JsonConvert.SerializeObject(e);
+          return _integrationEventMapperStrategy.GetMapper<T>(e)
+            .Map(e, body);
+        })
+        .ToArray();
 
       IUnitOfWork uow = null;
       if (withCommit)
@@ -111,7 +112,7 @@ namespace ViennaNET.EventSourcing
     {
       var body = JsonConvert.SerializeObject(@event);
       var integrationEvent = _integrationEventMapperStrategy.GetMapper<T>(@event)
-                                                            .Map(@event, body);
+        .Map(@event, body);
 
       IUnitOfWork uow = null;
       if (withCommit)

@@ -6,19 +6,18 @@ using ViennaNET.Messaging.Messages;
 namespace ViennaNET.Messaging.Tools
 {
   /// <summary>
-  /// Serializer/Deserializer for JSON messages
+  ///   Serializer/Deserializer for JSON messages
   /// </summary>
   /// <typeparam name="T"></typeparam>
   public class JsonMessageSerializer<T> : IMessageSerializer<T>, IMessageDeserializer<T>
   {
-    private JsonSerializerOptions options =>
-      new JsonSerializerOptions
-      {
-        Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
-        IgnoreNullValues = true
-      };
-
     private const string _contentType = "application/json";
+
+    private JsonSerializerOptions options =>
+      new()
+      {
+        Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic), IgnoreNullValues = true
+      };
 
     /// <inheritdoc />
     public T Deserialize(BaseMessage message)

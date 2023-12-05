@@ -2,10 +2,12 @@
 
 namespace ViennaNET.Mediator.DefaultConfiguration
 {
-  internal class PipelineBroadcastPreProcessorRegistrar<TMessagePreProcessor> where TMessagePreProcessor : IBroadcastPreProcessor
+  internal class PipelineBroadcastPreProcessorRegistrar<TMessagePreProcessor>
+    where TMessagePreProcessor : IBroadcastPreProcessor
   {
     public PipelineBroadcastPreProcessorRegistrar(
-      IPipelineProcessorsRegistrar registrar, TMessagePreProcessor preProcessor, PreProcessorOrder<TMessagePreProcessor> order)
+      IPipelineProcessorsRegistrar registrar, TMessagePreProcessor preProcessor,
+      PreProcessorOrder<TMessagePreProcessor> order)
     {
       registrar.RegisterBroadcastPreProcessor(preProcessor, order.Order);
     }

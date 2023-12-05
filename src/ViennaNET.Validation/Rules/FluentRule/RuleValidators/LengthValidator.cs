@@ -23,7 +23,7 @@ namespace ViennaNET.Validation.Rules.FluentRule.RuleValidators
       var num = instance == null
         ? 0
         : instance.ToString()
-                  .Length;
+          .Length;
       return num >= Min && num <= Max;
     }
   }

@@ -6,7 +6,7 @@ namespace ViennaNET.EventSourcing.DefaultConfiguration
 {
   /// <inheritdoc />
   /// <summary>
-  /// Пакет SimpleInjector для работы с хранилищем событий <see cref="EventStore"/>
+  ///   Пакет SimpleInjector для работы с хранилищем событий <see cref="EventStore" />
   /// </summary>
   public class EventSourcingPackage : IPackage
   {

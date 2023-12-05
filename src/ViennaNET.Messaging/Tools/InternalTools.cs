@@ -4,7 +4,8 @@ namespace ViennaNET.Messaging.Tools
 {
   internal static class InternalTools
   {
-    public static int CalculateTimeout(int errorCount, int errorThresholdCount, int reconnectTimeout, int maxReconnectTimeout)
+    public static int CalculateTimeout(int errorCount, int errorThresholdCount, int reconnectTimeout,
+      int maxReconnectTimeout)
     {
       // Examples of result:
       // errorCount = 0 , errorThresholdCount = 15, reconnectTimeout = 600, maxReconnectTimeout = 60000
@@ -27,8 +28,8 @@ namespace ViennaNET.Messaging.Tools
       if (errorCount > errorThresholdCount)
       {
         return Math.Min(reconnectTimeout * (int)Math.Pow(2, errorCount - errorThresholdCount > 20
-                          ? 20
-                          : errorCount - errorThresholdCount), maxReconnectTimeout);
+          ? 20
+          : errorCount - errorThresholdCount), maxReconnectTimeout);
       }
 
       return reconnectTimeout;

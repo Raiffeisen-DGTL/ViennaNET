@@ -1,17 +1,17 @@
 ﻿namespace ViennaNET.Messaging.Configuration
 {
   /// <summary>
-  /// Пользовательский заголовок
+  ///   Пользовательский заголовок
   /// </summary>
   public class CustomHeader
   {
     /// <summary>
-    /// Ключ
+    ///   Ключ
     /// </summary>
     public string Key { get; set; }
 
     /// <summary>
-    /// Значение
+    ///   Значение
     /// </summary>
     public string Value { get; set; }
   }

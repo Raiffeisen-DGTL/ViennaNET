@@ -11,7 +11,7 @@ namespace ViennaNET.ArcSight
     private readonly ILogger _logger;
 
     /// <summary>
-    /// Contructor
+    ///   Contructor
     /// </summary>
     /// <param name="logger">A logger interface</param>
     public CefSenderFactory(ILogger<CefSenderFactory> logger)

@@ -5,7 +5,7 @@ using StackExchange.Redis;
 namespace ViennaNET.Redis
 {
   /// <summary>
-  /// Параметры подключения
+  ///   Параметры подключения
   /// </summary>
   public class ConnectionOptions
   {
@@ -14,7 +14,7 @@ namespace ViennaNET.Redis
     private readonly int _expirationMinValue;
 
     /// <summary>
-    /// Инициализирует экземпляр параметрами подключения
+    ///   Инициализирует экземпляр параметрами подключения
     /// </summary>
     /// <param name="configurationOptions">Опции конфигурации</param>
     /// <param name="key">Пользовательский ключ БД</param>
@@ -35,22 +35,22 @@ namespace ViennaNET.Redis
     }
 
     /// <summary>
-    /// Пользовательский ключ БД
+    ///   Пользовательский ключ БД
     /// </summary>
     public string Key { get; }
 
     /// <summary>
-    /// Коллекция TTL ключей
+    ///   Коллекция TTL ключей
     /// </summary>
     public IDictionary<string, TimeSpan> KeyLifetimes { get; }
 
     /// <summary>
-    /// Флаг очищения старых ключей при запуске приложения
+    ///   Флаг очищения старых ключей при запуске приложения
     /// </summary>
     public bool ClearOnStartup { get; }
 
     /// <summary>
-    /// Получает политику переподключения к БД и дозаполняет опции конфигурации 
+    ///   Получает политику переподключения к БД и дозаполняет опции конфигурации
     /// </summary>
     /// <returns>Опции конфигурации</returns>
     public ConfigurationOptions GetConfigurationOptions()

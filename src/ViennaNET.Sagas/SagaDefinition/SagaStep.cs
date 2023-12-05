@@ -5,7 +5,7 @@ using ViennaNET.Utils;
 namespace ViennaNET.Sagas.SagaDefinition
 {
   /// <summary>
-  /// Класс для описания шага саги
+  ///   Класс для описания шага саги
   /// </summary>
   /// <typeparam name="TCont"></typeparam>
   public class SagaStep<TCont> : ISagaStep, IExecutableSagaStep<TCont>, IConfigurableSagaStep<TCont> where TCont : class
@@ -14,7 +14,7 @@ namespace ViennaNET.Sagas.SagaDefinition
     private Action<TCont> _compensation;
 
     /// <summary>
-    /// Конструктор
+    ///   Конструктор
     /// </summary>
     /// <param name="name">Имя шага</param>
     /// <param name="type">Тип шага</param>
@@ -25,17 +25,7 @@ namespace ViennaNET.Sagas.SagaDefinition
     }
 
     /// <summary>
-    /// Имя шага
-    /// </summary>
-    public string Name { get; }
-
-    /// <summary>
-    /// Тип шага
-    /// </summary>
-    public StepType Type { get; }
-
-    /// <summary>
-    /// Устанавливает основное действие
+    ///   Устанавливает основное действие
     /// </summary>
     /// <param name="action">Основное действие</param>
     /// <returns>Текущий шаг</returns>
@@ -46,7 +36,7 @@ namespace ViennaNET.Sagas.SagaDefinition
     }
 
     /// <summary>
-    /// Устанавливает функцию компенсации основного действия
+    ///   Устанавливает функцию компенсации основного действия
     /// </summary>
     /// <param name="compensation">Функция компенсации основного действия</param>
     /// <returns>Текущий шаг</returns>
@@ -57,7 +47,7 @@ namespace ViennaNET.Sagas.SagaDefinition
     }
 
     /// <summary>
-    /// Вызывает основное действие
+    ///   Вызывает основное действие
     /// </summary>
     /// <param name="context">Контекст саги</param>
     /// <returns>Успешность выполнения</returns>
@@ -70,7 +60,7 @@ namespace ViennaNET.Sagas.SagaDefinition
 
         return true;
       }
-      catch (AbortSagaExecutingException)
+      catch (AbortSagaExecutingException ex)
       {
         Logger.LogInfo($"Abort saga execution by AbortSagaExecutingException on executing step '{Name}' action");
         return false;
@@ -83,7 +73,7 @@ namespace ViennaNET.Sagas.SagaDefinition
     }
 
     /// <summary>
-    /// Вызывает функцию отката основного действия
+    ///   Вызывает функцию отката основного действия
     /// </summary>
     /// <param name="context">Контекст саги</param>
     public void InvokeCompensation(TCont context)
@@ -103,5 +93,15 @@ namespace ViennaNET.Sagas.SagaDefinition
         Logger.LogErrorFormat(ex, $"Unexpected error on executing step '{Name}' compensation");
       }
     }
+
+    /// <summary>
+    ///   Имя шага
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    ///   Тип шага
+    /// </summary>
+    public StepType Type { get; }
   }
 }

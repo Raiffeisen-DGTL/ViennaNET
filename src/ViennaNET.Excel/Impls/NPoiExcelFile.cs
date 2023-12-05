@@ -18,8 +18,7 @@ namespace ViennaNET.Excel.Impl
   internal class NPoiExcelFile : IExcel
   {
     private const string xlsxInXlsMessage =
-        "The supplied data appears to be in the Office 2007+ XML. You are calling the part of POI that deals with OLE2 Office Documents. You need to call a different part of POI to process this data (eg XSSF instead of HSSF)"
-      ;
+      "The supplied data appears to be in the Office 2007+ XML. You are calling the part of POI that deals with OLE2 Office Documents. You need to call a different part of POI to process this data (eg XSSF instead of HSSF)";
 
     private const string wrongPasswordMessage = "Default password is invalid for docId/saltData/saltHash";
 
@@ -27,8 +26,7 @@ namespace ViennaNET.Excel.Impl
       "The supplied POIFSFileSystem does not contain a BIFF8 'Workbook' entry. Is it really an excel file?";
 
     private const string oldFormat =
-        "The supplied spreadsheet seems to be Excel 5.0/7.0 (BIFF5) format. POI only supports BIFF8 format (from Excel versions 97/2000/XP/2003)"
-      ;
+      "The supplied spreadsheet seems to be Excel 5.0/7.0 (BIFF5) format. POI only supports BIFF8 format (from Excel versions 97/2000/XP/2003)";
 
     private const string badFormat = "Unexpected missing row when some rows already present, the file is wrong";
     private const string badRecordFormat = "Unable to construct record instance";
@@ -86,20 +84,21 @@ namespace ViennaNET.Excel.Impl
       {
         ProcessException(exception, fileName, isXml);
       }
+
       HiddenDataFormat = Excel.GetCreationHelper()
-                              .CreateDataFormat()
-                              .GetFormat(";;;");
+        .CreateDataFormat()
+        .GetFormat(";;;");
     }
 
     /// <summary>
-    /// Возвращает книгу
+    ///   Возвращает книгу
     /// </summary>
     public IWorkbook Workbook => Excel;
 
     public short HiddenDataFormat { get; }
 
     /// <summary>
-    /// Создает новый лист и возвращает его
+    ///   Создает новый лист и возвращает его
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
@@ -109,7 +108,7 @@ namespace ViennaNET.Excel.Impl
     }
 
     /// <summary>
-    /// Возвращает лист Excel по имени.
+    ///   Возвращает лист Excel по имени.
     /// </summary>
     public IWorkSheet this[string name]
     {
@@ -120,12 +119,13 @@ namespace ViennaNET.Excel.Impl
         {
           return null;
         }
+
         return new NPoiWorkSheet(Excel.GetSheet(name), this);
       }
     }
 
     /// <summary>
-    /// Вохвращает рабочий лист по индексу
+    ///   Вохвращает рабочий лист по индексу
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
@@ -140,6 +140,7 @@ namespace ViennaNET.Excel.Impl
           {
             return null;
           }
+
           return new NPoiWorkSheet(sheet, this);
         }
         catch (ArgumentOutOfRangeException)
@@ -157,8 +158,10 @@ namespace ViennaNET.Excel.Impl
     {
       if (string.IsNullOrEmpty(FileName))
       {
-        throw new InvalidOperationException("Can not save excel file - file name is empty. Use Excel provider to specify file name");
+        throw new InvalidOperationException(
+          "Can not save excel file - file name is empty. Use Excel provider to specify file name");
       }
+
       using (var stream = new FileStream(FileName, FileMode.Create))
       {
         Excel.Write(stream);
@@ -185,6 +188,7 @@ namespace ViennaNET.Excel.Impl
         Excel.Write(stream);
         bytes = stream.ToArray();
       }
+
       return bytes;
     }
 
@@ -211,7 +215,7 @@ namespace ViennaNET.Excel.Impl
 
     private static bool IsMatch<T>(Exception exception) where T : Exception
     {
-      return (exception as T) != null;
+      return exception as T != null;
     }
 
     private static bool IsContains<T>(Exception exception, string message) where T : Exception
@@ -247,7 +251,8 @@ namespace ViennaNET.Excel.Impl
       }
       else if (IsMatch<RecordFormatException>(exception, badRecordFormat))
       {
-        if (exception.InnerException != null && IsContains<RecordFormatException>(exception.InnerException, "Unknown encryption info"))
+        if (exception.InnerException != null &&
+            IsContains<RecordFormatException>(exception.InnerException, "Unknown encryption info"))
         {
           type = ExcelErrorType.PasswordProtected;
         }

@@ -12,7 +12,8 @@ namespace ViennaNET.Messaging.MQSeriesQueue.DefaultConfiguration
     /// </summary>
     public void RegisterServices(Container container)
     {
-      container.Collection.Append<IMessageAdapterConstructor, MqSeriesQueueMessageAdapterConstructor>(Lifestyle.Singleton);
+      container.Collection.Append<IMessageAdapterConstructor, MqSeriesQueueMessageAdapterConstructor>(
+        Lifestyle.Singleton);
     }
   }
 }

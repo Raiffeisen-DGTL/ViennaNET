@@ -6,12 +6,12 @@ using ViennaNET.Validation.Rules.ValidationResults.RuleMessages;
 namespace ViennaNET.Validation.Rules.FluentRule
 {
   /// <summary>
-  /// Методы расширения для контейнера со ссылкой на последний валидатор в цепи
+  ///   Методы расширения для контейнера со ссылкой на последний валидатор в цепи
   /// </summary>
   public static class CurrentValidatorHolderExtensions
   {
     /// <summary>
-    /// Задает обещание, что правило вернет предупреждение с указанными аргументами
+    ///   Задает обещание, что правило вернет предупреждение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -30,7 +30,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет предупреждение с указанными аргументами
+    ///   Задает обещание, что правило вернет предупреждение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -44,12 +44,12 @@ namespace ViennaNET.Validation.Rules.FluentRule
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
       obj.CurrentValidator.SetMessageSource(() => new WarningRuleMessage(new MessageIdentity(Guid.NewGuid()
-                                                                                                 .ToString()), message));
+        .ToString()), message));
       return (RuleValidationMemberBuilder<T, TProperty>)obj;
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет предупреждение с указанными аргументами
+    ///   Задает обещание, что правило вернет предупреждение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -71,7 +71,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет предупреждение с указанными аргументами
+    ///   Задает обещание, что правило вернет предупреждение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -82,17 +82,18 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <returns>Строитель валидаторов правила с текучим интерфейсом</returns>
     [StringFormatMethod("message")]
     public static RuleValidationMemberBuilder<T, TProperty> WithWarningMessage<T, TProperty>(
-      this CurrentValidatorHolder<T, TProperty> obj, Func<T, object> customState, string message, params Func<T, object>[] funcs)
+      this CurrentValidatorHolder<T, TProperty> obj, Func<T, object> customState, string message,
+      params Func<T, object>[] funcs)
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
       obj.CurrentValidator.SetState(x => customState((T)x));
       obj.CurrentValidator.SetMessageSource(() => new WarningRuleMessage(new MessageIdentity(Guid.NewGuid()
-                                                                                                 .ToString()), message));
+        .ToString()), message));
       return (RuleValidationMemberBuilder<T, TProperty>)obj;
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет предупреждение с указанными аргументами
+    ///   Задает обещание, что правило вернет предупреждение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -105,17 +106,19 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <returns>Строитель валидаторов правила с текучим интерфейсом</returns>
     [StringFormatMethod("message")]
     public static RuleValidationMemberBuilder<T, TProperty> WithWarningMessageCustomCode<T, TProperty>(
-      this CurrentValidatorHolder<T, TProperty> obj, string code, string customCode, Func<T, object> customState, string message,
+      this CurrentValidatorHolder<T, TProperty> obj, string code, string customCode, Func<T, object> customState,
+      string message,
       params Func<T, object>[] funcs)
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
       obj.CurrentValidator.SetState(x => customState((T)x));
-      obj.CurrentValidator.SetMessageSource(() => new WarningRuleMessage(customCode, new MessageIdentity(code), message));
+      obj.CurrentValidator.SetMessageSource(
+        () => new WarningRuleMessage(customCode, new MessageIdentity(code), message));
       return (RuleValidationMemberBuilder<T, TProperty>)obj;
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет информационное сообщение с указанными аргументами
+    ///   Задает обещание, что правило вернет информационное сообщение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -128,7 +131,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <returns>Строитель валидаторов правила с текучим интерфейсом</returns>
     [StringFormatMethod("message")]
     public static RuleValidationMemberBuilder<T, TProperty> WithInfoMessageCustomCode<T, TProperty>(
-      this CurrentValidatorHolder<T, TProperty> obj, string code, string customCode, Func<T, object> customState, string message,
+      this CurrentValidatorHolder<T, TProperty> obj, string code, string customCode, Func<T, object> customState,
+      string message,
       params Func<T, object>[] funcs)
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
@@ -138,7 +142,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет информационное сообщение с указанными аргументами
+    ///   Задает обещание, что правило вернет информационное сообщение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -157,7 +161,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет информационное сообщение с указанными аргументами
+    ///   Задает обещание, что правило вернет информационное сообщение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -171,12 +175,12 @@ namespace ViennaNET.Validation.Rules.FluentRule
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
       obj.CurrentValidator.SetMessageSource(() => new InfoRuleMessage(new MessageIdentity(Guid.NewGuid()
-                                                                                              .ToString()), message));
+        .ToString()), message));
       return (RuleValidationMemberBuilder<T, TProperty>)obj;
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет информационное сообщение с указанными аргументами
+    ///   Задает обещание, что правило вернет информационное сообщение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -198,7 +202,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет информационное сообщение с указанными аргументами
+    ///   Задает обещание, что правило вернет информационное сообщение с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -209,17 +213,18 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <returns>Строитель валидаторов правила с текучим интерфейсом</returns>
     [StringFormatMethod("message")]
     public static RuleValidationMemberBuilder<T, TProperty> WithInfoMessage<T, TProperty>(
-      this CurrentValidatorHolder<T, TProperty> obj, Func<T, object> customState, string message, params Func<T, object>[] funcs)
+      this CurrentValidatorHolder<T, TProperty> obj, Func<T, object> customState, string message,
+      params Func<T, object>[] funcs)
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
       obj.CurrentValidator.SetState(x => customState((T)x));
       obj.CurrentValidator.SetMessageSource(() => new InfoRuleMessage(new MessageIdentity(Guid.NewGuid()
-                                                                                              .ToString()), message));
+        .ToString()), message));
       return (RuleValidationMemberBuilder<T, TProperty>)obj;
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
+    ///   Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -238,7 +243,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
+    ///   Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -252,12 +257,12 @@ namespace ViennaNET.Validation.Rules.FluentRule
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
       obj.CurrentValidator.SetMessageSource(() => new ErrorRuleMessage(new MessageIdentity(Guid.NewGuid()
-                                                                                               .ToString()), message));
+        .ToString()), message));
       return (RuleValidationMemberBuilder<T, TProperty>)obj;
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
+    ///   Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -279,7 +284,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
+    ///   Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -292,7 +297,8 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <returns>Строитель валидаторов правила с текучим интерфейсом</returns>
     [StringFormatMethod("message")]
     public static RuleValidationMemberBuilder<T, TProperty> WithErrorMessageCustomCode<T, TProperty>(
-      this CurrentValidatorHolder<T, TProperty> obj, string code, string customCode, Func<T, object> customState, string message,
+      this CurrentValidatorHolder<T, TProperty> obj, string code, string customCode, Func<T, object> customState,
+      string message,
       params Func<T, object>[] funcs)
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
@@ -302,7 +308,7 @@ namespace ViennaNET.Validation.Rules.FluentRule
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
+    ///   Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>
@@ -313,17 +319,18 @@ namespace ViennaNET.Validation.Rules.FluentRule
     /// <returns>Строитель валидаторов правила с текучим интерфейсом</returns>
     [StringFormatMethod("message")]
     public static RuleValidationMemberBuilder<T, TProperty> WithErrorMessage<T, TProperty>(
-      this CurrentValidatorHolder<T, TProperty> obj, Func<T, object> customState, string message, params Func<T, object>[] funcs)
+      this CurrentValidatorHolder<T, TProperty> obj, Func<T, object> customState, string message,
+      params Func<T, object>[] funcs)
     {
       obj.CurrentValidator.AddArguments(funcs.Select(func => (Func<object, object>)(x => func((T)x))));
       obj.CurrentValidator.SetState(x => customState((T)x));
       obj.CurrentValidator.SetMessageSource(() => new ErrorRuleMessage(new MessageIdentity(Guid.NewGuid()
-                                                                                               .ToString()), message));
+        .ToString()), message));
       return (RuleValidationMemberBuilder<T, TProperty>)obj;
     }
 
     /// <summary>
-    /// Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
+    ///   Задает обещание, что правило вернет сообщение об ошибке с указанными аргументами
     /// </summary>
     /// <typeparam name="T">Тип объекта валидации</typeparam>
     /// <typeparam name="TProperty">Тип свойства</typeparam>

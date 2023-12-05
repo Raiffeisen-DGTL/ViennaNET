@@ -83,7 +83,7 @@ public enum DataTypes
     ///     kind: Secret
     ///     type: kubernetes.io/appsecretsjson
     ///     data:
-    ///       appsecret.json: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    ///       appsecret.json: eyAiU2VjcmV0RmllbGQiOiAi0KLRgNCw0L3QutC4IiB9Cg==
     /// </code>
     /// </example>
     Json = 1

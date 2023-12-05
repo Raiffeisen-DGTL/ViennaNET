@@ -3,9 +3,8 @@ using SimpleInjector.Packaging;
 
 namespace ViennaNET.ArcSight.DefaultConfiguration
 {
-  /// <inheritdoc />
   /// <summary>
-  /// Пакет SimpleInjector для работы с ArcSight
+  ///   Пакет SimpleInjector для работы с ArcSight
   /// </summary>
   public class ArcSightPackage : IPackage
   {

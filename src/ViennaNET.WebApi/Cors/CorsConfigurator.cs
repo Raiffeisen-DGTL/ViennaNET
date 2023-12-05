@@ -10,9 +10,9 @@ namespace ViennaNET.WebApi.Cors
     {
       RegisterPreflightMiddleware(app);
       app.UseCors(x => x.SetIsOriginAllowed(o => true)
-                        .AllowCredentials()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
+        .AllowCredentials()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
     }
 
     private static void RegisterPreflightMiddleware(IApplicationBuilder app)
@@ -22,7 +22,8 @@ namespace ViennaNET.WebApi.Cors
         if (context.Request.Method == HttpMethod.Options.Method)
         {
           context.Request.Headers.TryGetValue("Origin", out var origin);
-          context.Response.Headers.Add("Access-Control-Allow-Headers", "content-type,x-request-id,x-user-id,x-user-domain,cache-control,authorization");
+          context.Response.Headers.Add("Access-Control-Allow-Headers",
+            "content-type,x-request-id,x-user-id,x-user-domain,cache-control,authorization");
           context.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
           context.Response.Headers.Add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
           context.Response.Headers.Add("Access-Control-Allow-Origin", origin);

@@ -24,8 +24,8 @@ namespace ViennaNET.Utils.Threading
     public void ProcessAsync(Action action, Action<Exception> errorHandler)
     {
       _taskFactory.StartNew(action)
-                  .ContinueWith(t => errorHandler(t.Exception),
-                                TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
+        .ContinueWith(t => errorHandler(t.Exception),
+          TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
     }
   }
 }

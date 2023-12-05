@@ -119,7 +119,7 @@ public static class KubernetesConfigurationExtensions
     ///     kind: Secret
     ///     type: kubernetes.io/appsecretsjson
     ///     data:
-    ///       appsecret.json: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    ///       appsecret.json: eyAiU2VjcmV0RmllbGQiOiAi0KLRgNCw0L3QutC4IiB9Cg==
     /// </code>
     /// </example>
     /// <param name="builder">Ссылка на объект <see cref="IConfigurationBuilder" />.</param>

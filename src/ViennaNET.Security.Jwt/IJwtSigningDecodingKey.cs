@@ -3,7 +3,7 @@
 namespace ViennaNET.Security.Jwt
 {
   /// <summary>
-  /// Ключ для проверки подписи (публичный)
+  ///   Ключ для проверки подписи (публичный)
   /// </summary>
   public interface IJwtSigningDecodingKey
   {

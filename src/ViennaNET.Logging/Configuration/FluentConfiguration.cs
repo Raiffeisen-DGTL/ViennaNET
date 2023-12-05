@@ -45,14 +45,14 @@ namespace ViennaNET.Logging.Configuration
     public FluentConfiguration SetMinLevel(int index, LogLevel level)
     {
       _configuration.Listeners[index]
-                    .MinLevel = level;
+        .MinLevel = level;
       return this;
     }
 
     public FluentConfiguration SetMaxLevel(int index, LogLevel level)
     {
       _configuration.Listeners[index]
-                    .MaxLevel = level;
+        .MaxLevel = level;
       return this;
     }
 
@@ -69,7 +69,7 @@ namespace ViennaNET.Logging.Configuration
     {
       AssertTextFileType(index);
       _configuration.Listeners[index]
-                    .Params[TextFileConstants.Append] = isAppendMode
+        .Params[TextFileConstants.Append] = isAppendMode
         ? TextFileConstants.Append
         : TextFileConstants.RolloverValue;
       return this;
@@ -84,7 +84,7 @@ namespace ViennaNET.Logging.Configuration
       }
 
       _configuration.Listeners[index]
-                    .Params[TextFileConstants.MaxSize] = size.ToString();
+        .Params[TextFileConstants.MaxSize] = size.ToString();
       return this;
     }
 
@@ -97,7 +97,7 @@ namespace ViennaNET.Logging.Configuration
       }
 
       _configuration.Listeners[index]
-                    .Params[TextFileConstants.RollBackBackups] = number.ToString();
+        .Params[TextFileConstants.RollBackBackups] = number.ToString();
       return this;
     }
 
@@ -110,7 +110,7 @@ namespace ViennaNET.Logging.Configuration
       }
 
       _configuration.Listeners[index]
-                    .Params[TextFileConstants.FileName] = name;
+        .Params[TextFileConstants.FileName] = name;
       return this;
     }
 
@@ -123,16 +123,16 @@ namespace ViennaNET.Logging.Configuration
       }
 
       _configuration.Listeners[index]
-                    .Params.Remove(TextFileConstants.FileName);
+        .Params.Remove(TextFileConstants.FileName);
       _configuration.Listeners[index]
-                    .Params[TextFileConstants.FilePatternName] = name;
+        .Params[TextFileConstants.FilePatternName] = name;
       return this;
     }
 
     private void AssertTextFileType(int index)
     {
       if (_configuration.Listeners[index]
-                        .Type != TextFileConstants.Type)
+            .Type != TextFileConstants.Type)
       {
         throw new InvalidOperationException(string.Format("listener with index {0} has another type", index));
       }

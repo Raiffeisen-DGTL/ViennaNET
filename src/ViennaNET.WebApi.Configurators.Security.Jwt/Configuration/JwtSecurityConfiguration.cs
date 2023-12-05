@@ -3,27 +3,27 @@
   public class JwtSecurityConfiguration
   {
     /// <summary>
-    /// Название секции в конфигурационном файле
+    ///   Название секции в конфигурационном файле
     /// </summary>
     public const string SectionName = "jwtSecuritySettings";
 
     /// <summary>
-    /// Издатель
+    ///   Издатель
     /// </summary>
     public string Issuer { get; set; }
 
     /// <summary>
-    /// Аудитория
+    ///   Аудитория
     /// </summary>
     public string Audience { get; set; }
 
     /// <summary>
-    /// Название переменной окружения, хранящей ключ шифрования токена
+    ///   Название переменной окружения, хранящей ключ шифрования токена
     /// </summary>
     public string TokenKeyEnvVariable { get; set; }
 
     /// <summary>
-    /// Алгоритм шифрования
+    ///   Алгоритм шифрования
     /// </summary>
     public string SigningAlgorithm { get; set; }
   }

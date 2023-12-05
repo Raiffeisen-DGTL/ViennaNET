@@ -10,7 +10,7 @@ using ViennaNET.Utils;
 
 namespace ViennaNET.Messaging.Sending.Impl
 {
-  /// <inheritdoc cref="IMessageSender"/>
+  /// <inheritdoc cref="IMessageSender" />
   public class MessageSender : IMessageSender
   {
     private readonly IMessageAdapter _adapter;
@@ -19,9 +19,9 @@ namespace ViennaNET.Messaging.Sending.Impl
     private bool _disposed;
 
     /// <summary>
-    /// Инициализирует отправителя сообщений с определенным адаптером очереди <see cref="IMessageAdapter"/>
+    ///   Инициализирует отправителя сообщений с определенным адаптером очереди <see cref="IMessageAdapter" />
     /// </summary>
-    /// <param name="adapter">Адаптер сообщений <see cref="IMessageAdapter"/></param>
+    /// <param name="adapter">Адаптер сообщений <see cref="IMessageAdapter" /></param>
     /// <param name="callContextFactory">Провайдер контекста вызова</param>
     /// <param name="applicationName">Имя приложения</param>
     public MessageSender(IMessageAdapter adapter, ICallContextFactory callContextFactory, string applicationName)
@@ -64,19 +64,22 @@ namespace ViennaNET.Messaging.Sending.Impl
     }
 
     /// <inheritdoc />
-    public async Task<string> SendAsync(BaseMessage message, IReadOnlyDictionary<string, object> additionalProperties = null, CancellationToken cancellationToken = default)
+    public async Task<string> SendAsync(BaseMessage message,
+      IReadOnlyDictionary<string, object> additionalProperties = null, CancellationToken cancellationToken = default)
     {
       return await Task.Factory.StartNew(() => SendMessage(message, additionalProperties), cancellationToken);
     }
 
     /// <inheritdoc />
-    public BaseMessage SendAndWaitReplyMessage(BaseMessage message, IReadOnlyDictionary<string, object> additionalProperties = null)
+    public BaseMessage SendAndWaitReplyMessage(BaseMessage message,
+      IReadOnlyDictionary<string, object> additionalProperties = null)
     {
       return SendAndWaitReplyMessageAsync(message, additionalProperties).Result;
     }
 
     /// <inheritdoc />
-    public async Task<BaseMessage> SendAndWaitReplyMessageAsync(BaseMessage message, IReadOnlyDictionary<string, object> additionalProperties = null, CancellationToken cancellationToken = default)
+    public async Task<BaseMessage> SendAndWaitReplyMessageAsync(BaseMessage message,
+      IReadOnlyDictionary<string, object> additionalProperties = null, CancellationToken cancellationToken = default)
     {
       if (!(_adapter is IMessageAdapterWithSubscribing adapter))
       {
@@ -119,7 +122,7 @@ namespace ViennaNET.Messaging.Sending.Impl
     }
 
     /// <summary>
-    /// Обогащает свойства сообщения данными из контекста вызова: пользователь, домаен и т.п.
+    ///   Обогащает свойства сообщения данными из контекста вызова: пользователь, домаен и т.п.
     /// </summary>
     /// <param name="message">Сообщение, свойства которого нужно обогатить</param>
     protected void FillPropertiesFromCallContext(BaseMessage message)
@@ -134,7 +137,7 @@ namespace ViennaNET.Messaging.Sending.Impl
     }
 
     /// <summary>
-    /// Настраивает параметры сообщения в соответствии с конфигурацией
+    ///   Настраивает параметры сообщения в соответствии с конфигурацией
     /// </summary>
     /// <param name="message">Сообщение, параметры которого нужно настроить</param>
     protected void FillPropertiesFromQueueConfiguration(BaseMessage message)
@@ -156,14 +159,15 @@ namespace ViennaNET.Messaging.Sending.Impl
         return;
       }
 
-      foreach (var kv in queueConfiguration.CustomHeaders.Select(kv => new KeyValuePair<string, object>(kv.Key, kv.Value)))
+      foreach (var kv in queueConfiguration.CustomHeaders.Select(kv =>
+                 new KeyValuePair<string, object>(kv.Key, kv.Value)))
       {
         message.Properties.Add(kv.Key, kv.Value);
       }
     }
 
     /// <summary>
-    /// Заполняет свойства сообщения
+    ///   Заполняет свойства сообщения
     /// </summary>
     /// <param name="mes">Сообщение, свойства которого нужно заполнить</param>
     /// <param name="properties">Значения параметров</param>
