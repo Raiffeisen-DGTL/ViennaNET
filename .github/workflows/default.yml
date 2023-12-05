@@ -31,7 +31,7 @@ jobs:
         with:
           java-version: 21
 
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.x'
