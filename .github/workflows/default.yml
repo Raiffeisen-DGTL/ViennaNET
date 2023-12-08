@@ -107,7 +107,7 @@ jobs:
         run: dotnet pack $PROJECT_NAME -c Release -o ./nupkgs --nologo --no-build
 
       - name: Push nuget packages
-        needs: Pack
+        if: github.ref == 'refs/heads/master'
         env:
           NUGET_URL: https://api.nuget.org/v3/index.json
         run: dotnet nuget push ./nupkgs/**/*.nupkg -s $NUGET_URL -k ${{secrets.NUGETKEY}} --skip-duplicate --no-symbols
