@@ -103,11 +103,11 @@ jobs:
         run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login=$SONAR_TOKEN
 
       - name: Pack
-        if: github.event_name == 'release'
+        if: github.ref == 'refs/heads/master'
         run: dotnet pack $PROJECT_NAME -c Release -o ./nupkgs --nologo --no-build
 
       - name: Push nuget packages
-        if: github.event_name == 'release'
+        needs: Pack
         env:
           NUGET_URL: https://api.nuget.org/v3/index.json
         run: dotnet nuget push ./nupkgs/**/*.nupkg -s $NUGET_URL -k ${{secrets.NUGETKEY}} --skip-duplicate --no-symbols
