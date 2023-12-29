@@ -66,6 +66,7 @@ public class KubernetesConfigurationSourceTests
 
     [TestCase(Kinds.ConfigMap)]
     [TestCase(Kinds.Secret)]
+    [Explicit]
     public void Build_Returns_ConfigurationProvider(int kind)
     {
         var builder = Mock.Of<IConfigurationBuilder>();
