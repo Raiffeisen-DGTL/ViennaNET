@@ -1,80 +1,78 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using NUnit.Framework;
 using ViennaNET.Orm.Tests.Unit.DSL;
 
-namespace ViennaNET.Orm.Tests.Unit.Contexts
+namespace ViennaNET.Orm.Tests.Unit.Contexts;
+
+[TestFixture(Category = "Unit", TestOf = typeof(ApplicationContext))]
+public class ApplicationContextTests
 {
-  [TestFixture(Category = "Unit", TestOf = typeof(ApplicationContext))]
-  public class ApplicationContextTests
-  {
     [Test]
     public void AddCommandTest()
     {
-      var nick = "nick";
+        var nick = "nick";
 
-      var context = Given.ApplicationContext.WithCommand(nick).Please();
+        var context = Given.ApplicationContext.WithCommand(nick).Please();
 
-      CollectionAssert.Contains(context.Commands, (typeof(TestCommand), nick));
+        Assert.That(context.Commands, Has.Member((typeof(TestCommand), nick)));
     }
 
     [Test]
     public void AddAllCommandsTest()
     {
-      var nick = "nick";
+        const string nick = "nick";
 
-      var context = Given.ApplicationContext.AddAllCommands(nick).Please();
+        var context = Given.ApplicationContext.AddAllCommands(nick).Please();
 
-      Assert.Multiple(() =>
-      {
-        CollectionAssert.Contains(context.Commands, (typeof(TestCommand), nick));
-        Assert.IsFalse(context.Commands.Any(x => x.Item1 == typeof(BadCommand)));
-      });
+        Assert.Multiple(() =>
+        {
+            Assert.That(context.Commands, Has.Member((typeof(TestCommand), nick)));
+            Assert.That(context.Commands.Any(x => x.Item1 == typeof(BadCommand)), Is.False);
+        });
     }
 
     [Test]
     public void AddNamedQueryTest()
     {
-      var nick = "nick";
-      var queryName = "queryName";
+        const string nick = "nick";
+        const string queryName = "queryName";
 
-      var context = Given.ApplicationContext.WithNamedQuery(queryName, nick).Please();
+        var context = Given.ApplicationContext.WithNamedQuery(queryName, nick).Please();
 
-      CollectionAssert.Contains(context.NamedQueries, (queryName, nick));
+        Assert.That(context.NamedQueries, Has.Member((queryName, nick)));
     }
 
     [Test]
     public void AddCustomQueryTest()
     {
-      var nick = "nick";
+        const string nick = "nick";
 
-      var context = Given.ApplicationContext.WithQuery(nick).Please();
+        var context = Given.ApplicationContext.WithQuery(nick).Please();
 
-      CollectionAssert.Contains(context.CustomQueries, (typeof(TestEntity), nick));
+        Assert.That(context.CustomQueries, Has.Member((typeof(TestEntity), nick)));
     }
 
     [Test]
     public void AddIntegrationEventTest()
     {
-      var nick = "nick";
+        const string nick = "nick";
 
-      var context = Given.ApplicationContext.WithIntegrationEvent(nick).Please();
+        var context = Given.ApplicationContext.WithIntegrationEvent(nick).Please();
 
-      CollectionAssert.Contains(context.IntegrationEvents, (typeof(TestIntegrationEvent), nick, (Assembly)null));
+        Assert.That(context.IntegrationEvents, Has.Member((typeof(TestIntegrationEvent), nick, (Assembly)null!)));
     }
 
     [Test]
     public void AddAllIntegrationEventsTest()
     {
-      var nick = "nick";
+        const string nick = "nick";
 
-      var context = Given.ApplicationContext.AddAllIntegrationEvents(nick).Please();
+        var context = Given.ApplicationContext.AddAllIntegrationEvents(nick).Please();
 
-      Assert.Multiple(() =>
-      {
-        CollectionAssert.Contains(context.IntegrationEvents, (typeof(TestIntegrationEvent), nick, (Assembly)null));
-        Assert.IsFalse(context.IntegrationEvents.Any(e => e.Item1 == typeof(BadIntegrationEvent)));
-      });
+        Assert.Multiple(() =>
+        {
+            Assert.That(context.IntegrationEvents, Has.Member((typeof(TestIntegrationEvent), nick, (Assembly)null!)));
+            Assert.That(context.IntegrationEvents.Any(e => e.Item1 == typeof(BadIntegrationEvent)), Is.False);
+        });
     }
-  }
 }

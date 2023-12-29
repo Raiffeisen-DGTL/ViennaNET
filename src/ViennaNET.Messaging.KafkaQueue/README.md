@@ -33,7 +33,8 @@ ___
 > * consumerConfig - consumer configuration properties description can be found in [Confluent.Kafka consumer documentation](https://docs.confluent.io/platform/current/clients/confluent-kafka-dotnet/_site/api/Confluent.Kafka.ConsumerConfig.html)
 > * producerConfig - producer configuration properties description can be found in [Confluent.Kafka producer documentation](https://docs.confluent.io/platform/current/clients/confluent-kafka-dotnet/_site/api/Confluent.Kafka.ProducerConfig.html)
 > * consumerConfig or producerConfig must be set, but not both
-> * transactionEnabled - the table below describes automatically calculated properties 
+> * transactionEnabled - the table below describes automatically calculated properties
+> * initTransactionsTimeout - timeout to initialize transactions (used in InitTransactions)
 >
 >   | **transactionEnabled** | consumerConfig.EnableAutoCommit | consumerConfig.IsolationLevel | producerConfig.TransactionalId |
 >   |------------------------|---------------------------------|-------------------------------|--------------------------------|

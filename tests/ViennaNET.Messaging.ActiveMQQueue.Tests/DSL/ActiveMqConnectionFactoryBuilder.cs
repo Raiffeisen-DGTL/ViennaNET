@@ -1,10 +1,9 @@
-﻿using System;
-using Apache.NMS;
+﻿using Apache.NMS;
 using Moq;
 
 namespace ViennaNET.Messaging.ActiveMQQueue.Tests.DSL
 {
-  internal class ActiveMqConnectionFactoryBuilder
+    internal class ActiveMqConnectionFactoryBuilder
   {
     private Func<TimeSpan, IMessage> _producer;
     private Action<IMessage> _sender;

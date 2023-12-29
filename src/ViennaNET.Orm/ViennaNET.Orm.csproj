@@ -1,32 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DocumentationFile>bin\Debug\net6.0\ViennaNET.Orm.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>bin\Release\net6.0\ViennaNET.Orm.xml</DocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentNHibernate" Version="3.1.0" />
-    <PackageReference Include="NHibernate" Version="5.3.14" />
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentNHibernate" Version="3.3.0" />
+        <PackageReference Include="NHibernate" Version="5.5.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ViennaNET.Diagnostic\ViennaNET.Diagnostic.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Mediator.Seedwork\ViennaNET.Mediator.Seedwork.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Orm.Seedwork\ViennaNET.Orm.Seedwork.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Protection\ViennaNET.Protection.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Utils\ViennaNET.Utils.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.Diagnostic\ViennaNET.Diagnostic.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Mediator.Seedwork\ViennaNET.Mediator.Seedwork.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Orm.Seedwork\ViennaNET.Orm.Seedwork.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Utils\ViennaNET.Utils.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Conventions\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Conventions\" />
+    </ItemGroup>
 
 </Project>

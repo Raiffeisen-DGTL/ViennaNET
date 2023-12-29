@@ -23,6 +23,12 @@ namespace ViennaNET.ArcSight.Tests.Unit
       _serializer = new CefMessageSerializer(new Mock<ISyslogMessageSerializer>().Object);
     }
 
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _cefSender.Dispose();
+    }
+
     [Test]
     public void Dispose_SimpleCall_SyslogSenderCalled()
     {

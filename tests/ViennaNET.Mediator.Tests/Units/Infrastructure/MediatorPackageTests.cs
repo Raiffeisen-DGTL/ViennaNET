@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using SimpleInjector;
 using ViennaNET.Mediator.DefaultConfiguration;
-using ViennaNET.Validation.Behaviors;
+using ViennaNET.Mediator.Pipelines.Behaviors;
 using ViennaNET.Validation.Rules;
 
 namespace ViennaNET.Mediator.Tests.Units.Infrastructure
@@ -18,6 +18,12 @@ namespace ViennaNET.Mediator.Tests.Units.Infrastructure
     }
 
     private Container _container;
+
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _container.Dispose();
+    }
 
     [Test]
     public void InstallTest()

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Orm.DI;
 using ViennaNET.Orm.Factories;
 using Moq;
@@ -10,7 +9,7 @@ using ViennaNET.Orm.Tests.Unit.DSL;
 
 namespace ViennaNET.Orm.Tests.Unit.Factories
 {
-  [TestFixture]
+    [TestFixture]
   [Category("Unit")]
   [TestOf(nameof(EntityFactoryService))]
   public class EntityFactoryServiceTests

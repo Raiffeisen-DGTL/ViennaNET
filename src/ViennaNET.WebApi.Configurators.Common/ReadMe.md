@@ -12,37 +12,6 @@ Middleware software:
 * SetUpLoggerMiddleware (LoggingMiddlewareBase) - Fills the RequestId and User fields from the incoming request in the logger
 * LogRequestAndResponseMiddleware - Logs an incoming request and an outgoing service response
 
-Logging:
-For the logger from the ViennaNET.Logging library to work in the configuration, you must specify the "logger" section with the necessary parameters, for example:
+Logging: see [Logging in .NET Core and ASP.NET Core][logging]
 
-		"logger": {
-			"listeners": [
-				{
-					"type": "console",
-					"category": "All",
-					"minLevel": "Debug"
-				},
-				{
-					"type": "textFile",
-					"category": "All",
-					"minLevel": "Debug",
-					"params": {
-						"maxSize": "50000",
-						"append": "append",
-						"rollBackBackups": "10",
-						"filePatternName": "C:\\Logs\\TestCoreService\\TestCoreService_yyyy.MM.dd.log"
-					}
-				},
-				{
-					"type": "textFile",
-					"category": "All",
-					"minLevel": "Error",
-					"params": {
-						"maxSize": "50000",
-						"append": "append",
-						"rollBackBackups": "10",
-						"filePatternName": "C:\\Logs\\TestCoreService\\TestCoreService_yyyy.MM.dd.err"
-					}
-				}
-			]
-		}
+[logging]: <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-8.0>

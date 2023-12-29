@@ -1,8 +1,0 @@
-﻿{
-  "arcSight": {
-    "serverHost": "localhost",
-    "serverPort": "60",
-    "syslogVersion": "rfc3164",
-    "protocol": "tcp"
-  }
-}

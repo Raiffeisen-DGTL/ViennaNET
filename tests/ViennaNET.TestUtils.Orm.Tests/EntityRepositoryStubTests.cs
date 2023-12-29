@@ -225,7 +225,8 @@ namespace ViennaNET.TestUtils.Orm.Tests
 
       // Assert
       var updatedCard = await repo.GetAsync(newCardId);
-      Assert.AreEqual(newCardPan, updatedCard.Pan);
+      
+      Assert.That(newCardPan, Is.EqualTo(updatedCard.Pan));
     }
 
     [Test]
@@ -239,7 +240,7 @@ namespace ViennaNET.TestUtils.Orm.Tests
       var card = await repo.GetAsync(-1000);
 
       // Assert
-      Assert.IsNull(card);
+      Assert.That(card, Is.Null);
     }
   }
 }

@@ -1,25 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
   
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    
-  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Npgsql" Version="8.0.1" />
+    </ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DocumentationFile>bin\Debug\net6.0\ViennaNET.Orm.PostgreSql.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>bin\Release\net6.0\ViennaNET.Orm.PostgreSql.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Npgsql" Version="6.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ViennaNET.Orm\ViennaNET.Orm.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Protection\ViennaNET.Protection.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.Orm\ViennaNET.Orm.csproj" />
+    </ItemGroup>
 
 </Project>

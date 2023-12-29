@@ -8,12 +8,6 @@ namespace ViennaNET.Orm.DB2
     public static string GetConnectionString(this ConnectionInfo info)
     {
       var connectionStringBuilder = new DB2ConnectionStringBuilder { ConnectionString = info.ConnectionString };
-
-      if (!string.IsNullOrWhiteSpace(info.EncPassword))
-      {
-        connectionStringBuilder.Password = info.EncPassword;
-      }
-
       return connectionStringBuilder.ConnectionString;
     }
   }

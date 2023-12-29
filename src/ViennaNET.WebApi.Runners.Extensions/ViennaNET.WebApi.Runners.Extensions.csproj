@@ -1,25 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DocumentationFile>bin\Debug\net6.0\ViennaNET.WebApi.Runners.Extensions.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>bin\Release\net6.0\ViennaNET.WebApi.Runners.Extensions.xml</DocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
   
-  <ItemGroup>
-    <PackageReference Include="SimpleInjector" Version="5.4.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="SimpleInjector" Version="5.4.3" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Logging\ViennaNET.Logging.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+    </ItemGroup>
 
 </Project>

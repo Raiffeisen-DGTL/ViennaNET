@@ -9,19 +9,19 @@ using ViennaNET.Messaging.MQSeriesQueue;
 using ViennaNET.Messaging.RabbitMQQueue;
 using ViennaNET.Messaging.Tests.DSL;
 
-namespace ViennaNET.Messaging.Tests.Factories
+namespace ViennaNET.Messaging.Tests.Factories;
+
+[TestFixture(Category = "Unit", TestOf = typeof(MessageAdapterFactory))]
+public class MessageAdapterFactoryTests
 {
-  [TestFixture(Category = "Unit", TestOf = typeof(MessageAdapterFactory))]
-  public class MessageAdapterFactoryTests
-  {
     [OneTimeSetUp]
     public void Setup()
     {
-      using var configStream = Assembly.GetExecutingAssembly()
-        .GetManifestResourceStream("ViennaNET.Messaging.Tests.appsettings.json");
-      _configuration = new ConfigurationBuilder()
-        .AddJsonStream(configStream)
-        .Build();
+        using var configStream = Assembly.GetExecutingAssembly()
+            .GetManifestResourceStream("ViennaNET.Messaging.Tests.appsettings.json");
+        _configuration = new ConfigurationBuilder()
+            .AddJsonStream(configStream!)
+            .Build();
     }
 
     private const string ActiveMqQueueId = "ActiveMQ";
@@ -30,123 +30,122 @@ namespace ViennaNET.Messaging.Tests.Factories
     private const string KafkaQueueId = "testKafkaQueue";
     private const string DuplicateQueueId = "T2";
 
-    private IConfigurationRoot _configuration;
+    private IConfigurationRoot _configuration = null!;
 
     [Test]
     public void Create_ActiveMq_Success()
     {
-      var factory = Given
-        .MessageAdapterFactory
-        .WithActiveMq(_configuration)
-        .WithMqSeries(_configuration)
-        .WithKafka(_configuration)
-        .WithRabbit(_configuration)
-        .Please();
+        var factory = Given
+            .MessageAdapterFactory
+            .WithActiveMq(_configuration)
+            .WithMqSeries(_configuration)
+            .WithKafka(_configuration)
+            .WithRabbit(_configuration)
+            .Please();
 
-      var adapter = factory.Create(ActiveMqQueueId);
+        var adapter = factory.Create(ActiveMqQueueId);
 
-      Assert.IsInstanceOf<ActiveMqQueueMessageAdapter>(adapter);
+        Assert.That(adapter, Is.InstanceOf<ActiveMqQueueMessageAdapter>());
     }
 
     [Test]
     public void Create_DuplicateConstructor_Exception()
     {
-      var factory = Given
-        .MessageAdapterFactory
-        .WithActiveMq(_configuration)
-        .WithMqSeries(_configuration)
-        .WithKafka(_configuration)
-        .WithRabbit(_configuration)
-        .WithRabbit(_configuration)
-        .Please();
+        var factory = Given
+            .MessageAdapterFactory
+            .WithActiveMq(_configuration)
+            .WithMqSeries(_configuration)
+            .WithKafka(_configuration)
+            .WithRabbit(_configuration)
+            .WithRabbit(_configuration)
+            .Please();
 
-      Assert.Throws<MessagingConfigurationException>(() => factory.Create(RabbitQueueId));
+        Assert.Throws<MessagingConfigurationException>(() => factory.Create(RabbitQueueId));
     }
 
     [Test]
     public void Create_DuplicateId_Exception()
     {
-      var factory = Given
-        .MessageAdapterFactory
-        .WithActiveMq(_configuration)
-        .WithMqSeries(_configuration)
-        .WithKafka(_configuration)
-        .WithRabbit(_configuration)
-        .Please();
+        var factory = Given
+            .MessageAdapterFactory
+            .WithActiveMq(_configuration)
+            .WithMqSeries(_configuration)
+            .WithKafka(_configuration)
+            .WithRabbit(_configuration)
+            .Please();
 
-      Assert.Throws<MessagingConfigurationException>(() => factory.Create(DuplicateQueueId));
+        Assert.Throws<MessagingConfigurationException>(() => factory.Create(DuplicateQueueId));
     }
 
     [Test]
     public void Create_Kafka_Success()
     {
-      var factory = Given
-        .MessageAdapterFactory
-        .WithActiveMq(_configuration)
-        .WithMqSeries(_configuration)
-        .WithKafka(_configuration)
-        .WithRabbit(_configuration)
-        .Please();
+        var factory = Given
+            .MessageAdapterFactory
+            .WithActiveMq(_configuration)
+            .WithMqSeries(_configuration)
+            .WithKafka(_configuration)
+            .WithRabbit(_configuration)
+            .Please();
 
-      var adapter = factory.Create(KafkaQueueId);
+        var adapter = factory.Create(KafkaQueueId);
 
-      Assert.IsInstanceOf<KafkaQueueMessageAdapter>(adapter);
+        Assert.That(adapter, Is.InstanceOf<KafkaQueueMessageAdapter>());
     }
 
     [Test]
     public void Create_MqSeries_Success()
     {
-      var factory = Given
-        .MessageAdapterFactory
-        .WithActiveMq(_configuration)
-        .WithMqSeries(_configuration)
-        .WithKafka(_configuration)
-        .WithRabbit(_configuration)
-        .Please();
+        var factory = Given
+            .MessageAdapterFactory
+            .WithActiveMq(_configuration)
+            .WithMqSeries(_configuration)
+            .WithKafka(_configuration)
+            .WithRabbit(_configuration)
+            .Please();
 
-      var adapter = factory.Create(MqSeriesQueueId);
+        var adapter = factory.Create(MqSeriesQueueId);
 
-      Assert.IsInstanceOf<MqSeriesQueueMessageAdapter>(adapter);
+        Assert.That(adapter, Is.InstanceOf<MqSeriesQueueMessageAdapter>());
     }
 
     [Test]
     public void Create_NoConstructors_Exception()
     {
-      var factory = Given
-        .MessageAdapterFactory
-        .Please();
+        var factory = Given
+            .MessageAdapterFactory
+            .Please();
 
-      Assert.Throws<MessagingConfigurationException>(() => factory.Create(KafkaQueueId));
+        Assert.Throws<MessagingConfigurationException>(() => factory.Create(KafkaQueueId));
     }
 
     [Test]
     public void Create_NonExistingId_Exception()
     {
-      var factory = Given
-        .MessageAdapterFactory
-        .WithActiveMq(_configuration)
-        .WithMqSeries(_configuration)
-        .WithKafka(_configuration)
-        .WithRabbit(_configuration)
-        .Please();
+        var factory = Given
+            .MessageAdapterFactory
+            .WithActiveMq(_configuration)
+            .WithMqSeries(_configuration)
+            .WithKafka(_configuration)
+            .WithRabbit(_configuration)
+            .Please();
 
-      Assert.Throws<MessagingConfigurationException>(() => factory.Create("SomeOther"));
+        Assert.Throws<MessagingConfigurationException>(() => factory.Create("SomeOther"));
     }
 
     [Test]
     public void Create_Rabbit_Success()
     {
-      var factory = Given
-        .MessageAdapterFactory
-        .WithActiveMq(_configuration)
-        .WithMqSeries(_configuration)
-        .WithKafka(_configuration)
-        .WithRabbit(_configuration)
-        .Please();
+        var factory = Given
+            .MessageAdapterFactory
+            .WithActiveMq(_configuration)
+            .WithMqSeries(_configuration)
+            .WithKafka(_configuration)
+            .WithRabbit(_configuration)
+            .Please();
 
-      var adapter = factory.Create(RabbitQueueId);
+        var adapter = factory.Create(RabbitQueueId);
 
-      Assert.IsInstanceOf<RabbitMqQueueMessageAdapter>(adapter);
+        Assert.That(adapter, Is.InstanceOf<RabbitMqQueueMessageAdapter>());
     }
-  }
 }

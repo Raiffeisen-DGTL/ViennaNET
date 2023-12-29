@@ -11,9 +11,8 @@ namespace ViennaNET.Extensions.Mediator.Tests.DependencyInjection;
 [TestOf(typeof(MediatorServiceCollectionExtensions))]
 public class MediatorServiceCollectionExtensionsTests
 {
-#nullable disable
-    private IServiceCollection _services;
-#nullable restore
+    private IServiceCollection _services = null!;
+
     [SetUp]
     public void Setup()
     {
@@ -104,8 +103,8 @@ public class MediatorServiceCollectionExtensionsTests
                     .Select(descriptor => descriptor.ImplementationType),
             Is.EquivalentTo(new[]
             {
-                typeof(IncrementEventHandler), typeof(MessageHandler),
-                typeof(MessageHandlerWithResult), typeof(MultiplicationEventHandler)
+                typeof(IncrementEventHandler), typeof(MessageHandler), typeof(MessageHandlerWithResult),
+                typeof(MultiplicationEventHandler)
             }).And.Not.AnyOf(typeof(AbstractTypeForTestAddHandlersFromAssemblies),
                 typeof(AbstractTypeForTestAddHandlersFromAssemblies<>)));
     }
@@ -117,8 +116,8 @@ public class MediatorServiceCollectionExtensionsTests
                 _services.AddHandlers().Select(descriptor => descriptor.ImplementationType),
             Is.EquivalentTo(new[]
             {
-                typeof(IncrementEventHandler), typeof(MessageHandler),
-                typeof(MessageHandlerWithResult), typeof(MultiplicationEventHandler)
+                typeof(IncrementEventHandler), typeof(MessageHandler), typeof(MessageHandlerWithResult),
+                typeof(MultiplicationEventHandler)
             }));
     }
 }

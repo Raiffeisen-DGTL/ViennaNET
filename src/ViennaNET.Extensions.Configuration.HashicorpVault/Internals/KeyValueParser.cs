@@ -1,8 +1,9 @@
 #nullable disable
 
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 using VaultSharp.V1.Commons;
 
 namespace ViennaNET.Extensions.Configuration.HashicorpVault.Internals;
@@ -89,10 +90,10 @@ internal sealed class KeyValueParser
 
         switch (item.Value)
         {
-            case JObject obj:
+            case JsonObject obj:
                 VisitObject(obj);
                 break;
-            case JArray arr:
+            case JsonArray arr:
                 VisitArray(arr);
                 break;
             default:
@@ -103,17 +104,17 @@ internal sealed class KeyValueParser
         ExitContext();
     }
 
-    private void VisitObject(JObject obj)
+    private void VisitObject(JsonObject obj)
     {
-        foreach (var property in obj.Properties())
+        foreach (var property in obj.ToList())
         {
-            EnterContext(property.Name);
+            EnterContext(property.Key);
             VisitJToken(property.Value);
             ExitContext();
         }
     }
 
-    private void VisitArray(JArray array)
+    private void VisitArray(JsonArray array)
     {
         for (var i = 0; i < array.Count; i++)
         {
@@ -123,21 +124,20 @@ internal sealed class KeyValueParser
         }
     }
 
-    private void VisitJToken(JToken token)
+    private void VisitJToken(JsonNode token)
     {
-        switch (token.Type)
+        switch (token.GetValueKind())
         {
-            case JTokenType.Object:
-                VisitObject(token as JObject);
+            case JsonValueKind.Object:
+                VisitObject(token as JsonObject);
                 break;
-            case JTokenType.Array:
-                VisitArray(token as JArray);
+            case JsonValueKind.Array:
+                VisitArray(token as JsonArray);
                 break;
-            case JTokenType.Boolean:
-            case JTokenType.String:
-            case JTokenType.Float:
-            case JTokenType.Integer:
-            case JTokenType.Null:
+            case JsonValueKind.False or JsonValueKind.True:
+            case JsonValueKind.String:
+            case JsonValueKind.Number:
+            case JsonValueKind.Null:
                 VisitValue(token);
                 break;
         }

@@ -43,9 +43,9 @@ namespace ViennaNET.Messaging.Tests.Unit
     [Test]
     [TestCase(null)]
     [TestCase("ReString")]
-    public void ReceiveMessageArgumentTest(object data)
+    public void ReceiveMessageArgumentTest(object? data)
     {
-      InitReceive(data);
+      InitReceive(data!);
       var messageReceiver = new MessageReceiver<object>(_adapter.Object, _deserializer.Object);
       var result = messageReceiver.Receive(out _);
 
@@ -55,9 +55,9 @@ namespace ViennaNET.Messaging.Tests.Unit
     [Test]
     [TestCase(null)]
     [TestCase("ReString")]
-    public void ReceiveNotArgumentTest(object data)
+    public void ReceiveNotArgumentTest(object? data)
     {
-      InitReceive(data);
+      InitReceive(data!);
       var messageReceiver = new MessageReceiver<object>(_adapter.Object, _deserializer.Object);
       var result = messageReceiver.Receive();
       Assert.That(result, Is.EqualTo(data));
@@ -66,9 +66,9 @@ namespace ViennaNET.Messaging.Tests.Unit
     [Test]
     [TestCase(null)]
     [TestCase("ReString")]
-    public void ReceiveStringArgumentTest(object data)
+    public void ReceiveStringArgumentTest(object? data)
     {
-      InitReceive(data);
+      InitReceive(data!);
       var messageReceiver = new MessageReceiver<object>(_adapter.Object, _deserializer.Object);
       var result = messageReceiver.Receive("ReCorrelationId");
 
@@ -78,9 +78,9 @@ namespace ViennaNET.Messaging.Tests.Unit
     [Test]
     [TestCase(null)]
     [TestCase("ReString")]
-    public void ReceiveStringMessageArgumentsTest(object data)
+    public void ReceiveStringMessageArgumentsTest(object? data)
     {
-      InitReceive(data);
+      InitReceive(data!);
       var messageReceiver = new MessageReceiver<object>(_adapter.Object, _deserializer.Object);
       var result = messageReceiver.Receive("ReCorrelationId", out _);
       Assert.That(result, Is.EqualTo(data));
@@ -89,9 +89,9 @@ namespace ViennaNET.Messaging.Tests.Unit
     [Test]
     [TestCase(null)]
     [TestCase("ReString")]
-    public void ReceiveStringTimeSpanArgumentsTest(object data)
+    public void ReceiveStringTimeSpanArgumentsTest(object? data)
     {
-      InitReceive(data);
+      InitReceive(data!);
       var messageReceiver = new MessageReceiver<object>(_adapter.Object, _deserializer.Object);
       var result = messageReceiver.Receive("ReCorrelationId");
       Assert.That(result, Is.EqualTo(data));
@@ -100,9 +100,9 @@ namespace ViennaNET.Messaging.Tests.Unit
     [Test]
     [TestCase(null)]
     [TestCase("ReString")]
-    public void ReceiveStringTimeSpanMessageArgumentsTest(object data)
+    public void ReceiveStringTimeSpanMessageArgumentsTest(object? data)
     {
-      InitReceive(data);
+      InitReceive(data!);
       var messageReceiver = new MessageReceiver<object>(_adapter.Object, _deserializer.Object);
       var result = messageReceiver.Receive("ReCorrelationId", out _);
       Assert.That(result, Is.EqualTo(data));
@@ -111,9 +111,9 @@ namespace ViennaNET.Messaging.Tests.Unit
     [Test]
     [TestCase(null)]
     [TestCase("ReString")]
-    public void ReceiveTimeSpanArgumentTest(object data)
+    public void ReceiveTimeSpanArgumentTest(object? data)
     {
-      InitReceive(data);
+      InitReceive(data!);
       var messageReceiver = new MessageReceiver<object>(_adapter.Object, _deserializer.Object);
       var result = messageReceiver.Receive();
       Assert.That(result, Is.EqualTo(data));

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
 using ViennaNET.Orm.Configuration;
@@ -8,7 +7,7 @@ using ViennaNET.Orm.Factories;
 
 namespace ViennaNET.Orm.Tests.Unit.Factories
 {
-  [TestFixture]
+    [TestFixture]
   [Category("Unit")]
   [TestOf(typeof(SessionFactoryProvidersManager))]
   public class SessionFactoryProvidersManagerTests

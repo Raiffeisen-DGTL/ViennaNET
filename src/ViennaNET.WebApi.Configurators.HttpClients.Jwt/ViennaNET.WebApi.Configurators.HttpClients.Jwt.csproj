@@ -1,18 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DocumentationFile>bin\Debug\net6.0\ViennaNET.WebApi.Configurators.HttpClients.Jwt.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>bin\Release\net6.0\ViennaNET.WebApi.Configurators.HttpClients.Jwt.xml</DocumentationFile>
-  </PropertyGroup>
-
+  
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
@@ -22,7 +13,6 @@
     <ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\ViennaNET.WebApi.Configurators.HttpClients.Abstractions\ViennaNET.WebApi.Configurators.HttpClients.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\ViennaNET.HttpClient\ViennaNET.HttpClient.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Logging\ViennaNET.Logging.csproj" />
     <ProjectReference Include="..\..\src\ViennaNET.Utils\ViennaNET.Utils.csproj" />
   </ItemGroup>
   

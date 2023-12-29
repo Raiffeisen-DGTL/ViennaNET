@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using ViennaNET.EventSourcing.EventMappers;
 using ViennaNET.EventSourcing.Exceptions;
 using ViennaNET.Mediator.Seedwork;
 using ViennaNET.Orm.Application;
 
-namespace ViennaNET.EventSourcing.Tests.Unit
+namespace ViennaNET.EventSourcing.Tests.EventMappers
 {
   [TestFixture(Category = "Unit")]
   public class IntegrationEventMapperFactoryTests

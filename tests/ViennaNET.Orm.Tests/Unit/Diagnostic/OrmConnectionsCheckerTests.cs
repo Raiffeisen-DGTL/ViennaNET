@@ -5,14 +5,11 @@ using Moq;
 using NHibernate;
 using NHibernate.Metadata;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ViennaNET.Orm.Tests.Unit.Diagnostic
 {
-  [TestFixture(Category = "Unit"), TestOf(typeof(OrmConnectionsChecker))]
+    [TestFixture(Category = "Unit"), TestOf(typeof(OrmConnectionsChecker))]
   public class OrmConnectionsCheckerTests
   {
     private const string dbNick = "default";

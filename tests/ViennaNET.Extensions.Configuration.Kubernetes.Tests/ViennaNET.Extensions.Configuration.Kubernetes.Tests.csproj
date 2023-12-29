@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\ViennaNET.Extensions.Configuration.Kubernetes\ViennaNET.Extensions.Configuration.Kubernetes.csproj"/>
+        <ProjectReference Include="..\..\src\ViennaNET.Extensions.Configuration.Kubernetes\ViennaNET.Extensions.Configuration.Kubernetes.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="ListNamespacedConfigMapWithHttpMessagesAsyncResponse.json"/>
+        <None Remove="ListNamespacedConfigMapWithHttpMessagesAsyncResponse.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Responses\ListNamespacedConfigMapWithHttpMessagesAsyncResponse.json"/>
+        <None Remove="Responses\ListNamespacedConfigMapWithHttpMessagesAsyncResponse.json" />
     </ItemGroup>
 
 </Project>

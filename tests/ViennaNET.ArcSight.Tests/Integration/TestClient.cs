@@ -1,10 +1,9 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SyslogNet.Client.Transport;
 
 namespace ViennaNET.ArcSight.Tests.Integration
 {
-  [TestFixture(Category = "Debug")]
+    [TestFixture(Category = "Debug")]
   public class TestClient
   {
     [Test]

@@ -1,9 +1,8 @@
-﻿using System;
-using ViennaNET.Orm.Application;
+﻿using ViennaNET.Orm.Application;
 
 namespace ViennaNET.Orm.Tests.Unit.DSL
 {
-  internal abstract class BadIntegrationEvent : IIntegrationEvent
+    internal abstract class BadIntegrationEvent : IIntegrationEvent
   {
     public int Id => throw new NotImplementedException();
 

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using Apache.NMS;
 
 namespace ViennaNET.Messaging.ActiveMQQueue.Tests.DSL
 {
-  internal class IPrimitiveMapMock : IPrimitiveMap
+    internal class IPrimitiveMapMock : IPrimitiveMap
   {
     private readonly Dictionary<string, object> _values = new();
 

@@ -40,7 +40,6 @@ For each connection to the database, a separate list item is created containing 
 * nick - the name of the connection to the database. Unique identificator.
 * dbServerType - type of database to which the connection is made.
 * connectionString - connection string to the database
-* encPassword - encrypted password. Substituted in the connection string after decryption. If the connection string already has a clear password, it will be replaced with the decrypted one. If you do not intend to encrypt the password, the field should be blank.
 
 3a. If you just need to read the entity from the database, then just create a repository and call the Get method, passing the Id into it.
 

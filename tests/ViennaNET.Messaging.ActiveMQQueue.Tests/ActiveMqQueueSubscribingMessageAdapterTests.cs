@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
-using Apache.NMS;
+﻿using Apache.NMS;
 using Moq;
 using NUnit.Framework;
 using ViennaNET.Messaging.ActiveMQQueue.Tests.DSL;
 
 namespace ViennaNET.Messaging.ActiveMQQueue.Tests
 {
-  [TestFixture(Category = "Unit", TestOf = typeof(ActiveMqQueueSubscribingMessageAdapter))]
+    [TestFixture(Category = "Unit", TestOf = typeof(ActiveMqQueueSubscribingMessageAdapter))]
   public class ActiveMqQueueSubscribingMessageAdapterTests
   {
     [Test]

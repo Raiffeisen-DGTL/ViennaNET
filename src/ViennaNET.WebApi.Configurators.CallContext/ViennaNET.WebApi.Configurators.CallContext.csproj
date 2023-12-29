@@ -1,27 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DocumentationFile>bin\Debug\net6.0\ViennaNET.WebApi.Configurators.CallContext.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>bin\Release\net6.0\ViennaNET.WebApi.Configurators.CallContext.xml</DocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
   
-  <ItemGroup>
-    <PackageReference Include="SimpleInjector" Version="5.4.1" />
-    <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="5.4.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="SimpleInjector" Version="5.4.3" />
+        <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="5.5.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.WebApi.Net\ViennaNET.WebApi.Net.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.CallContext\ViennaNET.CallContext.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.WebApi.Abstractions\ViennaNET.WebApi.Abstractions.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.WebApi.Net\ViennaNET.WebApi.Net.csproj" />
+    </ItemGroup>
 
 </Project>

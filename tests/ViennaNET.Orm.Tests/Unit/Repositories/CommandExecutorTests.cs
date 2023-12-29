@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Orm.Repositories;
-using System.Threading;
-using System.Threading.Tasks;
 using Moq;
 using NHibernate;
 using NHibernate.Type;
@@ -10,7 +8,7 @@ using ViennaNET.Orm.Tests.Unit.DSL;
 
 namespace ViennaNET.Orm.Tests.Unit.Repositories
 {
-  [TestFixture]
+    [TestFixture]
   [Category("Unit")]
   [TestOf(typeof(CommandExecutor<>))]
   public class CommandExecutorTests

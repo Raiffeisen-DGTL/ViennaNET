@@ -1,6 +1,4 @@
 ﻿using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Orm.Factories;
 using ViennaNET.Orm.Repositories;
@@ -11,7 +9,7 @@ using ViennaNET.Orm.Application;
 
 namespace ViennaNET.Orm.Tests.Unit.Factories
 {
-  [TestFixture]
+    [TestFixture]
   [Category("Unit")]
   [TestOf(nameof(ScopedSessionManager))]
   public class ScopedSessionManagerTests

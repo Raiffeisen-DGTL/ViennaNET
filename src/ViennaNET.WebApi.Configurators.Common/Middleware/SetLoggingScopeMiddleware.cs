@@ -1,19 +1,16 @@
 ﻿#nullable enable
 
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using ViennaNET.Logging;
 using ViennaNET.Utils;
-using ViennaNET.WebApi.Abstractions;
 
 namespace ViennaNET.WebApi.Configurators.Common.Middleware
 {
   /// <summary>
-  ///   Заполняет в логгере поля RequestId и User из входящего запроса
+  ///   Создаёт области Host, Thread и User для текущего запроса, в системе ведения журнала.
   /// </summary>
+  [ExcludeFromCodeCoverage(Justification = "Тип будет удалён в последующем рефакторинге.")]
   public class SetLoggingScopeMiddleware
   {
     private readonly ILogger<SetLoggingScopeMiddleware> _logger;
@@ -48,16 +45,11 @@ namespace ViennaNET.WebApi.Configurators.Common.Middleware
     /// <returns></returns>
     public async Task InvokeAsync(HttpContext context)
     {
-      var userName = TrimUserDomain(context.User.Identity.Name ?? Environment.UserName);
+      var userName = TrimUserDomain(context.User.Identity?.Name ?? Environment.UserName);
 
       _logger.BeginScope($"Host: {Environment.MachineName}, " +
                          $"Thread: {Environment.CurrentManagedThreadId}, " +
                          $"User: {userName}");
-
-      Logger.User = userName;
-      Logger.RequestId = context.Request.Headers.ContainsKey(CompanyHttpHeaders.RequestId)
-        ? context.Request.Headers[CompanyHttpHeaders.RequestId].ToString()
-        : Activity.Current.Id;
 
       await _next(context).ConfigureAwait(false);
     }

@@ -34,7 +34,7 @@ namespace ViennaNET.WebApi.Net.Tests.Unit
       var resultIpValue = testItem.FilterIp(testIpValue);
 
       // assert
-      Assert.AreEqual(expectedIpValue, resultIpValue);
+      Assert.That(resultIpValue, Is.EqualTo(expectedIpValue));
     }
   }
 }

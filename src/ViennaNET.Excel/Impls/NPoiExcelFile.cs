@@ -11,7 +11,7 @@ using NPOI.SS.UserModel;
 using NPOI.Util;
 using NPOI.XSSF.UserModel;
 using ViennaNET.Excel.Contracts;
-using ViennaNET.FileUtils.Interfaces;
+using ViennaNET.Excel.IO;
 
 namespace ViennaNET.Excel.Impl
 {
