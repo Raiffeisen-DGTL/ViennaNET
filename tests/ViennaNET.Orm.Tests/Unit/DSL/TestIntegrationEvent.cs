@@ -1,9 +1,8 @@
-﻿using System;
-using ViennaNET.Orm.Application;
+﻿using ViennaNET.Orm.Application;
 
 namespace ViennaNET.Orm.Tests.Unit.DSL
 {
-  internal class TestIntegrationEvent : IIntegrationEvent
+    internal class TestIntegrationEvent : IIntegrationEvent
   {
     public int Id => throw new NotImplementedException();
 

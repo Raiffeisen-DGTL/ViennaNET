@@ -1,12 +1,11 @@
-﻿using System.Linq;
-using Moq;
+﻿using Moq;
 using NHibernate;
 using NUnit.Framework;
 using ViennaNET.Orm.Factories;
 
 namespace ViennaNET.Orm.Tests.Unit.Factories
 {
-  [TestFixture]
+    [TestFixture]
   [Category("Unit")]
   [TestOf(typeof(SessionFactoryManager))]
   public class SessionFactoryManagerTests

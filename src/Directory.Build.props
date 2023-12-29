@@ -5,6 +5,7 @@
     <PropertyGroup>
         <PackRelease>true</PackRelease>
         <IsPackable>true</IsPackable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup>

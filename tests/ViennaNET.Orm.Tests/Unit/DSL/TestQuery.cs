@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using ViennaNET.Orm.Repositories;
+﻿using ViennaNET.Orm.Repositories;
 
 namespace ViennaNET.Orm.Tests.Unit.DSL
 {
-  public class TestQuery : BaseQuery<object>
+    public class TestQuery : BaseQuery<object>
   {
     public TestQuery()
     {

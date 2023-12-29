@@ -1,11 +1,10 @@
-﻿using System;
-using Apache.NMS;
+﻿using Apache.NMS;
 using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace ViennaNET.Messaging.ActiveMQQueue.Tests.DSL
 {
-  internal static class Given
+    internal static class Given
   {
     public static ActiveMqConnectionFactoryBuilder ConnectionFactoryProvider => new();
 

@@ -84,7 +84,6 @@ microservices, such as RESTFull web api services, uses any databases, message br
 * [ViennaNET.Utils][31] - contains useful extension methods and attributes
 * [ViennaNET.Validation][32] - implementation of validation services
 * [ViennaNET.Specifications][33] - library for creating and using specifications
-* [ViennaNET.Sagas][34] - basic implementation of the sagas mechanism
 
 ### WebApi
 
@@ -99,7 +98,6 @@ microservices, such as RESTFull web api services, uses any databases, message br
 * [Example of microservice with Mediator and SimpleInjector][38]
 * [Example of microservice with validation][39]
 * [Example of microservice with database][40]
-* [Example of microservice with simple saga implementation][41]
 * [Example of microservice with messaging][42]
 
 ## Description
@@ -181,8 +179,6 @@ microservices, such as RESTFull web api services, uses any databases, message br
 
 [33]: <src/ViennaNET.Specifications> "Компонент предоставляющий Api для созданя спецификаций"
 
-[34]: <src/ViennaNET.Sagas> "Компонент предоставляющий Api для создания саги"
-
 [35]: <src/ViennaNET.WebApi> "ViennaNET.WebApi"
 
 [36]: <src/ViennaNET.HttpClient> "ViennaNET.HttpClient"
@@ -194,8 +190,6 @@ microservices, such as RESTFull web api services, uses any databases, message br
 [39]: <src/Examples/3-validation> "Пример использования ViennaNET.Validation"
 
 [40]: <src/Examples/4-orm> "Пример использования ViennaNET.Orm"
-
-[41]: <src/Examples/5-saga> "Пример использования ViennaNET.Sagas"
 
 [42]: <src/Examples/6-messaginga> "Пример использования ViennaNET.Messaging"
 

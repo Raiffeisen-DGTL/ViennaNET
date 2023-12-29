@@ -4,102 +4,90 @@ using NUnit.Framework;
 using ViennaNET.Messaging.Exceptions;
 using ViennaNET.Messaging.RabbitMQQueue.Tests.DSL;
 
-namespace ViennaNET.Messaging.RabbitMQQueue.Tests
+namespace ViennaNET.Messaging.RabbitMQQueue.Tests;
+
+[TestFixture(Category = "Unit", TestOf = typeof(RabbitMqQueueMessageAdapterConstructor))]
+public class RabbitMqQueueMessageAdapterConstructorTests
 {
-  [TestFixture(Category = "Unit", TestOf = typeof(RabbitMqQueueMessageAdapterConstructor))]
-  public class RabbitMqQueueMessageAdapterConstructorTests
-  {
     [OneTimeSetUp]
     public void RabbitMqQueueMessageAdapterConstructorSetup()
     {
-      using (var configStream = Assembly.GetExecutingAssembly()
-               .GetManifestResourceStream("ViennaNET.Messaging.RabbitMQQueue.Tests.appsettingsFailed.json"))
-      {
-        _failedConfig = new ConfigurationBuilder()
-          .AddJsonStream(configStream)
-          .Build();
-      }
+        using (var configStream = Assembly.GetExecutingAssembly()
+                   .GetManifestResourceStream("ViennaNET.Messaging.RabbitMQQueue.Tests.appsettingsFailed.json"))
+        {
+            _failedConfig = new ConfigurationBuilder()
+                .AddJsonStream(configStream!)
+                .Build();
+        }
 
-      using (var configStream = Assembly.GetExecutingAssembly()
-               .GetManifestResourceStream("ViennaNET.Messaging.RabbitMQQueue.Tests.appsettings.json"))
-      {
-        var configuration = new ConfigurationBuilder()
-          .AddJsonStream(configStream)
-          .Build();
+        using (var configStream = Assembly.GetExecutingAssembly()
+                   .GetManifestResourceStream("ViennaNET.Messaging.RabbitMQQueue.Tests.appsettings.json"))
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonStream(configStream!)
+                .Build();
 
-        _constructor = new RabbitMqQueueMessageAdapterConstructor(
-          configuration,
-          Given.FakeLoggerFactory);
-      }
+            _constructor = new RabbitMqQueueMessageAdapterConstructor(
+                configuration,
+                Given.FakeLoggerFactory);
+        }
     }
 
     private const string QueueId = "Rabbit";
     private const string QueueWithoutServerId = "NextRabbit";
 
-    private IConfiguration _failedConfig;
-    private RabbitMqQueueMessageAdapterConstructor _constructor;
+    private IConfiguration _failedConfig = null!;
+    private RabbitMqQueueMessageAdapterConstructor _constructor = null!;
 
     [Test]
     public void Create_HasNoQueueInConfig_Exception()
     {
-      Assert.Throws<MessagingConfigurationException>(() => _constructor.Create(string.Empty));
+        Assert.Throws<MessagingConfigurationException>(() => _constructor.Create(string.Empty));
     }
 
     [Test]
     public void Create_HasQueueInConfig_ReturnsAdapter()
     {
-      var adapter = _constructor.Create(QueueId);
+        var adapter = _constructor.Create(QueueId);
 
-      Assert.Multiple(() =>
-      {
-        Assert.IsNotNull(adapter);
-        Assert.IsNotNull(adapter.Configuration);
-        Assert.AreEqual(QueueId, adapter.Configuration.Id);
-      });
+        Assert.Multiple(() =>
+        {
+            Assert.That(adapter, Is.Not.Null);
+            Assert.That(adapter.Configuration, Is.Not.Null);
+            Assert.That(adapter.Configuration.Id, Is.EqualTo(QueueId));
+        });
     }
 
     [Test]
     public void CreateAll_HasConfig_ReturnAdapters()
     {
-      var adapters = _constructor.CreateAll();
-
-      CollectionAssert.IsNotEmpty(adapters);
+        Assert.That(_constructor.CreateAll(), Is.Not.Empty);
     }
 
     [Test]
     public void Create_HasQueueInConfigWithoutParameter_Exception()
     {
-      var exception = Assert.Throws<MessagingException>(() =>
-        new RabbitMqQueueMessageAdapterConstructor(_failedConfig, Given.FakeLoggerFactory));
-      Assert.Multiple(() =>
-      {
-        StringAssert.Contains("AutoAck", exception.Message);
-        StringAssert.Contains("Requeue", exception.Message);
-      });
+        Assert.That(() => new RabbitMqQueueMessageAdapterConstructor(_failedConfig, Given.FakeLoggerFactory),
+            Throws.InstanceOf<MessagingException>()
+                .And.Message.Contains("AutoAck")
+                .And.Message.Contains("Requeue"));
     }
 
     [Test]
     public void HasQueue_QueueExistsInConfig_True()
     {
-      var hasQueue = _constructor.HasQueue(QueueId);
-
-      Assert.That(hasQueue);
+        Assert.That(_constructor.HasQueue(QueueId), Is.True);
     }
 
     [Test]
     public void HasQueue_QueueExistsInConfigButBroken_True()
     {
-      var hasQueue = _constructor.HasQueue(QueueWithoutServerId);
-
-      Assert.That(hasQueue);
+        Assert.That(_constructor.HasQueue(QueueWithoutServerId), Is.True);
     }
 
     [Test]
     public void HasQueue_QueueNotExistsInConfig_False()
     {
-      var hasQueue = _constructor.HasQueue("");
-
-      Assert.That(!hasQueue);
+        Assert.That(_constructor.HasQueue(""), Is.False);
     }
-  }
 }

@@ -166,11 +166,16 @@ public class ConfigMapConfigurationProviderTests
     }
 
     [Test]
-    [Explicit]
     public void Dispose_Throws_Nothing()
     {
+        var k8sClient = Mock.Of<IKubernetes>();
+        var k8sClientBuilder = new Mock<IKubernetesClientBuilder>();
+
+        k8sClientBuilder.Setup(builder => builder.Build()).Returns(k8sClient);
+
         var provider =
             new ConfigMapConfigurationProvider(new KubernetesConfigurationSource(), new KubernetesClientBuilder());
+            new ConfigMapConfigurationProvider(new KubernetesConfigurationSource(), k8sClientBuilder.Object);
 
         Assert.That(() => provider.Dispose(), Throws.Nothing);
     }

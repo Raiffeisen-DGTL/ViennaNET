@@ -1,10 +1,9 @@
-﻿using System;
-using Apache.NMS;
+﻿using Apache.NMS;
 using Moq;
 
 namespace ViennaNET.Messaging.ActiveMQQueue.Tests.DSL
 {
-  internal class BytesMessageBuilder
+    internal class BytesMessageBuilder
   {
     private byte[] _body = new byte[0];
 

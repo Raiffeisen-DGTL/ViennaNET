@@ -1,25 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DocumentationFile>bin\Debug\net6.0\ViennaNET.Orm.PostgreSql.DefaultConfiguration.xml</DocumentationFile>
-  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="SimpleInjector.Packaging" Version="5.0.0" />
+    </ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>bin\Release\net6.0\ViennaNET.Orm.PostgreSql.DefaultConfiguration.xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="SimpleInjector.Packaging" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ViennaNET.Orm.PostgreSql\ViennaNET.Orm.PostgreSql.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Orm\ViennaNET.Orm.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.Orm.PostgreSql\ViennaNET.Orm.PostgreSql.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Orm\ViennaNET.Orm.csproj" />
+    </ItemGroup>
 
 </Project>

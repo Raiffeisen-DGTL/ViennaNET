@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0"/>
+        <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\ViennaNET.Word\ViennaNET.Word.csproj"/>
+        <ProjectReference Include="..\..\src\ViennaNET.Word\ViennaNET.Word.csproj" />
     </ItemGroup>
 
     <ItemGroup>

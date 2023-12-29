@@ -8,8 +8,7 @@
     </Property>
     <Property Name="sonar.links.homepage">https://github.com/Raiffeisen-DGTL/ViennaNET</Property>
     <Property Name="sonar.exclusions">artifacts/reports/*</Property>
-    <Property Name="sonar.cs.junit.reportsPaths">artifacts/reports/*-nunit-tests-result.xml</Property>
+    <Property Name="sonar.cs.nunit.reportsPaths">artifacts/reports/*-nunit-tests-result.xml</Property>
     <Property Name="sonar.coverageReportPaths">artifacts/reports/SonarQube.xml</Property>
     <Property Name="sonar.qualitygate.wait">false</Property>
 </SonarQubeAnalysisProperties>
-

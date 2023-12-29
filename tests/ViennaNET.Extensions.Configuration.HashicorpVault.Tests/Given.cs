@@ -44,7 +44,7 @@ public static class Given
             ],
         }
     }";
-    
+
     public static string AppSettingsJsonV2 = @"{
         ""ConnectionStrings"": {
             ""TestDB"": ""Server=(localdb)\\mssqllocaldbv2;Database=TestDB;""

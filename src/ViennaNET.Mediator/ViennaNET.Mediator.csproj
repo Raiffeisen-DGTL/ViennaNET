@@ -1,25 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DocumentationFile>bin\Debug\net6.0\ViennaNET.Mediator.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>bin\Release\net6.0\ViennaNET.Mediator.xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ViennaNET.Mediator.Pipelines\ViennaNET.Mediator.Pipelines.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Mediator.Seedwork\ViennaNET.Mediator.Seedwork.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Logging\ViennaNET.Logging.csproj" />
-    <ProjectReference Include="..\..\src\ViennaNET.Utils\ViennaNET.Utils.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\ViennaNET.Mediator.Pipelines\ViennaNET.Mediator.Pipelines.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Mediator.Seedwork\ViennaNET.Mediator.Seedwork.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Logging\ViennaNET.Logging.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Utils\ViennaNET.Utils.csproj" />
+    </ItemGroup>
 
 </Project>

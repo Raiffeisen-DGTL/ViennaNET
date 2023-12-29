@@ -16,7 +16,7 @@ internal class MessageHandler : IMessageHandler<Message>
         TestContext.WriteLine(
             $"The type of {GetType()} received {message.GetType()} " +
             $"and incremented value of property {nameof(message.Value)} on 1.");
-        
+
         return Task.CompletedTask;
     }
 }

@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using ViennaNET.Messaging.Configuration;
 
 namespace ViennaNET.Messaging.ActiveMQQueue.Tests.DSL
 {
-  internal class ActiveMqQueueMessageAdapterBuilder
+    internal class ActiveMqQueueMessageAdapterBuilder
   {
     private ActiveMqQueueConfiguration _configuration;
     private IActiveMqConnectionFactory _connectionFactoryProvider;

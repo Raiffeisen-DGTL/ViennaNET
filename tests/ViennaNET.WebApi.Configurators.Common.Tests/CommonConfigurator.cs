@@ -29,19 +29,12 @@ namespace ViennaNET.WebApi.Configurators.Common.Tests
           (appConfigurationAction, initBeforeContainer)
             => appConfigurationAction(_appBuilderMock.Object, _configMock.Object, _envMock.Object, null))
         .Returns(_companyHostBuilderMock.Object);
-
-      configSectionMock
-        .Setup(section => section.Value)
-        .Returns(loggerConfig);
-
+      
       _configMock
         .Setup(configuration => configuration.GetSection(It.IsAny<string>()))
         .Returns(configSectionMock.Object);
     }
-
-    private const string loggerConfig =
-      "\"logger\": { \"listeners\": [ { \"type\": \"console\", \"category\": \"All\", \"minLevel\": \"Debug\" }]}";
-
+    
     private Mock<ICompanyHostBuilder> _companyHostBuilderMock;
     private Mock<IApplicationBuilder> _appBuilderMock;
     private Mock<IConfiguration> _configMock;
@@ -52,7 +45,7 @@ namespace ViennaNET.WebApi.Configurators.Common.Tests
     {
       _companyHostBuilderMock.Object.UseCommonModules();
       _appBuilderMock.Verify(
-        builder => builder.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()), Times.AtLeast(2));
+        builder => builder.Use(It.IsAny<Func<RequestDelegate, RequestDelegate>>()), Times.Once);
     }
   }
 }

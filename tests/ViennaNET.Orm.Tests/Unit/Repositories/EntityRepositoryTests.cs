@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Orm.Exceptions;
 using ViennaNET.Orm.Repositories;
 using Moq;
@@ -11,7 +9,7 @@ using ViennaNET.Orm.Tests.Unit.DSL;
 
 namespace ViennaNET.Orm.Tests.Unit.Repositories
 {
-  [TestFixture]
+    [TestFixture]
   [Category("Unit")]
   [TestOf(typeof(EntityRepository<>))]
   public class EntityRepositoryTests

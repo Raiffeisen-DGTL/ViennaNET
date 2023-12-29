@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using ViennaNET.Orm.Factories;
 using Moq;
 using NUnit.Framework;
 
 namespace ViennaNET.Orm.Tests.Unit.Factories
 {
-  [TestFixture]
+    [TestFixture]
   [Category("Unit")]
   [TestOf(typeof(ExplicitNhSessionScope))]
   public class ExplicitNhSessionScopeTests

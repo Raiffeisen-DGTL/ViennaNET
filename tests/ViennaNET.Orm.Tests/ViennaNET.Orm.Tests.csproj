@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,15 +20,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\ViennaNET.Mediator.DefaultConfiguration\ViennaNET.Mediator.DefaultConfiguration.csproj"/>
-        <ProjectReference Include="..\..\src\ViennaNET.Orm.DefaultConfiguration\ViennaNET.Orm.DefaultConfiguration.csproj"/>
-        <ProjectReference Include="..\..\src\ViennaNET.Orm.SQLite.DefaultConfiguration\ViennaNET.Orm.SQLite.DefaultConfiguration.csproj"/>
+        <ProjectReference Include="..\..\src\ViennaNET.Mediator.DefaultConfiguration\ViennaNET.Mediator.DefaultConfiguration.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Orm.DefaultConfiguration\ViennaNET.Orm.DefaultConfiguration.csproj" />
+        <ProjectReference Include="..\..\src\ViennaNET.Orm.SQLite.DefaultConfiguration\ViennaNET.Orm.SQLite.DefaultConfiguration.csproj" />
     </ItemGroup>
 
 </Project>

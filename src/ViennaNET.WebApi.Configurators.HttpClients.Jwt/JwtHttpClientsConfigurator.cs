@@ -1,12 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ViennaNET.Diagnostic;
 using ViennaNET.HttpClient;
-using ViennaNET.Logging;
 using ViennaNET.WebApi.Abstractions;
 using ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Configuration;
 using ViennaNET.WebApi.Configurators.HttpClients.Abstractions.Diagnostic;
@@ -15,60 +11,52 @@ using ViennaNET.WebApi.Configurators.HttpClients.Jwt.Handlers;
 
 namespace ViennaNET.WebApi.Configurators.HttpClients.Jwt
 {
-  /// <summary>
-  ///   Конфигуратор для регистрации Http-клиентов с JwtRequestHeadersHandler
-  /// </summary>
-  public static class JwtHttpClientsConfigurator
-  {
     /// <summary>
-    ///   Регистрирует Http-клиентов, реализующих проброску авторизации в заголовках
+    ///   Конфигуратор для регистрации Http-клиентов с JwtRequestHeadersHandler
     /// </summary>
-    public static ICompanyHostBuilder UseJwtHttpClients(this ICompanyHostBuilder companyHostBuilder)
+    public static class JwtHttpClientsConfigurator
     {
-      return companyHostBuilder.RegisterServices(RegisterHttpClients);
-    }
-
-    internal static void RegisterHttpClients(this IServiceCollection services, IConfiguration configuration)
-    {
-      services.TryAddSingleton<IDiagnosticImplementor, HttpEndpointsChecker>();
-
-      try
-      {
-        var endpoints = configuration.GetSection(WebapiEndpointsSection.SectionName)
-          .Get<WebapiEndpoint[]>();
-        if (endpoints == null)
+        /// <summary>
+        ///   Регистрирует Http-клиентов, реализующих проброску авторизации в заголовках
+        /// </summary>
+        public static ICompanyHostBuilder UseJwtHttpClients(this ICompanyHostBuilder companyHostBuilder)
         {
-          services.AddHttpClient();
-          return;
+            return companyHostBuilder.RegisterServices(RegisterHttpClients);
         }
 
-        foreach (var endpoint in endpoints.Where(e => e.AuthType == CompanyHttpClientsTypes.Jwt))
+        internal static void RegisterHttpClients(this IServiceCollection services, IConfiguration configuration)
         {
-          ConfigureClient(endpoint)
-            .Register(services);
-        }
-      }
-      catch (Exception ex)
-      {
-        Logger.LogErrorFormat(ex, "Error while register HttpClients");
-        throw;
-      }
-    }
+            services.TryAddSingleton<IDiagnosticImplementor, HttpEndpointsChecker>();
 
-    private static HttpClientRegistrator ConfigureClient(WebapiEndpoint endpoint)
-    {
-      return HttpClientRegistrator.Create()
-        .WithName(endpoint.Name)
-        .WithUrl(endpoint.Url)
-        .WithTimeout(endpoint.Timeout)
-        .WithHandler<BaseCompanyRequestHeadersHandler>()
-        .WithHandler<RequestAuthorizationHeaderHandler>()
-        .ConfigureBuilder(x => x.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            var endpoints = configuration.GetSection(WebapiEndpointsSection.SectionName)
+                .Get<WebapiEndpoint[]>();
+            if (endpoints == null)
+            {
+                services.AddHttpClient();
+                return;
+            }
+
+            foreach (var endpoint in endpoints.Where(e => e.AuthType == CompanyHttpClientsTypes.Jwt))
+            {
+                ConfigureClient(endpoint)
+                    .Register(services);
+            }
+        }
+
+        private static HttpClientRegistrator ConfigureClient(WebapiEndpoint endpoint)
         {
-          AllowAutoRedirect = false,
-          UseProxy = false,
-          MaxConnectionsPerServer = endpoint.MaxConnections ?? int.MaxValue
-        }));
+            return HttpClientRegistrator.Create()
+                .WithName(endpoint.Name)
+                .WithUrl(endpoint.Url)
+                .WithTimeout(endpoint.Timeout)
+                .WithHandler<BaseCompanyRequestHeadersHandler>()
+                .WithHandler<RequestAuthorizationHeaderHandler>()
+                .ConfigureBuilder(x => x.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    AllowAutoRedirect = false,
+                    UseProxy = false,
+                    MaxConnectionsPerServer = endpoint.MaxConnections ?? int.MaxValue
+                }));
+        }
     }
-  }
 }

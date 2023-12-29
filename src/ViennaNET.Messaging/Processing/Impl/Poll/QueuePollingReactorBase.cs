@@ -60,11 +60,6 @@ namespace ViennaNET.Messaging.Processing.Impl.Poll
       _adapter = messageAdapter;
       _messageProcessors = messageProcessors;
       _asyncMessageProcessors = asyncMessageProcessors;
-      if (subscribeInterval <= 0)
-      {
-        throw new ArgumentOutOfRangeException(nameof(subscribeInterval));
-      }
-
       _healthCheckingService = healthCheckingService;
       _hasDiagnosticErrors = false;
       _serviceHealthDependent = serviceHealthDependent ?? false;

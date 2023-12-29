@@ -2,19 +2,19 @@
 using NUnit.Framework;
 using ViennaNET.Messaging.MQSeriesQueue.Infrastructure;
 
-namespace ViennaNET.Messaging.MQSeriesQueue.Tests
+namespace ViennaNET.Messaging.MQSeriesQueue.Tests;
+
+[TestFixture(Category = "Unit", TestOf = typeof(MqSeriesQueueConnectionFactoryProvider))]
+public class MqSeriesQueueConnectionFactoryProviderTests
 {
-  [TestFixture(Category = "Unit", TestOf = typeof(MqSeriesQueueConnectionFactoryProvider))]
-  public class MqSeriesQueueConnectionFactoryProviderTests
-  {
     [Test]
     public void ConnectionFactoryTest()
     {
-      var provider = new MqSeriesQueueConnectionFactoryProvider();
+        Environment.SetEnvironmentVariable("MQCLNTCF", Directory.GetCurrentDirectory());
+        var provider = new MqSeriesQueueConnectionFactoryProvider();
 
-      var factory = provider.GetConnectionFactory(XMSC.CT_WMQ);
+        var factory = provider.GetConnectionFactory(XMSC.CT_WMQ);
 
-      Assert.IsNotNull(factory);
+        Assert.That(factory, Is.Not.Null);
     }
-  }
 }

@@ -1,5 +1,3 @@
-using System.IO.Abstractions;
-using k8s;
 using Microsoft.Extensions.Configuration;
 using Moq;
 
@@ -14,15 +12,6 @@ public class KubernetesConfigurationSourceTests
         // И получать соответствующую конфигурацию (заглушку).
         Environment.SetEnvironmentVariable("KUBERNETES_SERVICE_HOST", "test.kube.api/");
         Environment.SetEnvironmentVariable("KUBERNETES_SERVICE_PORT", "8080");
-
-        var mockFs = new Mock<IFileSystem>();
-
-        // При создании конфигурации клиента, считывается SSL сертификат, замещаем пустым потоком
-        mockFs.Setup(fs => fs.File.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-        mockFs.Setup(fs => fs.File.Exists(It.IsAny<string>())).Returns(true);
-
-        // Замещаем файловую систему, которую используют типы K8S клиента
-        FileUtils.InjectFilesystem(mockFs.Object);
     }
 
     [Test]

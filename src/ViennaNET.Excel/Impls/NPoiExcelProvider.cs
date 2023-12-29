@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ViennaNET.Excel.Contracts;
-using ViennaNET.FileUtils.Interfaces;
+using ViennaNET.Excel.IO;
 
 namespace ViennaNET.Excel.Impl
 {

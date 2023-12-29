@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using ViennaNET.Mediator.Seedwork;
@@ -7,7 +5,7 @@ using ViennaNET.Orm.DI;
 
 namespace ViennaNET.Orm.Tests.Unit.DI
 {
-  [TestFixture]
+    [TestFixture]
   [Category("Unit")]
   [TestOf(typeof(DomainEventsInterceptor))]
   public class DomainEventsInterceptorTests

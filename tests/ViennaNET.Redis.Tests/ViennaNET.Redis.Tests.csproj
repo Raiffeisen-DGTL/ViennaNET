@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="redis.json"/>
-        <None Remove="redisNoConnection.json"/>
+        <None Remove="redis.json" />
+        <None Remove="redisNoConnection.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\ViennaNET.Redis.DefaultConfiguration\ViennaNET.Redis.DefaultConfiguration.csproj"/>
+        <ProjectReference Include="..\..\src\ViennaNET.Redis.DefaultConfiguration\ViennaNET.Redis.DefaultConfiguration.csproj" />
     </ItemGroup>
 
     <ItemGroup>

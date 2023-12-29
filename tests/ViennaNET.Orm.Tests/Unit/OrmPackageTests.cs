@@ -22,6 +22,12 @@ namespace ViennaNET.Orm.Tests.Unit
 
     Container _container;
 
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _container.Dispose();
+    }
+
     [Test]
     public void InstallTest()
     {

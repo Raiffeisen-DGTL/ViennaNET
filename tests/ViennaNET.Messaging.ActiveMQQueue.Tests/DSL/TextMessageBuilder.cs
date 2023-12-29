@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Apache.NMS;
 using Moq;
 
 namespace ViennaNET.Messaging.ActiveMQQueue.Tests.DSL
 {
-  internal class TextMessageBuilder
+    internal class TextMessageBuilder
   {
     private string _body;
     private IDictionary<string, object> _props = new Dictionary<string, object>();

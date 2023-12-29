@@ -1,11 +1,14 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Moq;
-using Newtonsoft.Json.Linq;
 using VaultSharp.V1.Commons;
 
 namespace ViennaNET.Extensions.Configuration.HashicorpVault.Tests;
 
 public class VaultConfigurationProviderTests
 {
+    private static JsonDocumentOptions DocOptions = new() { AllowTrailingCommas = true };
+
     [Test]
     public void Ctor_WithNullSource_Throws_ArgumentNullException()
     {
@@ -48,7 +51,8 @@ public class VaultConfigurationProviderTests
     {
         var secret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV2).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV2, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 1 }
         };
         var client = Given.GetClientMockWithSetupReadSecretAsync(secret).Object;
@@ -67,7 +71,8 @@ public class VaultConfigurationProviderTests
     {
         var secret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV2).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV2, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 1 }
         };
         var client = Given.GetClientMockWithSetupReadSecretAsync(secret).Object;
@@ -90,7 +95,8 @@ public class VaultConfigurationProviderTests
     {
         var secret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV2).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV2, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 1 }
         };
         var client = Given.GetClientMockWithSetupReadSecretAsync(secret).Object;
@@ -111,7 +117,8 @@ public class VaultConfigurationProviderTests
     {
         var secret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV2).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV2, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 1 }
         };
         var client = Given.GetClientMockWithSetupReadSecretAsync(secret).Object;
@@ -130,12 +137,14 @@ public class VaultConfigurationProviderTests
     {
         var firstSecret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV1).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV1, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 1 }
         };
         var secondSecret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV2).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV2, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 2 }
         };
         var client = Given.GetClientMockWithSetupReadSecretAsync(firstSecret, secondSecret).Object;
@@ -157,12 +166,14 @@ public class VaultConfigurationProviderTests
     {
         var firstSecret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV1).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV1, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 1 }
         };
         var secondSecret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV2).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV2, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 2 }
         };
         var client = Given.GetClientMockWithSetupReadSecretAsync(firstSecret, secondSecret).Object;
@@ -185,7 +196,8 @@ public class VaultConfigurationProviderTests
     {
         var firstSecret = new SecretData
         {
-            Data = JObject.Parse(Given.AppSettingsJsonV1).ToObject<IDictionary<string, object>>(),
+            Data = JsonNode.Parse(Given.AppSettingsJsonV1, documentOptions: DocOptions)?.AsObject()
+                .ToDictionary(pair => pair.Key, pair => pair.Value as object),
             Metadata = new CurrentSecretMetadata { Version = 1, Destroyed = true }
         };
         var client = Given.GetClientMockWithSetupReadSecretAsync(firstSecret).Object;

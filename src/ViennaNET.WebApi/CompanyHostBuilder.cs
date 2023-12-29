@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using ViennaNET.WebApi.Cors;
-using ViennaNET.WebApi.Logging;
 using ViennaNET.WebApi.Metrics;
 using ViennaNET.WebApi.StaticFiles;
 
@@ -87,15 +82,7 @@ namespace ViennaNET.WebApi
           _configurationBuilderAction?.Invoke(builder);
           Configuration = builder.Build();
         })
-        .ConfigureServices(ConfigureServices)
-        .ConfigureLogging(logBuilder =>
-        {
-          if (Configuration.GetValue<bool>("Logging:UseLegacyLogger"))
-          {
-            logBuilder.ClearProviders();
-            logBuilder.AddProvider(new LoggingAdapterProvider());
-          }
-        });
+        .ConfigureServices(ConfigureServices);
 
       _hostBuilderAction?.Invoke(hostBuilder);
       var host = hostBuilder.Build();

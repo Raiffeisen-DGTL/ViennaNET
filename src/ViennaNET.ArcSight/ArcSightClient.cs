@@ -15,7 +15,7 @@ namespace ViennaNET.ArcSight
   {
     private readonly ArcSightSection _cefConfig;
     private readonly ICefSenderFactory _cefSenderFactory;
-    private readonly ILogger _logger;
+    private readonly ILogger<ArcSightClient> _logger;
     private readonly ISyncPolicy _policy;
     private readonly CefMessageSerializer _serializer;
 

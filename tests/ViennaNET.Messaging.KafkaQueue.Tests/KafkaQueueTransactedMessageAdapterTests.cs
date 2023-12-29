@@ -36,7 +36,7 @@ namespace ViennaNET.Messaging.KafkaQueue.Tests
       Assert.Multiple(() =>
       {
         factory.ProducerMock.Verify(
-          m => m.InitTransactions(TimeSpan.FromMilliseconds(config.IntervalPollingQueue)));
+          m => m.InitTransactions(TimeSpan.FromMilliseconds(config.InitTransactionsTimeout)));
         factory.ProducerMock.Verify(
           m => m.BeginTransaction());
       });

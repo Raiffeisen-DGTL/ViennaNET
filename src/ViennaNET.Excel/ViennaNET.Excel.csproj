@@ -1,25 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DocumentationFile>bin\Debug\net6.0\ViennaNET.Excel.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DocumentationFile>bin\Release\net6.0\ViennaNET.Excel.xml</DocumentationFile>
-  </PropertyGroup>
-
+  
   <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
-    <PackageReference Include="NPOI" Version="2.5.6" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.0" />
+    <PackageReference Include="NPOI" Version="2.6.2" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ViennaNET.FileUtils\ViennaNET.FileUtils.csproj" />
-  </ItemGroup>
-
+  
 </Project>

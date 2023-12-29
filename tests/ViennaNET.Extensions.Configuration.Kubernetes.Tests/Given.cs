@@ -57,7 +57,7 @@ internal static class Given
         mock.Setup(kubernetes =>
                 kubernetes.CoreV1.ListNamespacedConfigMapWithHttpMessagesAsync(It.IsAny<string>(),
                     It.IsAny<bool?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
-                    It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>(),
+                    It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<int?>(),
                     It.IsAny<bool?>(), It.IsAny<bool?>(),
                     It.IsAny<IReadOnlyDictionary<string, IReadOnlyList<string>>>(),
                     It.IsAny<CancellationToken>()))
@@ -71,7 +71,7 @@ internal static class Given
         mock.Setup(kubernetes =>
                 kubernetes.CoreV1.ListNamespacedSecretWithHttpMessagesAsync(It.IsAny<string>(),
                     It.IsAny<bool?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
-                    It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>(),
+                    It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<int?>(),
                     It.IsAny<bool?>(), It.IsAny<bool?>(),
                     It.IsAny<IReadOnlyDictionary<string, IReadOnlyList<string>>>(),
                     It.IsAny<CancellationToken>()))
