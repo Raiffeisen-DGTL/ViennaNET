@@ -1,7 +1,6 @@
 using k8s;
 using k8s.Models;
 using Moq;
-using ViennaNET.Extensions.Configuration.Kubernetes.Internals;
 
 namespace ViennaNET.Extensions.Configuration.Kubernetes.Tests;
 
@@ -174,7 +173,6 @@ public class ConfigMapConfigurationProviderTests
         k8sClientBuilder.Setup(builder => builder.Build()).Returns(k8sClient);
 
         var provider =
-            new ConfigMapConfigurationProvider(new KubernetesConfigurationSource(), new KubernetesClientBuilder());
             new ConfigMapConfigurationProvider(new KubernetesConfigurationSource(), k8sClientBuilder.Object);
 
         Assert.That(() => provider.Dispose(), Throws.Nothing);
