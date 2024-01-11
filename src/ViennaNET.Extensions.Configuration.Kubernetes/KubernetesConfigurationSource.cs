@@ -101,7 +101,7 @@ public sealed class KubernetesConfigurationSource : IConfigurationSource
     /// <summary>
     ///     Ссылка на объект <see cref="IKubernetesClientBuilder" />.
     /// </summary>
-    public IKubernetesClientBuilder KubernetesClientBuilder { get; }
+    public IKubernetesClientBuilder KubernetesClientBuilder { get; set; }
 
     /// <exception cref="ArgumentOutOfRangeException">
     ///     Возникает, если значение свойства <see cref="Kind" />,

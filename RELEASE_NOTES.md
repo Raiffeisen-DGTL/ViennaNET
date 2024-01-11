@@ -1,37 +1,37 @@
-# v0016 (03.03.2022)
-1. Add missed host lifetime hook: ApplicationStopping
-2. Rename AddOnStopAction to AddOnStoppedAction for ApplicationStopped lifetime hook
+# 8.x [Release 8.0] (30.12.2023)
+1. Upgrade target framework to .NET 8 and a lot of refactoring
 
-# v0015 (25.01.2022)
-1. Remove using of log4net from all Orm libraries (see ViennaNET.Orm docs for details)
-2. Add ViennaNET.Orm.DB2.Osx for macOs users
-3. Breaking change: ViennaNET.Orm.MSSQL updated to Microsoft.Data.SqlClient from System.Data.SqlClient, it means that you should set Encrypt parameter in ConnectionString to correct value, because now it is **true** by default (https://github.com/dotnet/SqlClient/blob/main/release-notes/4.0/4.0.0.md#breaking-changes)
-4. Breaking change: fix namespace ViennaNET.Orm.DB2.Win.DefaultConfiguration to ViennaNET.Orm.DB2.DefaultConfiguration for ViennaNET DB2 Windows libs
+# 6.x [Release 6.0] (08.12.2023)
+1. Upgrade target framework to .NET 6 and a lot of refactoring
 
-# v0014 (08.04.2021)
+# 5.x [PR #35] (19.05.2021)
+1. Upgrade target framework to .NET 5 and a lot of refactoring
+
+
+# 3.14.x [Release 0014] (08.04.2021)
 1. Add ViennaNET.Messaging.ActiveMQ, split ViennaNET.Messaging.Tests
 2. Extension ViennaNET.Redis, ViennaNET.Utils.Orm
 
-# v0013 (01.03.2021)
+# 3.13.x [Release 0013] (01.03.2021)
 1. Minor changes in ViennaNET.Messaging, ViennaNET.Messaging.RabbitMQQueue, ViennaNET.Orm
 
-# v0012 (04.02.2021)
+# 3.12.x [Release 0012] (04.02.2021)
 1. Minor changes in ViennaNET.Messaging, ViennaNET.Messaging.MQSeriesQueue, ViennaNET.Orm, ViennaNET.Redis, ViennaNET.WebApi
 2. Refactor logging
 
-# v0011 (27.11.2020)
+# 3.11.x [Release 0011] (27.11.2020)
 
 ### Release Summary
 1. Various small bugfixes in Excel, Messaging and WebApi
 
 
-# v0010 (29.10.2020)
+# 3.10.x [Release 0010] (29.10.2020)
 
 ### Release Summary
 1. Change Messaging
 
 
-# v0009 (4.10.2020)
+# 3.9.x [Release 0009] (4.10.2020)
 
 ### Release Summary
 1. Added ORM DB2 integration
@@ -53,7 +53,7 @@ In order for the current logging option to continue working as it is, you need t
     }
 ```	
 
-# v0007 (30.07.2020)
+# 1.7.x [Release 0007] (30.07.2020)
 
 ### Release Summary
 1. For Rabbit queues, added the ability to create additional bindings through the routings configuration. 
@@ -69,7 +69,7 @@ the exchange point to the queues.
 3. Added optional loading of an additional configuration file, which is selected by the value of the environment variable:
    https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1
 
-# v0006 (30.06.2020)
+# 1.6.x [Release 0006] (30.06.2020)
 
 ### Release Summary
 1. MQSeriesQueue - selectors improved
@@ -77,13 +77,13 @@ the exchange point to the queues.
 3. HttpClients.NoAuthentication - added the ability to anonymously connect to other services
 4. WebApi.CompanyHostBuilder - add enironment variables to configuration
 
-# v0005 (29.05.2020)
+# 1.0.1.115 [Release 0005] (29.05.2020)
 
 ### Breaking Changes
 Changed CallContextHeaders headers. In case of their use, it is necessary to take into account the new formats.
 
 
-# v0004 (25.04.2020)
+# 1.0.1.79 [Release 0004] (25.04.2020)
 
 ### Release Summary
 We have added ICallContext. This abstraction receive and hold some context data such as request id, user name, domain and so on to pass in microservices by different channels: Http-requests and queue messaging.
@@ -93,13 +93,13 @@ SecurityContextFactories now uses this context to build authentication data.
 If you used manual installation of SimpleInjector packages, you will find that DiagnosticPackage is deleted: since this release it register automatically. Just delete DiagnosticPackage registration in your code.
 
 
-# v0003 (26.03.2020)
+# [Release 0003] (26.03.2020)
 
 ### Release Summary
 Add more libraries
 
 
-# v0002 (19.02.2020)
+# [Release 0002] (19.02.2020)
 
 ### Release Summary
 Rebranding Company.Framework to ViennaNET.
@@ -196,7 +196,7 @@ In the new version, the use of composite configurators has become easier, for ex
 3) We update versions of Company libraries to (2. \*.\*) In all assemblies. Version conflicts with third-party libraries (for example, SimpleInjector) may occur, so they need to be synchronized.
 
 
-# v0001 (14.01.2020)
+# [Release 0001] (14.01.2020)
 
 ### Release Summary
 MVP Company.Framework on NET Core 2.2

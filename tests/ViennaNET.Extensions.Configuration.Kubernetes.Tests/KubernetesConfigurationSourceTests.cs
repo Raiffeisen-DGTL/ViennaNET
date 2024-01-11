@@ -20,14 +20,6 @@ public class KubernetesConfigurationSourceTests
         Assert.That(() => new KubernetesConfigurationSource(), Throws.Nothing);
     }
 
-    [TestCase(null, null, null, true)]
-    [TestCase("./test.kubeconfig", "testcontext", "https://test.kube.api", false)]
-    public void ParameterizedCtor_DoesNotThrows(string? configPath, string? сontext, string? masterUrl,
-        bool useRelativePaths)
-    {
-        Assert.That(() => new KubernetesConfigurationSource(), Throws.Nothing);
-    }
-
     [Test]
     public void Ctor_Init_DefaultValues()
     {
@@ -66,16 +58,17 @@ public class KubernetesConfigurationSourceTests
 
     [TestCase(Kinds.ConfigMap)]
     [TestCase(Kinds.Secret)]
-    [Explicit]
     public void Build_Returns_ConfigurationProvider(int kind)
     {
         var builder = Mock.Of<IConfigurationBuilder>();
+        var clientBuilder = Mock.Of<IKubernetesClientBuilder>();
         var source = new KubernetesConfigurationSource
         {
             FileName = "test.json",
             Kind = (Kinds)kind,
             OnWatchClose = () => TestContext.WriteLine("WatchCloseTest"),
             OnWatchException = TestContext.WriteLine,
+            KubernetesClientBuilder = clientBuilder
         };
 
         Assert.That(source.Build(builder),
@@ -88,12 +81,14 @@ public class KubernetesConfigurationSourceTests
     public void Build_Throws_ArgumentOutOfRangeException()
     {
         var builder = Mock.Of<IConfigurationBuilder>();
+        var clientBuilder = Mock.Of<IKubernetesClientBuilder>();
         var source = new KubernetesConfigurationSource
         {
             FileName = "test.json",
             Kind = (Kinds)3,
             OnWatchClose = () => TestContext.WriteLine("WatchCloseTest"),
-            OnWatchException = TestContext.WriteLine
+            OnWatchException = TestContext.WriteLine,
+            KubernetesClientBuilder = clientBuilder
         };
 
         Assert.That(() => source.Build(builder), Throws.InvalidOperationException);

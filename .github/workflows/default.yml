@@ -83,6 +83,10 @@ jobs:
         run: dotnet restore
 
       - name: Build
+        env:
+          GitVersion_NuGetVersion: $GITVERSION_NUGETVERSIONV
+          GitVersion_AssemblySemVer: $GITVERSION_ASSEMBLYSEMVER
+          GitVersion_InformationalVersion: $GITVERSION_INFORMATIONALVERSION
         run: |
           dotnet build "$PROJECT_NAME" -c Release --nologo --no-restore
 
@@ -104,6 +108,10 @@ jobs:
 
       - name: Pack
         if: github.ref == 'refs/heads/master'
+        env:
+          GitVersion_NuGetVersion: $GITVERSION_NUGETVERSIONV
+          GitVersion_AssemblySemVer: $GITVERSION_ASSEMBLYSEMVER
+          GitVersion_InformationalVersion: $GITVERSION_INFORMATIONALVERSION
         run: dotnet pack $PROJECT_NAME -c Release -o ./nupkgs --nologo --no-build
 
       - name: Push nuget packages

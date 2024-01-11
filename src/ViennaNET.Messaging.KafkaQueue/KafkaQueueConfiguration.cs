@@ -38,7 +38,7 @@ namespace ViennaNET.Messaging.KafkaQueue
         public ProducerConfig? ProducerConfig { get; set; }
 
         /// <summary>
-        /// Таймат в мс метода включения транзакций (InitTransactions)
+        /// Таймаут в мс метода включения транзакций (InitTransactions)
         /// </summary>
         [Range(1, 3_600_000)]
         public int InitTransactionsTimeout { get; set; } = 1000;

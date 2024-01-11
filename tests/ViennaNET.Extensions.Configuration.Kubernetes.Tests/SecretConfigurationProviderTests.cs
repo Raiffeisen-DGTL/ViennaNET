@@ -2,6 +2,7 @@ using System.Text;
 using k8s;
 using k8s.Models;
 using Moq;
+using ViennaNET.Extensions.Configuration.Kubernetes.Internals;
 
 namespace ViennaNET.Extensions.Configuration.Kubernetes.Tests;
 
@@ -213,14 +214,10 @@ public class SecretConfigurationProviderTests
     [Test]
     public void Dispose_Throws_Nothing()
     {
-        var k8sClient = Mock.Of<IKubernetes>();
-        var k8sClientBuilder = new Mock<IKubernetesClientBuilder>();
+        var client = Mock.Of<IKubernetes>();
+        var builder = Mock.Of<IKubernetesClientBuilder>(clientBuilder => clientBuilder.Build() == client);
+        var provider = new SecretConfigurationProvider(new KubernetesConfigurationSource(), builder);
 
-        k8sClientBuilder.Setup(builder => builder.Build()).Returns(k8sClient);
-
-        var provider =
-            new SecretConfigurationProvider(new KubernetesConfigurationSource(), k8sClientBuilder.Object);
-
-        Assert.That(() => provider.Dispose(), Throws.Nothing);
+        Assert.That(provider.Dispose, Throws.Nothing);
     }
 }
