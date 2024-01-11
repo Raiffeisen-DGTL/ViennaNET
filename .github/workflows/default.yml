@@ -84,7 +84,7 @@ jobs:
 
       - name: Build
         env:
-          GitVersion_NuGetVersion: $GITVERSION_NUGETVERSIONV
+          GitVersion_NuGetVersion: $GITVERSION_NUGETVERSION
           GitVersion_AssemblySemVer: $GITVERSION_ASSEMBLYSEMVER
           GitVersion_AssemblySemFileVer: $GITVERSION_ASSEMBLYSEMFILEVER
           GitVersion_InformationalVersion: $GITVERSION_INFORMATIONALVERSION
@@ -110,7 +110,7 @@ jobs:
       - name: Pack
         if: github.ref == 'refs/heads/master'
         env:
-          GitVersion_NuGetVersion: $GITVERSION_NUGETVERSIONV
+          GitVersion_NuGetVersion: $GITVERSION_NUGETVERSION
           GitVersion_AssemblySemVer: $GITVERSION_ASSEMBLYSEMVER
           GitVersion_AssemblySemFileVer: $GITVERSION_ASSEMBLYSEMFILEVER
           GitVersion_InformationalVersion: $GITVERSION_INFORMATIONALVERSION
