@@ -1,3 +1,4 @@
+using k8s;
 using Microsoft.Extensions.Configuration;
 
 namespace ViennaNET.Extensions.Configuration.Kubernetes;
@@ -47,7 +48,7 @@ public static class KubernetesConfigurationExtensions
     /// <returns>Ссылка на объект <see cref="IConfigurationBuilder" />.</returns>
     public static IConfigurationBuilder AddJsonConfigMap(this IConfigurationBuilder builder,
         string name,
-        string @namespace,
+        string? @namespace = null,
         string? fileName = null,
         bool reloadOnChange = true,
         Action<IKubernetesClientBuilder>? configureClientBuilder = null)
@@ -90,7 +91,7 @@ public static class KubernetesConfigurationExtensions
     /// <returns>Ссылка на объект <see cref="IConfigurationBuilder" />.</returns>
     public static IConfigurationBuilder AddKeyValueConfigMap(this IConfigurationBuilder builder,
         string name,
-        string @namespace,
+        string? @namespace = null,
         bool reloadOnChange = true,
         Action<IKubernetesClientBuilder>? configureClientBuilder = null)
     {
@@ -136,7 +137,7 @@ public static class KubernetesConfigurationExtensions
     /// <returns>Ссылка на объект <see cref="IConfigurationBuilder" />.</returns>
     public static IConfigurationBuilder AddJsonSecret(this IConfigurationBuilder builder,
         string name,
-        string @namespace,
+        string? @namespace = null,
         string? fileName = null,
         bool reloadOnChange = true,
         Action<IKubernetesClientBuilder>? configureClientBuilder = null)
@@ -180,7 +181,7 @@ public static class KubernetesConfigurationExtensions
     /// <param name="configureClientBuilder">Действие, настраивающее сборщик клиента K8S.</param>
     /// <returns>Ссылка на объект <see cref="IConfigurationBuilder" />.</returns>
     public static IConfigurationBuilder AddKeyValueSecret(this IConfigurationBuilder builder,
-        string name, string @namespace, bool reloadOnChange = true,
+        string name, string? @namespace = null, bool reloadOnChange = true,
         Action<IKubernetesClientBuilder>? configureClientBuilder = null)
     {
         var metadata = (name, @namespace, Kinds.Secret);
@@ -206,7 +207,7 @@ public static class KubernetesConfigurationExtensions
     /// <returns>Ссылка на объект <see cref="IConfigurationBuilder" />.</returns>
     public static IConfigurationBuilder AddKubernetes(
         this IConfigurationBuilder builder,
-        (string name, string @namespace, Kinds kind) metadata,
+        (string name, string? @namespace, Kinds kind) metadata,
         DataTypes dataTypes,
         bool reloadOnChange = true,
         string? fileName = null,
@@ -221,12 +222,22 @@ public static class KubernetesConfigurationExtensions
                 source.Name = name;
             }
 
-            if (!string.IsNullOrWhiteSpace(ns))
+            if (string.IsNullOrWhiteSpace(ns))
+            {
+                if (KubernetesClientConfiguration.IsInCluster())
+                {
+                    var icc = KubernetesClientConfiguration.InClusterConfig();
+                    if (!string.IsNullOrEmpty(icc.Namespace))
+                    {
+                        source.Namespace = icc.Namespace;
+                    }
+                }
+            }
+            else
             {
                 source.Namespace = ns;
             }
 
-            source.Name = name;
             source.FileName = fileName;
             source.Kind = kind;
             source.DataType = dataTypes;

@@ -95,13 +95,13 @@ namespace ViennaNET.Orm.Repositories
 
     public void Delete(T entity)
     {
-      CheckCanDelete(entity);
+      CheckNotReadOnly();
       _session.Delete(entity);
     }
 
     public Task DeleteAsync(T entity, CancellationToken token = default)
     {
-      CheckCanDelete(entity);
+      CheckNotReadOnly();
       return _session.DeleteAsync(entity, token);
     }
 
@@ -125,27 +125,6 @@ namespace ViennaNET.Orm.Repositories
       }
 
       return nhQuery;
-    }
-
-    private void CheckCanDelete(T entity)
-    {
-      CheckNotReadOnly();
-      if (!IsMutable(entity))
-      {
-        throw new EntityRepositoryException("Trying to delete immutable entity");
-      }
-    }
-
-    private bool IsMutable(T entity)
-    {
-      var context = ((ISessionImplementor)_session).PersistenceContext;
-      if (!context.EntityEntries.Contains(entity))
-      {
-        return false;
-      }
-
-      var entityEntry = context.GetEntry(entity);
-      return entityEntry.Persister.IsMutable;
     }
 
     private void CheckNotReadOnly()

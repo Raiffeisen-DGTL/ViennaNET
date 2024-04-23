@@ -275,6 +275,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Net", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViennaNET.WebApi.Net.Tests", "tests\ViennaNET.WebApi.Net.Tests\ViennaNET.WebApi.Net.Tests.csproj", "{B9BC0212-D0E7-43A7-8295-EE571EF0BF71}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.KasperskyScanEngine.Client", "src\ViennaNET.KasperskyScanEngine.Client\ViennaNET.KasperskyScanEngine.Client.csproj", "{F812AC9D-BD96-4966-B6CC-837542872CA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViennaNET.KasperskyScanEngine.Client.Tests", "tests\ViennaNET.KasperskyScanEngine.Client.Tests\ViennaNET.KasperskyScanEngine.Client.Tests.csproj", "{4561F7BC-0085-4480-B72E-08FA73029CCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -717,6 +721,14 @@ Global
 		{B9BC0212-D0E7-43A7-8295-EE571EF0BF71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9BC0212-D0E7-43A7-8295-EE571EF0BF71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9BC0212-D0E7-43A7-8295-EE571EF0BF71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F812AC9D-BD96-4966-B6CC-837542872CA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F812AC9D-BD96-4966-B6CC-837542872CA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F812AC9D-BD96-4966-B6CC-837542872CA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F812AC9D-BD96-4966-B6CC-837542872CA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4561F7BC-0085-4480-B72E-08FA73029CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4561F7BC-0085-4480-B72E-08FA73029CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4561F7BC-0085-4480-B72E-08FA73029CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4561F7BC-0085-4480-B72E-08FA73029CCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

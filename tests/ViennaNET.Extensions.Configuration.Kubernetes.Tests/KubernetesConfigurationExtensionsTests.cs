@@ -73,4 +73,12 @@ public class KubernetesConfigurationExtensionsTests
     {
         Assert.That(() => ((ConfigurationBuilder)null!).AddKubernetes(_ => { }), Throws.ArgumentNullException);
     }
+
+    [Test]
+    public void AddKeyValueConfigMap_NoNamespace_Returns_ConfigurationBuilder()
+    {
+        var builder = new ConfigurationBuilder();
+
+        Assert.That(builder.AddKeyValueConfigMap("appsettings"), Is.Not.Null);
+    }
 }

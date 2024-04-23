@@ -3,9 +3,13 @@
     <Import Project="../Directory.Build.props"/>
 
     <PropertyGroup>
+        <IsTestProject>true</IsTestProject>
         <IsPackable>false</IsPackable>
         <CollectCoverage>true</CollectCoverage>
         <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+        <ExcludeByFile>**/*.g.cs</ExcludeByFile>
+        <ExcludeByAttribute>ObsoleteAttribute,GeneratedCodeAttribute,DebuggerBrowsableAttribute</ExcludeByAttribute>
+        <UseSourceLink>true</UseSourceLink>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(GITLAB_CI)' == 'True'">
@@ -13,13 +17,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
-        <PackageReference Include="NUnit" Version="4.0.1"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0"/>
+        <PackageReference Include="NUnit" Version="4.1.0"/>
         <PackageReference Include="NUnit3TestAdapter" Version="4.5.0"/>
-        <PackageReference Include="NunitXml.TestLogger" Version="3.1.15"/>
-        <PackageReference Include="NUnit.Analyzers" Version="3.10.0"/>
+        <PackageReference Include="NunitXml.TestLogger" Version="3.1.20"/>
+        <PackageReference Include="NUnit.Analyzers" Version="4.1.0"/>
         <PackageReference Include="Moq" Version="4.20.70"/>
-        <PackageReference Include="coverlet.msbuild" Version="6.0.0">
+        <PackageReference Include="coverlet.msbuild" Version="6.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

@@ -6,7 +6,7 @@
   
     <ItemGroup>
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
         <PackageReference Include="SimpleInjector.Packaging" Version="5.0.0" />
     </ItemGroup>
 

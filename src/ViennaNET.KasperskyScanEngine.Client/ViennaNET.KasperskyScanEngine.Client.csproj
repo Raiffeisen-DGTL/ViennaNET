@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Description>
+            Типовой HTTP клиент службы Kaspersky Scan Engine, использующий протокол KAV для взаимодействия. 
+            Текущая версия протокола KAV – 3, но также поддерживаются версии 1 и 2.
+        </Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include=".\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ViennaNET.Extensions.Http\ViennaNET.Extensions.Http.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="ViennaNET.KasperskyScanEngine.Client.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models/" />
+    </ItemGroup>
+
+</Project>
