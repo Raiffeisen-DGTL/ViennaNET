@@ -250,7 +250,7 @@ dotnet_naming_symbols.type_parameters.required_modifiers =
 
 dotnet_naming_symbols.methods__properties_and_events.applicable_kinds = property, event, method
 dotnet_naming_symbols.methods__properties_and_events.applicable_accessibilities = *
-dotnet_naming_symbols.methods__properties_and_events.required_modifiers = *
+dotnet_naming_symbols.methods__properties_and_events.required_modifiers = 
 
 dotnet_naming_symbols.local_variables.applicable_kinds = field
 dotnet_naming_symbols.local_variables.applicable_accessibilities = public, local
@@ -302,11 +302,11 @@ dotnet_naming_symbols.enum_members.required_modifiers = abstract, readonly, stat
 
 dotnet_naming_symbols.local_functions.applicable_kinds = local_function
 dotnet_naming_symbols.local_functions.applicable_accessibilities = *
-dotnet_naming_symbols.local_functions.required_modifiers = *
+dotnet_naming_symbols.local_functions.required_modifiers = 
 
 dotnet_naming_symbols.all_othr_entities.applicable_kinds = *
 dotnet_naming_symbols.all_othr_entities.applicable_accessibilities = *
-dotnet_naming_symbols.all_othr_entities.required_modifiers = *
+dotnet_naming_symbols.all_othr_entities.required_modifiers = 
 
 dotnet_naming_symbols.constant_fields__protected_.applicable_kinds = 
 dotnet_naming_symbols.constant_fields__protected_.applicable_accessibilities = protected, local
