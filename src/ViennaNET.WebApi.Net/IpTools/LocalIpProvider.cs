@@ -35,7 +35,7 @@ namespace ViennaNET.WebApi.Net.IpTools
             .FirstOrDefault(adapter => adapter.GetIPProperties()
               ?.DnsSuffix
               ?.Trim()
-              .ToLower() == "raiffeisen.ru")
+              .ToLower() == "youdomain.ru")
             ?.GetIPProperties()
             ?.UnicastAddresses;
 
